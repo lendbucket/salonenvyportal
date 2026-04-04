@@ -38,6 +38,7 @@ model Location {
   staffMembers     StaffMember[]
   inventoryItems   InventoryItem[]
   users            User[]
+  schedules        Schedule[]
   @@map("locations")
 }
 
@@ -55,6 +56,7 @@ model StaffMember {
   createdAt          DateTime @default(now())
   location           Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   user               User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shifts             Shift[]
   @@map("staff_members")
 }
 
@@ -77,6 +79,41 @@ model InventoryItem {
   updatedAt        DateTime @default(now()) @updatedAt
   location         Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   @@map("inventory_items")
+}
+
+model Schedule {
+  id            String    @id @default(cuid())
+  locationId    String
+  weekStart     DateTime
+  weekEnd       DateTime
+  status        String    @default("draft")
+  createdById   String
+  submittedAt   DateTime?
+  approvedAt    DateTime?
+  approvedById  String?
+  rejectedAt    DateTime?
+  rejectionNote String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  shifts        Shift[]
+  location      Location  @relation(fields: [locationId], references: [id])
+  @@map("schedules")
+}
+
+model Shift {
+  id            String      @id @default(cuid())
+  scheduleId    String
+  staffMemberId String
+  date          DateTime
+  startTime     String
+  endTime       String
+  isTimeOff     Boolean     @default(false)
+  notes         String?
+  createdAt     DateTime    @default(now())
+  schedule      Schedule    @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  staffMember   StaffMember @relation(fields: [staffMemberId], references: [id])
+  @@map("shifts")
 }
 
 model AdminAlert {
