@@ -8,17 +8,17 @@ function getSquare() {
 }
 
 export const TEAM_MEMBER_LOCATIONS: Record<string, "Corpus Christi" | "San Antonio"> = {
-  "TMbc13IBzS8Z43AO": "Corpus Christi", // Clarissa Reyna - Manager
-  "TMaExUyYaWYlvSqh": "Corpus Christi", // Alexis Rodriguez
-  "TMCzd3unwciKEVX7": "Corpus Christi", // Kaylie Espinoza
-  "TMn7kInT8g7Vrgxi": "Corpus Christi", // Ashlynn Ochoa
-  "TMMdDDwU8WXpCZ9m": "Corpus Christi", // Jessy Blamey
-  "TM_xI40vPph2_Cos": "Corpus Christi", // Mia Gonzales
-  "TMMJKxeQuMlMW1Dw": "San Antonio",    // Melissa Cruz - Manager
-  "TM5CjcvcHRXZQ4hP": "San Antonio",    // Madelynn Martinez
-  "TMcc0QbHuUZfgcIB": "San Antonio",    // Jaylee Jaeger
-  "TMfFCmgJ5RV-WCBq": "San Antonio",    // Aubree Saldana
-  "TMk1YstlrnPrKw8p": "San Antonio",    // Kiyara Smith
+  "TMbc13IBzS8Z43AO": "Corpus Christi",
+  "TMaExUyYaWYlvSqh": "Corpus Christi",
+  "TMCzd3unwciKEVX7": "Corpus Christi",
+  "TMn7kInT8g7Vrgxi": "Corpus Christi",
+  "TMMdDDwU8WXpCZ9m": "Corpus Christi",
+  "TM_xI40vPph2_Cos": "Corpus Christi",
+  "TMMJKxeQuMlMW1Dw": "San Antonio",
+  "TM5CjcvcHRXZQ4hP": "San Antonio",
+  "TMcc0QbHuUZfgcIB": "San Antonio",
+  "TMfFCmgJ5RV-WCBq": "San Antonio",
+  "TMk1YstlrnPrKw8p": "San Antonio",
 }
 
 export const TEAM_MEMBER_NAMES: Record<string, string> = {
@@ -76,12 +76,11 @@ export async function getMetricsByPeriod(
   const square = getSquare()
   const { startAt, endAt } = getDateRange(periodType)
 
-  // Initialize stylist metrics
   const stylistMetrics: Record<string, StylistMetrics> = {}
   for (const [id, loc] of Object.entries(TEAM_MEMBER_LOCATIONS)) {
     stylistMetrics[id] = {
       teamMemberId: id,
-      name: TEAM_MEMBER_NAMES[id] || "Unknown",
+      name: TEAM_MEMBER_NAMES[id],
       homeLocation: loc,
       revenue: 0,
       serviceCount: 0,
@@ -90,102 +89,84 @@ export async function getMetricsByPeriod(
   }
 
   try {
-    // STEP 1: Get all bookings in the period via pagination
-    const bookingTeamMap: Record<string, string> = {} // bookingId -> teamMemberId
+    // Step 1: Get all bookings with their IDs and team members
+    const bookingMap: Record<string, string> = {} // bookingId -> teamMemberId
 
-    const bookingsPage = await square.bookings.list({
+    let bookingsPage = await square.bookings.list({
       startAtMin: startAt,
       startAtMax: endAt,
-      limit: 100,
+      limit: 200,
     })
 
-    // Process first page
     for (const booking of bookingsPage.data) {
-      if (booking.status !== "ACCEPTED" && booking.status !== "PENDING") continue
-      const teamMemberId = booking.appointmentSegments?.[0]?.teamMemberId
-      if (!teamMemberId || !TEAM_MEMBER_LOCATIONS[teamMemberId]) continue
-      if (booking.id) {
-        bookingTeamMap[booking.id] = teamMemberId
-        stylistMetrics[teamMemberId].serviceCount += 1
+      const tmId = booking.appointmentSegments?.[0]?.teamMemberId
+      if (tmId && TEAM_MEMBER_LOCATIONS[tmId] && booking.id) {
+        bookingMap[booking.id] = tmId
+        stylistMetrics[tmId].serviceCount += 1
       }
     }
 
-    // Paginate through remaining pages
-    let page = bookingsPage
-    while (page.hasNextPage()) {
-      page = await page.getNextPage()
-      for (const booking of page.data) {
-        if (booking.status !== "ACCEPTED" && booking.status !== "PENDING") continue
-        const teamMemberId = booking.appointmentSegments?.[0]?.teamMemberId
-        if (!teamMemberId || !TEAM_MEMBER_LOCATIONS[teamMemberId]) continue
-        if (booking.id) {
-          bookingTeamMap[booking.id] = teamMemberId
-          stylistMetrics[teamMemberId].serviceCount += 1
+    while (bookingsPage.hasNextPage()) {
+      bookingsPage = await bookingsPage.getNextPage()
+      for (const booking of bookingsPage.data) {
+        const tmId = booking.appointmentSegments?.[0]?.teamMemberId
+        if (tmId && TEAM_MEMBER_LOCATIONS[tmId] && booking.id) {
+          bookingMap[booking.id] = tmId
+          stylistMetrics[tmId].serviceCount += 1
         }
       }
     }
 
-    // STEP 2: Get completed orders to match revenue
+    // Step 2: Search orders and match to bookings via source.bookingId
     const ordersRes = await square.orders.search({
       locationIds: ["LTJSA6QR1HGW6", "LXJYXDXWR0XZF"],
       query: {
         filter: {
           dateTimeFilter: {
-            createdAt: {
-              startAt,
-              endAt,
-            },
+            createdAt: { startAt, endAt },
           },
-          stateFilter: {
-            states: ["COMPLETED"],
-          },
+          stateFilter: { states: ["COMPLETED"] },
         },
       },
       limit: 500,
     })
 
-    const orders = ordersRes.orders || []
-    for (const order of orders) {
-      // Try to match order to a booking via metadata
+    for (const order of (ordersRes.orders || [])) {
+      const source = (order as unknown as Record<string, unknown>).source as Record<string, unknown> | undefined
+      const metadata = order.metadata as Record<string, string> | undefined
+
+      const sourceBookingId = (source?.bookingId as string | undefined) ??
+                              (metadata?.bookingId as string | undefined)
+
       let teamMemberId: string | undefined
 
-      if (order.metadata) {
-        const meta = order.metadata as Record<string, string>
-        if (meta.bookingId && bookingTeamMap[meta.bookingId]) {
-          teamMemberId = bookingTeamMap[meta.bookingId]
-        }
-      }
-
-      // Check direct team member on order
-      if (!teamMemberId) {
-        teamMemberId = (order as unknown as Record<string, unknown>).teamMemberId as string | undefined
+      if (sourceBookingId && bookingMap[sourceBookingId]) {
+        teamMemberId = bookingMap[sourceBookingId]
       }
 
       if (!teamMemberId || !stylistMetrics[teamMemberId]) continue
 
       const amount = Number(order.totalMoney?.amount || 0) / 100
-      stylistMetrics[teamMemberId].revenue += amount
+      if (amount > 0) {
+        stylistMetrics[teamMemberId].revenue += amount
+      }
     }
 
-    // Calculate avg tickets
+    // Step 3: Calculate avg tickets
     for (const m of Object.values(stylistMetrics)) {
       if (m.serviceCount > 0 && m.revenue > 0) {
         m.avgTicket = Math.round((m.revenue / m.serviceCount) * 100) / 100
       }
     }
 
-    // Aggregate by location
+    // Step 4: Aggregate by location
     const ccMetrics: LocationMetrics = {
-      location: "Corpus Christi",
-      revenue: 0, serviceCount: 0, avgTicket: 0,
-      stylistBreakdown: [],
-      periodStart: startAt, periodEnd: endAt,
+      location: "Corpus Christi", revenue: 0, serviceCount: 0, avgTicket: 0,
+      stylistBreakdown: [], periodStart: startAt, periodEnd: endAt,
     }
     const saMetrics: LocationMetrics = {
-      location: "San Antonio",
-      revenue: 0, serviceCount: 0, avgTicket: 0,
-      stylistBreakdown: [],
-      periodStart: startAt, periodEnd: endAt,
+      location: "San Antonio", revenue: 0, serviceCount: 0, avgTicket: 0,
+      stylistBreakdown: [], periodStart: startAt, periodEnd: endAt,
     }
 
     for (const m of Object.values(stylistMetrics)) {
@@ -198,8 +179,8 @@ export async function getMetricsByPeriod(
     if (ccMetrics.serviceCount > 0) ccMetrics.avgTicket = Math.round((ccMetrics.revenue / ccMetrics.serviceCount) * 100) / 100
     if (saMetrics.serviceCount > 0) saMetrics.avgTicket = Math.round((saMetrics.revenue / saMetrics.serviceCount) * 100) / 100
 
-    ccMetrics.stylistBreakdown.sort((a, b) => b.revenue - a.revenue || b.serviceCount - a.serviceCount)
-    saMetrics.stylistBreakdown.sort((a, b) => b.revenue - a.revenue || b.serviceCount - a.serviceCount)
+    ccMetrics.stylistBreakdown.sort((a, b) => b.serviceCount - a.serviceCount)
+    saMetrics.stylistBreakdown.sort((a, b) => b.serviceCount - a.serviceCount)
 
     if (location === "Corpus Christi") return [ccMetrics]
     if (location === "San Antonio") return [saMetrics]

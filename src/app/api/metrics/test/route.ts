@@ -9,25 +9,45 @@ export async function GET() {
     })
 
     const now = new Date()
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
+    // Get recent bookings
     const bookingsPage = await square.bookings.list({
-      startAtMin: weekAgo.toISOString(),
+      startAtMin: monthAgo.toISOString(),
       startAtMax: now.toISOString(),
-      limit: 10,
+      limit: 5,
     })
-
     const bookings = bookingsPage.data?.map(b => ({
       id: b.id,
-      status: b.status,
       teamMemberId: b.appointmentSegments?.[0]?.teamMemberId,
       startAt: b.startAt,
-      locationId: b.locationId,
+      status: b.status,
+    }))
+
+    // Get recent completed orders and check source
+    const ordersRes = await square.orders.search({
+      locationIds: ["LTJSA6QR1HGW6", "LXJYXDXWR0XZF"],
+      query: {
+        filter: {
+          dateTimeFilter: { createdAt: { startAt: monthAgo.toISOString(), endAt: now.toISOString() } },
+          stateFilter: { states: ["COMPLETED"] },
+        },
+      },
+      limit: 5,
+    })
+
+    const orders = ordersRes.orders?.map(o => ({
+      id: o.id,
+      total: Number(o.totalMoney?.amount || 0) / 100,
+      source: (o as unknown as Record<string, unknown>).source,
+      metadata: o.metadata,
+      createdAt: o.createdAt,
     }))
 
     return NextResponse.json({
-      bookingCount: bookings?.length || 0,
       bookings: bookings || [],
+      orders: orders || [],
+      message: "Check if orders have source.bookingId matching booking IDs",
     })
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error)
