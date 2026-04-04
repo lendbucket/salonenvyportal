@@ -2,15 +2,8 @@
 
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
 
-const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error("Missing DIRECT_URL or DATABASE_URL");
-}
-const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString }),
-});
+const prisma = new PrismaClient();
 
 async function main() {
   const cc = await prisma.location.upsert({
@@ -39,6 +32,7 @@ async function main() {
   await prisma.user.upsert({
     where: { email: "ceo@36west.org" },
     update: {
+      role: "OWNER",
       inviteStatus: "ACCEPTED",
     },
     create: {
@@ -60,7 +54,7 @@ async function main() {
   }[] = [
     {
       fullName: "Clarissa Reyna",
-      email: "clarissareyna625@gmail.com",
+      email: "salonenvycorpuschristitx@gmail.com",
       squareTeamMemberId: "TMbc13IBzS8Z43AO",
       position: "manager",
       inviteStatus: "active",
@@ -119,14 +113,14 @@ async function main() {
     },
     {
       fullName: "Jaylee Jaeger",
-      email: "jaylee@salonenvycc.com",
+      email: "jaylee@salonenvysa.com",
       squareTeamMemberId: "TMcc0QbHuUZfgcIB",
       position: "stylist",
       inviteStatus: "active",
     },
     {
       fullName: "Aubree Saldana",
-      email: "aubree@salonenvycc.com",
+      email: "aubree@salonenvysa.com",
       squareTeamMemberId: "TMfFCmgJ5RV-WCBq",
       position: "stylist",
       inviteStatus: "not_invited",
@@ -139,6 +133,9 @@ async function main() {
       inviteStatus: "active",
     },
   ];
+
+  // Clear all existing staff to fix wrong location assignments
+  await prisma.staffMember.deleteMany({});
 
   for (const s of ccStaff) {
     await prisma.staffMember.upsert({
