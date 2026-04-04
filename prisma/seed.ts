@@ -1,18 +1,9 @@
-import { PrismaPg } from "@prisma/adapter-pg"
-import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
+import { PrismaClient } from "@prisma/client"
 
-const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL
-if (!connectionString) {
-  throw new Error("Missing DIRECT_URL or DATABASE_URL for seed.")
-}
-
-const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString }),
-})
+const prisma = new PrismaClient()
 
 async function main() {
-  // Seed locations
   const cc = await prisma.location.upsert({
     where: { squareLocationId: "LTJSA6QR1HGW6" },
     update: {},
@@ -35,9 +26,6 @@ async function main() {
     },
   })
 
-  console.log("✅ Seeded locations:", cc.name, sa.name)
-
-  // Seed owner user
   const passwordHash = await bcrypt.hash("ChangeMe123!", 12)
 
   const owner = await prisma.user.upsert({
@@ -52,14 +40,9 @@ async function main() {
     },
   })
 
-  console.log("✅ Seeded owner:", owner.email)
+  console.log("✅ Seeded:", cc.name, sa.name, owner.email)
 }
 
 main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
+  .catch((e) => { console.error(e); process.exit(1) })
+  .finally(async () => { await prisma.$disconnect() })

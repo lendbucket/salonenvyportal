@@ -1,12 +1,10 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["bcryptjs"],
   turbopack: {
     root: __dirname,
   },
-  experimental: {
-    serverComponentsExternalPackages: ["bcryptjs"],
-  },
-};
+}
 
-export default nextConfig;
+export default nextConfig

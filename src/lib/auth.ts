@@ -5,8 +5,6 @@ import { NextResponse } from "next/server";
 
 import type { UserRole } from "@prisma/client";
 
-import { prisma } from "@/lib/prisma";
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   providers: [
@@ -16,6 +14,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        const { prisma } = await import("@/lib/prisma");
         const email = credentials?.email as string | undefined;
         const password = credentials?.password as string | undefined;
         if (!email || !password) return null;
