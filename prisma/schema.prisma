@@ -30,6 +30,8 @@ model Location {
   squareLocationId String @unique
   address          String
   phone            String
+  staffMembers     StaffMember[]
+  inventoryItems   InventoryItem[]
   @@map("locations")
 }
 
@@ -45,6 +47,7 @@ model StaffMember {
   isActive           Boolean  @default(true)
   inviteStatus       String   @default("not_invited")
   createdAt          DateTime @default(now())
+  location           Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
   @@map("staff_members")
 }
 
@@ -65,5 +68,15 @@ model InventoryItem {
   notes            String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now()) @updatedAt
+  location         Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
   @@map("inventory_items")
+}
+
+model AdminAlert {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  severity  String   @default("info")
+  createdAt DateTime @default(now())
+  @@map("admin_alerts")
 }

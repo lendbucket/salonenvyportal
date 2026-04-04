@@ -15,8 +15,9 @@ export default async function PortalLayout({
 
   return (
     <PortalShell
-      userName={session?.user?.name ?? ""}
-      userEmail={session?.user?.email ?? ""}
+      userName={session.user.name ?? ""}
+      userEmail={session.user.email ?? ""}
+      userRole={session.user.role}
     >
       {children}
     </PortalShell>

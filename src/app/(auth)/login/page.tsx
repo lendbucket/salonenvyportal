@@ -1,72 +1,108 @@
-"use client"
-import { useState } from "react"
-import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+"use client";
+
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
-    })
+    });
     if (result?.error) {
-      setError("Invalid email or password")
-      setLoading(false)
+      setError("Invalid email or password");
+      setLoading(false);
     } else {
-      router.push("/dashboard")
+      router.push("/dashboard");
     }
   }
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#0d0d0d", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ width: "100%", maxWidth: "400px", padding: "2rem" }}>
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#C9A84C", letterSpacing: "0.05em" }}>
-            Salon Envy®
+    <div className="flex min-h-dvh flex-col bg-[#0d0d0d] md:flex-row">
+      {/* Left: brand */}
+      <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-8 py-12 md:py-0">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 50% at 50% 45%, rgba(201,168,76,0.35) 0%, transparent 65%)",
+          }}
+        />
+        <div className="relative z-10 max-w-md text-center">
+          <div className="mb-6 flex justify-center text-[#C9A84C]" aria-hidden>
+            <span className="text-5xl md:text-6xl">✂</span>
+            <span className="ml-2 text-4xl md:text-5xl">✦</span>
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-[#C9A84C] md:text-5xl">
+            Salon Envy<sup className="text-2xl">®</sup>
           </h1>
-          <p style={{ color: "#888", marginTop: "0.5rem" }}>Management Portal</p>
+          <p className="mt-4 text-lg leading-relaxed text-neutral-400 md:text-xl">
+            Empowering Your Salon. Elevating Your Team.
+          </p>
         </div>
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div>
-            <label style={{ display: "block", color: "#888", fontSize: "0.875rem", marginBottom: "0.5rem" }}>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{ width: "100%", padding: "0.75rem", backgroundColor: "#161616", border: "1px solid #2a2a2a", borderRadius: "0.5rem", color: "#f5f5f5", fontSize: "1rem", boxSizing: "border-box" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", color: "#888", fontSize: "0.875rem", marginBottom: "0.5rem" }}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{ width: "100%", padding: "0.75rem", backgroundColor: "#161616", border: "1px solid #2a2a2a", borderRadius: "0.5rem", color: "#f5f5f5", fontSize: "1rem", boxSizing: "border-box" }}
-            />
-          </div>
-          {error && <p style={{ color: "#ef4444", fontSize: "0.875rem" }}>{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{ width: "100%", padding: "0.75rem", backgroundColor: "#C9A84C", color: "#0d0d0d", fontWeight: "bold", borderRadius: "0.5rem", border: "none", cursor: loading ? "not-allowed" : "pointer", fontSize: "1rem", opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
+      </div>
+
+      {/* Right: form */}
+      <div className="flex w-full flex-1 items-center justify-center px-4 pb-12 pt-4 md:w-auto md:max-w-[min(100%,520px)] md:pb-0 md:pr-10 md:pt-0">
+        <div
+          className="w-full max-w-md rounded-2xl rounded-l-none border border-l-0 border-[#2a2a2a] bg-[#161616] p-8 shadow-2xl md:rounded-l-3xl md:border-l md:pl-10"
+          style={{ borderRadius: "1rem 0 0 1rem" }}
+        >
+          <h2 className="text-2xl font-semibold text-neutral-100">Welcome back</h2>
+          <p className="mt-1 text-sm text-neutral-500">Sign in to the management portal</p>
+
+          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
+            <div>
+              <label className="mb-1.5 block text-sm text-neutral-400">Email</label>
+              <input
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-lg border border-[#2a2a2a] bg-[#0d0d0d] px-3 py-2.5 text-neutral-100 outline-none transition focus:border-[#C9A84C] focus:ring-2 focus:ring-[#C9A84C]/30"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm text-neutral-400">Password</label>
+              <input
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg border border-[#2a2a2a] bg-[#0d0d0d] px-3 py-2.5 text-neutral-100 outline-none transition focus:border-[#C9A84C] focus:ring-2 focus:ring-[#C9A84C]/30"
+              />
+            </div>
+            {error ? <p className="text-sm text-red-400">{error}</p> : null}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-[#C9A84C] py-3 text-base font-semibold text-[#0d0d0d] transition hover:bg-[#b89642] disabled:opacity-60"
+            >
+              {loading ? "Signing in…" : "Sign In"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center">
+            <Link href="#" className="text-sm text-[#C9A84C] hover:underline">
+              Forgot password?
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
-  )
+  );
 }
