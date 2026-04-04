@@ -39,6 +39,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/alerts", icon: "notifications", label: "ALERTS" },
       { href: "/issue-reports", icon: "flag", label: "ISSUE REPORTS" },
       { href: "/complaints", icon: "shield", label: "COMPLAINTS" },
+      { href: "/cancellations", icon: "event_busy", label: "CANCELLATIONS" },
     ]
   },
   {

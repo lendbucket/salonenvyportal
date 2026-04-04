@@ -20,5 +20,6 @@ export const config = {
     "/profile/:path*",
     "/preferences/:path*",
     "/retention/:path*",
+    "/cancellations/:path*",
   ]
 }
