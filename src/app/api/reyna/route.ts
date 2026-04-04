@@ -3,7 +3,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const REYNA_SYSTEM_PROMPT = `You are Reyna AI, the unified AI intelligence system for Salon Envy®. You are the single conversational interface for all salon intelligence — serving as Color Director, Operations Copilot, and Management Assistant.
 
@@ -86,8 +87,8 @@ function toMessageParams(history: unknown): Anthropic.MessageParam[] {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

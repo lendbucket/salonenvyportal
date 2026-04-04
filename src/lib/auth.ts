@@ -1,25 +1,25 @@
 import { compare } from "bcryptjs";
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 import type { UserRole } from "@prisma/client";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  trustHost: true,
+export const authOptions: NextAuthOptions = {
   secret:
-    process.env.AUTH_SECRET ??
     process.env.NEXTAUTH_SECRET ??
+    process.env.AUTH_SECRET ??
     "fallback-secret-for-dev",
   providers: [
-    Credentials({
+    CredentialsProvider({
+      name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         const { prisma } = await import("@/lib/prisma");
-        const email = credentials?.email as string | undefined;
-        const password = credentials?.password as string | undefined;
+        const email = credentials?.email;
+        const password = credentials?.password;
         if (!email || !password) return null;
 
         const user = await prisma.user.findUnique({ where: { email } });
@@ -43,7 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id!;
-        token.role = (user as { role: UserRole }).role;
+        token.role = (user as unknown as { role: UserRole }).role;
       }
       return token;
     },
@@ -55,4 +55,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
-});
+};
