@@ -92,11 +92,11 @@ export function PortalShell({
   const navLinkClass = (href: string, isReyna?: boolean) => {
     const active = isActive(href);
     return [
-      "flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors duration-200",
+      "flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ease-out",
       active
-        ? "border-l-[3px] border-[#C9A84C] bg-[#1f1f1f] pl-[9px] font-medium text-[#C9A84C]"
-        : "border-l-[3px] border-transparent text-neutral-400 hover:bg-[#1a1a1a]",
-      isReyna && !active ? "text-[#C9A84C]/90" : "",
+        ? "border-l-[3px] border-[#C9A84C] bg-[#1f1f1f] pl-[9px] font-semibold text-[#C9A84C]"
+        : "border-l-[3px] border-transparent text-neutral-400 hover:bg-[#1a1a1a] hover:text-neutral-200",
+      isReyna && !active ? "text-[#C9A84C]/85" : "",
     ]
       .filter(Boolean)
       .join(" ");
@@ -148,11 +148,26 @@ export function PortalShell({
 
       {/* Sidebar desktop */}
       <aside className="fixed bottom-0 left-0 top-0 z-40 hidden w-[260px] flex-col border-r border-[#2a2a2a] bg-[#161616] md:flex">
-        <div className="border-b border-[#2a2a2a] px-5 py-6">
-          <p className="text-xl font-bold tracking-tight text-[#C9A84C]">
-            Salon Envy<sup className="text-sm font-normal">®</sup>
-          </p>
-          <p className="mt-1 text-xs text-[#888]">Management Portal</p>
+        <div className="relative overflow-hidden border-b border-[#2a2a2a] px-5 py-8">
+          <div
+            className="pointer-events-none absolute -left-4 top-1/2 h-36 w-44 -translate-y-1/2 rounded-full opacity-50 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(201,168,76,0.45) 0%, rgba(201,168,76,0.08) 45%, transparent 70%)",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute left-8 top-8 h-24 w-32 rounded-full opacity-30 blur-2xl"
+            style={{
+              background: "linear-gradient(135deg, rgba(201,168,76,0.35) 0%, transparent 60%)",
+            }}
+          />
+          <div className="relative">
+            <h2 className="text-2xl font-bold tracking-tight text-[#C9A84C] md:text-[1.75rem] md:leading-tight">
+              Salon Envy<sup className="align-super text-base font-normal md:text-lg">®</sup>
+            </h2>
+            <p className="mt-2 text-xs font-medium text-[#888]">Management Portal</p>
+          </div>
         </div>
         <nav className="flex-1 overflow-y-auto px-2 py-4">
           <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C9A84C]/80">
@@ -183,13 +198,15 @@ export function PortalShell({
           </div>
         </nav>
         <div className="border-t border-[#2a2a2a] p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#C9A84C]/12 text-sm font-semibold text-[#C9A84C] ring-2 ring-[#C9A84C]/40">
+          <div className="flex items-start gap-3">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[linear-gradient(145deg,rgba(201,168,76,0.18)_0%,rgba(201,168,76,0.06)_100%)] text-sm font-bold text-[#C9A84C] shadow-[0_0_20px_-4px_rgba(201,168,76,0.35)]">
               {initials(userName)}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-neutral-100">{userName || "User"}</p>
-              <p className="truncate text-xs capitalize text-[#888]">{userRole.toLowerCase()}</p>
+              <p className="truncate text-sm font-semibold text-neutral-100">{userName || "User"}</p>
+              <span className="mt-1.5 inline-flex rounded-md border border-[#C9A84C]/35 bg-[#C9A84C]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#C9A84C]">
+                {userRole}
+              </span>
             </div>
           </div>
           <div className="mt-4 flex justify-center gap-3">

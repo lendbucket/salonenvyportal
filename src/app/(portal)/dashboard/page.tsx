@@ -53,7 +53,7 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-neutral-100 md:text-3xl">
-            {greeting}, {firstName} 👋
+            {greeting}, {firstName}
           </h1>
           <p className="mt-1 text-sm text-[#888]">{dateStr}</p>
         </div>
@@ -85,7 +85,7 @@ export default function DashboardPage() {
         {metrics.map((m) => (
           <div
             key={m.label}
-            className="group rounded-xl border border-[#2a2a2a] bg-[#1f1f1f] p-5 transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/40"
+            className="group rounded-xl border border-[#2a2a2a] bg-[#1f1f1f] p-5 shadow-[0_4px_24px_-12px_rgba(0,0,0,0.45)] transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.55),0_8px_24px_-8px_rgba(201,168,76,0.08)]"
           >
             <p className="text-sm font-medium text-[#888]">{m.label}</p>
             <div className="mt-2 flex items-baseline gap-2">
@@ -103,28 +103,31 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
-        <Link
-          href="/inventory/add"
-          className="inline-flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#161616] px-4 py-2.5 text-sm font-medium text-neutral-200 transition hover:border-[#C9A84C]/40 hover:bg-[#1f1f1f]"
-        >
-          <span aria-hidden>➕</span>
-          Add Inventory
-        </Link>
-        <Link
-          href="/schedule"
-          className="inline-flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#161616] px-4 py-2.5 text-sm font-medium text-neutral-200 transition hover:border-[#C9A84C]/40 hover:bg-[#1f1f1f]"
-        >
-          <span aria-hidden>📅</span>
-          View Schedule
-        </Link>
-        <Link
-          href="/reyna-ai"
-          className="inline-flex items-center gap-2 rounded-xl bg-[#C9A84C] px-4 py-2.5 text-sm font-semibold text-[#0d0d0d] shadow-[0_4px_24px_-6px_rgba(201,168,76,0.45)] transition hover:bg-[#b89642]"
-        >
-          <span aria-hidden>✨</span>
-          Ask Reyna AI
-        </Link>
+      <div className="mt-10">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#888]">Quick actions</h2>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/inventory/add"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#161616] px-4 py-2.5 text-sm font-medium text-neutral-200 transition hover:border-[#C9A84C]/45 hover:bg-[#1f1f1f]"
+          >
+            <span aria-hidden>➕</span>
+            Add Inventory
+          </Link>
+          <Link
+            href="/schedule"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#161616] px-4 py-2.5 text-sm font-medium text-neutral-200 transition hover:border-[#C9A84C]/45 hover:bg-[#1f1f1f]"
+          >
+            <span aria-hidden>📅</span>
+            View Schedule
+          </Link>
+          <Link
+            href="/reyna-ai"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#C9A84C] px-4 py-2.5 text-sm font-semibold text-[#0d0d0d] shadow-[0_6px_28px_-8px_rgba(201,168,76,0.55)] transition hover:bg-[#b89642] hover:shadow-[0_8px_32px_-8px_rgba(201,168,76,0.45)]"
+          >
+            <span aria-hidden>✨</span>
+            Ask Reyna AI
+          </Link>
+        </div>
       </div>
 
       <section className="mt-10 rounded-2xl border border-[#2a2a2a] bg-[#161616] p-8">
