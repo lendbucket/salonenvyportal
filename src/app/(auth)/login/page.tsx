@@ -92,7 +92,7 @@ function LoginForm() {
             margin: "0 0 28px",
             fontWeight: 500,
           }}>
-            Sign in to your Salon Envy\u00ae portal
+            Sign in to your Salon Envy portal
           </p>
 
           {displayError && (
@@ -158,7 +158,7 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+                placeholder=""
                 style={{
                   width: "100%",
                   padding: "11px 14px",
@@ -311,7 +311,7 @@ function LoginForm() {
             </div>
 
             <p style={{ textAlign: "center", fontSize: "11px", color: "#94A3B8", margin: "2px 0 0" }}>
-              New to Salon Envy\u00ae Portal?{" "}
+              New to Salon Envy Portal?{" "}
               <a href="/onboarding" style={{ color: "#CDC9C0", fontWeight: 700, textDecoration: "none" }}>
                 Request Access
               </a>

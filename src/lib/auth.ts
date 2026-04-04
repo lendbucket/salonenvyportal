@@ -18,6 +18,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      allowDangerousEmailAccountLinking: true,
     }),
     EmailProvider({
       server: {
@@ -36,26 +37,49 @@ export const authOptions: NextAuthOptions = {
         await resend.emails.send({
           from: process.env.EMAIL_FROM || "Salon Envy Portal <noreply@salonenvyusa.com>",
           to: email,
-          subject: "Sign in to Salon Envy\u00ae Portal",
-          html: `
-            <div style="font-family: Inter, sans-serif; max-width: 480px; margin: 0 auto; background-color: #0f1d24; color: #ffffff; padding: 40px;">
-              <div style="background-color:#1a2a32;border-radius:16px;padding:32px;border:1px solid rgba(205,201,192,0.12);">
-                <div style="text-align: center; margin-bottom: 28px;">
-                  <img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" width="160" style="display:inline-block;" />
-                </div>
-                <h2 style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0 0 8px;">Your sign-in link</h2>
-                <p style="color: #94A3B8; margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
-                  Click the button below to sign in to the Salon Envy\u00ae Management Portal. This link expires in 24 hours.
-                </p>
-                <a href="${url}" style="display:block;background-color:#CDC9C0;color:#0f1d24;padding:14px 24px;border-radius:10px;text-decoration:none;font-weight:800;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin-bottom:24px;">
-                  Sign In to Portal
-                </a>
-                <p style="color: #555; font-size: 12px; text-align: center; margin: 0;">
-                  If you didn't request this, you can safely ignore this email.
-                </p>
-              </div>
-            </div>
-          `,
+          subject: "Sign in to Salon Envy Portal",
+          html: `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#0a1520;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a1520;min-height:100vh;">
+    <tr>
+      <td align="center" style="padding:48px 24px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
+          <tr>
+            <td align="center" style="padding-bottom:36px;">
+              <img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" width="160" style="display:block;height:auto;margin:0 auto;" />
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#1a2a32;border-radius:16px;padding:40px 36px;border:1px solid rgba(205,201,192,0.15);">
+              <p style="margin:0 0 8px;font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;">Your sign-in link</p>
+              <p style="margin:0 0 32px;font-size:14px;color:#94a3b8;line-height:1.6;">Click the button below to securely sign in to the Salon Envy Management Portal. This link expires in 24 hours and can only be used once.</p>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <a href="${url}" style="display:inline-block;background-color:#CDC9C0;color:#0f1d24;padding:14px 40px;border-radius:10px;text-decoration:none;font-size:13px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;">Sign In to Portal</a>
+                  </td>
+                </tr>
+              </table>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0;">
+                <tr><td style="border-top:1px solid rgba(205,201,192,0.1);font-size:0;">&nbsp;</td></tr>
+              </table>
+              <p style="margin:0 0 8px;font-size:12px;color:#64748b;">Or copy and paste this link into your browser:</p>
+              <p style="margin:0;font-size:11px;color:#CDC9C0;word-break:break-all;line-height:1.6;">${url}</p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding-top:28px;">
+              <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.2);line-height:1.6;">If you did not request this link, you can safely ignore this email.<br/>Salon Envy Management Portal</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
         });
       },
     }),
