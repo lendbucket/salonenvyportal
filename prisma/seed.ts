@@ -1,58 +1,65 @@
-import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg"
+import { PrismaClient } from "@prisma/client"
+import bcrypt from "bcryptjs"
 
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
-
-const connectionString = process.env.DATABASE_URL;
+const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL
 if (!connectionString) {
-  throw new Error("DATABASE_URL is required to run the seed script.");
+  throw new Error("Missing DIRECT_URL or DATABASE_URL for seed.")
 }
 
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString }),
+})
 
 async function main() {
-  await prisma.location.createMany({
-    data: [
-      {
-        name: "Corpus Christi",
-        squareLocationId: "LTJSA6QR1HGW6",
-        address: "5601 S Padre Island Dr STE E",
-        phone: "(361) 889-1102",
-      },
-      {
-        name: "San Antonio",
-        squareLocationId: "LXJYXDXWR0XZF",
-        address: "11826 Wurzbach Rd",
-        phone: "(210) 660-3339",
-      },
-    ],
-    skipDuplicates: true,
-  });
+  // Seed locations
+  const cc = await prisma.location.upsert({
+    where: { squareLocationId: "LTJSA6QR1HGW6" },
+    update: {},
+    create: {
+      name: "Corpus Christi",
+      squareLocationId: "LTJSA6QR1HGW6",
+      address: "5601 S Padre Island Dr STE E, TX 78412",
+      phone: "(361) 889-1102",
+    },
+  })
 
-  const passwordHash = await hash("ChangeMe123!", 10);
-  await prisma.user.upsert({
+  const sa = await prisma.location.upsert({
+    where: { squareLocationId: "LXJYXDXWR0XZF" },
+    update: {},
+    create: {
+      name: "San Antonio",
+      squareLocationId: "LXJYXDXWR0XZF",
+      address: "11826 Wurzbach Rd, TX 78230",
+      phone: "(210) 660-3339",
+    },
+  })
+
+  console.log("✅ Seeded locations:", cc.name, sa.name)
+
+  // Seed owner user
+  const passwordHash = await bcrypt.hash("ChangeMe123!", 12)
+
+  const owner = await prisma.user.upsert({
     where: { email: "ceo@36west.org" },
+    update: {},
     create: {
       email: "ceo@36west.org",
-      name: "Owner",
-      passwordHash,
+      name: "Robert Reyna",
       role: "OWNER",
+      passwordHash: passwordHash,
+      locationId: null,
     },
-    update: {
-      passwordHash,
-      role: "OWNER",
-    },
-  });
+  })
+
+  console.log("✅ Seeded owner:", owner.email)
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
   })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

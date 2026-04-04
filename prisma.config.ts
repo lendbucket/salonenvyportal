@@ -2,12 +2,11 @@ import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
 export default defineConfig({
+  earlyAccess: true,
   schema: "prisma/schema.prisma",
-  migrations: {
-    path: "prisma/migrations",
-  },
   datasource: {
-    // CLI / migrations: prefer direct URL when set (replaces schema `directUrl` in Prisma 7+)
     url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "",
+    // @ts-expect-error directUrl is supported by Prisma CLI; omitted from PrismaConfig Datasource typings
+    directUrl: process.env.DIRECT_URL ?? "",
   },
 });
