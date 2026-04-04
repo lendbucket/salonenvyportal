@@ -121,7 +121,7 @@ export default function DashboardPage() {
   const pLabel = periodLabel[activePeriod] || activePeriod
 
   const metrics = [
-    { label: `Revenue · ${pLabel}`, value: loading ? null : fmt(totalRevenue), icon: "payments", sub: activeLocation === "Both" ? "Both locations" : activeLocation },
+    { label: `Net Sales · ${pLabel}`, value: loading ? null : fmt(totalRevenue), icon: "payments", sub: activeLocation === "Both" ? "Both locations" : activeLocation },
     { label: `Services · ${pLabel}`, value: loading ? null : String(totalServices), icon: "content_cut", sub: "Across all stylists" },
     { label: "Avg Ticket", value: loading ? null : fmt(totalAvg), icon: "receipt_long", sub: "Per service" },
     { label: "Pending Approvals", value: loading ? null : String(pendingCount), icon: "rule", sub: "Needs attention", alert: pendingCount > 0 },
@@ -211,7 +211,7 @@ export default function DashboardPage() {
       {/* QUICK STATS BAR */}
       {!loading && (
         <div style={{ marginBottom: "16px", fontSize: "12px", color: "rgba(205,201,192,0.45)", fontWeight: 500 }}>
-          This week: {fmt(totalRevenue)} revenue &middot; {totalServices} services{cancellations ? ` \u00b7 ${cancellations.totalCancellations} cancellations` : ""} &middot; Avg ticket {fmt(totalAvg)}
+          This week: {fmt(totalRevenue)} net sales &middot; {totalServices} services{cancellations ? ` \u00b7 ${cancellations.totalCancellations} cancellations` : ""} &middot; Avg ticket {fmt(totalAvg)}
         </div>
       )}
 

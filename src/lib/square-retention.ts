@@ -172,7 +172,10 @@ export async function getAllRetentionData(
         })
         for (const o of res.orders || []) {
           if (!o.customerId) continue
-          const amount = Number(o.totalMoney?.amount || 0) / 100
+          const totalAmt = Number(o.totalMoney?.amount || 0)
+          const taxAmt = Number(o.totalTaxMoney?.amount || 0)
+          const tipAmt = Number(o.totalTipMoney?.amount || 0)
+          const amount = (totalAmt - taxAmt - tipAmt) / 100
           if (amount > 0) {
             if (!customerOrders[o.customerId]) customerOrders[o.customerId] = []
             customerOrders[o.customerId].push(amount)

@@ -166,10 +166,10 @@ export default function MetricsPage() {
             Business Intelligence
           </h1>
           <p style={{ fontSize: "12px", color: "#94A3B8", margin: "0 0 4px" }}>
-            Live Square data · {periodLabel?.compareLabel} · Revenue estimates via booking matching
+            Live Square data · {periodLabel?.compareLabel} · Net sales via booking matching
           </p>
           <p style={{ fontSize: "11px", color: "rgba(148,163,184,0.5)", margin: 0, maxWidth: "550px", lineHeight: 1.5 }}>
-            Revenue is estimated using time-proximity matching between Square bookings and orders. Walk-ins not booked through Square Appointments may not be attributed to individual stylists.
+            Net sales (excluding tax and tips) estimated via booking-to-order time-proximity matching. Walk-ins not booked through Square Appointments may not be attributed to individual stylists.
           </p>
         </div>
         <button onClick={fetchData} style={{ padding: "8px 16px", fontSize: "10px", fontWeight: 700, borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -205,7 +205,7 @@ export default function MetricsPage() {
           {/* KPI Cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "14px", marginBottom: "24px" }}>
             {[
-              { label: "Total Revenue", current: fmt(currentTotal.revenue), change: revenueChange, prev: fmt(prevTotal.revenue), icon: "payments" },
+              { label: "Total Net Sales", current: fmt(currentTotal.revenue), change: revenueChange, prev: fmt(prevTotal.revenue), icon: "payments" },
               { label: "Total Services", current: String(currentTotal.serviceCount), change: servicesChange, prev: String(prevTotal.serviceCount), icon: "content_cut" },
               { label: "Avg Ticket", current: fmt(currentTotal.avgTicket), change: ticketChange, prev: fmt(prevTotal.avgTicket), icon: "receipt" },
               { label: "Locations Active", current: String(data?.currentMetrics.filter(m => m.serviceCount > 0).length || 0), change: null, prev: "2 total", icon: "location_on" },
@@ -229,7 +229,7 @@ export default function MetricsPage() {
             <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "20px", marginBottom: "24px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                 <div>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "4px" }}>Annual Revenue Goal — +10% vs Last Year</div>
+                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "4px" }}>Annual Net Sales Goal — +10% vs Last Year</div>
                   <div style={{ fontSize: "13px", color: "#94A3B8" }}>
                     Target: {fmt(prevTotal.revenue * 1.1)} · Current: {fmt(currentTotal.revenue)} · {annualGoalProgress.toFixed(1)}% of goal
                   </div>
@@ -258,7 +258,7 @@ export default function MetricsPage() {
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "16px" }}>
                       {[
-                        { label: "Revenue", value: fmt(loc.revenue) },
+                        { label: "Net Sales", value: fmt(loc.revenue) },
                         { label: "Services", value: String(loc.serviceCount) },
                         { label: "Avg Ticket", value: fmt(loc.avgTicket) },
                       ].map(stat => (
@@ -299,7 +299,7 @@ export default function MetricsPage() {
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ backgroundColor: "rgba(205,201,192,0.04)" }}>
-                    {["Stylist", "Loc", "Services", "vs Prev", "Revenue", "vs Prev", "Avg Ticket", "vs Prev"].map(h => (
+                    {["Stylist", "Loc", "Services", "vs Prev", "Net Sales", "vs Prev", "Avg Ticket", "vs Prev"].map(h => (
                       <th key={h} style={{ padding: "10px 14px", fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", textAlign: h === "Stylist" || h === "Loc" ? "left" : "right", whiteSpace: "nowrap" }}>{h}</th>
                     ))}
                   </tr>
