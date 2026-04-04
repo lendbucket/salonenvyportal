@@ -1,161 +1,357 @@
 "use client"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function DashboardPage() {
   const { data: session } = useSession()
+  const [activeLocation, setActiveLocation] = useState("Corpus Christi")
   const userName = session?.user?.name?.split(" ")[0] || "Robert"
-
   const hour = new Date().getHours()
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening"
-  const dateStr = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }).toUpperCase()
+  const dateStr = new Date().toLocaleDateString("en-US", {
+    weekday: "long", month: "long", day: "numeric", year: "numeric"
+  }).toUpperCase()
 
   const metrics = [
-    { label: "Revenue This Week", value: "$0", icon: "payments", trend: "0%" },
-    { label: "Services This Week", value: "0", icon: "content_cut" },
-    { label: "New Clients", value: "0", icon: "person_add" },
-    { label: "Pending Approvals", value: "0", icon: "rule" },
+    { label: "Revenue This Week", value: "$0", icon: "payments", sub: "\u2194 0% vs last week" },
+    { label: "Services This Week", value: "0", icon: "content_cut", sub: "Across all stylists" },
+    { label: "New Clients", value: "0", icon: "person_add", sub: "This week" },
+    { label: "Pending Approvals", value: "0", icon: "rule", sub: "Needs attention" },
   ]
 
-  const alerts = [
+  const statusCards = [
     { label: "Low Stock Items", sub: "Reorder suggested", icon: "inventory_2", count: 0 },
-    { label: "Pending Schedules", sub: "Needs review", icon: "event_note", count: 0 },
-    { label: "Open Issues", sub: "Action required", icon: "report_problem", count: 0 },
+    { label: "Pending Schedules", sub: "Awaiting approval", icon: "event_note", count: 0 },
+    { label: "Open Issues", sub: "Needs resolution", icon: "report_problem", count: 0 },
+  ]
+
+  const quickActions = [
+    { href: "/inventory/add", icon: "add_box", label: "Add Inventory" },
+    { href: "/schedule", icon: "calendar_today", label: "Build Schedule" },
+    { href: "/approvals", icon: "task_alt", label: "Review Approvals" },
   ]
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-8">
-      {/* Hero Header */}
-      <section className="space-y-1">
-        <h1 className="font-[var(--font-noto-serif)] text-4xl text-white">
+    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px 24px" }}>
+
+      {/* HERO HEADER */}
+      <div style={{ marginBottom: "32px" }}>
+        <h1 style={{
+          fontSize: "36px",
+          fontWeight: 800,
+          color: "#FFFFFF",
+          margin: "0 0 6px 0",
+          letterSpacing: "-0.02em",
+          lineHeight: 1.1,
+        }}>
           {greeting}, {userName} <span aria-hidden>&#x1F44B;</span>
         </h1>
-        <p className="text-[#a8a49c] text-sm tracking-wide">{dateStr}</p>
-      </section>
+        <p style={{
+          fontSize: "12px",
+          fontWeight: 600,
+          color: "#94A3B8",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase" as const,
+          margin: 0,
+        }}>
+          {dateStr}
+        </p>
+      </div>
 
-      {/* Location Tabs */}
-      <div className="flex items-center gap-1 bg-[#3a4347] p-1 rounded-lg w-fit">
-        {["Corpus Christi", "San Antonio", "Both"].map((loc, i) => (
-          <button key={loc} className={`px-6 py-2 text-xs font-bold rounded-lg transition-colors ${
-            i === 0
-              ? "text-[#CDC9C0] bg-[#142127] shadow-sm"
-              : "text-[#CDC9C0]/60 hover:text-[#CDC9C0]"
-          }`}>
+      {/* LOCATION TABS */}
+      <div style={{
+        display: "inline-flex",
+        gap: "2px",
+        backgroundColor: "#1a2a32",
+        padding: "4px",
+        borderRadius: "10px",
+        marginBottom: "28px",
+        border: "1px solid rgba(205,201,192,0.1)",
+      }}>
+        {["Corpus Christi", "San Antonio", "Both"].map((loc) => (
+          <button
+            key={loc}
+            onClick={() => setActiveLocation(loc)}
+            style={{
+              padding: "8px 20px",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+              borderRadius: "7px",
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: activeLocation === loc ? "#CDC9C0" : "transparent",
+              color: activeLocation === loc ? "#0f1d24" : "rgba(205,201,192,0.5)",
+              transition: "all 0.2s",
+            }}
+          >
             {loc}
           </button>
         ))}
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* METRIC CARDS */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "16px",
+        marginBottom: "24px",
+      }}>
         {metrics.map((m) => (
-          <div key={m.label} className="bg-[#4a5459] border border-[rgba(205,201,192,0.2)] p-6 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-[10px] font-bold text-[#CDC9C0] tracking-[0.1em] uppercase">{m.label}</span>
-              <span className="material-symbols-outlined text-[#CDC9C0]/40">{m.icon}</span>
+          <div key={m.label} style={{
+            backgroundColor: "#1a2a32",
+            border: "1px solid rgba(205,201,192,0.12)",
+            borderRadius: "12px",
+            padding: "24px",
+            transition: "transform 0.2s, box-shadow 0.2s",
+            cursor: "default",
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+              <span style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                color: "#CDC9C0",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase" as const,
+              }}>
+                {m.label}
+              </span>
+              <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "rgba(205,201,192,0.3)" }}>
+                {m.icon}
+              </span>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="font-[var(--font-noto-serif)] text-3xl text-white">{m.value}</span>
-              {m.trend && <span className="text-xs text-[#CDC9C0] font-bold flex items-center">
-                <span className="material-symbols-outlined text-sm mr-0.5">trending_flat</span>{m.trend}
-              </span>}
+            <div style={{
+              fontSize: "40px",
+              fontWeight: 800,
+              color: "#FFFFFF",
+              lineHeight: 1,
+              marginBottom: "8px",
+              letterSpacing: "-0.02em",
+            }}>
+              {m.value}
+            </div>
+            <div style={{ fontSize: "12px", color: "#94A3B8", fontWeight: 500 }}>
+              {m.sub}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Alert Summary Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {alerts.map((a) => (
-          <div key={a.label} className="bg-[#1f2c31] p-6 rounded-lg flex items-center justify-between cursor-pointer hover:bg-[#29373c] transition-colors">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#29373c] flex items-center justify-center text-[#CDC9C0]">
-                <span className="material-symbols-outlined">{a.icon}</span>
+      {/* STATUS CARDS */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "16px",
+        marginBottom: "24px",
+      }}>
+        {statusCards.map((s) => (
+          <div key={s.label} style={{
+            backgroundColor: "#1a2a32",
+            border: "1px solid rgba(205,201,192,0.12)",
+            borderRadius: "12px",
+            padding: "20px 24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            cursor: "pointer",
+            transition: "background-color 0.15s",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <div style={{
+                width: "44px",
+                height: "44px",
+                borderRadius: "10px",
+                backgroundColor: "rgba(205,201,192,0.08)",
+                border: "1px solid rgba(205,201,192,0.15)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#CDC9C0" }}>
+                  {s.icon}
+                </span>
               </div>
               <div>
-                <p className="text-[10px] font-bold tracking-wider text-[#CDC9C0] uppercase">{a.label}</p>
-                <p className="text-xs text-[#cac6bc]">{a.sub}</p>
+                <div style={{
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  color: "#CDC9C0",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase" as const,
+                  marginBottom: "3px",
+                }}>
+                  {s.label}
+                </div>
+                <div style={{ fontSize: "12px", color: "#94A3B8" }}>{s.sub}</div>
               </div>
             </div>
-            <span className="bg-[#29373c] text-[#CDC9C0] font-[var(--font-noto-serif)] text-xl px-3 py-1 rounded">{a.count}</span>
+            <div style={{
+              fontSize: "28px",
+              fontWeight: 800,
+              color: "#FFFFFF",
+              backgroundColor: "rgba(205,201,192,0.08)",
+              width: "52px",
+              height: "52px",
+              borderRadius: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+              {s.count}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-4 items-center bg-[#101d22]/50 p-6 rounded-xl border border-[rgba(205,201,192,0.1)]">
-        {[
-          { href: "/inventory/add", icon: "add", label: "Add Inventory" },
-          { href: "/schedule", icon: "calendar_today", label: "Build Schedule" },
-          { href: "/approvals", icon: "done_all", label: "Review Approvals" },
-        ].map(({ href, icon, label }) => (
-          <Link key={href} href={href} className="bg-transparent border border-[#CDC9C0] text-[#CDC9C0] px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#CDC9C0] hover:text-[#1a1a1a] transition-all flex items-center gap-2">
-            <span className="material-symbols-outlined text-sm">{icon}</span>
+      {/* QUICK ACTIONS */}
+      <div style={{
+        backgroundColor: "#1a2a32",
+        border: "1px solid rgba(205,201,192,0.12)",
+        borderRadius: "12px",
+        padding: "20px 24px",
+        display: "flex",
+        flexWrap: "wrap" as const,
+        gap: "12px",
+        alignItems: "center",
+        marginBottom: "24px",
+      }}>
+        <span style={{
+          fontSize: "10px",
+          fontWeight: 700,
+          color: "rgba(205,201,192,0.4)",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase" as const,
+          marginRight: "8px",
+        }}>
+          Quick Actions
+        </span>
+        {quickActions.map(({ href, icon, label }) => (
+          <Link key={href} href={href} style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "10px 20px",
+            backgroundColor: "transparent",
+            border: "1px solid rgba(205,201,192,0.3)",
+            borderRadius: "8px",
+            color: "#CDC9C0",
+            textDecoration: "none",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase" as const,
+            transition: "all 0.15s",
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>{icon}</span>
             {label}
           </Link>
         ))}
-        <Link href="/reyna-ai" className="bg-[#CDC9C0] text-[#1a1a1a] px-8 py-2.5 rounded-lg text-xs font-extrabold uppercase tracking-[0.15em] shadow-lg hover:brightness-110 transition-all flex items-center gap-2 ml-auto">
-          <span className="material-symbols-outlined text-sm">auto_awesome</span>
+        <Link href="/reyna-ai" style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          padding: "10px 24px",
+          backgroundColor: "#CDC9C0",
+          borderRadius: "8px",
+          color: "#0f1d24",
+          textDecoration: "none",
+          fontSize: "11px",
+          fontWeight: 800,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase" as const,
+          marginLeft: "auto",
+          boxShadow: "0 4px 12px rgba(205,201,192,0.2)",
+        }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>auto_awesome</span>
           Ask Reyna AI
         </Link>
       </div>
 
-      {/* Activity + Alerts Bento */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      {/* BENTO: ACTIVITY + ALERTS */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        gap: "24px",
+      }} className="lg:!grid-cols-[1fr_400px]">
         {/* Recent Activity */}
-        <div className="lg:col-span-3 bg-[#142127] p-8 rounded-xl min-h-[400px] flex flex-col">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="font-[var(--font-noto-serif)] text-xl text-white">Recent Activity</h3>
-            <span className="material-symbols-outlined text-[#CDC9C0]/40">history</span>
+        <div style={{
+          backgroundColor: "#1a2a32",
+          border: "1px solid rgba(205,201,192,0.12)",
+          borderRadius: "12px",
+          padding: "28px",
+          minHeight: "360px",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+            <h3 style={{ fontSize: "14px", fontWeight: 800, color: "#FFFFFF", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
+              Recent Activity
+            </h3>
+            <span className="material-symbols-outlined" style={{ color: "rgba(205,201,192,0.3)", fontSize: "20px" }}>history</span>
           </div>
-          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 opacity-40">
-            <div className="w-16 h-16 rounded-full border border-dashed border-[#CDC9C0]/40 flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl text-[#CDC9C0]">sync</span>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", opacity: 0.4 }}>
+            <div style={{
+              width: "56px",
+              height: "56px",
+              borderRadius: "50%",
+              border: "2px dashed rgba(205,201,192,0.4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "16px",
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "28px", color: "#CDC9C0" }}>sync</span>
             </div>
-            <div>
-              <p className="font-[var(--font-noto-serif)] text-lg italic text-[#e9e5dc]">Awaiting Activity</p>
-              <p className="text-sm text-[#cac6bc]">The portal is currently synchronized.</p>
-            </div>
+            <p style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 4px" }}>Awaiting Activity</p>
+            <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>The portal is synchronized.</p>
           </div>
         </div>
 
         {/* Admin Alerts */}
-        <div className="lg:col-span-2 space-y-4">
-          <h3 className="text-xs font-bold text-[#CDC9C0] tracking-[0.2em] uppercase px-2">Admin Alerts</h3>
-          <div className="bg-[#1f2c31] p-5 rounded-lg border-l-4 border-[#ffb4ab]">
-            <div className="flex items-start gap-4">
-              <span className="material-symbols-outlined text-[#ffb4ab]">priority_high</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <h3 style={{ fontSize: "10px", fontWeight: 800, color: "#CDC9C0", letterSpacing: "0.2em", textTransform: "uppercase" as const, margin: "0 0 4px" }}>
+            Admin Alerts
+          </h3>
+          {[
+            { priority: "URGENT", color: "#EF4444", icon: "priority_high", text: "End of month reconciliation due in 48 hours." },
+            { priority: "HIGH", color: "#F59E0B", icon: "warning", text: "3 staff members have not confirmed their schedules." },
+            { priority: "MEDIUM", color: "#CDC9C0", icon: "info", text: "Quarterly inventory audit scheduled for next Monday." },
+          ].map((alert) => (
+            <div key={alert.priority} style={{
+              backgroundColor: "#1a2a32",
+              border: "1px solid rgba(205,201,192,0.1)",
+              borderLeft: `4px solid ${alert.color}`,
+              borderRadius: "0 10px 10px 0",
+              padding: "16px 18px",
+              display: "flex",
+              gap: "14px",
+            }}>
+              <span className="material-symbols-outlined" style={{ color: alert.color, fontSize: "20px", flexShrink: 0 }}>{alert.icon}</span>
               <div>
-                <p className="text-xs font-bold text-[#ffb4ab] uppercase tracking-wider">Urgent</p>
-                <p className="text-sm text-[#d6e5ec]">End of month reconciliation due in 48 hours.</p>
+                <div style={{ fontSize: "10px", fontWeight: 800, color: alert.color, letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "4px" }}>
+                  {alert.priority}
+                </div>
+                <div style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: 1.4 }}>{alert.text}</div>
               </div>
             </div>
-          </div>
-          <div className="bg-[#1f2c31] p-5 rounded-lg border-l-4 border-[#ffb000]">
-            <div className="flex items-start gap-4">
-              <span className="material-symbols-outlined text-[#ffb000]">warning</span>
-              <div>
-                <p className="text-xs font-bold text-[#ffb000] uppercase tracking-wider">High Priority</p>
-                <p className="text-sm text-[#d6e5ec]">3 staff members have not confirmed their schedules.</p>
-              </div>
+          ))}
+          <div style={{
+            backgroundColor: "#0a151b",
+            border: "1px solid rgba(205,201,192,0.1)",
+            borderRadius: "10px",
+            padding: "24px",
+            textAlign: "center" as const,
+          }}>
+            <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, marginBottom: "8px" }}>
+              System Health
             </div>
-          </div>
-          <div className="bg-[#1f2c31] p-5 rounded-lg border-l-4 border-[#CDC9C0]">
-            <div className="flex items-start gap-4">
-              <span className="material-symbols-outlined text-[#CDC9C0]">info</span>
-              <div>
-                <p className="text-xs font-bold text-[#CDC9C0] uppercase tracking-wider">Medium</p>
-                <p className="text-sm text-[#d6e5ec]">Quarterly inventory audit scheduled for next Monday.</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-[#031015] p-8 rounded-xl border border-[rgba(205,201,192,0.1)] text-center space-y-2">
-            <p className="text-[10px] text-[#CDC9C0]/40 uppercase tracking-[0.3em]">System Health</p>
-            <p className="font-[var(--font-noto-serif)] text-2xl text-white">Optimal</p>
-            <div className="flex justify-center gap-1">
-              <div className="h-1 w-8 bg-[#CDC9C0] rounded-full"></div>
-              <div className="h-1 w-8 bg-[#CDC9C0]/20 rounded-full"></div>
-              <div className="h-1 w-8 bg-[#CDC9C0]/20 rounded-full"></div>
+            <div style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", marginBottom: "12px" }}>Optimal</div>
+            <div style={{ display: "flex", justifyContent: "center", gap: "4px" }}>
+              <div style={{ height: "3px", width: "32px", backgroundColor: "#CDC9C0", borderRadius: "4px" }} />
+              <div style={{ height: "3px", width: "32px", backgroundColor: "rgba(205,201,192,0.2)", borderRadius: "4px" }} />
+              <div style={{ height: "3px", width: "32px", backgroundColor: "rgba(205,201,192,0.2)", borderRadius: "4px" }} />
             </div>
           </div>
         </div>

@@ -1,115 +1,263 @@
-"use client";
-
-import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+"use client"
+import { useState } from "react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError("")
+    const result = await signIn("credentials", { email, password, redirect: false })
     if (result?.error) {
-      setError("Invalid email or password");
-      setLoading(false);
+      setError("Invalid email or password")
+      setLoading(false)
     } else {
-      router.push("/dashboard");
+      router.push("/dashboard")
     }
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-[#07151a] md:flex-row">
-      {/* Google Fonts for Material Symbols */}
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=swap" />
+    <div style={{ minHeight: "100vh", display: "flex", backgroundColor: "#0f1d24" }}>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
 
-      {/* Left: brand */}
-      <div className="relative order-1 flex min-h-[42vh] flex-1 flex-col items-center justify-center overflow-hidden bg-[#142127] px-6 py-12 md:order-none md:min-h-0 md:flex-[1.15] md:py-0">
-        <div
-          className="pointer-events-none absolute inset-0"
+      {/* LEFT — Brand panel */}
+      <div style={{
+        flex: "0 0 50%",
+        backgroundColor: "#0a151b",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px 48px",
+        position: "relative",
+        overflow: "hidden",
+      }} className="hidden md:flex">
+        <div style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "400px",
+          height: "400px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(205,201,192,0.06) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
+
+        <img
+          src="/images/logo-white.png"
+          alt="Salon Envy"
           style={{
-            background:
-              "radial-gradient(ellipse 85% 70% at 50% 38%, rgba(205,201,192,0.12) 0%, rgba(7,21,26,0.4) 55%, #07151a 100%)",
+            width: "240px",
+            height: "auto",
+            objectFit: "contain",
+            marginBottom: "32px",
+            position: "relative",
+            zIndex: 1,
           }}
         />
-        <div className="relative z-10 max-w-lg text-center space-y-8">
-          <div
-            className="mx-auto inline-block"
-            style={{
-              filter: "drop-shadow(0 0 40px rgba(205,201,192,0.2)) drop-shadow(0 0 80px rgba(205,201,192,0.08))",
-            }}
-          >
-            <img
-              src="/images/logo-white.png"
-              alt="Salon Envy®"
-              style={{ width: "200px", height: "auto", objectFit: "contain" }}
-            />
-          </div>
-          <p className="mx-auto max-w-sm text-base leading-relaxed text-[#CDC9C0]/60 italic font-[var(--font-noto-serif)] md:text-lg">
-            Empowering Your Salon. Elevating Your Team.
-          </p>
+
+        <div style={{
+          fontSize: "13px",
+          fontWeight: 600,
+          color: "rgba(205,201,192,0.6)",
+          letterSpacing: "0.12em",
+          textTransform: "uppercase" as const,
+          textAlign: "center" as const,
+          position: "relative",
+          zIndex: 1,
+          lineHeight: 1.8,
+        }}>
+          Empowering Your Salon<br />
+          <span style={{ color: "#CDC9C0" }}>Elevating Your Team</span>
+        </div>
+
+        <div style={{
+          position: "absolute",
+          bottom: "32px",
+          fontSize: "10px",
+          fontWeight: 600,
+          color: "rgba(205,201,192,0.25)",
+          letterSpacing: "0.2em",
+          textTransform: "uppercase" as const,
+        }}>
+          Management Portal
         </div>
       </div>
 
-      {/* Right: form */}
-      <div className="order-2 flex w-full flex-1 items-center justify-center bg-[#07151a] px-4 pb-10 pt-4 md:max-w-[min(100%,560px)] md:px-8 md:pb-0 md:pt-0">
-        <div className="w-full max-w-md rounded-t-3xl border border-b-0 border-[rgba(205,201,192,0.15)] bg-[#1f2c31] p-8 shadow-2xl md:rounded-3xl md:border md:shadow-[0_32px_90px_-24px_rgba(0,0,0,0.75)]">
-          <h2 className="text-2xl font-semibold tracking-tight text-[#e9e5dc]">Welcome back</h2>
-          <p className="mt-1 text-sm text-[#CDC9C0]/50">Sign in to the management portal</p>
+      {/* RIGHT — Login form */}
+      <div style={{
+        flex: 1,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "40px 32px",
+        backgroundColor: "#142127",
+      }}>
+        <div style={{ width: "100%", maxWidth: "420px" }}>
+          <div className="md:hidden" style={{ textAlign: "center" as const, marginBottom: "32px" }}>
+            <img src="/images/logo-white.png" alt="Salon Envy" style={{ height: "60px", width: "auto" }} />
+          </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
+          <h2 style={{
+            fontSize: "28px",
+            fontWeight: 800,
+            color: "#FFFFFF",
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+          }}>
+            Welcome back
+          </h2>
+          <p style={{
+            fontSize: "14px",
+            color: "#94A3B8",
+            margin: "0 0 36px",
+            fontWeight: 500,
+          }}>
+            Sign in to your Salon Envy® portal
+          </p>
+
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div>
-              <label className="mb-2 block text-sm font-medium text-[#CDC9C0]/70">Email</label>
+              <label style={{
+                display: "block",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "#CDC9C0",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase" as const,
+                marginBottom: "8px",
+              }}>Email Address</label>
               <input
                 type="email"
-                autoComplete="email"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@salon.com"
-                className="w-full rounded-xl border border-[rgba(205,201,192,0.2)] bg-[#142127] px-4 py-3 text-[#e9e5dc] outline-none transition placeholder:text-[#CDC9C0]/30 focus:border-[#CDC9C0] focus:ring-2 focus:ring-[#CDC9C0]/30 focus:ring-offset-0"
+                required
+                autoComplete="email"
+                placeholder="you@example.com"
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  backgroundColor: "#1a2a32",
+                  border: "1px solid rgba(205,201,192,0.2)",
+                  borderRadius: "8px",
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  boxSizing: "border-box" as const,
+                  outline: "none",
+                  transition: "border-color 0.15s",
+                }}
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-[#CDC9C0]/70">Password</label>
+              <label style={{
+                display: "block",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "#CDC9C0",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase" as const,
+                marginBottom: "8px",
+              }}>Password</label>
               <input
                 type="password"
-                autoComplete="current-password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-xl border border-[rgba(205,201,192,0.2)] bg-[#142127] px-4 py-3 text-[#e9e5dc] outline-none transition placeholder:text-[#CDC9C0]/30 focus:border-[#CDC9C0] focus:ring-2 focus:ring-[#CDC9C0]/30 focus:ring-offset-0"
+                required
+                autoComplete="current-password"
+                placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  backgroundColor: "#1a2a32",
+                  border: "1px solid rgba(205,201,192,0.2)",
+                  borderRadius: "8px",
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  boxSizing: "border-box" as const,
+                  outline: "none",
+                  transition: "border-color 0.15s",
+                }}
               />
             </div>
-            {error ? <p className="text-sm text-[#ffb4ab]">{error}</p> : null}
+
+            {error && (
+              <div style={{
+                padding: "12px 16px",
+                backgroundColor: "rgba(239,68,68,0.1)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                borderRadius: "8px",
+                color: "#FCA5A5",
+                fontSize: "13px",
+                fontWeight: 500,
+              }}>
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 w-full rounded-xl bg-[#CDC9C0] py-3.5 text-base font-semibold text-[#1a1a1a] shadow-[0_8px_32px_-8px_rgba(205,201,192,0.35)] transition hover:brightness-110 disabled:opacity-60"
+              style={{
+                width: "100%",
+                padding: "14px",
+                backgroundColor: loading ? "rgba(205,201,192,0.5)" : "#CDC9C0",
+                color: "#0f1d24",
+                fontSize: "12px",
+                fontWeight: 800,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase" as const,
+                borderRadius: "8px",
+                border: "none",
+                cursor: loading ? "not-allowed" : "pointer",
+                marginTop: "4px",
+                transition: "all 0.15s",
+                boxShadow: "0 4px 16px rgba(205,201,192,0.2)",
+              }}
             >
-              {loading ? "Signing in\u2026" : "Sign In"}
+              {loading ? "Signing in..." : "Sign In"}
             </button>
-          </form>
 
-          <p className="mt-8 text-center">
-            <Link href="#" className="text-sm font-medium text-[#CDC9C0] underline-offset-4 hover:underline">
-              Forgot password?
-            </Link>
-          </p>
+            <div style={{ textAlign: "center" as const, marginTop: "8px" }}>
+              <a href="#" style={{
+                fontSize: "12px",
+                color: "rgba(205,201,192,0.6)",
+                textDecoration: "none",
+                fontWeight: 600,
+              }}>
+                Forgot your password?
+              </a>
+            </div>
+
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              margin: "8px 0",
+            }}>
+              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(205,201,192,0.15)" }} />
+              <span style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.1em" }}>or</span>
+              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(205,201,192,0.15)" }} />
+            </div>
+
+            <p style={{ textAlign: "center" as const, fontSize: "12px", color: "#94A3B8", margin: "4px 0 0" }}>
+              New to Salon Envy® Portal?{" "}
+              <a href="/onboarding" style={{ color: "#CDC9C0", fontWeight: 700, textDecoration: "none" }}>
+                Request Access
+              </a>
+            </p>
+          </form>
         </div>
       </div>
     </div>
-  );
+  )
 }
