@@ -99,52 +99,50 @@ export function PortalShell({
 
       {/* SIDEBAR */}
       <aside style={{
-        width: "280px",
-        minWidth: "280px",
+        width: "240px",
+        minWidth: "240px",
         backgroundColor: "#0a1520",
         display: "flex",
         flexDirection: "column",
         height: "100vh",
         position: "sticky",
         top: 0,
-        borderRight: "1px solid rgba(205,201,192,0.1)",
+        borderRight: "1px solid rgba(205,201,192,0.08)",
         overflow: "hidden",
       }} className="hidden md:flex">
 
         {/* Logo section */}
         <div style={{
-          padding: "20px 24px",
-          minHeight: "80px",
+          padding: "16px 20px",
           backgroundColor: "#060e14",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
         }}>
-          <SalonEnvyLogo width={160} />
+          <SalonEnvyLogo width={140} />
           <div style={{
-            marginTop: "10px",
-            fontSize: "9px",
+            marginTop: "8px",
+            fontSize: "8px",
             fontWeight: 700,
-            letterSpacing: "0.2em",
+            letterSpacing: "0.25em",
             color: "rgba(205,201,192,0.4)",
             textTransform: "uppercase" as const,
           }}>
             Management Portal
           </div>
         </div>
-        {/* Gold accent line */}
-        <div style={{ height: "1px", backgroundColor: "rgba(205,201,192,0.25)" }} />
+        <div style={{ height: "1px", backgroundColor: "rgba(205,201,192,0.2)" }} />
 
         {/* Nav sections */}
-        <nav style={{ flex: 1, overflowY: "auto", padding: "16px 0" }}>
+        <nav style={{ flex: 1, overflowY: "auto", padding: "12px 0" }}>
           {visibleSections.map((section) => (
-            <div key={section.label} style={{ marginBottom: "8px" }}>
+            <div key={section.label} style={{ marginBottom: "4px" }}>
               <div style={{
-                padding: "8px 24px 4px",
+                padding: "12px 20px 4px",
                 fontSize: "9px",
                 fontWeight: 800,
                 letterSpacing: "0.2em",
-                color: "rgba(205,201,192,0.4)",
+                color: "rgba(205,201,192,0.35)",
                 textTransform: "uppercase" as const,
               }}>
                 {section.label}
@@ -158,24 +156,24 @@ export function PortalShell({
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "10px 24px",
+                      padding: "9px 20px",
                       fontSize: "11px",
-                      fontWeight: 700,
-                      letterSpacing: "0.1em",
+                      fontWeight: 600,
+                      letterSpacing: "0.08em",
                       textTransform: "uppercase" as const,
                       textDecoration: "none",
-                      borderLeft: isActive ? "3px solid #CDC9C0" : "3px solid transparent",
-                      backgroundColor: isActive ? "rgba(205,201,192,0.08)" : "transparent",
-                      color: isActive ? "#FFFFFF" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.6)",
+                      borderLeft: isActive ? "2px solid #CDC9C0" : "2px solid transparent",
+                      backgroundColor: isActive ? "rgba(205,201,192,0.06)" : "transparent",
+                      color: isActive ? "#FFFFFF" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.55)",
                       transition: "all 0.15s ease",
                     }}
                   >
                     <span
                       className="material-symbols-outlined"
                       style={{
-                        fontSize: "18px",
-                        marginRight: "12px",
-                        color: isActive ? "#CDC9C0" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.5)",
+                        fontSize: "17px",
+                        marginRight: "10px",
+                        color: isActive ? "#CDC9C0" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.4)",
                       }}
                     >
                       {item.icon}
@@ -183,8 +181,8 @@ export function PortalShell({
                     <span style={{ flex: 1 }}>{item.label}</span>
                     {item.badge && (
                       <span style={{
-                        width: "8px",
-                        height: "8px",
+                        width: "6px",
+                        height: "6px",
                         borderRadius: "50%",
                         backgroundColor: "#EF4444",
                       }} />
@@ -198,22 +196,22 @@ export function PortalShell({
 
         {/* User section */}
         <div style={{
-          padding: "16px 24px",
-          borderTop: "1px solid rgba(205,201,192,0.1)",
+          padding: "14px 20px",
+          borderTop: "1px solid rgba(205,201,192,0.08)",
           backgroundColor: "#060e14",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
             <div style={{
-              width: "40px",
-              height: "40px",
+              width: "34px",
+              height: "34px",
               borderRadius: "50%",
-              backgroundColor: "rgba(205,201,192,0.1)",
-              border: "2px solid rgba(205,201,192,0.3)",
+              backgroundColor: "rgba(205,201,192,0.08)",
+              border: "1.5px solid rgba(205,201,192,0.25)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "#CDC9C0",
-              fontSize: "14px",
+              fontSize: "12px",
               fontWeight: 800,
               flexShrink: 0,
             }}>
@@ -222,7 +220,7 @@ export function PortalShell({
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{
                 color: "#FFFFFF",
-                fontSize: "13px",
+                fontSize: "12px",
                 fontWeight: 700,
                 whiteSpace: "nowrap" as const,
                 overflow: "hidden",
@@ -232,49 +230,47 @@ export function PortalShell({
               </div>
               <div style={{
                 color: "#CDC9C0",
-                fontSize: "10px",
+                fontSize: "9px",
                 fontWeight: 600,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase" as const,
-                opacity: 0.7,
+                opacity: 0.6,
               }}>
                 {userRole}
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div style={{ display: "flex", gap: "6px" }}>
             <Link href="/profile" style={{
               flex: 1,
-              padding: "8px",
-              backgroundColor: "rgba(205,201,192,0.08)",
-              border: "1px solid rgba(205,201,192,0.15)",
+              padding: "7px",
+              backgroundColor: "rgba(205,201,192,0.06)",
+              border: "1px solid rgba(205,201,192,0.12)",
               borderRadius: "6px",
-              color: "rgba(205,201,192,0.7)",
+              color: "rgba(205,201,192,0.6)",
               textDecoration: "none",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              transition: "all 0.15s",
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>settings</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>settings</span>
             </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
               style={{
                 flex: 1,
-                padding: "8px",
-                backgroundColor: "rgba(205,201,192,0.08)",
-                border: "1px solid rgba(205,201,192,0.15)",
+                padding: "7px",
+                backgroundColor: "rgba(205,201,192,0.06)",
+                border: "1px solid rgba(205,201,192,0.12)",
                 borderRadius: "6px",
-                color: "rgba(205,201,192,0.7)",
+                color: "rgba(205,201,192,0.6)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "all 0.15s",
               }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>logout</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>logout</span>
             </button>
           </div>
         </div>
@@ -285,71 +281,70 @@ export function PortalShell({
 
         {/* TOP BAR */}
         <header style={{
-          height: "64px",
+          height: "56px",
           backgroundColor: "#0f1d24",
-          borderBottom: "1px solid rgba(205,201,192,0.1)",
+          borderBottom: "1px solid rgba(205,201,192,0.08)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0 24px",
+          padding: "0 20px",
           position: "sticky",
           top: 0,
           zIndex: 40,
           flexShrink: 0,
         }}>
           <div className="md:hidden">
-            <SalonEnvyLogo width={120} />
+            <SalonEnvyLogo width={100} />
           </div>
-          <div className="hidden md:block" style={{ color: "#FFFFFF", fontSize: "16px", fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>
+          <div className="hidden md:block" style={{ color: "#FFFFFF", fontSize: "13px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const }}>
             Salon Envy® Portal
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <button style={{
-              width: "36px",
-              height: "36px",
-              borderRadius: "8px",
-              backgroundColor: "rgba(205,201,192,0.08)",
-              border: "1px solid rgba(205,201,192,0.15)",
-              color: "rgba(205,201,192,0.7)",
+              width: "32px",
+              height: "32px",
+              borderRadius: "7px",
+              backgroundColor: "rgba(205,201,192,0.06)",
+              border: "1px solid rgba(205,201,192,0.12)",
+              color: "rgba(205,201,192,0.6)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              position: "relative",
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>notifications</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>notifications</span>
             </button>
 
             <Link href="/reyna-ai" style={{
               display: "flex",
               alignItems: "center",
-              gap: "6px",
-              padding: "8px 16px",
+              gap: "5px",
+              padding: "7px 14px",
               backgroundColor: "#CDC9C0",
-              borderRadius: "8px",
+              borderRadius: "7px",
               color: "#0f1d24",
               textDecoration: "none",
-              fontSize: "11px",
+              fontSize: "10px",
               fontWeight: 800,
               letterSpacing: "0.1em",
               textTransform: "uppercase" as const,
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>auto_awesome</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>auto_awesome</span>
               Reyna AI
             </Link>
 
             <div style={{
-              width: "36px",
-              height: "36px",
+              width: "32px",
+              height: "32px",
               borderRadius: "50%",
-              backgroundColor: "rgba(205,201,192,0.1)",
-              border: "2px solid rgba(205,201,192,0.3)",
+              backgroundColor: "rgba(205,201,192,0.08)",
+              border: "1.5px solid rgba(205,201,192,0.25)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "#CDC9C0",
-              fontSize: "12px",
+              fontSize: "11px",
               fontWeight: 800,
             }}>
               {initials}
@@ -362,7 +357,7 @@ export function PortalShell({
           flex: 1,
           backgroundColor: "#1e2d35",
           overflowY: "auto",
-          paddingBottom: "80px",
+          paddingBottom: "72px",
         }}>
           {children}
         </main>
@@ -374,9 +369,9 @@ export function PortalShell({
         bottom: 0,
         left: 0,
         right: 0,
-        height: "64px",
+        height: "56px",
         backgroundColor: "#0f1d24",
-        borderTop: "1px solid rgba(205,201,192,0.15)",
+        borderTop: "1px solid rgba(205,201,192,0.1)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -389,16 +384,16 @@ export function PortalShell({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "2px",
-              color: isActive ? "#CDC9C0" : "rgba(205,201,192,0.4)",
+              gap: "1px",
+              color: isActive ? "#CDC9C0" : "rgba(205,201,192,0.35)",
               textDecoration: "none",
-              fontSize: "9px",
+              fontSize: "8px",
               fontWeight: 700,
               letterSpacing: "0.08em",
               textTransform: "uppercase" as const,
-              padding: "8px 12px",
+              padding: "6px 10px",
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>{icon}</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>{icon}</span>
               {label}
             </Link>
           )

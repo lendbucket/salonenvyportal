@@ -45,22 +45,22 @@ export default function LoginPage() {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "400px",
-          height: "400px",
+          width: "360px",
+          height: "360px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(205,201,192,0.06) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(205,201,192,0.05) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
 
-        <div style={{ marginBottom: "32px", position: "relative", zIndex: 1 }}>
-          <SalonEnvyLogo width={240} />
+        <div style={{ marginBottom: "28px", position: "relative", zIndex: 1 }}>
+          <SalonEnvyLogo width={200} />
         </div>
 
         <div style={{
-          fontSize: "13px",
+          fontSize: "12px",
           fontWeight: 600,
-          color: "rgba(205,201,192,0.6)",
-          letterSpacing: "0.12em",
+          color: "rgba(205,201,192,0.5)",
+          letterSpacing: "0.15em",
           textTransform: "uppercase" as const,
           textAlign: "center" as const,
           position: "relative",
@@ -73,10 +73,10 @@ export default function LoginPage() {
 
         <div style={{
           position: "absolute",
-          bottom: "32px",
-          fontSize: "10px",
+          bottom: "28px",
+          fontSize: "9px",
           fontWeight: 600,
-          color: "rgba(205,201,192,0.25)",
+          color: "rgba(205,201,192,0.2)",
           letterSpacing: "0.2em",
           textTransform: "uppercase" as const,
         }}>
@@ -90,42 +90,49 @@ export default function LoginPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "40px 32px",
+        padding: "40px 40px",
         backgroundColor: "#142127",
       }}>
-        <div style={{ width: "100%", maxWidth: "420px" }}>
-          <div className="md:hidden" style={{ textAlign: "center" as const, marginBottom: "32px" }}>
+        <div style={{
+          width: "100%",
+          maxWidth: "400px",
+          boxShadow: "inset 0 0 0 1px rgba(205,201,192,0.08)",
+          borderRadius: "10px",
+          padding: "36px",
+          backgroundColor: "#142127",
+        }}>
+          <div className="md:hidden" style={{ textAlign: "center" as const, marginBottom: "28px" }}>
             <SalonEnvyLogo width={140} />
           </div>
 
           <h2 style={{
-            fontSize: "28px",
+            fontSize: "26px",
             fontWeight: 800,
             color: "#FFFFFF",
-            margin: "0 0 8px",
+            margin: "0 0 6px",
             letterSpacing: "-0.02em",
           }}>
             Welcome back
           </h2>
           <p style={{
-            fontSize: "14px",
+            fontSize: "13px",
             color: "#94A3B8",
-            margin: "0 0 36px",
+            margin: "0 0 32px",
             fontWeight: 500,
           }}>
             Sign in to your Salon Envy® portal
           </p>
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             <div>
               <label style={{
                 display: "block",
-                fontSize: "11px",
+                fontSize: "10px",
                 fontWeight: 700,
                 color: "#CDC9C0",
-                letterSpacing: "0.1em",
+                letterSpacing: "0.12em",
                 textTransform: "uppercase" as const,
-                marginBottom: "8px",
+                marginBottom: "7px",
               }}>Email Address</label>
               <input
                 type="email"
@@ -136,12 +143,12 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 style={{
                   width: "100%",
-                  padding: "12px 16px",
+                  padding: "11px 14px",
                   backgroundColor: "#1a2a32",
-                  border: "1px solid rgba(205,201,192,0.2)",
-                  borderRadius: "8px",
+                  border: "1px solid rgba(205,201,192,0.15)",
+                  borderRadius: "7px",
                   color: "#FFFFFF",
-                  fontSize: "14px",
+                  fontSize: "13px",
                   fontWeight: 500,
                   boxSizing: "border-box" as const,
                   outline: "none",
@@ -152,12 +159,12 @@ export default function LoginPage() {
             <div>
               <label style={{
                 display: "block",
-                fontSize: "11px",
+                fontSize: "10px",
                 fontWeight: 700,
                 color: "#CDC9C0",
-                letterSpacing: "0.1em",
+                letterSpacing: "0.12em",
                 textTransform: "uppercase" as const,
-                marginBottom: "8px",
+                marginBottom: "7px",
               }}>Password</label>
               <input
                 type="password"
@@ -168,12 +175,12 @@ export default function LoginPage() {
                 placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
                 style={{
                   width: "100%",
-                  padding: "12px 16px",
+                  padding: "11px 14px",
                   backgroundColor: "#1a2a32",
-                  border: "1px solid rgba(205,201,192,0.2)",
-                  borderRadius: "8px",
+                  border: "1px solid rgba(205,201,192,0.15)",
+                  borderRadius: "7px",
                   color: "#FFFFFF",
-                  fontSize: "14px",
+                  fontSize: "13px",
                   fontWeight: 500,
                   boxSizing: "border-box" as const,
                   outline: "none",
@@ -184,12 +191,12 @@ export default function LoginPage() {
 
             {error && (
               <div style={{
-                padding: "12px 16px",
-                backgroundColor: "rgba(239,68,68,0.1)",
-                border: "1px solid rgba(239,68,68,0.3)",
-                borderRadius: "8px",
+                padding: "10px 14px",
+                backgroundColor: "rgba(239,68,68,0.08)",
+                border: "1px solid rgba(239,68,68,0.25)",
+                borderRadius: "7px",
                 color: "#FCA5A5",
-                fontSize: "13px",
+                fontSize: "12px",
                 fontWeight: 500,
               }}>
                 {error}
@@ -201,28 +208,27 @@ export default function LoginPage() {
               disabled={loading}
               style={{
                 width: "100%",
-                padding: "14px",
+                padding: "13px",
                 backgroundColor: loading ? "rgba(205,201,192,0.5)" : "#CDC9C0",
                 color: "#0f1d24",
-                fontSize: "12px",
+                fontSize: "11px",
                 fontWeight: 800,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase" as const,
-                borderRadius: "8px",
+                borderRadius: "7px",
                 border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
                 marginTop: "4px",
-                transition: "all 0.15s",
-                boxShadow: "0 4px 16px rgba(205,201,192,0.2)",
+                boxShadow: "0 2px 12px rgba(205,201,192,0.15)",
               }}
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
 
-            <div style={{ textAlign: "center" as const, marginTop: "8px" }}>
+            <div style={{ textAlign: "center" as const, marginTop: "6px" }}>
               <a href="#" style={{
-                fontSize: "12px",
-                color: "rgba(205,201,192,0.6)",
+                fontSize: "11px",
+                color: "rgba(205,201,192,0.5)",
                 textDecoration: "none",
                 fontWeight: 600,
               }}>
@@ -233,15 +239,15 @@ export default function LoginPage() {
             <div style={{
               display: "flex",
               alignItems: "center",
-              gap: "16px",
-              margin: "8px 0",
+              gap: "14px",
+              margin: "6px 0",
             }}>
-              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(205,201,192,0.15)" }} />
-              <span style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.1em" }}>or</span>
-              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(205,201,192,0.15)" }} />
+              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(205,201,192,0.1)" }} />
+              <span style={{ fontSize: "10px", color: "#94A3B8", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.1em" }}>or</span>
+              <div style={{ flex: 1, height: "1px", backgroundColor: "rgba(205,201,192,0.1)" }} />
             </div>
 
-            <p style={{ textAlign: "center" as const, fontSize: "12px", color: "#94A3B8", margin: "4px 0 0" }}>
+            <p style={{ textAlign: "center" as const, fontSize: "11px", color: "#94A3B8", margin: "2px 0 0" }}>
               New to Salon Envy® Portal?{" "}
               <a href="/onboarding" style={{ color: "#CDC9C0", fontWeight: 700, textDecoration: "none" }}>
                 Request Access

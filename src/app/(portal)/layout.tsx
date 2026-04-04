@@ -7,7 +7,9 @@ export default function PortalLayout({
 }) {
   return (
     <PortalShell userName="Robert" userEmail="ceo@36west.org" userRole="OWNER">
-      {children}
+      <div style={{ animation: "fadeIn 0.2s ease" }}>
+        {children}
+      </div>
     </PortalShell>
   )
 }

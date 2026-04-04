@@ -33,22 +33,22 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px 24px" }}>
+    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px" }}>
 
       {/* HERO HEADER */}
-      <div style={{ marginBottom: "32px" }}>
+      <div style={{ marginBottom: "28px" }}>
         <h1 style={{
-          fontSize: "36px",
+          fontSize: "32px",
           fontWeight: 800,
           color: "#FFFFFF",
-          margin: "0 0 6px 0",
+          margin: "0 0 5px 0",
           letterSpacing: "-0.02em",
           lineHeight: 1.1,
         }}>
           {greeting}, {userName} <span aria-hidden>&#x1F44B;</span>
         </h1>
         <p style={{
-          fontSize: "12px",
+          fontSize: "11px",
           fontWeight: 600,
           color: "#94A3B8",
           letterSpacing: "0.15em",
@@ -64,27 +64,27 @@ export default function DashboardPage() {
         display: "inline-flex",
         gap: "2px",
         backgroundColor: "#1a2a32",
-        padding: "4px",
-        borderRadius: "10px",
-        marginBottom: "28px",
-        border: "1px solid rgba(205,201,192,0.1)",
+        padding: "3px",
+        borderRadius: "8px",
+        marginBottom: "24px",
+        border: "1px solid rgba(205,201,192,0.08)",
       }}>
         {["Corpus Christi", "San Antonio", "Both"].map((loc) => (
           <button
             key={loc}
             onClick={() => setActiveLocation(loc)}
             style={{
-              padding: "8px 20px",
-              fontSize: "11px",
+              padding: "7px 16px",
+              fontSize: "10px",
               fontWeight: 700,
               letterSpacing: "0.08em",
               textTransform: "uppercase" as const,
-              borderRadius: "7px",
+              borderRadius: "6px",
               border: "none",
               cursor: "pointer",
               backgroundColor: activeLocation === loc ? "#CDC9C0" : "transparent",
-              color: activeLocation === loc ? "#0f1d24" : "rgba(205,201,192,0.5)",
-              transition: "all 0.2s",
+              color: activeLocation === loc ? "#0f1d24" : "rgba(205,201,192,0.45)",
+              transition: "all 0.15s",
             }}
           >
             {loc}
@@ -95,22 +95,22 @@ export default function DashboardPage() {
       {/* METRIC CARDS */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: "16px",
-        marginBottom: "24px",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "14px",
+        marginBottom: "20px",
       }}>
         {metrics.map((m) => (
           <div key={m.label} style={{
             backgroundColor: "#1a2a32",
-            border: "1px solid rgba(205,201,192,0.12)",
-            borderRadius: "12px",
-            padding: "24px",
-            transition: "transform 0.2s, box-shadow 0.2s",
+            border: "1px solid rgba(205,201,192,0.1)",
+            borderRadius: "10px",
+            padding: "20px",
+            transition: "transform 0.15s, box-shadow 0.15s",
             cursor: "default",
           }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
               <span style={{
-                fontSize: "10px",
+                fontSize: "9px",
                 fontWeight: 700,
                 color: "#CDC9C0",
                 letterSpacing: "0.12em",
@@ -118,21 +118,21 @@ export default function DashboardPage() {
               }}>
                 {m.label}
               </span>
-              <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "rgba(205,201,192,0.3)" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "rgba(205,201,192,0.25)" }}>
                 {m.icon}
               </span>
             </div>
             <div style={{
-              fontSize: "40px",
+              fontSize: "32px",
               fontWeight: 800,
               color: "#FFFFFF",
               lineHeight: 1,
-              marginBottom: "8px",
+              marginBottom: "6px",
               letterSpacing: "-0.02em",
             }}>
               {m.value}
             </div>
-            <div style={{ fontSize: "12px", color: "#94A3B8", fontWeight: 500 }}>
+            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
               {m.sub}
             </div>
           </div>
@@ -142,59 +142,59 @@ export default function DashboardPage() {
       {/* STATUS CARDS */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: "16px",
-        marginBottom: "24px",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "14px",
+        marginBottom: "20px",
       }}>
         {statusCards.map((s) => (
           <div key={s.label} style={{
             backgroundColor: "#1a2a32",
-            border: "1px solid rgba(205,201,192,0.12)",
-            borderRadius: "12px",
-            padding: "20px 24px",
+            border: "1px solid rgba(205,201,192,0.1)",
+            borderRadius: "10px",
+            padding: "16px 20px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             cursor: "pointer",
             transition: "background-color 0.15s",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
               <div style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "10px",
-                backgroundColor: "rgba(205,201,192,0.08)",
-                border: "1px solid rgba(205,201,192,0.15)",
+                width: "36px",
+                height: "36px",
+                borderRadius: "8px",
+                backgroundColor: "rgba(205,201,192,0.06)",
+                border: "1px solid rgba(205,201,192,0.12)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#CDC9C0" }}>
+                <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>
                   {s.icon}
                 </span>
               </div>
               <div>
                 <div style={{
-                  fontSize: "10px",
+                  fontSize: "9px",
                   fontWeight: 700,
                   color: "#CDC9C0",
                   letterSpacing: "0.12em",
                   textTransform: "uppercase" as const,
-                  marginBottom: "3px",
+                  marginBottom: "2px",
                 }}>
                   {s.label}
                 </div>
-                <div style={{ fontSize: "12px", color: "#94A3B8" }}>{s.sub}</div>
+                <div style={{ fontSize: "11px", color: "#94A3B8" }}>{s.sub}</div>
               </div>
             </div>
             <div style={{
-              fontSize: "28px",
+              fontSize: "24px",
               fontWeight: 800,
               color: "#FFFFFF",
-              backgroundColor: "rgba(205,201,192,0.08)",
-              width: "52px",
-              height: "52px",
-              borderRadius: "10px",
+              backgroundColor: "rgba(205,201,192,0.06)",
+              width: "44px",
+              height: "44px",
+              borderRadius: "8px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -208,22 +208,22 @@ export default function DashboardPage() {
       {/* QUICK ACTIONS */}
       <div style={{
         backgroundColor: "#1a2a32",
-        border: "1px solid rgba(205,201,192,0.12)",
-        borderRadius: "12px",
-        padding: "20px 24px",
+        border: "1px solid rgba(205,201,192,0.1)",
+        borderRadius: "10px",
+        padding: "16px 20px",
         display: "flex",
         flexWrap: "wrap" as const,
-        gap: "12px",
+        gap: "10px",
         alignItems: "center",
-        marginBottom: "24px",
+        marginBottom: "20px",
       }}>
         <span style={{
-          fontSize: "10px",
+          fontSize: "9px",
           fontWeight: 700,
-          color: "rgba(205,201,192,0.4)",
+          color: "rgba(205,201,192,0.35)",
           letterSpacing: "0.15em",
           textTransform: "uppercase" as const,
-          marginRight: "8px",
+          marginRight: "6px",
         }}>
           Quick Actions
         </span>
@@ -231,40 +231,39 @@ export default function DashboardPage() {
           <Link key={href} href={href} style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
-            padding: "10px 20px",
+            gap: "6px",
+            padding: "9px 16px",
             backgroundColor: "transparent",
-            border: "1px solid rgba(205,201,192,0.3)",
-            borderRadius: "8px",
+            border: "1px solid rgba(205,201,192,0.25)",
+            borderRadius: "7px",
             color: "#CDC9C0",
             textDecoration: "none",
-            fontSize: "11px",
+            fontSize: "10px",
             fontWeight: 700,
             letterSpacing: "0.1em",
             textTransform: "uppercase" as const,
-            transition: "all 0.15s",
           }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>{icon}</span>
+            <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>{icon}</span>
             {label}
           </Link>
         ))}
         <Link href="/reyna-ai" style={{
           display: "flex",
           alignItems: "center",
-          gap: "8px",
-          padding: "10px 24px",
+          gap: "6px",
+          padding: "9px 20px",
           backgroundColor: "#CDC9C0",
-          borderRadius: "8px",
+          borderRadius: "7px",
           color: "#0f1d24",
           textDecoration: "none",
-          fontSize: "11px",
+          fontSize: "10px",
           fontWeight: 800,
           letterSpacing: "0.1em",
           textTransform: "uppercase" as const,
           marginLeft: "auto",
-          boxShadow: "0 4px 12px rgba(205,201,192,0.2)",
+          boxShadow: "0 2px 8px rgba(205,201,192,0.15)",
         }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>auto_awesome</span>
+          <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>auto_awesome</span>
           Ask Reyna AI
         </Link>
       </div>
@@ -273,45 +272,45 @@ export default function DashboardPage() {
       <div style={{
         display: "grid",
         gridTemplateColumns: "1fr",
-        gap: "24px",
-      }} className="lg:!grid-cols-[1fr_400px]">
+        gap: "20px",
+      }} className="lg:!grid-cols-[1fr_380px]">
         {/* Recent Activity */}
         <div style={{
           backgroundColor: "#1a2a32",
-          border: "1px solid rgba(205,201,192,0.12)",
-          borderRadius: "12px",
-          padding: "28px",
-          minHeight: "360px",
+          border: "1px solid rgba(205,201,192,0.1)",
+          borderRadius: "10px",
+          padding: "24px",
+          minHeight: "340px",
           display: "flex",
           flexDirection: "column",
         }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-            <h3 style={{ fontSize: "14px", fontWeight: 800, color: "#FFFFFF", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FFFFFF", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
               Recent Activity
             </h3>
-            <span className="material-symbols-outlined" style={{ color: "rgba(205,201,192,0.3)", fontSize: "20px" }}>history</span>
+            <span className="material-symbols-outlined" style={{ color: "rgba(205,201,192,0.25)", fontSize: "18px" }}>history</span>
           </div>
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", opacity: 0.4 }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", opacity: 0.35 }}>
             <div style={{
-              width: "56px",
-              height: "56px",
+              width: "48px",
+              height: "48px",
               borderRadius: "50%",
-              border: "2px dashed rgba(205,201,192,0.4)",
+              border: "1.5px dashed rgba(205,201,192,0.35)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: "16px",
+              marginBottom: "14px",
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "28px", color: "#CDC9C0" }}>sync</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "24px", color: "#CDC9C0" }}>sync</span>
             </div>
-            <p style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 4px" }}>Awaiting Activity</p>
-            <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>The portal is synchronized.</p>
+            <p style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 3px" }}>Awaiting Activity</p>
+            <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>The portal is synchronized.</p>
           </div>
         </div>
 
         {/* Admin Alerts */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          <h3 style={{ fontSize: "10px", fontWeight: 800, color: "#CDC9C0", letterSpacing: "0.2em", textTransform: "uppercase" as const, margin: "0 0 4px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <h3 style={{ fontSize: "9px", fontWeight: 800, color: "#CDC9C0", letterSpacing: "0.2em", textTransform: "uppercase" as const, margin: "0 0 2px" }}>
             Admin Alerts
           </h3>
           {[
@@ -321,37 +320,37 @@ export default function DashboardPage() {
           ].map((alert) => (
             <div key={alert.priority} style={{
               backgroundColor: "#1a2a32",
-              border: "1px solid rgba(205,201,192,0.1)",
-              borderLeft: `4px solid ${alert.color}`,
-              borderRadius: "0 10px 10px 0",
-              padding: "16px 18px",
+              border: "1px solid rgba(205,201,192,0.08)",
+              borderLeft: `3px solid ${alert.color}`,
+              borderRadius: "0 8px 8px 0",
+              padding: "14px 16px",
               display: "flex",
-              gap: "14px",
+              gap: "12px",
             }}>
-              <span className="material-symbols-outlined" style={{ color: alert.color, fontSize: "20px", flexShrink: 0 }}>{alert.icon}</span>
+              <span className="material-symbols-outlined" style={{ color: alert.color, fontSize: "18px", flexShrink: 0 }}>{alert.icon}</span>
               <div>
-                <div style={{ fontSize: "10px", fontWeight: 800, color: alert.color, letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "4px" }}>
+                <div style={{ fontSize: "9px", fontWeight: 800, color: alert.color, letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "3px" }}>
                   {alert.priority}
                 </div>
-                <div style={{ fontSize: "13px", color: "#CBD5E1", lineHeight: 1.4 }}>{alert.text}</div>
+                <div style={{ fontSize: "12px", color: "#CBD5E1", lineHeight: 1.4 }}>{alert.text}</div>
               </div>
             </div>
           ))}
           <div style={{
             backgroundColor: "#0a151b",
-            border: "1px solid rgba(205,201,192,0.1)",
-            borderRadius: "10px",
-            padding: "24px",
+            border: "1px solid rgba(205,201,192,0.08)",
+            borderRadius: "8px",
+            padding: "20px",
             textAlign: "center" as const,
           }}>
-            <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, marginBottom: "8px" }}>
+            <div style={{ fontSize: "8px", fontWeight: 700, color: "rgba(205,201,192,0.3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, marginBottom: "6px" }}>
               System Health
             </div>
-            <div style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", marginBottom: "12px" }}>Optimal</div>
-            <div style={{ display: "flex", justifyContent: "center", gap: "4px" }}>
-              <div style={{ height: "3px", width: "32px", backgroundColor: "#CDC9C0", borderRadius: "4px" }} />
-              <div style={{ height: "3px", width: "32px", backgroundColor: "rgba(205,201,192,0.2)", borderRadius: "4px" }} />
-              <div style={{ height: "3px", width: "32px", backgroundColor: "rgba(205,201,192,0.2)", borderRadius: "4px" }} />
+            <div style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", marginBottom: "10px" }}>Optimal</div>
+            <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
+              <div style={{ height: "2px", width: "28px", backgroundColor: "#CDC9C0", borderRadius: "4px" }} />
+              <div style={{ height: "2px", width: "28px", backgroundColor: "rgba(205,201,192,0.15)", borderRadius: "4px" }} />
+              <div style={{ height: "2px", width: "28px", backgroundColor: "rgba(205,201,192,0.15)", borderRadius: "4px" }} />
             </div>
           </div>
         </div>
