@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/api-auth";
 
 const createSchema = z.object({
@@ -20,6 +19,7 @@ export async function GET() {
   const { response } = await requireSession();
   if (response) return response;
 
+  const { prisma } = await import("@/lib/prisma");
   const items = await prisma.inventoryItem.findMany({
     include: { location: true },
     orderBy: [{ location: { name: "asc" } }, { brand: "asc" }, { productName: "asc" }],
@@ -49,6 +49,7 @@ export async function POST(req: Request) {
   const threshold = d.reorderThreshold ?? 2;
   const isLowStock = qty <= threshold;
 
+  const { prisma } = await import("@/lib/prisma");
   const item = await prisma.inventoryItem.create({
     data: {
       brand: d.brand,

@@ -1,13 +1,12 @@
-import { prisma } from "@/lib/prisma";
+import { AddInventoryForm } from "./add-inventory-form"
 
-import { AddInventoryForm } from "./add-inventory-form";
+/** Static placeholders — no DB on load (restore prisma.location.findMany when debugging DB). */
+const LOCATIONS = [
+  { id: "placeholder-cc", name: "Corpus Christi" },
+  { id: "placeholder-sa", name: "San Antonio" },
+]
 
-export default async function AddInventoryPage() {
-  const locations = await prisma.location.findMany({
-    orderBy: { name: "asc" },
-    select: { id: true, name: true },
-  });
-
+export default function AddInventoryPage() {
   return (
     <div className="p-4 md:p-8">
       <h1 className="text-2xl font-semibold text-neutral-100">Add inventory item</h1>
@@ -15,8 +14,8 @@ export default async function AddInventoryPage() {
         Track stock by salon location. Low and critical levels use your reorder threshold.
       </p>
       <div className="mt-8">
-        <AddInventoryForm locations={locations} />
+        <AddInventoryForm locations={LOCATIONS} />
       </div>
     </div>
-  );
+  )
 }
