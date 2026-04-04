@@ -173,25 +173,58 @@ EXECUTION STANDARD:
 - Treat open schedule time as lost revenue
 - Inventory is cash on the shelf
 
+PHOTO SCHEDULE WORKFLOW:
+When a manager uploads a photo of a handwritten schedule:
+1. Carefully read every name and time visible in the photo
+2. List what you see in a clear structured format
+3. Ask: "Does this look correct? Should I create this as a draft schedule?"
+4. Note any names or times you could not read clearly
+
 You are Reyna. You are part of the Salon Envy team. You think in terms of revenue, risk, efficiency, consistency, and long-term brand health.`;
 
-type HistoryItem = { role: string; content: string };
+type ApiMessage = { role: string; content: string; image?: string };
 
-function toMessageParams(history: unknown): Anthropic.MessageParam[] {
-  if (!Array.isArray(history)) return [];
-  return history
+function buildClaudeMessages(messages: ApiMessage[]): Anthropic.MessageParam[] {
+  return messages
     .filter(
-      (m): m is HistoryItem =>
+      (m) =>
         !!m &&
         typeof m === "object" &&
-        (m as HistoryItem).role !== undefined &&
-        ((m as HistoryItem).role === "user" || (m as HistoryItem).role === "assistant") &&
-        typeof (m as HistoryItem).content === "string",
+        (m.role === "user" || m.role === "assistant") &&
+        typeof m.content === "string",
     )
-    .map((m) => ({
-      role: m.role as "user" | "assistant",
-      content: m.content,
-    }));
+    .map((m) => {
+      // If the message has an image (only for user messages), construct vision format
+      if (m.role === "user" && m.image && m.image.startsWith("data:")) {
+        const commaIndex = m.image.indexOf(",");
+        const meta = m.image.substring(5, commaIndex); // after "data:" before ","
+        const mediaType = meta.split(";")[0] as "image/jpeg" | "image/png" | "image/gif" | "image/webp";
+        const base64Data = m.image.substring(commaIndex + 1);
+
+        const content: Anthropic.ContentBlockParam[] = [
+          {
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: mediaType,
+              data: base64Data,
+            },
+          },
+        ];
+        if (m.content.trim()) {
+          content.push({ type: "text", text: m.content });
+        } else {
+          content.push({ type: "text", text: "Please analyze this image." });
+        }
+
+        return { role: "user" as const, content };
+      }
+
+      return {
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      };
+    });
 }
 
 export async function POST(req: NextRequest) {
@@ -216,25 +249,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let body: { message?: string; conversationHistory?: unknown };
+    let body: { messages?: ApiMessage[]; message?: string; conversationHistory?: unknown };
     try {
       body = await req.json();
     } catch {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
-    const { message: rawMessage, conversationHistory = [] } = body;
-    const message = typeof rawMessage === "string" ? rawMessage.trim() : "";
+    // Support both new { messages } format and legacy { message, conversationHistory } format
+    let apiMessages: ApiMessage[];
 
-    if (!message) {
+    if (body.messages && Array.isArray(body.messages)) {
+      apiMessages = body.messages;
+    } else {
+      // Legacy format
+      const rawMessage = typeof body.message === "string" ? body.message.trim() : "";
+      if (!rawMessage) {
+        return NextResponse.json({ error: "Message required" }, { status: 400 });
+      }
+      const prior = Array.isArray(body.conversationHistory)
+        ? (body.conversationHistory as ApiMessage[])
+        : [];
+      apiMessages = [...prior, { role: "user", content: rawMessage }];
+    }
+
+    if (apiMessages.length === 0) {
       return NextResponse.json({ error: "Message required" }, { status: 400 });
     }
 
-    const prior = toMessageParams(conversationHistory);
-    const messages: Anthropic.MessageParam[] = [
-      ...prior,
-      { role: "user", content: message },
-    ];
+    const messages = buildClaudeMessages(apiMessages);
 
     const client = new Anthropic({ apiKey: key });
 
@@ -250,10 +293,12 @@ export async function POST(req: NextRequest) {
       .map((block) => block.text)
       .join("");
 
+    // Build updated history (strip image data to keep payload small)
     const updatedHistory = [
-      ...messages.map((m) => ({
+      ...apiMessages.map((m) => ({
         role: m.role,
         content: typeof m.content === "string" ? m.content : "",
+        ...(m.image ? { image: m.image } : {}),
       })),
       { role: "assistant" as const, content: reply },
     ];
