@@ -27,6 +27,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/inventory", icon: "inventory_2", label: "INVENTORY" },
       { href: "/schedule", icon: "calendar_month", label: "SCHEDULE" },
       { href: "/staff", icon: "group", label: "STAFF" },
+      { href: "/retention", icon: "favorite", label: "RETENTION" },
     ]
   },
   {

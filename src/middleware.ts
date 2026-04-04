@@ -19,5 +19,6 @@ export const config = {
     "/alerts/:path*",
     "/profile/:path*",
     "/preferences/:path*",
+    "/retention/:path*",
   ]
 }
