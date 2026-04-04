@@ -20,10 +20,10 @@ export async function GET(req: NextRequest) {
       })
 
       const now = new Date()
-      const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
       const page = await square.bookings.list({
-        startAtMin: ninetyDaysAgo.toISOString(),
+        startAtMin: thirtyDaysAgo.toISOString(),
         startAtMax: now.toISOString(),
         limit: 50,
       })

@@ -95,25 +95,31 @@ export async function getAllRetentionData(
   const now = new Date()
   const DAY = 24 * 60 * 60 * 1000
 
-  // 5 chunks covering 3 years — fetched in PARALLEL for speed
-  const chunks = [
-    { startAt: new Date(now.getTime() - 90 * DAY).toISOString(), endAt: now.toISOString() },
-    { startAt: new Date(now.getTime() - 180 * DAY).toISOString(), endAt: new Date(now.getTime() - 90 * DAY).toISOString() },
-    { startAt: new Date(now.getTime() - 365 * DAY).toISOString(), endAt: new Date(now.getTime() - 180 * DAY).toISOString() },
-    { startAt: new Date(now.getTime() - 730 * DAY).toISOString(), endAt: new Date(now.getTime() - 365 * DAY).toISOString() },
-    { startAt: new Date(now.getTime() - 1095 * DAY).toISOString(), endAt: new Date(now.getTime() - 730 * DAY).toISOString() },
-  ]
+  // Build 28-day chunks covering 3 years (stays under Square's 31-day limit)
+  const chunks: { startAt: string; endAt: string }[] = []
+  const threeYearsAgo = new Date(now.getTime() - 3 * 365 * 24 * 60 * 60 * 1000)
+  let chunkStart = new Date(threeYearsAgo)
+  while (chunkStart < now) {
+    const chunkEnd = new Date(chunkStart)
+    chunkEnd.setDate(chunkEnd.getDate() + 28)
+    if (chunkEnd > now) chunkEnd.setTime(now.getTime())
+    chunks.push({ startAt: chunkStart.toISOString(), endAt: chunkEnd.toISOString() })
+    chunkStart = new Date(chunkEnd)
+    chunkStart.setSeconds(chunkStart.getSeconds() + 1)
+  }
 
-  // Step 1: Fetch bookings + orders in parallel across all chunks
-  await Promise.allSettled([
-    ...chunks.map(async (chunk) => {
+  // Step 1: Fetch bookings in batches of 5 parallel chunks
+  const BATCH_SIZE = 5
+  for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+    const batch = chunks.slice(i, i + BATCH_SIZE)
+    await Promise.allSettled(batch.map(async (chunk) => {
       try {
         let page = await square.bookings.list({
           startAtMin: chunk.startAt,
           startAtMax: chunk.endAt,
           limit: 200,
         })
-        const process = (data: typeof page.data) => {
+        const processPage = (data: typeof page.data) => {
           for (const b of data) {
             if (b.status !== "ACCEPTED") continue
             if (!b.customerId || !b.startAt) continue
@@ -126,16 +132,21 @@ export async function getAllRetentionData(
             })
           }
         }
-        process(page.data)
+        processPage(page.data)
         while (page.hasNextPage()) {
           page = await page.getNextPage()
-          process(page.data)
+          processPage(page.data)
         }
       } catch (e) {
         console.warn("Booking chunk skipped:", chunk.startAt, e instanceof Error ? e.message : e)
       }
-    }),
-    ...chunks.map(async (chunk) => {
+    }))
+  }
+
+  // Step 1b: Fetch orders in batches of 5 parallel chunks
+  for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+    const batch = chunks.slice(i, i + BATCH_SIZE)
+    await Promise.allSettled(batch.map(async (chunk) => {
       try {
         const res = await square.orders.search({
           locationIds: filterLocationIds,
@@ -158,8 +169,8 @@ export async function getAllRetentionData(
       } catch (e) {
         console.warn("Order chunk skipped:", chunk.startAt, e instanceof Error ? e.message : e)
       }
-    }),
-  ])
+    }))
+  }
 
   // Step 2: Fetch top 100 customer details in parallel
   const topIds = Object.entries(customerBookings)
