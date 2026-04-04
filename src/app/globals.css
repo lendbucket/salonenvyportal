@@ -1,3 +1,8 @@
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -190,3 +195,16 @@ input, select, textarea { font-size: 16px !important; }
 
 .portal-page { padding: 16px; }
 @media (min-width: 768px) { .portal-page { padding: 28px; } }
+
+@media (max-width: 767px) {
+  html, body {
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+  }
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+}

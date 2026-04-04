@@ -190,7 +190,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             <img
               src="/images/logo-white.png"
               alt="Salon Envy"
-              style={{ height: "32px", width: "auto", objectFit: "contain", display: "block" }}
+              style={{ height: "40px", width: "auto", objectFit: "contain", display: "block" }}
             />
             {isOwner && pendingCount > 0 && (
               <Link href="/approvals" style={{
@@ -371,6 +371,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           backgroundColor: "#1e2d35",
           overflowY: "auto",
           paddingBottom: "72px",
+          width: "100%",
         }}>
           {children}
         </main>
@@ -381,7 +382,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           bottom: 0,
           left: 0,
           right: 0,
-          height: "64px",
+          minHeight: "60px",
           backgroundColor: "#0a1520",
           borderTop: "1px solid rgba(205,201,192,0.1)",
           display: "flex",
