@@ -1,146 +1,165 @@
-"use client";
-
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useMemo, useState } from "react";
-
-type LocationTab = "cc" | "sa" | "both";
+"use client"
+import { useSession } from "next-auth/react"
+import Link from "next/link"
 
 export default function DashboardPage() {
-  const { data: session } = useSession();
-  const [locationTab, setLocationTab] = useState<LocationTab>("both");
-  const pendingApprovals = 0;
+  const { data: session } = useSession()
+  const userName = session?.user?.name?.split(" ")[0] || "Robert"
 
-  const firstName = session?.user?.name?.split(/\s+/)[0] ?? "Robert";
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening"
+  const dateStr = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }).toUpperCase()
 
-  const greeting = useMemo(() => {
-    const h = new Date().getHours();
-    if (h < 12) return "Good morning";
-    if (h < 17) return "Good afternoon";
-    return "Good evening";
-  }, []);
+  const metrics = [
+    { label: "Revenue This Week", value: "$0", icon: "payments", trend: "0%" },
+    { label: "Services This Week", value: "0", icon: "content_cut" },
+    { label: "New Clients", value: "0", icon: "person_add" },
+    { label: "Pending Approvals", value: "0", icon: "rule" },
+  ]
 
-  const dateStr = useMemo(
-    () =>
-      new Date().toLocaleDateString(undefined, {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      }),
-    [],
-  );
-
-  const metrics: {
-    label: string;
-    value: string;
-    showDollar: boolean;
-    badge?: boolean;
-  }[] = [
-    { label: "Revenue This Week", value: "0", showDollar: true },
-    { label: "Services This Week", value: "0", showDollar: false },
-    { label: "New Clients", value: "0", showDollar: false },
-    {
-      label: "Pending Approvals",
-      value: String(pendingApprovals),
-      showDollar: false,
-      badge: pendingApprovals > 0,
-    },
-  ];
+  const alerts = [
+    { label: "Low Stock Items", sub: "Reorder suggested", icon: "inventory_2", count: 0 },
+    { label: "Pending Schedules", sub: "Needs review", icon: "event_note", count: 0 },
+    { label: "Open Issues", sub: "Action required", icon: "report_problem", count: 0 },
+  ]
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-neutral-100 md:text-3xl">
-            {greeting}, {firstName}
-          </h1>
-          <p className="mt-1 text-sm text-[#888]">{dateStr}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {(
-            [
-              { id: "cc" as const, label: "Corpus Christi" },
-              { id: "sa" as const, label: "San Antonio" },
-              { id: "both" as const, label: "Both" },
-            ] as const
-          ).map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setLocationTab(t.id)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                locationTab === t.id
-                  ? "bg-[#C9A84C] text-[#0d0d0d] shadow-[0_0_20px_-4px_rgba(201,168,76,0.5)]"
-                  : "bg-[#1f1f1f] text-neutral-400 ring-1 ring-[#2a2a2a] hover:bg-[#252525]"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
+      {/* Hero Header */}
+      <section className="space-y-1">
+        <h1 className="font-[var(--font-noto-serif)] text-4xl text-white">
+          {greeting}, {userName} <span aria-hidden>&#x1F44B;</span>
+        </h1>
+        <p className="text-[#a8a49c] text-sm tracking-wide">{dateStr}</p>
+      </section>
+
+      {/* Location Tabs */}
+      <div className="flex items-center gap-1 bg-[#3a4347] p-1 rounded-lg w-fit">
+        {["Corpus Christi", "San Antonio", "Both"].map((loc, i) => (
+          <button key={loc} className={`px-6 py-2 text-xs font-bold rounded-lg transition-colors ${
+            i === 0
+              ? "text-[#CDC9C0] bg-[#142127] shadow-sm"
+              : "text-[#CDC9C0]/60 hover:text-[#CDC9C0]"
+          }`}>
+            {loc}
+          </button>
+        ))}
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((m) => (
-          <div
-            key={m.label}
-            className="group rounded-xl border border-[#2a2a2a] bg-[#1f1f1f] p-5 shadow-[0_4px_24px_-12px_rgba(0,0,0,0.45)] transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.55),0_8px_24px_-8px_rgba(201,168,76,0.08)]"
-          >
-            <p className="text-sm font-medium text-[#888]">{m.label}</p>
-            <div className="mt-2 flex items-baseline gap-2">
-              {m.showDollar ? (
-                <span className="text-xl font-semibold text-[#C9A84C]">$</span>
-              ) : null}
-              <p className="text-3xl font-semibold tabular-nums text-[#C9A84C]">{m.value}</p>
-              {m.badge ? (
-                <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
-                  {pendingApprovals}
-                </span>
-              ) : null}
+          <div key={m.label} className="bg-[#4a5459] border border-[rgba(205,201,192,0.2)] p-6 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <div className="flex justify-between items-start mb-4">
+              <span className="text-[10px] font-bold text-[#CDC9C0] tracking-[0.1em] uppercase">{m.label}</span>
+              <span className="material-symbols-outlined text-[#CDC9C0]/40">{m.icon}</span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-[var(--font-noto-serif)] text-3xl text-white">{m.value}</span>
+              {m.trend && <span className="text-xs text-[#CDC9C0] font-bold flex items-center">
+                <span className="material-symbols-outlined text-sm mr-0.5">trending_flat</span>{m.trend}
+              </span>}
             </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-10">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#888]">Quick actions</h2>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/inventory/add"
-            className="inline-flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#161616] px-4 py-2.5 text-sm font-medium text-neutral-200 transition hover:border-[#C9A84C]/45 hover:bg-[#1f1f1f]"
-          >
-            <span aria-hidden>➕</span>
-            Add Inventory
-          </Link>
-          <Link
-            href="/schedule"
-            className="inline-flex items-center gap-2 rounded-xl border border-[#2a2a2a] bg-[#161616] px-4 py-2.5 text-sm font-medium text-neutral-200 transition hover:border-[#C9A84C]/45 hover:bg-[#1f1f1f]"
-          >
-            <span aria-hidden>📅</span>
-            View Schedule
-          </Link>
-          <Link
-            href="/reyna-ai"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#C9A84C] px-4 py-2.5 text-sm font-semibold text-[#0d0d0d] shadow-[0_6px_28px_-8px_rgba(201,168,76,0.55)] transition hover:bg-[#b89642] hover:shadow-[0_8px_32px_-8px_rgba(201,168,76,0.45)]"
-          >
-            <span aria-hidden>✨</span>
-            Ask Reyna AI
-          </Link>
-        </div>
+      {/* Alert Summary Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {alerts.map((a) => (
+          <div key={a.label} className="bg-[#1f2c31] p-6 rounded-lg flex items-center justify-between cursor-pointer hover:bg-[#29373c] transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-[#29373c] flex items-center justify-center text-[#CDC9C0]">
+                <span className="material-symbols-outlined">{a.icon}</span>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold tracking-wider text-[#CDC9C0] uppercase">{a.label}</p>
+                <p className="text-xs text-[#cac6bc]">{a.sub}</p>
+              </div>
+            </div>
+            <span className="bg-[#29373c] text-[#CDC9C0] font-[var(--font-noto-serif)] text-xl px-3 py-1 rounded">{a.count}</span>
+          </div>
+        ))}
       </div>
 
-      <section className="mt-10 rounded-2xl border border-[#2a2a2a] bg-[#161616] p-8">
-        <h2 className="text-lg font-semibold text-neutral-100">Recent activity</h2>
-        <div className="mt-10 flex flex-col items-center justify-center py-6 text-center">
-          <p className="text-4xl" aria-hidden>
-            ✨
-          </p>
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-[#888]">
-            No activity yet — when your team uses the portal, updates will show up here.
-          </p>
+      {/* Quick Actions */}
+      <div className="flex flex-wrap gap-4 items-center bg-[#101d22]/50 p-6 rounded-xl border border-[rgba(205,201,192,0.1)]">
+        {[
+          { href: "/inventory/add", icon: "add", label: "Add Inventory" },
+          { href: "/schedule", icon: "calendar_today", label: "Build Schedule" },
+          { href: "/approvals", icon: "done_all", label: "Review Approvals" },
+        ].map(({ href, icon, label }) => (
+          <Link key={href} href={href} className="bg-transparent border border-[#CDC9C0] text-[#CDC9C0] px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#CDC9C0] hover:text-[#1a1a1a] transition-all flex items-center gap-2">
+            <span className="material-symbols-outlined text-sm">{icon}</span>
+            {label}
+          </Link>
+        ))}
+        <Link href="/reyna-ai" className="bg-[#CDC9C0] text-[#1a1a1a] px-8 py-2.5 rounded-lg text-xs font-extrabold uppercase tracking-[0.15em] shadow-lg hover:brightness-110 transition-all flex items-center gap-2 ml-auto">
+          <span className="material-symbols-outlined text-sm">auto_awesome</span>
+          Ask Reyna AI
+        </Link>
+      </div>
+
+      {/* Activity + Alerts Bento */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        {/* Recent Activity */}
+        <div className="lg:col-span-3 bg-[#142127] p-8 rounded-xl min-h-[400px] flex flex-col">
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="font-[var(--font-noto-serif)] text-xl text-white">Recent Activity</h3>
+            <span className="material-symbols-outlined text-[#CDC9C0]/40">history</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 opacity-40">
+            <div className="w-16 h-16 rounded-full border border-dashed border-[#CDC9C0]/40 flex items-center justify-center">
+              <span className="material-symbols-outlined text-3xl text-[#CDC9C0]">sync</span>
+            </div>
+            <div>
+              <p className="font-[var(--font-noto-serif)] text-lg italic text-[#e9e5dc]">Awaiting Activity</p>
+              <p className="text-sm text-[#cac6bc]">The portal is currently synchronized.</p>
+            </div>
+          </div>
         </div>
-      </section>
+
+        {/* Admin Alerts */}
+        <div className="lg:col-span-2 space-y-4">
+          <h3 className="text-xs font-bold text-[#CDC9C0] tracking-[0.2em] uppercase px-2">Admin Alerts</h3>
+          <div className="bg-[#1f2c31] p-5 rounded-lg border-l-4 border-[#ffb4ab]">
+            <div className="flex items-start gap-4">
+              <span className="material-symbols-outlined text-[#ffb4ab]">priority_high</span>
+              <div>
+                <p className="text-xs font-bold text-[#ffb4ab] uppercase tracking-wider">Urgent</p>
+                <p className="text-sm text-[#d6e5ec]">End of month reconciliation due in 48 hours.</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#1f2c31] p-5 rounded-lg border-l-4 border-[#ffb000]">
+            <div className="flex items-start gap-4">
+              <span className="material-symbols-outlined text-[#ffb000]">warning</span>
+              <div>
+                <p className="text-xs font-bold text-[#ffb000] uppercase tracking-wider">High Priority</p>
+                <p className="text-sm text-[#d6e5ec]">3 staff members have not confirmed their schedules.</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#1f2c31] p-5 rounded-lg border-l-4 border-[#CDC9C0]">
+            <div className="flex items-start gap-4">
+              <span className="material-symbols-outlined text-[#CDC9C0]">info</span>
+              <div>
+                <p className="text-xs font-bold text-[#CDC9C0] uppercase tracking-wider">Medium</p>
+                <p className="text-sm text-[#d6e5ec]">Quarterly inventory audit scheduled for next Monday.</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#031015] p-8 rounded-xl border border-[rgba(205,201,192,0.1)] text-center space-y-2">
+            <p className="text-[10px] text-[#CDC9C0]/40 uppercase tracking-[0.3em]">System Health</p>
+            <p className="font-[var(--font-noto-serif)] text-2xl text-white">Optimal</p>
+            <div className="flex justify-center gap-1">
+              <div className="h-1 w-8 bg-[#CDC9C0] rounded-full"></div>
+              <div className="h-1 w-8 bg-[#CDC9C0]/20 rounded-full"></div>
+              <div className="h-1 w-8 bg-[#CDC9C0]/20 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
