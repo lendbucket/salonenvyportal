@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { SalonEnvyLogo } from "@/components/SalonEnvyLogo"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -51,19 +52,9 @@ export default function LoginPage() {
           pointerEvents: "none",
         }} />
 
-        <img
-          src="/images/logo-white.png"
-          alt="Salon Envy"
-          onError={(e) => { e.currentTarget.src = '/images/logo-text.svg' }}
-          style={{
-            width: "240px",
-            height: "auto",
-            objectFit: "contain",
-            marginBottom: "32px",
-            position: "relative",
-            zIndex: 1,
-          }}
-        />
+        <div style={{ marginBottom: "32px", position: "relative", zIndex: 1 }}>
+          <SalonEnvyLogo width={240} />
+        </div>
 
         <div style={{
           fontSize: "13px",
@@ -104,7 +95,7 @@ export default function LoginPage() {
       }}>
         <div style={{ width: "100%", maxWidth: "420px" }}>
           <div className="md:hidden" style={{ textAlign: "center" as const, marginBottom: "32px" }}>
-            <img src="/images/logo-white.png" alt="Salon Envy" onError={(e) => { e.currentTarget.src = '/images/logo-text.svg' }} style={{ height: "60px", width: "auto" }} />
+            <SalonEnvyLogo width={140} />
           </div>
 
           <h2 style={{
