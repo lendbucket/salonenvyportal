@@ -1,5 +1,5 @@
 import { SquareClient, SquareEnvironment } from "square"
-import { LOCATION_IDS, TEAM_MEMBER_NAMES } from "./square-metrics"
+import { TEAM_MEMBER_NAMES } from "./square-metrics"
 
 function getSquare() {
   return new SquareClient({
@@ -13,11 +13,9 @@ const LOCATION_MAP: Record<string, string> = {
   LXJYXDXWR0XZF: "San Antonio",
 }
 
-interface BookingRecord {
-  date: string
-  stylistId: string
-  locationId: string
-}
+const ALL_LOCATION_IDS = ["LTJSA6QR1HGW6", "LXJYXDXWR0XZF"]
+
+interface BookingRecord { date: string; stylistId: string; locationId: string }
 
 interface CustomerRetention {
   customerId: string
@@ -51,30 +49,7 @@ export interface RetentionStats {
   retentionScore: number
   retentionGrade: string
   allCustomers: CustomerRetention[]
-}
-
-function getDateChunks(yearsBack: number): { startAt: string; endAt: string }[] {
-  const now = new Date()
-  const start = new Date(now)
-  start.setFullYear(start.getFullYear() - yearsBack)
-
-  const chunks: { startAt: string; endAt: string }[] = []
-  let current = new Date(start)
-
-  while (current < now) {
-    const chunkEnd = new Date(current)
-    chunkEnd.setDate(chunkEnd.getDate() + 30)
-    if (chunkEnd > now) chunkEnd.setTime(now.getTime())
-
-    chunks.push({
-      startAt: current.toISOString(),
-      endAt: chunkEnd.toISOString(),
-    })
-
-    current = new Date(chunkEnd)
-  }
-
-  return chunks
+  dataNote: string
 }
 
 function getLapsedSegment(daysSince: number): string {
@@ -106,111 +81,108 @@ export async function getAllRetentionData(
   locationFilter?: "Corpus Christi" | "San Antonio"
 ): Promise<RetentionStats> {
   const square = getSquare()
-  const chunks = getDateChunks(3)
 
-  // Filter location IDs based on filter
   const filterLocationIds = locationFilter
-    ? LOCATION_IDS.filter((id) => LOCATION_MAP[id] === locationFilter)
-    : [...LOCATION_IDS]
+    ? ALL_LOCATION_IDS.filter((id) => LOCATION_MAP[id] === locationFilter)
+    : ALL_LOCATION_IDS
 
-  // Step 1: Collect all bookings by customer
   const customerBookings: Record<string, BookingRecord[]> = {}
+  const customerOrders: Record<string, number[]> = {}
   const customerNames: Record<string, string> = {}
   const customerEmails: Record<string, string> = {}
   const customerPhones: Record<string, string> = {}
 
-  for (const chunk of chunks) {
-    try {
-      let page = await square.bookings.list({
-        startAtMin: chunk.startAt,
-        startAtMax: chunk.endAt,
-        limit: 200,
-      })
-
-      const processBookings = (data: typeof page.data) => {
-        for (const b of data) {
-          if (b.status !== "ACCEPTED") continue
-          if (!b.customerId || !b.startAt) continue
-          if (filterLocationIds.length > 0 && b.locationId && !filterLocationIds.includes(b.locationId as typeof LOCATION_IDS[number])) continue
-
-          const stylistId = b.appointmentSegments?.[0]?.teamMemberId || "unknown"
-          if (!customerBookings[b.customerId]) {
-            customerBookings[b.customerId] = []
-          }
-          customerBookings[b.customerId].push({
-            date: b.startAt,
-            stylistId,
-            locationId: b.locationId || "",
-          })
-        }
-      }
-
-      processBookings(page.data)
-
-      while (page.hasNextPage()) {
-        page = await page.getNextPage()
-        processBookings(page.data)
-      }
-    } catch (err) {
-      console.warn("Skipping booking chunk due to error:", chunk.startAt, err instanceof Error ? err.message : err)
-      continue
-    }
-  }
-
-  // Step 2: Get customer spend from orders — store individual amounts
-  const customerOrders: Record<string, number[]> = {}
-
-  for (const chunk of chunks) {
-    try {
-      const ordersRes = await square.orders.search({
-        locationIds: filterLocationIds as unknown as string[],
-        query: {
-          filter: {
-            dateTimeFilter: { createdAt: { startAt: chunk.startAt, endAt: chunk.endAt } },
-            stateFilter: { states: ["COMPLETED"] },
-          },
-        },
-        limit: 500,
-      })
-
-      for (const o of ordersRes.orders || []) {
-        const custId = o.customerId
-        if (!custId) continue
-        const amount = Number(o.totalMoney?.amount || 0) / 100
-        if (amount > 0) {
-          if (!customerOrders[custId]) customerOrders[custId] = []
-          customerOrders[custId].push(amount)
-        }
-      }
-    } catch (err) {
-      console.warn("Skipping orders chunk due to error:", chunk.startAt, err instanceof Error ? err.message : err)
-      continue
-    }
-  }
-
-  // Step 3: Fetch customer details for top 200 customers by visit count
-  const allCustomerIds = Object.keys(customerBookings)
-  const topCustomerIds = allCustomerIds
-    .sort((a, b) => (customerBookings[b]?.length || 0) - (customerBookings[a]?.length || 0))
-    .slice(0, 200)
-
-  for (const custId of topCustomerIds) {
-    try {
-      const res = await square.customers.get({ customerId: custId })
-      if (res.customer) {
-        const c = res.customer
-        const name = [c.givenName, c.familyName].filter(Boolean).join(" ")
-        if (name) customerNames[custId] = name
-        if (c.emailAddress) customerEmails[custId] = c.emailAddress
-        if (c.phoneNumber) customerPhones[custId] = c.phoneNumber
-      }
-    } catch {
-      // Customer may have been deleted — skip silently
-    }
-  }
-
-  // Step 4: Calculate per-customer metrics
   const now = new Date()
+  const DAY = 24 * 60 * 60 * 1000
+
+  // 5 chunks covering 3 years — fetched in PARALLEL for speed
+  const chunks = [
+    { startAt: new Date(now.getTime() - 90 * DAY).toISOString(), endAt: now.toISOString() },
+    { startAt: new Date(now.getTime() - 180 * DAY).toISOString(), endAt: new Date(now.getTime() - 90 * DAY).toISOString() },
+    { startAt: new Date(now.getTime() - 365 * DAY).toISOString(), endAt: new Date(now.getTime() - 180 * DAY).toISOString() },
+    { startAt: new Date(now.getTime() - 730 * DAY).toISOString(), endAt: new Date(now.getTime() - 365 * DAY).toISOString() },
+    { startAt: new Date(now.getTime() - 1095 * DAY).toISOString(), endAt: new Date(now.getTime() - 730 * DAY).toISOString() },
+  ]
+
+  // Step 1: Fetch bookings + orders in parallel across all chunks
+  await Promise.allSettled([
+    ...chunks.map(async (chunk) => {
+      try {
+        let page = await square.bookings.list({
+          startAtMin: chunk.startAt,
+          startAtMax: chunk.endAt,
+          limit: 200,
+        })
+        const process = (data: typeof page.data) => {
+          for (const b of data) {
+            if (b.status !== "ACCEPTED") continue
+            if (!b.customerId || !b.startAt) continue
+            if (b.locationId && !filterLocationIds.includes(b.locationId)) continue
+            if (!customerBookings[b.customerId]) customerBookings[b.customerId] = []
+            customerBookings[b.customerId].push({
+              date: b.startAt,
+              stylistId: b.appointmentSegments?.[0]?.teamMemberId || "unknown",
+              locationId: b.locationId || "",
+            })
+          }
+        }
+        process(page.data)
+        while (page.hasNextPage()) {
+          page = await page.getNextPage()
+          process(page.data)
+        }
+      } catch (e) {
+        console.warn("Booking chunk skipped:", chunk.startAt, e instanceof Error ? e.message : e)
+      }
+    }),
+    ...chunks.map(async (chunk) => {
+      try {
+        const res = await square.orders.search({
+          locationIds: filterLocationIds,
+          query: {
+            filter: {
+              dateTimeFilter: { createdAt: { startAt: chunk.startAt, endAt: chunk.endAt } },
+              stateFilter: { states: ["COMPLETED"] },
+            },
+          },
+          limit: 500,
+        })
+        for (const o of res.orders || []) {
+          if (!o.customerId) continue
+          const amount = Number(o.totalMoney?.amount || 0) / 100
+          if (amount > 0) {
+            if (!customerOrders[o.customerId]) customerOrders[o.customerId] = []
+            customerOrders[o.customerId].push(amount)
+          }
+        }
+      } catch (e) {
+        console.warn("Order chunk skipped:", chunk.startAt, e instanceof Error ? e.message : e)
+      }
+    }),
+  ])
+
+  // Step 2: Fetch top 100 customer details in parallel
+  const topIds = Object.entries(customerBookings)
+    .sort((a, b) => b[1].length - a[1].length)
+    .slice(0, 100)
+    .map(([id]) => id)
+
+  await Promise.allSettled(
+    topIds.map(async (custId) => {
+      try {
+        const res = await square.customers.get({ customerId: custId })
+        if (res.customer) {
+          const c = res.customer
+          const name = [c.givenName, c.familyName].filter(Boolean).join(" ")
+          if (name) customerNames[custId] = name
+          if (c.emailAddress) customerEmails[custId] = c.emailAddress
+          if (c.phoneNumber) customerPhones[custId] = c.phoneNumber
+        }
+      } catch { /* deleted customer */ }
+    })
+  )
+
+  // Step 3: Build customer metrics
   const customers: CustomerRetention[] = []
 
   for (const [custId, bookings] of Object.entries(customerBookings)) {
@@ -219,40 +191,32 @@ export async function getAllRetentionData(
     const dates = bookings.map((b) => new Date(b.date)).sort((a, b) => a.getTime() - b.getTime())
     const firstVisit = dates[0].toISOString()
     const lastVisit = dates[dates.length - 1].toISOString()
-    const daysSinceLastVisit = Math.floor(
-      (now.getTime() - dates[dates.length - 1].getTime()) / (1000 * 60 * 60 * 24)
-    )
+    const daysSince = Math.floor((now.getTime() - dates[dates.length - 1].getTime()) / DAY)
 
-    // Preferred stylist
     const stylistCounts: Record<string, number> = {}
-    for (const b of bookings) {
-      stylistCounts[b.stylistId] = (stylistCounts[b.stylistId] || 0) + 1
-    }
-    const preferredStylistId = Object.entries(stylistCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || ""
-    const preferredStylist = TEAM_MEMBER_NAMES[preferredStylistId] || preferredStylistId
+    for (const b of bookings) stylistCounts[b.stylistId] = (stylistCounts[b.stylistId] || 0) + 1
+    const preferredId = Object.entries(stylistCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || ""
 
-    // Location
-    const locationCounts: Record<string, number> = {}
+    const locCounts: Record<string, number> = {}
     for (const b of bookings) {
-      const locName = LOCATION_MAP[b.locationId] || b.locationId
-      locationCounts[locName] = (locationCounts[locName] || 0) + 1
+      const n = LOCATION_MAP[b.locationId] || b.locationId
+      locCounts[n] = (locCounts[n] || 0) + 1
     }
-    const locationName = Object.entries(locationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || ""
+    const locationName = Object.entries(locCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || ""
 
     const orders = customerOrders[custId] || []
-    const totalSpend = orders.reduce((sum, a) => sum + a, 0)
+    const totalSpend = orders.reduce((s, a) => s + a, 0)
     const ticketCount = orders.length
     const avgTicket = ticketCount > 0 ? Math.round((totalSpend / ticketCount) * 100) / 100 : 0
-    const minTicket = ticketCount > 0 ? Math.round(orders.reduce((min, a) => a < min ? a : min, orders[0]) * 100) / 100 : 0
-    const maxTicket = ticketCount > 0 ? Math.round(orders.reduce((max, a) => a > max ? a : max, orders[0]) * 100) / 100 : 0
-    const totalVisits = bookings.length
+    const minTicket = ticketCount > 0 ? Math.round(orders.reduce((m, a) => a < m ? a : m, orders[0]) * 100) / 100 : 0
+    const maxTicket = ticketCount > 0 ? Math.round(orders.reduce((m, a) => a > m ? a : m, orders[0]) * 100) / 100 : 0
 
     customers.push({
       customerId: custId,
       customerName: customerNames[custId] || `Customer ${custId.slice(-6)}`,
       email: customerEmails[custId] || "",
       phone: customerPhones[custId] || "",
-      totalVisits,
+      totalVisits: bookings.length,
       ticketCount,
       firstVisit,
       lastVisit,
@@ -260,68 +224,45 @@ export async function getAllRetentionData(
       avgTicket,
       minTicket,
       maxTicket,
-      daysSinceLastVisit,
-      lapsedSegment: getLapsedSegment(daysSinceLastVisit),
-      preferredStylist,
+      daysSinceLastVisit: daysSince,
+      lapsedSegment: getLapsedSegment(daysSince),
+      preferredStylist: TEAM_MEMBER_NAMES[preferredId] || preferredId,
       locationName,
     })
   }
 
-  // Step 5: Aggregate stats
+  // Step 4: Aggregate stats
   const totalCustomers = customers.length
   const activeCustomers = customers.filter((c) => c.lapsedSegment === "active").length
   const oneTimeCustomers = customers.filter((c) => c.totalVisits === 1).length
   const recurringCustomers = customers.filter((c) => c.totalVisits > 1).length
-  const retentionRate = totalCustomers > 0 ? Math.round((activeCustomers / totalCustomers) * 100 * 10) / 10 : 0
-  const avgVisitsPerCustomer =
-    totalCustomers > 0
-      ? Math.round((customers.reduce((sum, c) => sum + c.totalVisits, 0) / totalCustomers) * 10) / 10
-      : 0
+  const retentionRate = totalCustomers > 0 ? Math.round((activeCustomers / totalCustomers) * 1000) / 10 : 0
+  const avgVisits = totalCustomers > 0 ? Math.round((customers.reduce((s, c) => s + c.totalVisits, 0) / totalCustomers) * 10) / 10 : 0
 
-  const lapsedSegments: Record<string, number> = {
-    active: 0,
-    "<6mo": 0,
-    "<12mo": 0,
-    "<18mo": 0,
-    "<2yr": 0,
-    "3yr+": 0,
-  }
-  for (const c of customers) {
-    lapsedSegments[c.lapsedSegment] = (lapsedSegments[c.lapsedSegment] || 0) + 1
-  }
+  const lapsedSegments: Record<string, number> = { active: 0, "<6mo": 0, "<12mo": 0, "<18mo": 0, "<2yr": 0, "3yr+": 0 }
+  for (const c of customers) lapsedSegments[c.lapsedSegment] = (lapsedSegments[c.lapsedSegment] || 0) + 1
 
-  const top20Recurring = [...customers]
-    .filter((c) => c.totalVisits > 1)
-    .sort((a, b) => b.totalVisits - a.totalVisits)
-    .slice(0, 20)
-
-  const top5HighestTickets = [...customers]
-    .filter((c) => c.maxTicket > 0)
-    .sort((a, b) => b.maxTicket - a.maxTicket)
-    .slice(0, 5)
-
-  // Retention score: weighted combination
   const recurringRatio = totalCustomers > 0 ? recurringCustomers / totalCustomers : 0
   const activeRatio = totalCustomers > 0 ? activeCustomers / totalCustomers : 0
-  const visitScore = Math.min(avgVisitsPerCustomer / 5, 1)
+  const visitScore = Math.min(avgVisits / 5, 1)
+  const retentionScore = Math.round(activeRatio * 40 + recurringRatio * 35 + visitScore * 25)
 
-  const retentionScore = Math.round(
-    activeRatio * 40 + recurringRatio * 35 + visitScore * 25
-  )
-  const retentionGrade = getRetentionGrade(retentionScore)
+  const top20Recurring = [...customers].filter((c) => c.totalVisits > 1).sort((a, b) => b.totalVisits - a.totalVisits).slice(0, 20)
+  const top5HighestTickets = [...customers].filter((c) => c.maxTicket > 0).sort((a, b) => b.maxTicket - a.maxTicket).slice(0, 5)
 
   return {
     totalCustomers,
     activeCustomers,
     retentionRate,
-    avgVisitsPerCustomer,
+    avgVisitsPerCustomer: avgVisits,
     oneTimeCustomers,
     recurringCustomers,
     lapsedSegments,
     top20Recurring,
     top5HighestTickets,
     retentionScore,
-    retentionGrade,
+    retentionGrade: getRetentionGrade(retentionScore),
     allCustomers: customers,
+    dataNote: "Data covers last 3 years from Square bookings (parallel fetch)",
   }
 }
