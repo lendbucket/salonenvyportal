@@ -1,11 +1,48 @@
 "use client"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+
+interface LocationMetrics {
+  location: string
+  revenue: number
+  serviceCount: number
+  avgTicket: number
+}
+
+function fmt(n: number) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n)
+}
+
+function timeAgo(d: Date) {
+  const mins = Math.round((Date.now() - d.getTime()) / 60000)
+  if (mins < 1) return "just now"
+  if (mins === 1) return "1 min ago"
+  if (mins < 60) return `${mins} mins ago`
+  return `${Math.round(mins / 60)}h ago`
+}
+
+function Skeleton() {
+  return (
+    <div style={{
+      height: "32px",
+      width: "80px",
+      backgroundColor: "rgba(205,201,192,0.1)",
+      borderRadius: "6px",
+      animation: "pulse 1.5s ease-in-out infinite",
+    }} />
+  )
+}
 
 export default function DashboardPage() {
   const { data: session } = useSession()
-  const [activeLocation, setActiveLocation] = useState("Corpus Christi")
+  const [activeLocation, setActiveLocation] = useState("Both")
+  const [metricsData, setMetricsData] = useState<LocationMetrics[]>([])
+  const [pendingCount, setPendingCount] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
+  const [now, setNow] = useState(Date.now()) // for re-rendering timeAgo
+
   const userName = session?.user?.name?.split(" ")[0] || "Robert"
   const hour = new Date().getHours()
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening"
@@ -13,11 +50,47 @@ export default function DashboardPage() {
     weekday: "long", month: "long", day: "numeric", year: "numeric"
   }).toUpperCase()
 
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams({ period: "week" })
+      if (activeLocation !== "Both") params.set("location", activeLocation)
+
+      const [metricsRes, approvalsRes] = await Promise.all([
+        fetch(`/api/metrics/live?${params}`),
+        fetch("/api/approvals/pending"),
+      ])
+      const metricsJson = await metricsRes.json()
+      const approvalsJson = await approvalsRes.json()
+
+      setMetricsData(metricsJson.metrics || [])
+      setPendingCount(approvalsJson.users?.length || 0)
+      setUpdatedAt(new Date())
+    } catch {
+      // silent fail — show zeros
+    } finally {
+      setLoading(false)
+    }
+  }, [activeLocation])
+
+  useEffect(() => { fetchData() }, [fetchData])
+
+  // Update "time ago" every 30s
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 30000)
+    return () => clearInterval(id)
+  }, [])
+
+  // Compute totals from fetched data
+  const totalRevenue = metricsData.reduce((s, d) => s + d.revenue, 0)
+  const totalServices = metricsData.reduce((s, d) => s + d.serviceCount, 0)
+  const totalAvg = totalServices > 0 ? totalRevenue / totalServices : 0
+
   const metrics = [
-    { label: "Revenue This Week", value: "$0", icon: "payments", sub: "\u2194 0% vs last week" },
-    { label: "Services This Week", value: "0", icon: "content_cut", sub: "Across all stylists" },
-    { label: "New Clients", value: "0", icon: "person_add", sub: "This week" },
-    { label: "Pending Approvals", value: "0", icon: "rule", sub: "Needs attention" },
+    { label: "Revenue This Week", value: loading ? null : fmt(totalRevenue), icon: "payments", sub: activeLocation === "Both" ? "Both locations" : activeLocation },
+    { label: "Services This Week", value: loading ? null : String(totalServices), icon: "content_cut", sub: "Across all stylists" },
+    { label: "Avg Ticket", value: loading ? null : fmt(totalAvg), icon: "receipt_long", sub: "Per service" },
+    { label: "Pending Approvals", value: loading ? null : String(pendingCount), icon: "rule", sub: "Needs attention", alert: pendingCount > 0 },
   ]
 
   const statusCards = [
@@ -32,31 +105,52 @@ export default function DashboardPage() {
     { href: "/approvals", icon: "task_alt", label: "Review Approvals" },
   ]
 
+  // suppress unused var warning
+  void now
+
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px" }}>
+      <style>{`@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }`}</style>
 
       {/* HERO HEADER */}
       <div style={{ marginBottom: "28px" }}>
-        <h1 style={{
-          fontSize: "32px",
-          fontWeight: 800,
-          color: "#FFFFFF",
-          margin: "0 0 5px 0",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-        }}>
-          {greeting}, {userName} <span aria-hidden>&#x1F44B;</span>
-        </h1>
-        <p style={{
-          fontSize: "11px",
-          fontWeight: 600,
-          color: "#94A3B8",
-          letterSpacing: "0.15em",
-          textTransform: "uppercase" as const,
-          margin: 0,
-        }}>
-          {dateStr}
-        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "5px" }}>
+          <h1 style={{
+            fontSize: "32px",
+            fontWeight: 800,
+            color: "#FFFFFF",
+            margin: 0,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            {greeting}, {userName} <span aria-hidden>&#x1F44B;</span>
+          </h1>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <p style={{
+            fontSize: "11px",
+            fontWeight: 600,
+            color: "#94A3B8",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase" as const,
+            margin: 0,
+          }}>
+            {dateStr}
+          </p>
+          {updatedAt && (
+            <span style={{
+              fontSize: "10px",
+              fontWeight: 600,
+              color: "rgba(205,201,192,0.4)",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+            }}>
+              <span style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "#10B981", display: "inline-block" }} />
+              Live · Updated {timeAgo(updatedAt)}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* LOCATION TABS */}
@@ -69,7 +163,7 @@ export default function DashboardPage() {
         marginBottom: "24px",
         border: "1px solid rgba(205,201,192,0.08)",
       }}>
-        {["Corpus Christi", "San Antonio", "Both"].map((loc) => (
+        {["Both", "Corpus Christi", "San Antonio"].map((loc) => (
           <button
             key={loc}
             onClick={() => setActiveLocation(loc)}
@@ -87,7 +181,7 @@ export default function DashboardPage() {
               transition: "all 0.15s",
             }}
           >
-            {loc}
+            {loc === "Corpus Christi" ? "CC" : loc === "San Antonio" ? "SA" : loc}
           </button>
         ))}
       </div>
@@ -102,11 +196,12 @@ export default function DashboardPage() {
         {metrics.map((m) => (
           <div key={m.label} style={{
             backgroundColor: "#1a2a32",
-            border: "1px solid rgba(205,201,192,0.1)",
+            border: m.alert ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(205,201,192,0.1)",
             borderRadius: "10px",
             padding: "20px",
             transition: "transform 0.15s, box-shadow 0.15s",
             cursor: "default",
+            position: "relative",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
               <span style={{
@@ -118,7 +213,7 @@ export default function DashboardPage() {
               }}>
                 {m.label}
               </span>
-              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "rgba(205,201,192,0.25)" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: m.alert ? "#EF4444" : "rgba(205,201,192,0.25)" }}>
                 {m.icon}
               </span>
             </div>
@@ -130,11 +225,22 @@ export default function DashboardPage() {
               marginBottom: "6px",
               letterSpacing: "-0.02em",
             }}>
-              {m.value}
+              {m.value === null ? <Skeleton /> : m.value}
             </div>
             <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
               {m.sub}
             </div>
+            {m.alert && (
+              <div style={{
+                position: "absolute",
+                top: "12px",
+                right: "12px",
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                backgroundColor: "#EF4444",
+              }} />
+            )}
           </div>
         ))}
       </div>
