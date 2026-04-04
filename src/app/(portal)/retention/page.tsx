@@ -22,10 +22,13 @@ interface CustomerData {
   email: string
   phone: string
   totalVisits: number
+  ticketCount: number
   firstVisit: string
   lastVisit: string
   totalSpend: number
   avgTicket: number
+  minTicket: number
+  maxTicket: number
   daysSinceLastVisit: number
   lapsedSegment: string
   preferredStylist: string
@@ -518,8 +521,8 @@ export default function RetentionPage() {
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(205,201,192,0.12)" }}>
-                      {["#", "Client", "Visits", "Total Spend", "Avg Ticket", "Last Visit", "Stylist", "Location"].map((h) => (
-                        <th key={h} style={{ padding: "10px 8px", textAlign: "left", color: "rgba(205,201,192,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
+                      {["#", "Client", "Visits", "Tickets", "Total Spend", "Avg", "Min", "Max", "Last Visit", "Stylist"].map((h) => (
+                        <th key={h} style={{ padding: "10px 8px", textAlign: "left", color: "rgba(205,201,192,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
                           {h}
                         </th>
                       ))}
@@ -531,24 +534,26 @@ export default function RetentionPage() {
                         <td style={{ padding: "8px", color: "rgba(205,201,192,0.4)", fontWeight: 700 }}>{i + 1}</td>
                         <td style={{ padding: "8px", color: "#FFFFFF", fontWeight: 600 }}>{c.customerName}</td>
                         <td style={{ padding: "8px", color: "#22c55e", fontWeight: 700 }}>{c.totalVisits}</td>
-                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>${c.avgTicket.toFixed(2)}</td>
+                        <td style={{ padding: "8px", color: c.ticketCount !== c.totalVisits ? "#F59E0B" : "rgba(205,201,192,0.5)", fontWeight: 600 }}>{c.ticketCount}{c.ticketCount !== c.totalVisits && <span style={{ fontSize: "9px", color: "#94A3B8" }}> paid</span>}</td>
+                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 0 })}</td>
+                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>${c.avgTicket.toFixed(0)}</td>
+                        <td style={{ padding: "8px", color: c.minTicket >= 50 ? "#10B981" : "#94A3B8" }}>{c.minTicket > 0 ? `$${c.minTicket.toFixed(0)}` : "\u2014"}</td>
+                        <td style={{ padding: "8px", color: "#CDC9C0", fontWeight: 700 }}>{c.maxTicket > 0 ? `$${c.maxTicket.toFixed(0)}` : "\u2014"}</td>
                         <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>{new Date(c.lastVisit).toLocaleDateString()}</td>
                         <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>{c.preferredStylist}</td>
-                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>{c.locationName}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
 
-              <h3 style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700, marginBottom: "16px" }}>Top 5 Highest Average Tickets</h3>
+              <h3 style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700, marginBottom: "16px" }}>Top 5 Highest Single Tickets</h3>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(205,201,192,0.12)" }}>
-                      {["#", "Client", "Avg Ticket", "Total Spend", "Visits", "Stylist"].map((h) => (
-                        <th key={h} style={{ padding: "10px 8px", textAlign: "left", color: "rgba(205,201,192,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
+                      {["#", "Client", "Max Ticket", "Avg Ticket", "Total Spend", "Visits", "Stylist"].map((h) => (
+                        <th key={h} style={{ padding: "10px 8px", textAlign: "left", color: "rgba(205,201,192,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
                           {h}
                         </th>
                       ))}
@@ -559,8 +564,9 @@ export default function RetentionPage() {
                       <tr key={c.customerId} style={{ borderBottom: "1px solid rgba(205,201,192,0.06)" }}>
                         <td style={{ padding: "8px", color: "rgba(205,201,192,0.4)", fontWeight: 700 }}>{i + 1}</td>
                         <td style={{ padding: "8px", color: "#FFFFFF", fontWeight: 600 }}>{c.customerName}</td>
-                        <td style={{ padding: "8px", color: "#CDC9C0", fontWeight: 700, fontSize: "14px" }}>${c.avgTicket.toFixed(2)}</td>
-                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        <td style={{ padding: "8px", color: "#CDC9C0", fontWeight: 700, fontSize: "14px" }}>${c.maxTicket.toFixed(2)}</td>
+                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>${c.avgTicket.toFixed(0)}</td>
+                        <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 0 })}</td>
                         <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>{c.totalVisits}</td>
                         <td style={{ padding: "8px", color: "rgba(205,201,192,0.7)" }}>{c.preferredStylist}</td>
                       </tr>

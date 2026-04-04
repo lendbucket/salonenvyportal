@@ -25,10 +25,13 @@ interface CustomerRetention {
   email: string
   phone: string
   totalVisits: number
+  ticketCount: number
   firstVisit: string
   lastVisit: string
   totalSpend: number
   avgTicket: number
+  minTicket: number
+  maxTicket: number
   daysSinceLastVisit: number
   lapsedSegment: string
   preferredStylist: string
@@ -158,8 +161,8 @@ export async function getAllRetentionData(
     }
   }
 
-  // Step 2: Get customer spend from orders
-  const customerSpend: Record<string, number> = {}
+  // Step 2: Get customer spend from orders — store individual amounts
+  const customerOrders: Record<string, number[]> = {}
 
   for (const chunk of chunks) {
     try {
@@ -179,7 +182,8 @@ export async function getAllRetentionData(
         if (!custId) continue
         const amount = Number(o.totalMoney?.amount || 0) / 100
         if (amount > 0) {
-          customerSpend[custId] = (customerSpend[custId] || 0) + amount
+          if (!customerOrders[custId]) customerOrders[custId] = []
+          customerOrders[custId].push(amount)
         }
       }
     } catch (err) {
@@ -238,9 +242,13 @@ export async function getAllRetentionData(
     }
     const locationName = Object.entries(locationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || ""
 
-    const totalSpend = customerSpend[custId] || 0
+    const orders = customerOrders[custId] || []
+    const totalSpend = orders.reduce((sum, a) => sum + a, 0)
+    const ticketCount = orders.length
+    const avgTicket = ticketCount > 0 ? Math.round((totalSpend / ticketCount) * 100) / 100 : 0
+    const minTicket = ticketCount > 0 ? Math.round(Math.min(...orders) * 100) / 100 : 0
+    const maxTicket = ticketCount > 0 ? Math.round(Math.max(...orders) * 100) / 100 : 0
     const totalVisits = bookings.length
-    const avgTicket = totalSpend > 0 && totalVisits > 0 ? Math.round((totalSpend / totalVisits) * 100) / 100 : 0
 
     customers.push({
       customerId: custId,
@@ -248,10 +256,13 @@ export async function getAllRetentionData(
       email: customerEmails[custId] || "",
       phone: customerPhones[custId] || "",
       totalVisits,
+      ticketCount,
       firstVisit,
       lastVisit,
       totalSpend,
       avgTicket,
+      minTicket,
+      maxTicket,
       daysSinceLastVisit,
       lapsedSegment: getLapsedSegment(daysSinceLastVisit),
       preferredStylist,
@@ -288,8 +299,8 @@ export async function getAllRetentionData(
     .slice(0, 20)
 
   const top5HighestTickets = [...customers]
-    .filter((c) => c.avgTicket > 0)
-    .sort((a, b) => b.avgTicket - a.avgTicket)
+    .filter((c) => c.maxTicket > 0)
+    .sort((a, b) => b.maxTicket - a.maxTicket)
     .slice(0, 5)
 
   // Retention score: weighted combination
