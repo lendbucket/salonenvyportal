@@ -1,4 +1,4 @@
-import { PortalShell } from "./portal-shell"
+import PortalShell from "./portal-shell"
 
 export default function PortalLayout({
   children,
@@ -6,7 +6,7 @@ export default function PortalLayout({
   children: React.ReactNode
 }) {
   return (
-    <PortalShell userName="Robert" userEmail="ceo@36west.org" userRole="OWNER">
+    <PortalShell>
       <div style={{ animation: "fadeIn 0.2s ease" }}>
         {children}
       </div>
