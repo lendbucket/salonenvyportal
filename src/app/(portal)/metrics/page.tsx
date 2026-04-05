@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { useUserRole } from "@/hooks/useUserRole"
 
 interface StylistMetric {
@@ -71,6 +72,7 @@ function ChangeIndicator({ change }: { change: number | null }) {
 }
 
 export default function MetricsPage() {
+  const router = useRouter()
   const { isOwner, locationName: userLocation } = useUserRole()
   const [period, setPeriod] = useState("today")
   const [location, setLocation] = useState("Both")
@@ -314,7 +316,7 @@ export default function MetricsPage() {
                       const tktCh = prevStylist && prevStylist.avgTicket > 0 ? getChange(stylist.avgTicket, prevStylist.avgTicket) : null
 
                       return (
-                        <tr key={stylist.teamMemberId} style={{ borderBottom: "1px solid rgba(205,201,192,0.06)" }}>
+                        <tr key={stylist.teamMemberId} onClick={() => router.push(`/stylist/${stylist.teamMemberId}`)} style={{ borderBottom: "1px solid rgba(205,201,192,0.06)", cursor: "pointer" }}>
                           <td style={{ padding: "12px 14px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                               <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>

@@ -24,5 +24,6 @@ export const config = {
     "/preferences/:path*",
     "/retention/:path*",
     "/cancellations/:path*",
+    "/stylist/:path*",
   ]
 }

@@ -22,17 +22,20 @@ const SUGGESTED_PROMPTS = [
 
 function ReynaAvatar({ size = 36 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 36 36" fill="none">
-      <defs>
-        <linearGradient id="reynaGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#1a3a3a" />
-          <stop offset="1" stopColor="#2a5a5a" />
-        </linearGradient>
-      </defs>
-      <rect width="36" height="36" rx="10" fill="url(#reynaGrad)" />
-      <circle cx="18" cy="13" r="5" fill="rgba(205,201,192,0.85)" />
-      <path d="M10 28c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="rgba(205,201,192,0.85)" />
-    </svg>
+    <div style={{
+      width: size,
+      height: size,
+      borderRadius: size * 0.28,
+      background: "linear-gradient(135deg, #0a2a2a 0%, #1a4a4a 50%, #0f3535 100%)",
+      border: "1px solid rgba(205,201,192,0.4)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+      flexShrink: 0,
+    }}>
+      <img src="/images/logo-white.png" alt="Reyna" style={{ width: size * 0.75, height: "auto", objectFit: "contain", opacity: 0.9 }} />
+    </div>
   )
 }
 
@@ -167,12 +170,22 @@ export default function ReynaAIPage() {
         <p style={{
           fontSize: isMobile ? "14px" : "15px",
           color: "rgba(255,255,255,0.45)",
-          margin: 0,
+          margin: "0 0 4px",
           lineHeight: 1.6,
           maxWidth: "400px",
           marginInline: "auto",
         }}>
-          Your color director, operations copilot, and business coach — all in one.
+          Salon Envy Intelligence System
+        </p>
+        <p style={{
+          fontSize: isMobile ? "12px" : "13px",
+          color: "rgba(255,255,255,0.3)",
+          margin: 0,
+          lineHeight: 1.5,
+          maxWidth: "400px",
+          marginInline: "auto",
+        }}>
+          Color Director &middot; Operations Copilot &middot; Business Coach
         </p>
       </div>
       <div style={{
@@ -346,7 +359,7 @@ export default function ReynaAIPage() {
           <div style={{ fontSize: isMobile ? "14px" : "15px", fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.01em" }}>Reyna AI</div>
           <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: "4px" }}>
             <div style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "#10B981" }} />
-            Color Director
+            Salon Envy Intelligence
           </div>
         </div>
       </div>

@@ -209,28 +209,6 @@ export default function DashboardPage() {
   const allStylists: StylistMetrics[] = metricsData.flatMap((m) => m.stylistBreakdown || [])
   const topStylist = allStylists.length > 0 ? [...allStylists].sort((a, b) => b.revenue - a.revenue)[0] : null
 
-  const statusCards = [
-    {
-      label: "Cancellations",
-      sub: cancellations ? `${cancellations.noShows} no-shows \u00b7 ${cancellations.cancelledByCustomer} client cancelled` : "Loading...",
-      icon: "event_busy",
-      count: cancellations?.totalCancellations ?? 0,
-    },
-    {
-      label: "Top Stylist",
-      sub: topStylist ? `${topStylist.homeLocation === "Corpus Christi" ? "CC" : "SA"} \u00b7 ${topStylist.serviceCount} services` : "No data yet",
-      icon: "star",
-      count: topStylist ? topStylist.name.split(" ")[0] : "\u2014",
-    },
-    {
-      label: "Retention",
-      sub: "Full analysis available",
-      icon: "favorite",
-      count: "Run",
-      href: "/retention",
-    },
-  ]
-
   const quickActions = [
     { href: "/inventory/add", icon: "add_box", label: "Add Inventory" },
     { href: "/schedule", icon: "calendar_today", label: "Build Schedule" },
@@ -367,7 +345,7 @@ export default function DashboardPage() {
       {/* METRIC CARDS */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+        gridTemplateColumns: "repeat(2, 1fr)",
         gap: "14px",
         marginBottom: "20px",
       }}>
@@ -430,71 +408,74 @@ export default function DashboardPage() {
         gap: "14px",
         marginBottom: "20px",
       }}>
-        {statusCards.map((s) => {
-          const inner = (
-            <div style={{
-              backgroundColor: "#1a2a32",
-              border: "1px solid rgba(205,201,192,0.1)",
-              borderRadius: "10px",
-              padding: "16px 20px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              cursor: "pointer",
-              transition: "background-color 0.15s",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                <div style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "8px",
-                  backgroundColor: "rgba(205,201,192,0.06)",
-                  border: "1px solid rgba(205,201,192,0.12)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>
-                    {s.icon}
-                  </span>
-                </div>
-                <div>
-                  <div style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    color: "#CDC9C0",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase" as const,
-                    marginBottom: "2px",
-                  }}>
-                    {s.label}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "#94A3B8" }}>{s.sub}</div>
-                </div>
-              </div>
-              <div style={{
-                fontSize: typeof s.count === "string" ? "14px" : "24px",
-                fontWeight: 800,
-                color: "#FFFFFF",
-                backgroundColor: "rgba(205,201,192,0.06)",
-                minWidth: "44px",
-                height: "44px",
-                borderRadius: "8px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "0 10px",
-              }}>
-                {s.count}
-              </div>
+        {/* Cancellations */}
+        <Link href="/cancellations" style={{ textDecoration: "none" }}>
+          <div style={{
+            backgroundColor: "#1a2a32",
+            border: "1px solid rgba(205,201,192,0.1)",
+            borderRadius: "10px",
+            padding: "20px",
+            cursor: "pointer",
+            transition: "background-color 0.15s",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>event_busy</span>
+              <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Cancellations</span>
             </div>
-          )
-          return s.href ? (
-            <Link key={s.label} href={s.href} style={{ textDecoration: "none" }}>{inner}</Link>
-          ) : (
-            <div key={s.label}>{inner}</div>
-          )
-        })}
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+              {cancellations?.totalCancellations ?? 0}
+            </div>
+            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
+              {cancellations ? `${cancellations.noShows} no-shows \u00b7 ${cancellations.cancelledByCustomer} client cancelled` : "Loading..."}
+            </div>
+          </div>
+        </Link>
+
+        {/* Top Stylist */}
+        <Link href="/metrics" style={{ textDecoration: "none" }}>
+          <div style={{
+            backgroundColor: "#1a2a32",
+            border: "1px solid rgba(205,201,192,0.1)",
+            borderRadius: "10px",
+            padding: "20px",
+            cursor: "pointer",
+            transition: "background-color 0.15s",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>star</span>
+              <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Top Stylist</span>
+            </div>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+              {topStylist ? topStylist.name.split(" ")[0] : "\u2014"}
+            </div>
+            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
+              {topStylist ? `${topStylist.homeLocation === "Corpus Christi" ? "CC" : "SA"} \u00b7 ${topStylist.serviceCount} services` : "No data yet"}
+            </div>
+          </div>
+        </Link>
+
+        {/* Retention */}
+        <Link href="/retention" style={{ textDecoration: "none" }}>
+          <div style={{
+            backgroundColor: "#1a2a32",
+            border: "1px solid rgba(205,201,192,0.1)",
+            borderRadius: "10px",
+            padding: "20px",
+            cursor: "pointer",
+            transition: "background-color 0.15s",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>favorite</span>
+              <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Retention</span>
+            </div>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+              Run
+            </div>
+            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
+              Full analysis available
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* QUICK ACTIONS */}
