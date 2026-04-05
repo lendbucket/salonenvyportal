@@ -1,11 +1,11 @@
 {
-  "name": "Salon Envy\u00ae Portal",
+  "name": "Salon Envy Portal",
   "short_name": "SE Portal",
   "description": "Salon Envy Management Portal",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#0f1d24",
-  "theme_color": "#0f1d24",
+  "background_color": "#0a1520",
+  "theme_color": "#0a1520",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -24,15 +24,13 @@
   "shortcuts": [
     {
       "name": "My Schedule",
-      "short_name": "Schedule",
       "url": "/my-schedule",
-      "icons": [{ "src": "/images/logo-white.png", "sizes": "192x192" }]
+      "description": "View your work schedule"
     },
     {
       "name": "Reyna AI",
-      "short_name": "Reyna",
       "url": "/reyna-ai",
-      "icons": [{ "src": "/images/logo-white.png", "sizes": "192x192" }]
+      "description": "Ask Reyna AI"
     }
   ]
 }

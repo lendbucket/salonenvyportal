@@ -3,6 +3,14 @@ html, body {
   width: 100%;
 }
 
+/* PWA Safe Areas */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    background-color: #0a1520;
+  }
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";

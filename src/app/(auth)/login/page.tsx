@@ -46,6 +46,7 @@ function LoginForm() {
       justifyContent: "center",
       backgroundColor: "#0f1d24",
       padding: "24px",
+      paddingTop: "max(24px, env(safe-area-inset-top, 24px))",
     }}>
       <div style={{
         width: "100%",

@@ -173,18 +173,21 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
         />
 
-        {/* TOP BAR — 52px */}
+        {/* TOP BAR — with safe area */}
         <header style={{
-          height: "52px",
+          paddingTop: "env(safe-area-inset-top, 0px)",
           backgroundColor: "#0a1520",
           borderBottom: "1px solid rgba(205,201,192,0.08)",
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+        }}>
+        <div style={{
+          height: "52px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           padding: "0 14px",
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <img
@@ -228,6 +231,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           >
             <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>menu</span>
           </button>
+        </div>
         </header>
 
         {/* DRAWER OVERLAY */}

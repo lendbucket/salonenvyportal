@@ -378,7 +378,7 @@ export default function ReynaAIPage() {
     return (
       <div style={{
         position: "fixed",
-        top: "52px",
+        top: "calc(52px + env(safe-area-inset-top, 0px))",
         left: 0,
         right: 0,
         bottom: "60px",
