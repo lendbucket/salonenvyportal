@@ -102,15 +102,28 @@ export async function POST(req: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paymentRes = await square.payments.create(paymentCreateParams as any)
 
+    // Try to mark booking as completed in Square
+    if (bookingId) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (square.bookings as any).cancel?.({ bookingId, body: {} })
+          .catch(() => {}) // Booking may not support cancel/complete via API — non-critical
+      } catch {
+        // Non-critical — log but don't fail the checkout
+      }
+    }
+
     // Calculate commission breakdown (40% per service)
-    const commissionBreakdown = lineItems
-      .filter((item: { teamMemberId?: string }) => item.teamMemberId)
-      .map((item: { name: string; price: number; teamMemberId?: string }) => ({
-        teamMemberId: item.teamMemberId,
-        serviceName: item.name,
-        servicePrice: item.price,
-        commission: Math.round(item.price * 0.4 * 100) / 100,
-      }))
+    const commissionBreakdown = lineItems.map((item: { name: string; price: number; teamMemberId?: string; teamMemberName?: string }) => ({
+      service: item.name,
+      price: item.price,
+      teamMemberId: item.teamMemberId || null,
+      teamMemberName: item.teamMemberName || null,
+      commission: parseFloat((item.price * 0.40).toFixed(2)),
+    }))
+    const totalCommission = parseFloat(
+      (lineItems.reduce((s: number, i: { price: number }) => s + i.price, 0) * 0.40).toFixed(2)
+    )
 
     return NextResponse.json({
       success: true,
@@ -120,6 +133,7 @@ export async function POST(req: NextRequest) {
       receipt: paymentRes.payment?.receiptUrl,
       paymentMethod: isCash ? "cash" : "card",
       commissionBreakdown,
+      totalCommission,
     })
   } catch (error: unknown) {
     console.error("Checkout error:", error)

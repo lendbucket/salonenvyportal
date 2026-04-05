@@ -100,6 +100,7 @@ export default function POSPage() {
   const [customTip, setCustomTip] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [showSuccess, setShowSuccess] = useState(false)
+  const [checkoutResult, setCheckoutResult] = useState<{ totalCharged?: number; receipt?: string; commissionBreakdown?: Array<{ service: string; teamMemberName: string; commission: number }>; totalCommission?: number } | null>(null)
   const [squareCard, setSquareCard] = useState<unknown>(null)
   const [squareReady, setSquareReady] = useState(false)
   const [squareInitError, setSquareInitError] = useState<string | null>(null)
@@ -384,6 +385,7 @@ export default function POSPage() {
       if (data.error) {
         setChargeError(data.error)
       } else {
+        setCheckoutResult(data)
         setShowSuccess(true)
       }
     } catch {
@@ -1173,11 +1175,39 @@ export default function POSPage() {
           Payment Successful
         </div>
         <div style={{ color: "rgba(205,201,192,0.5)", fontSize: "14px" }}>
-          {fmtCurrency(total)} charged
+          {fmtCurrency(checkoutResult?.totalCharged ?? total)} charged
           {selectedAppt ? ` for ${selectedAppt.customerName}` : ""}
         </div>
+
+        {/* Commission breakdown */}
+        {checkoutResult?.commissionBreakdown && checkoutResult.commissionBreakdown.length > 0 && (
+          <div style={{ backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "10px", padding: "16px 20px", width: "100%", maxWidth: "360px", textAlign: "left", marginTop: "8px" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "10px" }}>
+              Commission (40%)
+            </div>
+            {checkoutResult.commissionBreakdown.map((item, i) => (
+              <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "6px" }}>
+                <span style={{ color: "#94A3B8" }}>{(item.teamMemberName || "").split(" ")[0]} — {item.service}</span>
+                <span style={{ color: "#10B981", fontWeight: 700 }}>{fmtCurrency(item.commission)}</span>
+              </div>
+            ))}
+            {checkoutResult.totalCommission != null && (
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", fontWeight: 800, borderTop: "1px solid rgba(205,201,192,0.1)", paddingTop: "8px", marginTop: "4px" }}>
+                <span style={{ color: "#CDC9C0" }}>Total Commission</span>
+                <span style={{ color: "#10B981" }}>{fmtCurrency(checkoutResult.totalCommission)}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {checkoutResult?.receipt && (
+          <a href={checkoutResult.receipt} target="_blank" rel="noopener noreferrer" style={{ fontSize: "12px", color: "#CDC9C0", textDecoration: "none", marginTop: "8px" }}>
+            View Receipt
+          </a>
+        )}
+
         <button
-          onClick={resetCheckout}
+          onClick={() => { setCheckoutResult(null); resetCheckout() }}
           style={{
             marginTop: "20px",
             padding: "14px 32px",
