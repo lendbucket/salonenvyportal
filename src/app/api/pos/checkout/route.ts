@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    const { locationId, customerId, lineItems, tipAmount, sourceId, bookingId, note, paymentMethod, taxAmount } = await req.json()
+    const { locationId, customerId, lineItems, tipAmount, sourceId, bookingId, note, paymentMethod, taxAmount, cashReceived, signatureData } = await req.json()
 
     if (!lineItems?.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
@@ -82,12 +82,20 @@ export async function POST(req: NextRequest) {
 
     // Add cash details for cash payments
     if (isCash) {
+      const cashAmt = cashReceived ? Math.round(cashReceived * 100) : totalAmount + tipAmt
       paymentCreateParams.cashDetails = {
         buyerSuppliedMoney: {
-          amount: BigInt(totalAmount + tipAmt),
+          amount: BigInt(cashAmt),
           currency: "USD",
         },
       }
+    }
+
+    // Append signature note if provided
+    if (signatureData) {
+      paymentCreateParams.note = paymentCreateParams.note
+        ? `${paymentCreateParams.note} | Signature captured`
+        : "Signature captured"
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
