@@ -1,0 +1,1149 @@
+"use client"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { useUserRole } from "@/hooks/useUserRole"
+
+/* ── Team member name map (hardcoded) ── */
+const TEAM_NAMES: Record<string, string> = {
+  TMbc13IBzS8Z43AO: "Clarissa",
+  TMMJKxeQuMlMW1Dw: "Melissa",
+  TMKwAEkzf3NN3Hiu: "Yahaira",
+  TMxKBPJq29Wfrl2N: "Jasmine",
+  TMr3JMjH29LqXLJp: "Briana",
+  TM3eYXBb4hFwcPwA: "Priscilla",
+  TMPFXkqFP7vJXRMa: "Christina",
+  TM0JKR4Zq4jMNcbE: "Nayelie",
+}
+
+interface Appointment {
+  id: string
+  customerName: string
+  customerPhone: string
+  startTime: string
+  teamMemberId: string | null
+  status: string
+}
+
+interface ServiceVariation {
+  id: string
+  name: string
+  price: number
+}
+
+interface CatalogService {
+  id: string
+  name: string
+  variations: ServiceVariation[]
+}
+
+interface CartItem {
+  variationId: string
+  serviceName: string
+  variationName: string
+  price: number
+  qty: number
+}
+
+const LOCATIONS = ["Corpus Christi", "San Antonio"]
+
+export default function POSPage() {
+  const { isOwner, isStylist, locationName } = useUserRole()
+
+  const [isMobile, setIsMobile] = useState(false)
+  const [mobileTab, setMobileTab] = useState<"appointments" | "checkout">("appointments")
+
+  const [location, setLocation] = useState(locationName || "Corpus Christi")
+  const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [catalog, setCatalog] = useState<CatalogService[]>([])
+  const [loadingAppts, setLoadingAppts] = useState(true)
+  const [loadingCatalog, setLoadingCatalog] = useState(true)
+
+  const [selectedAppt, setSelectedAppt] = useState<Appointment | null>(null)
+  const [cart, setCart] = useState<CartItem[]>([])
+  const [tipPercent, setTipPercent] = useState<number | null>(20)
+  const [customTip, setCustomTip] = useState("")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showSuccess, setShowSuccess] = useState(false)
+
+  // Responsive
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
+
+  const dateStr = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  })
+
+  // Fetch appointments
+  const fetchAppointments = useCallback(async () => {
+    setLoadingAppts(true)
+    try {
+      const params = new URLSearchParams()
+      if (isOwner && location) params.set("location", location)
+      const res = await fetch(`/api/pos/appointments?${params}`)
+      const data = await res.json()
+      setAppointments(data.appointments || [])
+    } catch {
+      setAppointments([])
+    } finally {
+      setLoadingAppts(false)
+    }
+  }, [isOwner, location])
+
+  // Fetch catalog
+  const fetchCatalog = useCallback(async () => {
+    setLoadingCatalog(true)
+    try {
+      const res = await fetch("/api/pos/catalog")
+      const data = await res.json()
+      setCatalog(data.services || [])
+    } catch {
+      setCatalog([])
+    } finally {
+      setLoadingCatalog(false)
+    }
+  }, [])
+
+  useEffect(() => { fetchAppointments() }, [fetchAppointments])
+  useEffect(() => { fetchCatalog() }, [fetchCatalog])
+
+  // Cart helpers
+  const addToCart = (service: CatalogService, variation: ServiceVariation) => {
+    setCart((prev) => {
+      const existing = prev.find((c) => c.variationId === variation.id)
+      if (existing) {
+        return prev.map((c) =>
+          c.variationId === variation.id ? { ...c, qty: c.qty + 1 } : c
+        )
+      }
+      return [
+        ...prev,
+        {
+          variationId: variation.id,
+          serviceName: service.name,
+          variationName: variation.name,
+          price: variation.price,
+          qty: 1,
+        },
+      ]
+    })
+  }
+
+  const updateQty = (variationId: string, delta: number) => {
+    setCart((prev) =>
+      prev
+        .map((c) =>
+          c.variationId === variationId ? { ...c, qty: c.qty + delta } : c
+        )
+        .filter((c) => c.qty > 0)
+    )
+  }
+
+  const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0)
+  const tipAmount =
+    tipPercent !== null ? subtotal * (tipPercent / 100) : Number(customTip) || 0
+  const total = subtotal + tipAmount
+
+  const filteredCatalog = useMemo(() => {
+    if (!searchQuery.trim()) return catalog
+    const q = searchQuery.toLowerCase()
+    return catalog.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.variations.some((v) => v.name.toLowerCase().includes(q))
+    )
+  }, [catalog, searchQuery])
+
+  const handleCharge = () => {
+    // TODO: Integrate Square Web Payments SDK for real card payments
+    setShowSuccess(true)
+  }
+
+  const resetCheckout = () => {
+    setCart([])
+    setSelectedAppt(null)
+    setTipPercent(20)
+    setCustomTip("")
+    setShowSuccess(false)
+    setSearchQuery("")
+    if (isMobile) setMobileTab("appointments")
+  }
+
+  const fmtTime = (iso: string) => {
+    try {
+      return new Date(iso).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    } catch {
+      return iso
+    }
+  }
+
+  const fmtCurrency = (n: number) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(n)
+
+  /* ── Shared UI blocks ── */
+
+  function AppointmentCard({ appt }: { appt: Appointment }) {
+    const isSelected = selectedAppt?.id === appt.id
+    return (
+      <button
+        onClick={() => {
+          setSelectedAppt(appt)
+          if (isMobile) setMobileTab("checkout")
+        }}
+        style={{
+          width: "100%",
+          textAlign: "left",
+          padding: "14px 16px",
+          backgroundColor: isSelected ? "rgba(205,201,192,0.1)" : "#1a2a32",
+          border: isSelected
+            ? "1px solid rgba(205,201,192,0.3)"
+            : "1px solid rgba(205,201,192,0.08)",
+          borderRadius: "10px",
+          cursor: "pointer",
+          transition: "all 0.15s",
+          display: "flex",
+          flexDirection: "column",
+          gap: "6px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span
+            style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 700 }}
+          >
+            {appt.customerName}
+          </span>
+          <span
+            style={{
+              fontSize: "10px",
+              fontWeight: 700,
+              padding: "3px 8px",
+              borderRadius: "4px",
+              backgroundColor:
+                appt.status === "ACCEPTED"
+                  ? "rgba(16,185,129,0.12)"
+                  : "rgba(205,201,192,0.08)",
+              color:
+                appt.status === "ACCEPTED" ? "#10B981" : "rgba(205,201,192,0.5)",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            {appt.status}
+          </span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "12px",
+            fontSize: "11px",
+            color: "rgba(205,201,192,0.55)",
+            fontWeight: 500,
+          }}
+        >
+          <span>{fmtTime(appt.startTime)}</span>
+          {appt.teamMemberId && (
+            <span>
+              {TEAM_NAMES[appt.teamMemberId] || appt.teamMemberId.slice(0, 6)}
+            </span>
+          )}
+        </div>
+      </button>
+    )
+  }
+
+  function CatalogGrid() {
+    return (
+      <div>
+        {/* Search */}
+        <div style={{ marginBottom: "14px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "10px 14px",
+              backgroundColor: "rgba(205,201,192,0.04)",
+              border: "1px solid rgba(205,201,192,0.1)",
+              borderRadius: "8px",
+            }}
+          >
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: "18px", color: "rgba(205,201,192,0.35)" }}
+            >
+              search
+            </span>
+            <input
+              type="text"
+              placeholder="Search services..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                flex: 1,
+                backgroundColor: "transparent",
+                border: "none",
+                outline: "none",
+                color: "#FFFFFF",
+                fontSize: "13px",
+              }}
+            />
+          </div>
+        </div>
+        {loadingCatalog ? (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "40px 0",
+              color: "rgba(205,201,192,0.35)",
+              fontSize: "12px",
+            }}
+          >
+            Loading catalog...
+          </div>
+        ) : filteredCatalog.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "40px 0",
+              color: "rgba(205,201,192,0.35)",
+              fontSize: "12px",
+            }}
+          >
+            No services found
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+              gap: "10px",
+            }}
+          >
+            {filteredCatalog.map((service) =>
+              service.variations.map((v) => (
+                <button
+                  key={v.id}
+                  onClick={() => addToCart(service, v)}
+                  style={{
+                    padding: "14px 12px",
+                    backgroundColor: "#1a2a32",
+                    border: "1px solid rgba(205,201,192,0.08)",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "all 0.15s",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "6px",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#FFFFFF",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {service.name}
+                  </span>
+                  {service.variations.length > 1 && (
+                    <span
+                      style={{
+                        color: "rgba(205,201,192,0.45)",
+                        fontSize: "10px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {v.name}
+                    </span>
+                  )}
+                  <span
+                    style={{
+                      color: "#CDC9C0",
+                      fontSize: "14px",
+                      fontWeight: 800,
+                    }}
+                  >
+                    {fmtCurrency(v.price)}
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  function CartPanel() {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
+        {/* Selected appointment info */}
+        {selectedAppt && (
+          <div
+            style={{
+              padding: "14px 16px",
+              backgroundColor: "rgba(205,201,192,0.04)",
+              border: "1px solid rgba(205,201,192,0.08)",
+              borderRadius: "10px",
+              marginBottom: "14px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "9px",
+                fontWeight: 700,
+                color: "rgba(205,201,192,0.4)",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: "6px",
+              }}
+            >
+              Client
+            </div>
+            <div style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 700 }}>
+              {selectedAppt.customerName}
+            </div>
+            <div
+              style={{
+                color: "rgba(205,201,192,0.5)",
+                fontSize: "11px",
+                marginTop: "2px",
+              }}
+            >
+              {fmtTime(selectedAppt.startTime)}
+              {selectedAppt.teamMemberId &&
+                ` \u00b7 ${TEAM_NAMES[selectedAppt.teamMemberId] || "Stylist"}`}
+            </div>
+          </div>
+        )}
+
+        {/* Cart items */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            marginBottom: "14px",
+          }}
+        >
+          {cart.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "30px 0",
+                color: "rgba(205,201,192,0.3)",
+                fontSize: "12px",
+              }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "32px", display: "block", marginBottom: "8px" }}
+              >
+                shopping_cart
+              </span>
+              Add services to cart
+            </div>
+          ) : (
+            cart.map((item) => (
+              <div
+                key={item.variationId}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "10px 12px",
+                  backgroundColor: "#1a2a32",
+                  border: "1px solid rgba(205,201,192,0.08)",
+                  borderRadius: "8px",
+                }}
+              >
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div
+                    style={{
+                      color: "#FFFFFF",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {item.serviceName}
+                  </div>
+                  <div
+                    style={{
+                      color: "rgba(205,201,192,0.45)",
+                      fontSize: "10px",
+                    }}
+                  >
+                    {item.variationName} &middot; {fmtCurrency(item.price)}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <button
+                    onClick={() => updateQty(item.variationId, -1)}
+                    style={{
+                      width: "26px",
+                      height: "26px",
+                      borderRadius: "6px",
+                      backgroundColor: "rgba(205,201,192,0.08)",
+                      border: "1px solid rgba(205,201,192,0.15)",
+                      color: "#CDC9C0",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "14px",
+                      fontWeight: 700,
+                    }}
+                  >
+                    -
+                  </button>
+                  <span
+                    style={{
+                      color: "#FFFFFF",
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      minWidth: "18px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {item.qty}
+                  </span>
+                  <button
+                    onClick={() => updateQty(item.variationId, 1)}
+                    style={{
+                      width: "26px",
+                      height: "26px",
+                      borderRadius: "6px",
+                      backgroundColor: "rgba(205,201,192,0.08)",
+                      border: "1px solid rgba(205,201,192,0.15)",
+                      color: "#CDC9C0",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "14px",
+                      fontWeight: 700,
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+                <span
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    minWidth: "60px",
+                    textAlign: "right",
+                  }}
+                >
+                  {fmtCurrency(item.price * item.qty)}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Tip selector */}
+        {cart.length > 0 && (
+          <>
+            <div
+              style={{
+                fontSize: "9px",
+                fontWeight: 700,
+                color: "rgba(205,201,192,0.4)",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: "8px",
+              }}
+            >
+              Tip
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                marginBottom: "16px",
+                flexWrap: "wrap",
+              }}
+            >
+              {[0, 15, 20, 25].map((pct) => (
+                <button
+                  key={pct}
+                  onClick={() => {
+                    setTipPercent(pct)
+                    setCustomTip("")
+                  }}
+                  style={{
+                    padding: "8px 14px",
+                    borderRadius: "7px",
+                    border:
+                      tipPercent === pct
+                        ? "1px solid #CDC9C0"
+                        : "1px solid rgba(205,201,192,0.15)",
+                    backgroundColor:
+                      tipPercent === pct ? "rgba(205,201,192,0.12)" : "transparent",
+                    color: tipPercent === pct ? "#CDC9C0" : "rgba(205,201,192,0.5)",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                  }}
+                >
+                  {pct}%
+                </button>
+              ))}
+              <input
+                type="text"
+                placeholder="Custom $"
+                value={customTip}
+                onChange={(e) => {
+                  setCustomTip(e.target.value)
+                  setTipPercent(null)
+                }}
+                style={{
+                  width: "80px",
+                  padding: "8px 10px",
+                  borderRadius: "7px",
+                  border: "1px solid rgba(205,201,192,0.15)",
+                  backgroundColor: "transparent",
+                  color: "#FFFFFF",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  outline: "none",
+                }}
+              />
+            </div>
+          </>
+        )}
+
+        {/* Totals */}
+        {cart.length > 0 && (
+          <div
+            style={{
+              borderTop: "1px solid rgba(205,201,192,0.1)",
+              paddingTop: "14px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: "12px",
+                color: "rgba(205,201,192,0.55)",
+              }}
+            >
+              <span>Subtotal</span>
+              <span>{fmtCurrency(subtotal)}</span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: "12px",
+                color: "rgba(205,201,192,0.55)",
+              }}
+            >
+              <span>Tip</span>
+              <span>{fmtCurrency(tipAmount)}</span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: "18px",
+                fontWeight: 800,
+                color: "#FFFFFF",
+                paddingTop: "6px",
+                borderTop: "1px solid rgba(205,201,192,0.1)",
+              }}
+            >
+              <span>Total</span>
+              <span>{fmtCurrency(total)}</span>
+            </div>
+
+            {/* Charge button */}
+            <button
+              onClick={handleCharge}
+              style={{
+                marginTop: "10px",
+                padding: "16px",
+                backgroundColor: "#CDC9C0",
+                border: "none",
+                borderRadius: "10px",
+                color: "#0f1d24",
+                fontSize: "13px",
+                fontWeight: 800,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "18px" }}
+              >
+                credit_card
+              </span>
+              Charge {fmtCurrency(total)}
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  function SuccessOverlay() {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(15,29,36,0.95)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 200,
+          gap: "16px",
+        }}
+      >
+        <div
+          style={{
+            width: "80px",
+            height: "80px",
+            borderRadius: "50%",
+            backgroundColor: "rgba(16,185,129,0.12)",
+            border: "2px solid #10B981",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span
+            className="material-symbols-outlined"
+            style={{ fontSize: "40px", color: "#10B981" }}
+          >
+            check_circle
+          </span>
+        </div>
+        <div
+          style={{
+            color: "#FFFFFF",
+            fontSize: "24px",
+            fontWeight: 800,
+          }}
+        >
+          Payment Successful
+        </div>
+        <div style={{ color: "rgba(205,201,192,0.5)", fontSize: "14px" }}>
+          {fmtCurrency(total)} charged
+          {selectedAppt ? ` for ${selectedAppt.customerName}` : ""}
+        </div>
+        <button
+          onClick={resetCheckout}
+          style={{
+            marginTop: "20px",
+            padding: "14px 32px",
+            backgroundColor: "#CDC9C0",
+            border: "none",
+            borderRadius: "10px",
+            color: "#0f1d24",
+            fontSize: "12px",
+            fontWeight: 800,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+          }}
+        >
+          New Transaction
+        </button>
+      </div>
+    )
+  }
+
+  /* ═════════════════════════════════════
+     SUCCESS OVERLAY
+     ═════════════════════════════════════ */
+  if (showSuccess) {
+    return <SuccessOverlay />
+  }
+
+  /* ═════════════════════════════════════
+     MOBILE LAYOUT
+     ═════════════════════════════════════ */
+  if (isMobile) {
+    return (
+      <div style={{ padding: "16px", minHeight: "calc(100vh - 130px)" }}>
+        {/* Header */}
+        <div style={{ marginBottom: "16px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "6px",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "22px",
+                fontWeight: 800,
+                color: "#FFFFFF",
+                margin: 0,
+              }}
+            >
+              POS Terminal
+            </h1>
+            {isOwner && (
+              <select
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                style={{
+                  padding: "6px 10px",
+                  backgroundColor: "#1a2a32",
+                  border: "1px solid rgba(205,201,192,0.15)",
+                  borderRadius: "6px",
+                  color: "#CDC9C0",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  outline: "none",
+                }}
+              >
+                {LOCATIONS.map((l) => (
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+          <div
+            style={{
+              fontSize: "10px",
+              fontWeight: 600,
+              color: "rgba(205,201,192,0.4)",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+            }}
+          >
+            {dateStr}
+          </div>
+        </div>
+
+        {/* Tab switcher */}
+        <div
+          style={{
+            display: "flex",
+            gap: "2px",
+            backgroundColor: "#1a2a32",
+            padding: "3px",
+            borderRadius: "8px",
+            border: "1px solid rgba(205,201,192,0.08)",
+            marginBottom: "16px",
+          }}
+        >
+          {(["appointments", "checkout"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setMobileTab(tab)}
+              style={{
+                flex: 1,
+                padding: "10px",
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                borderRadius: "6px",
+                border: "none",
+                cursor: "pointer",
+                backgroundColor:
+                  mobileTab === tab ? "#CDC9C0" : "transparent",
+                color:
+                  mobileTab === tab ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                transition: "all 0.15s",
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        {mobileTab === "appointments" ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {loadingAppts ? (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 0",
+                  color: "rgba(205,201,192,0.35)",
+                  fontSize: "12px",
+                }}
+              >
+                Loading appointments...
+              </div>
+            ) : appointments.length === 0 ? (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 0",
+                  color: "rgba(205,201,192,0.35)",
+                  fontSize: "12px",
+                }}
+              >
+                No appointments today
+              </div>
+            ) : (
+              appointments.map((appt) => (
+                <AppointmentCard key={appt.id} appt={appt} />
+              ))
+            )}
+          </div>
+        ) : (
+          <div>
+            <CartPanel />
+            <div style={{ marginTop: "20px" }}>
+              <div
+                style={{
+                  fontSize: "9px",
+                  fontWeight: 700,
+                  color: "rgba(205,201,192,0.4)",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  marginBottom: "10px",
+                }}
+              >
+                Add Services
+              </div>
+              <CatalogGrid />
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  /* ═════════════════════════════════════
+     DESKTOP LAYOUT — 3 columns
+     ═════════════════════════════════════ */
+  return (
+    <div style={{ height: "calc(100vh - 52px)", display: "flex", flexDirection: "column" }}>
+      {/* Header bar */}
+      <div
+        style={{
+          padding: "16px 24px",
+          borderBottom: "1px solid rgba(205,201,192,0.08)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexShrink: 0,
+        }}
+      >
+        <div>
+          <h1
+            style={{
+              fontSize: "20px",
+              fontWeight: 800,
+              color: "#FFFFFF",
+              margin: "0 0 2px",
+            }}
+          >
+            POS Terminal
+          </h1>
+          <div
+            style={{
+              fontSize: "10px",
+              fontWeight: 600,
+              color: "rgba(205,201,192,0.4)",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+            }}
+          >
+            {dateStr}
+          </div>
+        </div>
+        {isOwner && (
+          <div style={{ display: "flex", gap: "4px" }}>
+            {LOCATIONS.map((l) => (
+              <button
+                key={l}
+                onClick={() => setLocation(l)}
+                style={{
+                  padding: "7px 16px",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  borderRadius: "6px",
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor:
+                    location === l ? "#CDC9C0" : "rgba(205,201,192,0.06)",
+                  color:
+                    location === l ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                  transition: "all 0.15s",
+                }}
+              >
+                {l === "Corpus Christi" ? "CC" : "SA"}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* 3-column grid */}
+      <div
+        style={{
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "300px 1fr 340px",
+          overflow: "hidden",
+        }}
+      >
+        {/* LEFT — Appointments */}
+        <div
+          style={{
+            borderRight: "1px solid rgba(205,201,192,0.08)",
+            overflowY: "auto",
+            padding: "16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "9px",
+              fontWeight: 700,
+              color: "rgba(205,201,192,0.4)",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              marginBottom: "6px",
+            }}
+          >
+            Today&apos;s Appointments ({appointments.length})
+          </div>
+          {loadingAppts ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "40px 0",
+                color: "rgba(205,201,192,0.35)",
+                fontSize: "12px",
+              }}
+            >
+              Loading...
+            </div>
+          ) : appointments.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "40px 0",
+                color: "rgba(205,201,192,0.35)",
+                fontSize: "12px",
+              }}
+            >
+              No appointments today
+            </div>
+          ) : (
+            appointments.map((appt) => (
+              <AppointmentCard key={appt.id} appt={appt} />
+            ))
+          )}
+        </div>
+
+        {/* CENTER — Catalog */}
+        <div
+          style={{
+            borderRight: "1px solid rgba(205,201,192,0.08)",
+            overflowY: "auto",
+            padding: "16px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "9px",
+              fontWeight: 700,
+              color: "rgba(205,201,192,0.4)",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              marginBottom: "10px",
+            }}
+          >
+            Service Catalog
+          </div>
+          <CatalogGrid />
+        </div>
+
+        {/* RIGHT — Cart */}
+        <div
+          style={{
+            overflowY: "auto",
+            padding: "16px",
+            backgroundColor: "#0f1d24",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "9px",
+              fontWeight: 700,
+              color: "rgba(205,201,192,0.4)",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              marginBottom: "10px",
+            }}
+          >
+            Cart
+          </div>
+          <CartPanel />
+        </div>
+      </div>
+
+      {/* Suppress unused var */}
+      {isStylist ? null : null}
+    </div>
+  )
+}

@@ -213,6 +213,7 @@ export default function DashboardPage() {
     { href: "/inventory/add", icon: "add_box", label: "Add Inventory" },
     { href: "/schedule", icon: "calendar_today", label: "Build Schedule" },
     { href: "/approvals", icon: "task_alt", label: "Review Approvals" },
+    { href: "/pos", icon: "point_of_sale", label: "POS Terminal" },
   ]
 
   // suppress unused var warning

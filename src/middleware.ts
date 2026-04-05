@@ -25,5 +25,6 @@ export const config = {
     "/retention/:path*",
     "/cancellations/:path*",
     "/stylist/:path*",
+    "/pos/:path*",
   ]
 }
