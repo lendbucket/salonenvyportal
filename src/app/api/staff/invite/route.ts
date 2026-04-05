@@ -141,8 +141,7 @@ export async function POST(req: Request) {
       html: `
         <div style="font-family: -apple-system, Inter, sans-serif; max-width: 480px; margin: 0 auto; background: #0f1d24; color: #ffffff; padding: 40px; border-radius: 12px;">
           <div style="text-align: center; margin-bottom: 32px;">
-            <h1 style="color: #CDC9C0; font-size: 28px; margin: 0 0 8px; font-weight: 900; letter-spacing: 0.05em;">SALON</h1>
-            <h1 style="color: #CDC9C0; font-size: 36px; margin: 0; font-style: italic; font-family: Georgia, serif; font-weight: 400;">Envy</h1>
+            <img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" width="180" style="display:block;height:auto;margin:0 auto;" />
           </div>
           <h2 style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0 0 8px;">Welcome, ${fullName}!</h2>
           <p style="color: #94A3B8; margin: 0 0 8px; font-size: 14px; line-height: 1.6;">
