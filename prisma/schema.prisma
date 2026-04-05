@@ -41,6 +41,7 @@ model Location {
   inventoryItems   InventoryItem[]
   users            User[]
   schedules        Schedule[]
+  purchaseOrders   PurchaseOrder[]
   @@map("locations")
 }
 
@@ -59,6 +60,7 @@ model StaffMember {
   location           Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   user               User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   shifts             Shift[]
+  conductRecords     ConductRecord[]
   @@map("staff_members")
 }
 
@@ -167,4 +169,70 @@ model AdminAlert {
   severity  String   @default("info")
   createdAt DateTime @default(now())
   @@map("admin_alerts")
+}
+
+model PurchaseOrder {
+  id              String   @id @default(cuid())
+  poNumber        String   @unique
+  locationId      String
+  status          String   @default("draft")
+  supplier        String
+  totalAmount     Float    @default(0)
+  notes           String?
+  createdById     String
+  approvedById    String?
+  approvedAt      DateTime?
+  orderedAt       DateTime?
+  receivedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+  items           PurchaseOrderItem[]
+  location        Location @relation(fields: [locationId], references: [id])
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id                String        @id @default(cuid())
+  purchaseOrderId   String
+  inventoryItemId   String?
+  brand             String
+  productName       String
+  shadeOrVolume     String?
+  unitType          String?
+  quantityOrdered   Int
+  quantityReceived  Int           @default(0)
+  costPerUnit       Float         @default(0)
+  totalCost         Float         @default(0)
+  purchaseOrder     PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  @@map("purchase_order_items")
+}
+
+model AnonymousComplaint {
+  id          String   @id @default(cuid())
+  category    String
+  locationId  String?
+  message     String
+  isReviewed  Boolean  @default(false)
+  reviewedAt  DateTime?
+  reviewNote  String?
+  createdAt   DateTime @default(now())
+  @@map("anonymous_complaints")
+}
+
+model ConductRecord {
+  id              String   @id @default(cuid())
+  staffMemberId   String
+  issuedById      String
+  severity        String
+  category        String
+  title           String
+  description     String
+  actionTaken     String?
+  followUpDate    DateTime?
+  isAcknowledged  Boolean  @default(false)
+  acknowledgedAt  DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+  staffMember     StaffMember @relation(fields: [staffMemberId], references: [id])
+  @@map("conduct_records")
 }
