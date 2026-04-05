@@ -16,6 +16,7 @@ const TEAM_NAMES: Record<string, string> = {
 
 interface Appointment {
   id: string
+  customerId?: string
   customerName: string
   customerPhone: string
   startTime: string
@@ -63,6 +64,10 @@ export default function POSPage() {
   const [customTip, setCustomTip] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [showSuccess, setShowSuccess] = useState(false)
+  const [squareCard, setSquareCard] = useState<unknown>(null)
+  const [squareReady, setSquareReady] = useState(false)
+  const [charging, setCharging] = useState(false)
+  const [chargeError, setChargeError] = useState<string | null>(null)
 
   // Responsive
   useEffect(() => {
@@ -71,6 +76,44 @@ export default function POSPage() {
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
   }, [])
+
+  // Load Square Web Payments SDK
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID
+    if (!appId || appId.includes("placeholder")) return
+
+    const existing = document.querySelector('script[src*="squarecdn"]')
+    if (existing) return
+
+    const script = document.createElement("script")
+    script.src = "https://web.squarecdn.com/v1/square.js"
+    script.async = true
+    script.onload = async () => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sq = (window as any).Square as { payments: (appId: string, locId: string) => Promise<unknown> } | undefined
+        if (!sq) return
+        const locId = location === "San Antonio" ? "LXJYXDXWR0XZF" : "LTJSA6QR1HGW6"
+        const payments = await sq.payments(appId, locId)
+        const card = await (payments as { card: () => Promise<unknown> }).card()
+        setSquareCard(card)
+        setSquareReady(true)
+      } catch (e) {
+        console.warn("Square SDK init failed:", e)
+      }
+    }
+    document.head.appendChild(script)
+  }, [location])
+
+  // Attach card form when ready
+  useEffect(() => {
+    if (!squareCard || !squareReady) return
+    const container = document.getElementById("sq-card-container")
+    if (container && container.childElementCount === 0) {
+      (squareCard as { attach: (sel: string) => Promise<void> }).attach("#sq-card-container").catch(console.warn)
+    }
+  }, [squareCard, squareReady, selectedAppt])
 
   const dateStr = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -158,9 +201,60 @@ export default function POSPage() {
     )
   }, [catalog, searchQuery])
 
-  const handleCharge = () => {
-    // TODO: Integrate Square Web Payments SDK for real card payments
-    setShowSuccess(true)
+  const handleCharge = async () => {
+    if (cart.length === 0) return
+    setCharging(true)
+    setChargeError(null)
+
+    let sourceId = "cnon:card-nonce-ok" // fallback test nonce
+
+    // Use Square Web Payments SDK if available
+    if (squareCard && squareReady) {
+      try {
+        const result = await (squareCard as { tokenize: () => Promise<{ status: string; token?: string; errors?: Array<{ message: string }> }> }).tokenize()
+        if (result.status === "OK" && result.token) {
+          sourceId = result.token
+        } else {
+          setChargeError(result.errors?.[0]?.message || "Card tokenization failed. Please try again.")
+          setCharging(false)
+          return
+        }
+      } catch (e) {
+        setChargeError("Card processing error. Please try again.")
+        setCharging(false)
+        return
+      }
+    }
+
+    try {
+      const locId = location === "San Antonio" ? "LXJYXDXWR0XZF" : "LTJSA6QR1HGW6"
+      const res = await fetch("/api/pos/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          locationId: locId,
+          customerId: selectedAppt?.customerId || undefined,
+          lineItems: cart.map(item => ({
+            name: `${item.serviceName}${item.variationName && item.variationName !== "Regular" ? ` (${item.variationName})` : ""}`,
+            price: item.price,
+            catalogObjectId: item.variationId,
+          })),
+          tipAmount: tipAmount,
+          sourceId,
+          bookingId: selectedAppt?.id,
+          note: `Checkout for ${selectedAppt?.customerName || "Walk-in"}`,
+        }),
+      })
+      const data = await res.json()
+      if (data.error) {
+        setChargeError(data.error)
+      } else {
+        setShowSuccess(true)
+      }
+    } catch {
+      setChargeError("Payment failed. Please try again.")
+    }
+    setCharging(false)
   }
 
   const resetCheckout = () => {
@@ -698,13 +792,37 @@ export default function POSPage() {
               <span>{fmtCurrency(total)}</span>
             </div>
 
+            {/* Square Web Payments card form */}
+            {squareReady && (
+              <div style={{ marginTop: "12px" }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>credit_card</span>
+                  Card Payment
+                </div>
+                <div id="sq-card-container" style={{ minHeight: "89px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)", overflow: "hidden" }} />
+              </div>
+            )}
+            {!squareReady && (
+              <div style={{ marginTop: "12px", fontSize: "11px", color: "rgba(205,201,192,0.4)", textAlign: "center", padding: "12px", backgroundColor: "rgba(255,255,255,0.02)", borderRadius: "8px" }}>
+                Square card form loading... (Set NEXT_PUBLIC_SQUARE_APP_ID in env)
+              </div>
+            )}
+
+            {/* Charge error */}
+            {chargeError && (
+              <div style={{ marginTop: "8px", padding: "10px 12px", backgroundColor: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "8px", fontSize: "12px", color: "#fca5a5" }}>
+                {chargeError}
+              </div>
+            )}
+
             {/* Charge button */}
             <button
               onClick={handleCharge}
+              disabled={charging || cart.length === 0}
               style={{
                 marginTop: "10px",
                 padding: "16px",
-                backgroundColor: "#CDC9C0",
+                backgroundColor: charging ? "rgba(205,201,192,0.5)" : "#CDC9C0",
                 border: "none",
                 borderRadius: "10px",
                 color: "#0f1d24",
@@ -712,20 +830,18 @@ export default function POSPage() {
                 fontWeight: 800,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
-                cursor: "pointer",
+                cursor: charging ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "8px",
+                opacity: charging ? 0.7 : 1,
               }}
             >
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "18px" }}
-              >
-                credit_card
+              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>
+                {charging ? "sync" : "credit_card"}
               </span>
-              Charge {fmtCurrency(total)}
+              {charging ? "Processing..." : `Charge ${fmtCurrency(total)}`}
             </button>
           </div>
         )}
