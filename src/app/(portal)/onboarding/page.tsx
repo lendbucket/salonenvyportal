@@ -63,17 +63,19 @@ export default function OnboardingManagementPage() {
     fetchEnrollments();
   }, [fetchEnrollments]);
 
-  // Also fetch locations from a known source if none from enrollments
-  useEffect(() => {
-    if (locations.length === 0) {
-      fetch("/api/schedule")
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.locations) setLocations(data.locations);
-        })
-        .catch(() => {});
+  const loadLocations = useCallback(async () => {
+    try {
+      const res = await fetch("/api/locations");
+      const data = await res.json();
+      if (data.locations) setLocations(data.locations);
+    } catch {
+      // ignore
     }
-  }, [locations.length]);
+  }, []);
+
+  useEffect(() => {
+    loadLocations();
+  }, [loadLocations]);
 
   const handleSend = async () => {
     if (!newEnroll.firstName || !newEnroll.lastName || !newEnroll.email || !newEnroll.locationId) {

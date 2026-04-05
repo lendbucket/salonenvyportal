@@ -32,13 +32,16 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { firstName, lastName, email, locationId, enrollRole } = body as {
+    const { firstName, lastName, email, phone, locationId, enrollRole, role: bodyRole } = body as {
       firstName?: string;
       lastName?: string;
       email?: string;
+      phone?: string;
       locationId?: string;
       enrollRole?: string;
+      role?: string;
     };
+    const inviteRole = enrollRole || bodyRole || "STYLIST";
 
     if (!firstName || !lastName || !email || !locationId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -65,8 +68,9 @@ export async function POST(req: NextRequest) {
         firstName,
         lastName,
         email,
+        phone: phone || null,
         locationId,
-        role: enrollRole === "MANAGER" ? "MANAGER" : "STYLIST",
+        role: inviteRole === "MANAGER" ? "MANAGER" : "STYLIST",
         expiresAt,
       },
     });

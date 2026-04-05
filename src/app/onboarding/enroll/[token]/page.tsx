@@ -159,12 +159,14 @@ export default function EnrollmentPage({
     emergencyPhone: "",
   });
   const [agreement, setAgreement] = useState({
+    agreementTopDate: new Date().toISOString().split("T")[0],
+    agreementContractorName: "",
     ackPolicies: false,
     ackConfidentiality: false,
     ackAtWill: false,
     ackSafetyProtocol: false,
     ackTechPolicy: false,
-    signedLegalName: "",
+    agreementSignedName: "",
     signedSsnLast4: "",
     signedDate: new Date().toISOString().split("T")[0],
   });
@@ -367,6 +369,7 @@ export default function EnrollmentPage({
         const sigData = canvasRef.current?.toDataURL("image/png") || "";
         const ok = await saveStep("agreement", {
           ...agreement,
+          signedLegalName: resolvedSignedName,
           signatureData: sigData,
         });
         if (ok) {
@@ -400,7 +403,8 @@ export default function EnrollmentPage({
   }
 
   const allAcked = agreement.ackPolicies && agreement.ackConfidentiality && agreement.ackAtWill && agreement.ackSafetyProtocol && agreement.ackTechPolicy;
-  const agreementValid = allAcked && hasSigned && agreement.signedLegalName && agreement.signedSsnLast4.length === 4 && agreement.signedDate;
+  const resolvedSignedName = agreement.agreementSignedName || agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "");
+  const agreementValid = allAcked && hasSigned && resolvedSignedName && agreement.signedSsnLast4.length === 4 && agreement.signedDate;
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#0f1d24" }}>
@@ -748,20 +752,20 @@ export default function EnrollmentPage({
               {/* Agreement date and contractor name ABOVE the scrollable text */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
                 <div>
-                  <label style={labelStyle}>Contractor / Employee Name</label>
+                  <label style={labelStyle}>Agreement Date</label>
                   <input
-                    value={agreement.signedLegalName}
-                    onChange={(e) => setAgreement({ ...agreement, signedLegalName: e.target.value })}
-                    placeholder="Full legal name"
+                    type="date"
+                    value={agreement.agreementTopDate}
+                    onChange={(e) => setAgreement({ ...agreement, agreementTopDate: e.target.value })}
                     style={inputStyle}
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Agreement Date</label>
+                  <label style={labelStyle}>Full Legal Name</label>
                   <input
-                    type="date"
-                    value={agreement.signedDate}
-                    onChange={(e) => setAgreement({ ...agreement, signedDate: e.target.value })}
+                    value={agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "")}
+                    onChange={(e) => setAgreement({ ...agreement, agreementContractorName: e.target.value })}
+                    placeholder="Full legal name"
                     style={inputStyle}
                   />
                 </div>
@@ -770,7 +774,7 @@ export default function EnrollmentPage({
               {/* Scrollable contract text */}
               <div style={{ maxHeight: "200px", overflowY: "auto", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px", marginBottom: "20px", fontSize: "12px", color: "#94A3B8", lineHeight: 1.7 }}>
                 <p style={{ margin: "0 0 12px", fontWeight: 700, color: "#CDC9C0" }}>SALON ENVY INDEPENDENT CONTRACTOR / EMPLOYMENT AGREEMENT</p>
-                <p style={{ margin: "0 0 8px" }}>This Agreement is entered into on <strong style={{ color: "#CDC9C0" }}>{agreement.signedDate || "___________"}</strong> between Salon Envy LLC (&ldquo;Company&rdquo;) and <strong style={{ color: "#CDC9C0" }}>{agreement.signedLegalName || "___________"}</strong> (&ldquo;Contractor/Employee&rdquo;).</p>
+                <p style={{ margin: "0 0 8px" }}>This Agreement is entered into on <strong style={{ color: "#CDC9C0" }}>{agreement.agreementTopDate ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "___________"}</strong> between Salon Envy USA LLC (&ldquo;Company&rdquo;) and <strong style={{ color: "#CDC9C0" }}>{agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "") || "___________"}</strong> (&ldquo;Contractor/Employee&rdquo;).</p>
                 <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>1. Employment At-Will.</strong> Employment with Salon Envy is at-will, meaning either party may terminate the relationship at any time, with or without cause or notice, subject to applicable law.</p>
                 <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>2. Confidentiality.</strong> You agree to maintain the confidentiality of all proprietary information, client lists, pricing, formulas, and business practices of Salon Envy. This obligation survives termination.</p>
                 <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>3. Workplace Policies.</strong> You agree to comply with all Salon Envy workplace policies, including but not limited to: dress code, attendance, client interaction standards, health and safety protocols, and anti-harassment policies.</p>
@@ -831,8 +835,13 @@ export default function EnrollmentPage({
               {/* Legal name, SSN last 4, Date */}
               <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "12px", marginBottom: "20px" }}>
                 <div>
-                  <label style={labelStyle}>Legal Name</label>
-                  <input value={agreement.signedLegalName} onChange={(e) => setAgreement({ ...agreement, signedLegalName: e.target.value })} placeholder="Full legal name" style={inputStyle} />
+                  <label style={labelStyle}>Full Legal Name</label>
+                  <input
+                    value={agreement.agreementSignedName || agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "")}
+                    onChange={(e) => setAgreement({ ...agreement, agreementSignedName: e.target.value })}
+                    placeholder="Full legal name"
+                    style={inputStyle}
+                  />
                 </div>
                 <div>
                   <label style={labelStyle}>SSN Last 4</label>
@@ -841,6 +850,23 @@ export default function EnrollmentPage({
                 <div>
                   <label style={labelStyle}>Date</label>
                   <input type="date" value={agreement.signedDate} onChange={(e) => setAgreement({ ...agreement, signedDate: e.target.value })} style={inputStyle} />
+                </div>
+              </div>
+
+              {/* Salon Envy Pre-Executed Signor */}
+              <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)", padding: "16px", marginBottom: "20px" }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "10px" }}>Salon Envy USA LLC (Pre-Executed)</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                  <div>
+                    <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)", marginBottom: "2px" }}>Authorized Signor</div>
+                    <div style={{ fontSize: "14px", fontWeight: 700, color: "#CDC9C0", fontStyle: "italic" }}>Robert R. Reyna</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)", marginBottom: "2px" }}>Date</div>
+                    <div style={{ fontSize: "14px", color: "#CDC9C0" }}>
+                      {agreement.agreementTopDate ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : ""}
+                    </div>
+                  </div>
                 </div>
               </div>
 
