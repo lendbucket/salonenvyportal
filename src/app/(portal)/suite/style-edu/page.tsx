@@ -45,7 +45,7 @@ function getCategoryGradient(cat: string) {
 type Course = {
   id: string; title: string; description: string; category: string; instructor: string | null
   durationMinutes: number; level: string; isFeatured: boolean; isTdlrApproved: boolean
-  tdlrHours: number; isCompleted: boolean; completedAt: string | null
+  tdlrHours: number; isCompleted: boolean; completedAt: string | null; videoUrl: string | null
 }
 
 type Renewal = {
@@ -241,15 +241,22 @@ export default function StyleEduPage() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "24px" }}>
                   {featuredCourses.slice(0, 4).map(course => (
                     <div key={course.id} onClick={() => setSelectedCourse(course)} style={{ background: S1, border: `1px solid ${BORDER}`, borderRadius: "12px", overflow: "hidden", cursor: "pointer", position: "relative" }}>
-                      <div style={{ height: "80px", background: getCategoryGradient(course.category), display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <div style={{ height: "80px", background: getCategoryGradient(course.category), display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                         {course.isCompleted && (
-                          <div style={{ position: "absolute", top: "8px", right: "8px", width: "24px", height: "24px", borderRadius: "50%", background: GREEN, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <div style={{ position: "absolute", top: "8px", right: "8px", zIndex: 2, width: "24px", height: "24px", borderRadius: "50%", background: GREEN, display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#fff" }}>check</span>
                           </div>
                         )}
                         <span className="material-symbols-outlined" style={{ fontSize: "28px", color: "rgba(255,255,255,0.5)" }}>
                           {course.category === "color" ? "palette" : course.category === "cutting" ? "content_cut" : course.category === "business" ? "trending_up" : course.category === "tdlr_ce" ? "verified" : "auto_awesome"}
                         </span>
+                        {course.videoUrl && !course.isCompleted && (
+                          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(0,0,0,0.55)", border: "2px solid rgba(255,255,255,0.35)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
+                              <div style={{ width: 0, height: 0, borderTop: "8px solid transparent", borderBottom: "8px solid transparent", borderLeft: "13px solid white", marginLeft: "3px" }} />
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div style={{ padding: "14px" }}>
                         <div style={{ fontSize: "13px", fontWeight: 700, marginBottom: "4px", letterSpacing: "-0.01em" }}>{course.title}</div>
@@ -360,12 +367,19 @@ export default function StyleEduPage() {
                           {course.category === "color" ? "palette" : course.category === "cutting" ? "content_cut" : course.category === "texture" ? "auto_awesome" : course.category === "business" ? "trending_up" : "verified"}
                         </span>
                         {course.isCompleted && <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)" }} />}
+                        {course.videoUrl && !course.isCompleted && (
+                          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(0,0,0,0.55)", border: "2px solid rgba(255,255,255,0.35)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
+                              <div style={{ width: 0, height: 0, borderTop: "8px solid transparent", borderBottom: "8px solid transparent", borderLeft: "13px solid white", marginLeft: "3px" }} />
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div style={{ padding: "12px" }}>
                         <div style={{ fontSize: "12px", fontWeight: 700, marginBottom: "6px", lineHeight: 1.3, letterSpacing: "-0.01em" }}>{course.title}</div>
                         <div style={{ fontSize: "10px", color: MUTED, marginBottom: "6px" }}>{course.instructor}</div>
                         <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
-                          <span style={{ ...mono, fontSize: "8px", padding: "1px 5px", borderRadius: "3px", background: S2, color: MUTED }}>{course.durationMinutes} min</span>
+                          <span style={{ ...mono, fontSize: "8px", padding: "1px 5px", borderRadius: "3px", background: S2, color: MUTED }}>{course.videoUrl ? `\u25B6 ${course.durationMinutes} min` : `${course.durationMinutes} min`}</span>
                           <span style={{ ...mono, fontSize: "8px", padding: "1px 5px", borderRadius: "3px", background: `${LEVEL_COLORS[course.level] || ACC}12`, color: LEVEL_COLORS[course.level] || ACC, textTransform: "uppercase" }}>{course.level}</span>
                           {course.isTdlrApproved && <span style={{ ...mono, fontSize: "8px", padding: "1px 5px", borderRadius: "3px", background: `${AMBER}12`, color: AMBER }}>{course.tdlrHours} CE</span>}
                         </div>
@@ -472,35 +486,77 @@ export default function StyleEduPage() {
 
         {/* ═══ Course Detail Modal ═══ */}
         {selectedCourse && (
-          <div onClick={() => setSelectedCourse(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: "20px" }}>
-            <div onClick={e => e.stopPropagation()} style={{ background: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "14px", width: "100%", maxWidth: "520px", overflow: "hidden" }}>
-              <div style={{ height: "100px", background: getCategoryGradient(selectedCourse.category), display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(255,255,255,0.5)" }}>
-                  {selectedCourse.category === "color" ? "palette" : selectedCourse.category === "cutting" ? "content_cut" : selectedCourse.category === "texture" ? "auto_awesome" : selectedCourse.category === "business" ? "trending_up" : "verified"}
-                </span>
-              </div>
+          <div onClick={() => setSelectedCourse(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: "20px", overflowY: "auto" }}>
+            <div onClick={e => e.stopPropagation()} style={{ background: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "14px", width: "100%", maxWidth: "680px", overflow: "hidden", position: "relative", margin: "auto" }}>
+              {/* Close button */}
+              <button onClick={() => setSelectedCourse(null)} style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, width: "32px", height: "32px", borderRadius: "50%", background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(4px)" }}>
+                <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>close</span>
+              </button>
+
+              {/* Video player or gradient thumbnail */}
+              {selectedCourse.videoUrl ? (
+                <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", backgroundColor: "#000", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${selectedCourse.videoUrl}?rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&controls=1&color=white&fs=1&playsinline=1`}
+                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    loading="lazy"
+                    title={selectedCourse.title}
+                  />
+                </div>
+              ) : (
+                <div style={{ height: "220px", backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px", background: getCategoryGradient(selectedCourse.category) }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(255,255,255,0.3)" }}>
+                    {selectedCourse.category === "color" ? "palette" : selectedCourse.category === "cutting" ? "content_cut" : selectedCourse.category === "texture" ? "auto_awesome" : selectedCourse.category === "business" ? "trending_up" : "verified"}
+                  </span>
+                  <div style={{ ...mono, fontSize: "11px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em" }}>Video content coming soon</div>
+                </div>
+              )}
+
               <div style={{ padding: "24px" }}>
-                <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 6px", letterSpacing: "-0.02em" }}>{selectedCourse.title}</h3>
-                <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
-                  <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", background: S2, color: MUTED }}>{selectedCourse.durationMinutes} min</span>
+                {/* Title + badges */}
+                <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px", letterSpacing: "-0.02em" }}>{selectedCourse.title}</h3>
+                <div style={{ display: "flex", gap: "8px", marginBottom: "18px", flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", background: S2, color: MUTED }}>{selectedCourse.videoUrl ? `\u25B6 ${selectedCourse.durationMinutes} min` : `${selectedCourse.durationMinutes} min`}</span>
                   <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", background: `${LEVEL_COLORS[selectedCourse.level] || ACC}12`, color: LEVEL_COLORS[selectedCourse.level] || ACC, textTransform: "uppercase" }}>{selectedCourse.level}</span>
                   {selectedCourse.isTdlrApproved && <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", background: `${AMBER}12`, color: AMBER }}>{selectedCourse.tdlrHours} CE hours</span>}
-                  {selectedCourse.instructor && <span style={{ fontSize: "10px", color: MUTED }}>{selectedCourse.instructor}</span>}
                 </div>
-                <p style={{ fontSize: "13px", color: MID, lineHeight: 1.7, margin: "0 0 20px" }}>{selectedCourse.description}</p>
 
+                {/* What you'll learn */}
+                <div style={{ marginBottom: "16px" }}>
+                  <div style={{ ...mono, fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "10px" }}>What you&apos;ll learn</div>
+                  {selectedCourse.description.split(". ").filter((s: string) => s.length > 20).slice(0, 3).map((point: string, i: number) => (
+                    <div key={i} style={{ display: "flex", gap: "10px", marginBottom: "7px", alignItems: "flex-start" }}>
+                      <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: ACC, flexShrink: 0, marginTop: "6px" }} />
+                      <span style={{ fontSize: "13px", color: MID, lineHeight: 1.6 }}>{point.trim().replace(/\.$/, "")}.</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Instructor */}
+                {selectedCourse.instructor && (
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
+                    <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: ACC_DIM, border: `1px solid ${ACC_BORDER}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: "14px", color: ACC_BRIGHT }}>person</span>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "12px", fontWeight: 600, color: "#fff" }}>{selectedCourse.instructor}</div>
+                      <div style={{ fontSize: "9px", color: MUTED }}>Instructor</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action */}
                 {selectedCourse.isCompleted ? (
                   <div style={{ padding: "12px 16px", background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)", borderRadius: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "18px", color: GREEN }}>check_circle</span>
                     <span style={{ fontSize: "13px", color: GREEN, fontWeight: 600 }}>Completed{selectedCourse.completedAt ? ` on ${new Date(selectedCourse.completedAt).toLocaleDateString()}` : ""}</span>
                   </div>
                 ) : (
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <button onClick={() => setSelectedCourse(null)} style={{ flex: 1, padding: "11px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: MID, fontSize: "12px", cursor: "pointer", ...jakarta }}>Close</button>
-                    <button onClick={() => markComplete(selectedCourse.id)} disabled={completing} style={{ flex: 2, padding: "11px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: completing ? 0.7 : 1 }}>
-                      {completing ? "Marking Complete..." : "Mark as Complete"}
-                    </button>
-                  </div>
+                  <button onClick={() => markComplete(selectedCourse.id)} disabled={completing} style={{ width: "100%", padding: "13px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: completing ? 0.7 : 1, boxShadow: `0 2px 16px rgba(96,110,116,0.25)` }}>
+                    {completing ? "Marking Complete..." : "Mark as Complete"}
+                  </button>
                 )}
               </div>
             </div>
