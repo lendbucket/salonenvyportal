@@ -18,7 +18,7 @@ const MID = "rgba(255,255,255,0.6)"
 const APPS = [
   { id: "style-credit", name: "StyleCredit", tag: "Credit Builder", icon: "credit_score", dotColor: "#4da6ff", features: ["Reported to all 3 bureaus", "Income verification letters"], price: "$0", period: "included", live: true },
   { id: "style-insure", name: "StyleInsure", tag: "Professional Liability", icon: "shield", dotColor: "#ffb347", features: ["$1M professional liability", "Chemical incidents covered"], price: "$15", period: "/ month", live: true },
-  { id: "style-edu", name: "StyleEdu", tag: "CE Credits + Education", icon: "school", dotColor: "#a78bfa", features: ["TDLR CE credits tracked", "License renewal reminders"], price: "$19", period: "/ month", live: false },
+  { id: "style-edu", name: "StyleEdu", tag: "CE Credits + Education", icon: "school", dotColor: "#a78bfa", features: ["TDLR CE credits tracked", "License renewal reminders"], price: "$0", period: "included", live: true },
   { id: "style-health", name: "StyleHealth", tag: "Group Health Insurance", icon: "favorite", dotColor: "#ff6b6b", features: ["Group rates as contractor", "Dental and vision included"], price: "$25", period: "/ month", live: false },
 ]
 

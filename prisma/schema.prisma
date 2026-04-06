@@ -39,6 +39,8 @@ model User {
   insuranceProfile    InsuranceProfile?
   incidentReports     IncidentReport[]
   otherIncome         OtherIncome[]
+  courseCompletions    CourseCompletion[]
+  tdlrLicenseRenewal  TdlrLicenseRenewal?
   @@map("users")
 }
 
@@ -505,4 +507,51 @@ model OtherIncome {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   @@map("other_income")
+}
+
+model EduCourse {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  category        String
+  instructor      String?
+  durationMinutes Int      @default(30)
+  level           String   @default("beginner")
+  thumbnailUrl    String?
+  videoUrl        String?
+  isFeatured      Boolean  @default(false)
+  isTdlrApproved  Boolean  @default(false)
+  tdlrHours       Float    @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  completions     CourseCompletion[]
+  @@map("edu_courses")
+}
+
+model CourseCompletion {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId     String
+  completedAt DateTime  @default(now())
+  score       Int?
+  notes       String?
+  user        User      @relation(fields: [userId], references: [id])
+  course      EduCourse @relation(fields: [courseId], references: [id])
+  @@unique([userId, courseId])
+  @@map("course_completions")
+}
+
+model TdlrLicenseRenewal {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  licenseNumber     String?
+  licenseExpiration DateTime?
+  ceHoursRequired   Float     @default(8)
+  ceHoursCompleted  Float     @default(0)
+  renewalDueDate    DateTime?
+  lastReminderSent  DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now()) @updatedAt
+  user              User      @relation(fields: [userId], references: [id])
+  @@map("tdlr_license_renewals")
 }

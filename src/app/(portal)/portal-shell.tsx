@@ -27,7 +27,7 @@ const OWNER_NAV: NavItem[] = [
   { href: "/conduct", icon: "gavel", label: "Conduct" },
   { href: "/onboarding", icon: "person_add", label: "Onboarding" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
-  { href: "/suite", icon: "diamond", label: "Envy Suite" },
+  { href: "/suite", icon: "", label: "Envy Suite®" },
 ]
 
 const MANAGER_NAV: NavItem[] = [
@@ -43,7 +43,7 @@ const MANAGER_NAV: NavItem[] = [
   { href: "/purchase-orders", icon: "shopping_cart", label: "Purchase Orders" },
   { href: "/conduct", icon: "gavel", label: "Conduct" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
-  { href: "/suite", icon: "diamond", label: "Envy Suite" },
+  { href: "/suite", icon: "", label: "Envy Suite®" },
 ]
 
 const STYLIST_NAV: NavItem[] = [
@@ -53,7 +53,7 @@ const STYLIST_NAV: NavItem[] = [
   { href: "/submit-complaint", icon: "report", label: "Report Issue" },
   { href: "/conduct", icon: "gavel", label: "My Record" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
-  { href: "/suite", icon: "diamond", label: "Envy Suite" },
+  { href: "/suite", icon: "", label: "Envy Suite®" },
 ]
 
 /* ── Bottom nav (max 5) ── */
@@ -149,17 +149,20 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           transition: "all 0.15s ease",
         }}
       >
-        <span
-          className="material-symbols-outlined"
-          style={{
-            fontSize: "17px",
-            marginRight: "10px",
-            color: isActive ? "#CDC9C0" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.4)",
-          }}
-        >
-          {item.icon}
-        </span>
-        <span style={{ flex: 1 }}>{item.label}</span>
+        {item.icon && (
+          <span
+            className="material-symbols-outlined"
+            style={{
+              fontSize: "17px",
+              marginRight: "10px",
+              color: isActive ? "#CDC9C0" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.4)",
+            }}
+          >
+            {item.icon}
+          </span>
+        )}
+        {!item.icon && <span style={{ width: "17px", marginRight: "10px" }} />}
+        <span style={{ flex: 1 }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
         {item.badge && isOwner && (
           <span style={{
             minWidth: "18px",
