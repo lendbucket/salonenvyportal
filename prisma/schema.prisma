@@ -28,11 +28,14 @@ model User {
   staffMember  StaffMember?
   accounts     Account[]
   sessions     Session[]
-  suiteSubscription SuiteSubscription?
-  taxReceipts       TaxReceipt[]
-  mileageLogs       MileageLog[]
-  quarterlyPayments QuarterlyPayment[]
-  taxYears          TaxYear[]
+  suiteSubscription   SuiteSubscription?
+  taxReceipts         TaxReceipt[]
+  mileageLogs         MileageLog[]
+  quarterlyPayments   QuarterlyPayment[]
+  taxYears            TaxYear[]
+  creditProfile       CreditProfile?
+  disputeLetters      DisputeLetter[]
+  incomeVerifications IncomeVerification[]
   @@map("users")
 }
 
@@ -403,4 +406,51 @@ model TaxYear {
   user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([userId, year])
   @@map("tax_years")
+}
+
+model CreditProfile {
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  currentScore          Int?
+  scoreHistory          Json?
+  tier                  String?
+  reportingStartDate    DateTime?
+  totalPaymentsReported Int       @default(0)
+  bureausReported       Json?
+  estimatedScoreGain    Int       @default(0)
+  notes                 String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @default(now()) @updatedAt
+  user                  User      @relation(fields: [userId], references: [id])
+  @@map("credit_profiles")
+}
+
+model DisputeLetter {
+  id            String    @id @default(cuid())
+  userId        String
+  bureau        String
+  creditorName  String
+  accountNumber String?
+  errorType     String
+  description   String
+  letterContent String    @db.Text
+  status        String    @default("draft")
+  sentAt        DateTime?
+  createdAt     DateTime  @default(now())
+  user          User      @relation(fields: [userId], references: [id])
+  @@map("dispute_letters")
+}
+
+model IncomeVerification {
+  id           String   @id @default(cuid())
+  userId       String
+  generatedAt  DateTime @default(now())
+  monthlyAvg   Float
+  annualIncome Float
+  incomeMonths Int
+  consistency  String
+  purpose      String?
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+  @@map("income_verifications")
 }

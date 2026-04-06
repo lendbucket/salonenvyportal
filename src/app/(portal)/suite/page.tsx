@@ -16,10 +16,10 @@ const MUTED = "rgba(255,255,255,0.3)"
 const MID = "rgba(255,255,255,0.6)"
 
 const APPS = [
-  { id: "style-credit", name: "StyleCredit", tag: "Credit Builder", icon: "credit_score", dotColor: "#4da6ff", features: ["Reported to all 3 bureaus", "Income verification letters"], price: "$0", period: "included" },
-  { id: "style-insure", name: "StyleInsure", tag: "Professional Liability", icon: "shield", dotColor: "#ffb347", features: ["$1M professional liability", "Chemical incidents covered"], price: "$15", period: "/ month" },
-  { id: "style-edu", name: "StyleEdu", tag: "CE Credits + Education", icon: "school", dotColor: "#a78bfa", features: ["TDLR CE credits tracked", "License renewal reminders"], price: "$19", period: "/ month" },
-  { id: "style-health", name: "StyleHealth", tag: "Group Health Insurance", icon: "favorite", dotColor: "#ff6b6b", features: ["Group rates as contractor", "Dental and vision included"], price: "$25", period: "/ month" },
+  { id: "style-credit", name: "StyleCredit", tag: "Credit Builder", icon: "credit_score", dotColor: "#4da6ff", features: ["Reported to all 3 bureaus", "Income verification letters"], price: "$0", period: "included", live: true },
+  { id: "style-insure", name: "StyleInsure", tag: "Professional Liability", icon: "shield", dotColor: "#ffb347", features: ["$1M professional liability", "Chemical incidents covered"], price: "$15", period: "/ month", live: false },
+  { id: "style-edu", name: "StyleEdu", tag: "CE Credits + Education", icon: "school", dotColor: "#a78bfa", features: ["TDLR CE credits tracked", "License renewal reminders"], price: "$19", period: "/ month", live: false },
+  { id: "style-health", name: "StyleHealth", tag: "Group Health Insurance", icon: "favorite", dotColor: "#ff6b6b", features: ["Group rates as contractor", "Dental and vision included"], price: "$25", period: "/ month", live: false },
 ]
 
 export default function SuitePage() {
@@ -170,31 +170,36 @@ export default function SuitePage() {
 
         {/* 4 SMALL CARDS */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "40px" }}>
-          {APPS.map(app => (
-            <div key={app.id} style={{ background: S1, border: `1px solid ${BORDER}`, borderRadius: "12px", padding: "20px", position: "relative", overflow: "hidden" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
-                <div style={{ width: "38px", height: "38px", borderRadius: "9px", background: "rgba(255,255,255,0.04)", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px", color: app.dotColor }}>{app.icon}</span>
-                </div>
-                <span style={{ ...mono, fontSize: "9px", padding: "3px 8px", borderRadius: "4px", textTransform: "uppercase", letterSpacing: "0.08em", background: S1, border: `1px solid ${BORDER}`, color: MUTED }}>Soon</span>
-              </div>
-              <div style={{ fontSize: "16px", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "2px" }}>{app.name}</div>
-              <div style={{ fontSize: "10px", color: MUTED, marginBottom: "12px" }}>{app.tag}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "5px", opacity: 0.5 }}>
-                {app.features.map((f, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "7px", fontSize: "11px", color: MID }}>
-                    <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: app.dotColor, flexShrink: 0 }} />
-                    {f}
+          {APPS.map(app => {
+            const unlocked = app.live && (hasAccess || isOwner)
+            return (
+              <div key={app.id} onClick={() => unlocked ? router.push(`/suite/${app.id}`) : undefined} style={{ background: S1, border: `1px solid ${unlocked ? ACC_BORDER : BORDER}`, borderRadius: "12px", padding: "20px", position: "relative", overflow: "hidden", cursor: unlocked ? "pointer" : "default", boxShadow: unlocked ? "0 0 30px rgba(96,110,116,0.06)" : "none" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
+                  <div style={{ width: "38px", height: "38px", borderRadius: "9px", background: "rgba(255,255,255,0.04)", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: "18px", color: app.dotColor }}>{app.icon}</span>
                   </div>
-                ))}
+                  <span style={{ ...mono, fontSize: "9px", padding: "3px 8px", borderRadius: "4px", textTransform: "uppercase", letterSpacing: "0.08em", background: unlocked ? ACC_DIM : S1, border: `1px solid ${unlocked ? ACC_BORDER : BORDER}`, color: unlocked ? ACC_BRIGHT : MUTED }}>{unlocked ? "Live" : "Soon"}</span>
+                </div>
+                <div style={{ fontSize: "16px", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "2px" }}>{app.name}</div>
+                <div style={{ fontSize: "10px", color: MUTED, marginBottom: "12px" }}>{app.tag}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "5px", opacity: unlocked ? 1 : 0.5 }}>
+                  {app.features.map((f, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: "7px", fontSize: "11px", color: MID }}>
+                      <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: app.dotColor, flexShrink: 0 }} />
+                      {f}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ ...mono, fontSize: "15px", fontWeight: 500, marginTop: "14px", color: ACC_BRIGHT }}>{app.price}<span style={{ fontSize: "10px", color: MUTED, fontWeight: 400 }}> {app.period}</span></div>
+                {!unlocked && (
+                  <div style={{ position: "absolute", inset: 0, background: "rgba(6,8,13,0.72)", backdropFilter: "blur(4px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "11px" }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: "24px", color: MUTED }}>lock</span>
+                    <span style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.1em", color: MUTED }}>Coming soon</span>
+                  </div>
+                )}
               </div>
-              <div style={{ ...mono, fontSize: "15px", fontWeight: 500, marginTop: "14px", color: ACC_BRIGHT }}>{app.price}<span style={{ fontSize: "10px", color: MUTED, fontWeight: 400 }}> {app.period}</span></div>
-              <div style={{ position: "absolute", inset: 0, background: "rgba(6,8,13,0.72)", backdropFilter: "blur(4px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "11px" }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "24px", color: MUTED }}>lock</span>
-                <span style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.1em", color: MUTED }}>Coming soon</span>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         <div style={{ ...mono, fontSize: "9px", letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>Pricing<div style={{ flex: 1, height: "1px", background: BORDER }} /></div>
