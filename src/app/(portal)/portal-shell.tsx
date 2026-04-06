@@ -27,6 +27,7 @@ const OWNER_NAV: NavItem[] = [
   { href: "/conduct", icon: "gavel", label: "Conduct" },
   { href: "/onboarding", icon: "person_add", label: "Onboarding" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
+  { href: "/suite", icon: "diamond", label: "Envy Suite" },
 ]
 
 const MANAGER_NAV: NavItem[] = [
@@ -42,6 +43,7 @@ const MANAGER_NAV: NavItem[] = [
   { href: "/purchase-orders", icon: "shopping_cart", label: "Purchase Orders" },
   { href: "/conduct", icon: "gavel", label: "Conduct" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
+  { href: "/suite", icon: "diamond", label: "Envy Suite" },
 ]
 
 const STYLIST_NAV: NavItem[] = [
@@ -51,6 +53,7 @@ const STYLIST_NAV: NavItem[] = [
   { href: "/submit-complaint", icon: "report", label: "Report Issue" },
   { href: "/conduct", icon: "gavel", label: "My Record" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
+  { href: "/suite", icon: "diamond", label: "Envy Suite" },
 ]
 
 /* ── Bottom nav (max 5) ── */
@@ -69,7 +72,7 @@ const STYLIST_BOTTOM: NavItem[] = [
 ]
 
 /* ── Allowed pages per role for stylist redirect ── */
-const STYLIST_ALLOWED = ["/my-schedule", "/reyna-ai", "/profile", "/preferences", "/submit-complaint", "/conduct", "/pos", "/appointments"]
+const STYLIST_ALLOWED = ["/my-schedule", "/reyna-ai", "/profile", "/preferences", "/submit-complaint", "/conduct", "/pos", "/appointments", "/suite"]
 
 export default function PortalShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()

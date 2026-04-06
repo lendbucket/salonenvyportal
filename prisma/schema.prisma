@@ -28,6 +28,9 @@ model User {
   staffMember  StaffMember?
   accounts     Account[]
   sessions     Session[]
+  suiteSubscription SuiteSubscription?
+  taxReceipts       TaxReceipt[]
+  mileageLogs       MileageLog[]
   @@map("users")
 }
 
@@ -313,4 +316,51 @@ model OnboardingEnrollment {
 
   location              Location  @relation(fields: [locationId], references: [id])
   @@map("onboarding_enrollments")
+}
+
+model SuiteSubscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  status    String   @default("active")
+  plan      String   @default("monthly")
+  price     Float    @default(40)
+  startDate DateTime @default(now())
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("suite_subscriptions")
+}
+
+model TaxReceipt {
+  id           String   @id @default(cuid())
+  userId       String
+  imageData    String?  @db.Text
+  vendor       String?
+  amount       Float?
+  category     String?
+  description  String?
+  receiptDate  DateTime?
+  isDeductible Boolean  @default(true)
+  aiAnalysis   String?  @db.Text
+  taxYear      Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("tax_receipts")
+}
+
+model MileageLog {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime
+  purpose   String
+  miles     Float
+  amount    Float
+  notes     String?
+  taxYear   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("mileage_logs")
 }
