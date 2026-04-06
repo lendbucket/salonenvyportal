@@ -1,5 +1,6 @@
 "use client"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import Script from "next/script"
 import { useUserRole } from "@/hooks/useUserRole"
 
 /* ── Team member name map (hardcoded) ── */
@@ -55,6 +56,8 @@ interface Appointment {
   totalPrice?: number
   totalDurationMinutes?: number
   note?: string | null
+  isCheckedOut?: boolean
+  orderId?: string
 }
 
 interface ServiceVariation {
@@ -108,6 +111,9 @@ export default function POSPage() {
   const [charging, setCharging] = useState(false)
   const [chargeError, setChargeError] = useState<string | null>(null)
 
+  // Square SDK loaded state
+  const [squareSdkLoaded, setSquareSdkLoaded] = useState(false)
+
   // Payment method state
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cash">("card")
   const [cashReceived, setCashReceived] = useState("")
@@ -120,19 +126,10 @@ export default function POSPage() {
     return () => window.removeEventListener("resize", check)
   }, [])
 
-  // Load Square Web Payments SDK script (once)
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    if (document.querySelector('script[src*="squarecdn"]')) return
-    const script = document.createElement("script")
-    script.src = "https://web.squarecdn.com/v1/square.js"
-    script.async = true
-    document.head.appendChild(script)
-  }, [])
-
-  // Initialize Square card form when paymentMethod is "card"
+  // Initialize Square card form when paymentMethod is "card" and SDK is loaded
   useEffect(() => {
     if (paymentMethod !== "card") return
+    if (!squareSdkLoaded) return
     if (squareInitialized.current) return
 
     const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID
@@ -152,7 +149,7 @@ export default function POSPage() {
       const sq = (window as any).Square as { payments: (appId: string, locId: string) => Promise<unknown> } | undefined
 
       if (!container || !sq) {
-        if (attempt < 20) {
+        if (attempt < 10) {
           retryTimer = setTimeout(() => tryInit(attempt + 1), 300)
         } else {
           setSquareInitError("Square SDK failed to load. Please refresh.")
@@ -191,7 +188,7 @@ export default function POSPage() {
 
     tryInit(0)
     return () => { cancelled = true; clearTimeout(retryTimer) }
-  }, [paymentMethod, location])
+  }, [paymentMethod, location, squareSdkLoaded])
 
   // Reset Square state on location change
   useEffect(() => {
@@ -444,6 +441,7 @@ export default function POSPage() {
           display: "flex",
           flexDirection: "column",
           gap: "6px",
+          opacity: appt.isCheckedOut ? 0.45 : 1,
         }}
       >
         <div
@@ -512,6 +510,11 @@ export default function POSPage() {
         {appt.totalPrice != null && appt.totalPrice > 0 && (
           <div style={{ fontSize: "12px", fontWeight: 700, color: "#CDC9C0" }}>
             {fmtCurrency(appt.totalPrice)}
+          </div>
+        )}
+        {appt.isCheckedOut && (
+          <div style={{ fontSize: "10px", fontWeight: 600, color: "rgba(16,185,129,0.6)", fontStyle: "italic" }}>
+            Already checked out
           </div>
         )}
       </button>
@@ -1395,6 +1398,11 @@ export default function POSPage() {
      ═════════════════════════════════════ */
   return (
     <div style={{ height: "calc(100vh - 52px)", display: "flex", flexDirection: "column" }}>
+      <Script
+        src="https://web.squarecdn.com/v1/square.js"
+        strategy="afterInteractive"
+        onLoad={() => setSquareSdkLoaded(true)}
+      />
       {/* Header bar */}
       <div
         style={{

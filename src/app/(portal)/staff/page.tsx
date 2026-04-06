@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Users, Search, X, Send, ShieldCheck, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -67,6 +68,7 @@ function tdlrBadge(m: StaffRow) {
 }
 
 export default function StaffPage() {
+  const router = useRouter();
   const { isOwner, canSeeAllLocations } = useUserRole();
 
   const [staff, setStaff] = useState<StaffRow[]>([]);
@@ -271,7 +273,22 @@ export default function StaffPage() {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <p className="truncate font-medium text-neutral-100">{m.fullName}</p>
+              <p
+                className="truncate font-medium"
+                style={{
+                  color: m.squareTeamMemberId ? "#CDC9C0" : undefined,
+                  textDecoration: m.squareTeamMemberId ? "underline" : undefined,
+                  cursor: m.squareTeamMemberId ? "pointer" : undefined,
+                }}
+                onClick={(e) => {
+                  if (m.squareTeamMemberId) {
+                    e.stopPropagation();
+                    router.push(`/stylist/${m.squareTeamMemberId}`);
+                  }
+                }}
+              >
+                {m.fullName}
+              </p>
               {!m.isActive && (
                 <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-400 ring-1 ring-red-500/30">
                   Inactive

@@ -187,7 +187,44 @@ export async function GET(request: NextRequest) {
       })
     );
 
-    return NextResponse.json({ appointments });
+    // Check for completed orders matching each appointment (checked-out detection)
+    let completedOrders: Array<{ id?: string; createdAt?: string }> = [];
+    try {
+      const ordersRes = await square.orders.search({
+        locationIds: [locationId],
+        query: {
+          filter: {
+            dateTimeFilter: { createdAt: { startAt: startOfDay.toISOString(), endAt: new Date(endOfDay.getTime() + 4 * 60 * 60 * 1000).toISOString() } },
+            stateFilter: { states: ["COMPLETED"] },
+          },
+        },
+        limit: 200,
+      });
+      completedOrders = (ordersRes.orders || []).map(o => ({ id: o.id, createdAt: o.createdAt }));
+    } catch {
+      // Orders lookup failed — skip checkout detection
+    }
+
+    const enrichedAppointments = appointments.map(appt => {
+      let isCheckedOut = false;
+      let orderId: string | undefined;
+      if (appt.startTime && completedOrders.length > 0) {
+        const apptStart = new Date(appt.startTime).getTime();
+        for (const order of completedOrders) {
+          if (!order.createdAt) continue;
+          const orderTime = new Date(order.createdAt).getTime();
+          const diffHours = (orderTime - apptStart) / (1000 * 60 * 60);
+          if (diffHours >= -0.5 && diffHours <= 4) {
+            isCheckedOut = true;
+            orderId = order.id;
+            break;
+          }
+        }
+      }
+      return { ...appt, isCheckedOut, ...(orderId ? { orderId } : {}) };
+    });
+
+    return NextResponse.json({ appointments: enrichedAppointments });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ appointments: [], error: msg }, { status: 500 });

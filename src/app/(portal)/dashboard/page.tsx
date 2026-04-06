@@ -191,7 +191,7 @@ export default function DashboardPage() {
   // Auto-refresh when viewing today
   useEffect(() => {
     if (activePeriod !== "today") return
-    const id = setInterval(() => { fetchData() }, 5 * 60 * 1000)
+    const id = setInterval(() => { fetchData() }, 60 * 1000)
     return () => clearInterval(id)
   }, [activePeriod, fetchData])
 

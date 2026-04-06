@@ -181,6 +181,7 @@ export async function GET(request: NextRequest) {
       subtotal: Math.round(stylistData[id].subtotal * 100) / 100,
       commission: Math.round(stylistData[id].subtotal * 0.40 * 100) / 100,
       tips: Math.round(stylistData[id].tips * 100) / 100,
+      totalPay: Math.round((stylistData[id].subtotal * 0.40 + stylistData[id].tips) * 100) / 100,
       periodStart: startParam,
       periodEnd: endParam,
     }))

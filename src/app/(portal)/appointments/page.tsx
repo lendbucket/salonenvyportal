@@ -67,6 +67,8 @@ interface Appointment {
   totalPrice?: number
   totalDurationMinutes?: number
   note?: string | null
+  isCheckedOut?: boolean
+  orderId?: string
 }
 
 export default function AppointmentsPage() {
@@ -449,14 +451,15 @@ export default function AppointmentsPage() {
                     textAlign: "left",
                     padding: "16px",
                     backgroundColor: "#1a2a32",
-                    border: "1px solid rgba(205,201,192,0.08)",
-                    borderLeft: `3px solid ${statusStyle.border}`,
+                    border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(205,201,192,0.08)",
+                    borderLeft: `3px solid ${appt.isCheckedOut ? "rgba(16,185,129,0.3)" : statusStyle.border}`,
                     borderRadius: "10px",
                     cursor: "pointer",
                     transition: "all 0.15s",
                     display: "flex",
                     flexDirection: "column",
                     gap: "8px",
+                    opacity: appt.isCheckedOut ? 0.5 : 1,
                   }}
                 >
                   {/* Top row: name + status */}
@@ -464,13 +467,24 @@ export default function AppointmentsPage() {
                     <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700 }}>
                       {appt.customerName}
                     </span>
-                    <span style={{
-                      fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px",
-                      backgroundColor: statusStyle.bg, color: statusStyle.text,
-                      textTransform: "uppercase", letterSpacing: "0.06em",
-                    }}>
-                      {appt.status.replace(/_/g, " ")}
-                    </span>
+                    <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                      {appt.isCheckedOut && (
+                        <span style={{
+                          fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px",
+                          backgroundColor: "rgba(16,185,129,0.12)", color: "#22c55e",
+                          textTransform: "uppercase", letterSpacing: "0.06em",
+                        }}>
+                          Checked Out
+                        </span>
+                      )}
+                      <span style={{
+                        fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px",
+                        backgroundColor: statusStyle.bg, color: statusStyle.text,
+                        textTransform: "uppercase", letterSpacing: "0.06em",
+                      }}>
+                        {appt.status.replace(/_/g, " ")}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Time + Stylist row */}

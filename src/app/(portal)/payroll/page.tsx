@@ -193,7 +193,7 @@ export default function PayrollPage() {
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(205,201,192,0.08)" }}>
-                {["Stylist", "Services", "Subtotal", "Commission (40%)", "Tips", "Pay"].map(h => (
+                {["Stylist", "Checkouts", "Subtotal", "Commission (40%)", "Tips", "Total Pay"].map(h => (
                   <th key={h} style={{
                     padding: "10px 16px",
                     textAlign: h === "Stylist" ? "left" : "right",
@@ -344,10 +344,12 @@ export default function PayrollPage() {
         <>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px", marginBottom: "20px" }}>
             {[
-              { label: "Total Services", value: String(totals.services) },
+              { label: "Total Checkouts", value: String(totals.services) },
               { label: "Total Subtotal", value: fmtCurrency(totals.subtotal) },
               { label: "Total Commissions", value: fmtCurrency(totals.commission), green: true },
-              { label: "Avg per Stylist", value: stylistCount > 0 ? fmtCurrency(totals.commission / stylistCount) : "$0.00", green: true },
+              { label: "Total Tips", value: fmtCurrency(totals.tips) },
+              { label: "Total Pay", value: fmtCurrency(totals.commission + totals.tips), green: true },
+              { label: "Avg per Stylist", value: stylistCount > 0 ? fmtCurrency((totals.commission + totals.tips) / stylistCount) : "$0.00", green: true },
             ].map(stat => (
               <div key={stat.label} style={cardStyle}>
                 <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>
