@@ -31,6 +31,8 @@ model User {
   suiteSubscription SuiteSubscription?
   taxReceipts       TaxReceipt[]
   mileageLogs       MileageLog[]
+  quarterlyPayments QuarterlyPayment[]
+  taxYears          TaxYear[]
   @@map("users")
 }
 
@@ -346,6 +348,12 @@ model TaxReceipt {
   taxYear      Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
+  scheduleC_line   String?
+  isSplit          Boolean  @default(false)
+  businessPercent  Float    @default(100)
+  businessAmount   Float?
+  isDuplicate      Boolean  @default(false)
+  merchantCategory String?
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("tax_receipts")
 }
@@ -361,6 +369,38 @@ model MileageLog {
   taxYear   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  fromLocation String?
+  toLocation   String?
+  isRoundTrip  Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("mileage_logs")
+}
+
+model QuarterlyPayment {
+  id              String    @id @default(cuid())
+  userId          String
+  taxYear         Int
+  quarter         Int
+  dueDate         DateTime
+  estimatedAmount Float
+  actualAmount    Float?
+  paidAt          DateTime?
+  confirmationNum String?
+  status          String    @default("upcoming")
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, taxYear, quarter])
+  @@map("quarterly_payments")
+}
+
+model TaxYear {
+  id              String  @id @default(cuid())
+  userId          String
+  year            Int
+  totalIncome     Float   @default(0)
+  totalDeductions Float   @default(0)
+  estimatedTax    Float   @default(0)
+  isFinalized     Boolean @default(false)
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, year])
+  @@map("tax_years")
 }

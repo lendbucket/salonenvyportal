@@ -39,7 +39,7 @@ export async function POST(request: Request) {
           },
           {
             type: "text",
-            text: `Analyze this receipt image. Extract the following information and respond in valid JSON only (no markdown):
+            text: `Analyze this receipt image for a self-employed hair stylist / salon professional. Extract the following information and respond in valid JSON only (no markdown):
 {
   "vendor": "store/business name",
   "amount": 0.00,
@@ -47,8 +47,12 @@ export async function POST(request: Request) {
   "description": "brief description of the purchase",
   "date": "YYYY-MM-DD or null if not visible",
   "isDeductible": true,
-  "reasoning": "brief explanation of why this is or isn't tax deductible for a hair stylist/salon professional"
-}`,
+  "reasoning": "brief explanation of why this is or isn't tax deductible for a hair stylist/salon professional",
+  "scheduleC_line": "IRS Schedule C line number (e.g. '22 - Supplies', '13 - Depreciation', '18 - Office expense', '27a - Other expenses', '8 - Advertising', '15 - Insurance', '10 - Commissions and fees'). Pick the best match.",
+  "businessPercent": 100,
+  "merchantCategory": "merchant category like 'Beauty Supply', 'Office Supply', 'Gas Station', 'Restaurant', 'Retail', 'Education', 'Insurance', 'Auto', 'Technology', 'Other'"
+}
+If the expense is mixed personal/business (like a phone bill), set businessPercent to the estimated business-use percentage (e.g. 60).`,
           },
         ],
       },
@@ -66,6 +70,9 @@ export async function POST(request: Request) {
     date?: string | null
     isDeductible?: boolean
     reasoning?: string
+    scheduleC_line?: string
+    businessPercent?: number
+    merchantCategory?: string
   }
   try {
     parsed = JSON.parse(aiText)
@@ -77,20 +84,46 @@ export async function POST(request: Request) {
     ? new Date(parsed.date).getFullYear()
     : new Date().getFullYear()
 
-  const receipt = await prisma.taxReceipt.create({
-    data: {
+  const amt = parsed.amount || 0
+  const bizPct = parsed.businessPercent ?? 100
+  const bizAmount = Math.round(amt * bizPct) / 100
+
+  // Duplicate detection: same vendor + amount within 7 days
+  const receiptDate = parsed.date ? new Date(parsed.date) : new Date()
+  const sevenDaysAgo = new Date(receiptDate)
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  const sevenDaysAhead = new Date(receiptDate)
+  sevenDaysAhead.setDate(sevenDaysAhead.getDate() + 7)
+
+  const duplicate = await prisma.taxReceipt.findFirst({
+    where: {
       userId,
-      imageData: imageData.substring(0, 500), // Store thumbnail reference, not full image
       vendor: parsed.vendor || "Unknown",
-      amount: parsed.amount || 0,
-      category: parsed.category || "Other",
-      description: parsed.description || "",
-      receiptDate: parsed.date ? new Date(parsed.date) : new Date(),
-      isDeductible: parsed.isDeductible ?? true,
-      aiAnalysis: aiText,
-      taxYear,
+      amount: amt,
+      receiptDate: { gte: sevenDaysAgo, lte: sevenDaysAhead },
     },
   })
 
-  return NextResponse.json({ receipt, analysis: parsed })
+  const receipt = await prisma.taxReceipt.create({
+    data: {
+      userId,
+      imageData: imageData.substring(0, 500),
+      vendor: parsed.vendor || "Unknown",
+      amount: amt,
+      category: parsed.category || "Other",
+      description: parsed.description || "",
+      receiptDate,
+      isDeductible: parsed.isDeductible ?? true,
+      aiAnalysis: aiText,
+      taxYear,
+      scheduleC_line: parsed.scheduleC_line || null,
+      isSplit: bizPct < 100,
+      businessPercent: bizPct,
+      businessAmount: bizAmount,
+      isDuplicate: !!duplicate,
+      merchantCategory: parsed.merchantCategory || null,
+    },
+  })
+
+  return NextResponse.json({ receipt, analysis: parsed, isDuplicate: !!duplicate })
 }
