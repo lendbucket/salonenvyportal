@@ -46,7 +46,8 @@ export default function SuitePage() {
   const mono: React.CSSProperties = { fontFamily: "'Fira Code', monospace" }
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#06080d", color: "#fff", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#06080d", color: "#fff", position: "relative", overflow: "hidden", paddingBottom: "80px" }}>
+      <style>{`@media(max-width:767px){.suite-grid{grid-template-columns:1fr !important} .suite-feat{grid-template-columns:1fr !important} .suite-pricing{grid-template-columns:1fr !important}}`}</style>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "400px", background: "radial-gradient(ellipse at 50% 0%, rgba(96,110,116,0.1) 0%, transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "1000px", margin: "0 auto", padding: "clamp(24px,4vw,48px) clamp(16px,4vw,32px)" }}>
@@ -109,7 +110,7 @@ export default function SuitePage() {
         <div style={{ ...mono, fontSize: "9px", letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>Five apps. One subscription.<div style={{ flex: 1, height: "1px", background: BORDER }} /></div>
 
         {/* STYLETAX FEATURED */}
-        <div onClick={() => (hasAccess || isOwner) ? router.push("/suite/style-tax") : setShowModal(true)} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: S1, border: `1px solid ${ACC_BORDER}`, borderRadius: "16px", overflow: "hidden", marginBottom: "12px", boxShadow: "0 0 40px rgba(96,110,116,0.06)", cursor: "pointer" }}>
+        <div className="suite-feat" onClick={() => (hasAccess || isOwner) ? router.push("/suite/style-tax") : setShowModal(true)} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: S1, border: `1px solid ${ACC_BORDER}`, borderRadius: "16px", overflow: "hidden", marginBottom: "12px", boxShadow: "0 0 40px rgba(96,110,116,0.06)", cursor: "pointer" }}>
           <div style={{ padding: "28px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
               <div style={{ width: "42px", height: "42px", borderRadius: "10px", background: ACC_DIM, border: `1px solid ${ACC_BORDER}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -169,7 +170,7 @@ export default function SuitePage() {
         </div>
 
         {/* 4 SMALL CARDS */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "40px" }}>
+        <div className="suite-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "40px" }}>
           {APPS.map(app => {
             const unlocked = app.live && (hasAccess || isOwner)
             return (
@@ -207,7 +208,7 @@ export default function SuitePage() {
         {/* PRICING */}
         {!isOwner && !hasAccess && (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", maxWidth: "460px", margin: "0 auto 24px" }}>
+            <div className="suite-pricing" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", maxWidth: "460px", margin: "0 auto 24px" }}>
               {[
                 { id: "monthly", label: "Monthly", price: "$40", per: "per month", note: "or $10/paycheck", best: false },
                 { id: "annual", label: "Annual", price: "$399", per: "per year", note: "save $81 vs monthly", best: true },

@@ -146,7 +146,7 @@ export async function getMetricsByPeriodWithDates(
   }
 
   try {
-    // Step 1: Get ALL bookings in period
+    // Step 1: Get ALL bookings in period (for stylist attribution)
     const bookings: BookingEntry[] = []
 
     let bookingsPage = await square.bookings.list({
@@ -157,9 +157,8 @@ export async function getMetricsByPeriodWithDates(
 
     for (const b of bookingsPage.data) {
       const tmId = b.appointmentSegments?.[0]?.teamMemberId
-      if (tmId && TEAM_MEMBER_LOCATIONS[tmId] && b.startAt) {
+      if (tmId && TEAM_MEMBER_LOCATIONS[tmId] && b.startAt && b.status === "ACCEPTED") {
         bookings.push({ teamMemberId: tmId, startAt: new Date(b.startAt), locationId: b.locationId || "" })
-        stylistMetrics[tmId].serviceCount += 1
       }
     }
 
@@ -167,38 +166,80 @@ export async function getMetricsByPeriodWithDates(
       bookingsPage = await bookingsPage.getNextPage()
       for (const b of bookingsPage.data) {
         const tmId = b.appointmentSegments?.[0]?.teamMemberId
-        if (tmId && TEAM_MEMBER_LOCATIONS[tmId] && b.startAt) {
+        if (tmId && TEAM_MEMBER_LOCATIONS[tmId] && b.startAt && b.status === "ACCEPTED") {
           bookings.push({ teamMemberId: tmId, startAt: new Date(b.startAt), locationId: b.locationId || "" })
-          stylistMetrics[tmId].serviceCount += 1
         }
       }
     }
 
-    // Step 2: Get ALL completed orders in period
+    // Step 2: Get ALL completed orders in period (closed_at for accuracy)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawOrders: any[] = []
     const orders: OrderEntry[] = []
 
     const ordersRes = await square.orders.search({
       locationIds: [...LOCATION_IDS],
       query: {
         filter: {
-          dateTimeFilter: { createdAt: { startAt, endAt } },
+          dateTimeFilter: { closedAt: { startAt, endAt } },
           stateFilter: { states: ["COMPLETED"] },
         },
+        sort: { sortField: "CLOSED_AT", sortOrder: "DESC" },
       },
       limit: 500,
     })
 
     for (const o of (ordersRes.orders || [])) {
+      rawOrders.push(o)
       const totalAmt = Number(o.totalMoney?.amount || 0)
       const taxAmt = Number(o.totalTaxMoney?.amount || 0)
       const tipAmt = Number(o.totalTipMoney?.amount || 0)
+      // Net revenue = total - tax - tip (all in cents, /100)
       const amount = (totalAmt - taxAmt - tipAmt) / 100
-      if (amount > 0 && o.createdAt) {
-        orders.push({ total: amount, createdAt: new Date(o.createdAt), locationId: o.locationId || "" })
+      if (amount > 0 && o.closedAt) {
+        orders.push({ total: amount, createdAt: new Date(o.closedAt), locationId: o.locationId || "" })
       }
     }
 
-    // Step 3: Match orders to bookings by time proximity
+    // Step 2b: Count services from order line items (not bookings)
+    // Only count real service line items, exclude cancellation/no-show fees
+    for (const o of rawOrders) {
+      const lineItems = o.lineItems || []
+      let orderServiceCount = 0
+      for (const li of lineItems) {
+        const name = (li.name || "").toLowerCase()
+        const amt = Number(li.grossSalesMoney?.amount || li.totalMoney?.amount || 0)
+        // Skip $0 items, cancellation fees, and no-show fees
+        if (amt <= 0) continue
+        if (name.includes("cancellation") || name.includes("no-show") || name.includes("no show")) continue
+        orderServiceCount++
+      }
+
+      // Attribute service count to stylist via booking match
+      const orderTime = new Date(o.closedAt || o.createdAt || "")
+      let matched = false
+      for (let i = 0; i < bookings.length; i++) {
+        const diffMs = orderTime.getTime() - bookings[i].startAt.getTime()
+        const diffHours = diffMs / (1000 * 60 * 60)
+        if (diffHours >= -0.5 && diffHours <= 5 && bookings[i].locationId === (o.locationId || "")) {
+          stylistMetrics[bookings[i].teamMemberId].serviceCount += Math.max(orderServiceCount, 1)
+          matched = true
+          break
+        }
+      }
+      // If no booking match, attribute to location but not stylist
+      if (!matched && orderServiceCount > 0) {
+        // Find any stylist at this location to attribute
+        const locName = o.locationId === "LTJSA6QR1HGW6" ? "Corpus Christi" : "San Antonio"
+        const locStylists = Object.entries(TEAM_MEMBER_LOCATIONS).filter(([, l]) => l === locName)
+        if (locStylists.length > 0) {
+          // Distribute to first available stylist at location (walk-in attribution)
+          stylistMetrics[locStylists[0][0]].serviceCount += orderServiceCount
+        }
+      }
+    }
+
+    // Step 3: Match orders to bookings by time proximity for REVENUE attribution
     const usedBookings = new Set<number>()
     for (const order of orders) {
       let bestMatch: { index: number; diff: number } | null = null

@@ -158,7 +158,7 @@ export default function DashboardPage() {
       const [metricsRes, approvalsRes, cancellationsRes] = await Promise.all([
         fetch(`/api/metrics/live?${params}`),
         fetch("/api/approvals/pending"),
-        fetch("/api/cancellations?period=7days"),
+        fetch(`/api/cancellations?period=${activePeriod}`),
       ])
       const metricsJson = await metricsRes.json()
       const approvalsJson = await approvalsRes.json()
