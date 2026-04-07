@@ -42,6 +42,7 @@ model User {
   courseCompletions    CourseCompletion[]
   tdlrLicenseRenewal  TdlrLicenseRenewal?
   healthProfile        HealthProfile?
+  videoSubmissions     VideoSubmission[] @relation("VideoSubmissions")
   @@map("users")
 }
 
@@ -57,6 +58,7 @@ model Location {
   schedules              Schedule[]
   purchaseOrders         PurchaseOrder[]
   onboardingEnrollments  OnboardingEnrollment[]
+  videoSubmissions       VideoSubmission[]
   @@map("locations")
 }
 
@@ -526,6 +528,7 @@ model EduCourse {
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   completions     CourseCompletion[]
+  submission      VideoSubmission?
   @@map("edu_courses")
 }
 
@@ -575,4 +578,30 @@ model HealthProfile {
   updatedAt         DateTime  @default(now()) @updatedAt
   user              User      @relation(fields: [userId], references: [id])
   @@map("health_profiles")
+}
+
+model VideoSubmission {
+  id               String     @id @default(cuid())
+  submittedBy      String
+  locationId       String
+  title            String
+  description      String
+  url              String
+  videoId          String?
+  platform         String
+  embedUrl         String?
+  category         String
+  suggestedHours   Float      @default(0)
+  isTdlrCe         Boolean    @default(false)
+  status           String     @default("pending")
+  reviewedBy       String?
+  reviewedAt       DateTime?
+  rejectionReason  String?
+  approvedCourseId String?    @unique
+  approvedCourse   EduCourse? @relation(fields: [approvedCourseId], references: [id])
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @default(now()) @updatedAt
+  submitter        User       @relation("VideoSubmissions", fields: [submittedBy], references: [id])
+  location         Location   @relation(fields: [locationId], references: [id])
+  @@map("video_submissions")
 }

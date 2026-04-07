@@ -1,8 +1,10 @@
 "use client"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useUserRole } from "@/hooks/useUserRole"
+import { parseVideoUrl, getPlatformLabel, getPlatformColor } from "@/lib/videoParser"
+import type { ParsedVideo } from "@/lib/videoParser"
 
 const ACC = "#606E74"
 const ACC_BRIGHT = "#7a8f96"
@@ -20,12 +22,29 @@ const GREEN = "#10B981"
 const BLUE = "#4da6ff"
 const RED = "#ff6b6b"
 
-const TABS = [
+const BASE_TABS = [
   { id: "learning", label: "My Learning" },
   { id: "ce", label: "CE Credits" },
   { id: "library", label: "Course Library" },
   { id: "license", label: "License Tracker" },
 ]
+
+const SUBMIT_CATEGORIES = [
+  { id: "color", label: "Color" },
+  { id: "cutting", label: "Cutting" },
+  { id: "texture", label: "Texture" },
+  { id: "business", label: "Business" },
+  { id: "tdlr_ce", label: "TDLR CE" },
+  { id: "trends", label: "Trends" },
+]
+
+type Submission = {
+  id: string; title: string; description: string; url: string; videoId: string | null
+  platform: string; embedUrl: string | null; category: string; suggestedHours: number
+  isTdlrCe: boolean; status: string; rejectionReason: string | null; createdAt: string
+  submitter: { name: string | null; email: string } | null
+  location: { name: string } | null
+}
 
 const CATEGORIES = [
   { id: "all", label: "All" },
@@ -54,7 +73,7 @@ type Renewal = {
 }
 
 export default function StyleEduPage() {
-  const { isOwner } = useUserRole()
+  const { isOwner, isManager } = useUserRole()
   const { data: session } = useSession()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("learning")
@@ -67,6 +86,27 @@ export default function StyleEduPage() {
   const [completing, setCompleting] = useState(false)
   const [renewalForm, setRenewalForm] = useState({ licenseNumber: "", licenseExpiration: "" })
   const [savingRenewal, setSavingRenewal] = useState(false)
+
+  // Submission state
+  const [submitUrl, setSubmitUrl] = useState("")
+  const [parsedUrl, setParsedUrl] = useState<ParsedVideo | null>(null)
+  const [submitForm, setSubmitForm] = useState({ title: "", description: "", category: "color", suggestedHours: "0.5", isTdlrCe: false })
+  const [submitting, setSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [mySubmissions, setMySubmissions] = useState<Submission[]>([])
+  // Review state (owner)
+  const [allSubmissions, setAllSubmissions] = useState<Submission[]>([])
+  const [reviewFilter, setReviewFilter] = useState("pending")
+  const [expandedSub, setExpandedSub] = useState<string | null>(null)
+  const [rejectReason, setRejectReason] = useState("")
+  const [reviewing, setReviewing] = useState(false)
+
+  const tabs = useMemo(() => {
+    const t = [...BASE_TABS]
+    if (isOwner || isManager) t.push({ id: "submit", label: "Submit Video" })
+    if (isOwner) t.push({ id: "review", label: "Review Videos" })
+    return t
+  }, [isOwner, isManager])
 
   useEffect(() => { checkAccess() }, [])
 
@@ -93,6 +133,65 @@ export default function StyleEduPage() {
       if (rData.renewal?.licenseExpiration) setRenewalForm(f => ({ ...f, licenseExpiration: rData.renewal.licenseExpiration?.split("T")[0] || "" }))
     } catch { /* noop */ }
     setLoading(false)
+  }
+
+  const loadSubmissions = useCallback(async () => {
+    try {
+      const res = await fetch("/api/suite/edu/submissions?status=all")
+      const data = await res.json()
+      setMySubmissions(data.submissions || [])
+      setAllSubmissions(data.submissions || [])
+    } catch { /* noop */ }
+  }, [])
+
+  useEffect(() => {
+    if (activeTab === "submit" || activeTab === "review") loadSubmissions()
+  }, [activeTab, loadSubmissions])
+
+  const handleUrlChange = (url: string) => {
+    setSubmitUrl(url)
+    setSubmitSuccess(false)
+    if (url.length > 10) {
+      const parsed = parseVideoUrl(url)
+      setParsedUrl(parsed)
+    } else {
+      setParsedUrl(null)
+    }
+  }
+
+  const handleSubmitVideo = async () => {
+    if (!parsedUrl?.isValid || !submitForm.title) return
+    setSubmitting(true)
+    try {
+      const res = await fetch("/api/suite/edu/submissions", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...submitForm, url: submitUrl }),
+      })
+      const data = await res.json()
+      if (data.submission) {
+        setSubmitSuccess(true)
+        setSubmitUrl("")
+        setParsedUrl(null)
+        setSubmitForm({ title: "", description: "", category: "color", suggestedHours: "0.5", isTdlrCe: false })
+        loadSubmissions()
+      }
+    } catch { /* noop */ }
+    setSubmitting(false)
+  }
+
+  const handleReview = async (id: string, action: "approve" | "reject") => {
+    setReviewing(true)
+    try {
+      await fetch(`/api/suite/edu/submissions/${id}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, rejectionReason: rejectReason }),
+      })
+      setRejectReason("")
+      setExpandedSub(null)
+      loadSubmissions()
+      if (action === "approve") loadData()
+    } catch { /* noop */ }
+    setReviewing(false)
   }
 
   const markComplete = useCallback(async (courseId: string) => {
@@ -198,7 +297,7 @@ export default function StyleEduPage() {
 
         {/* Tab bar */}
         <div style={{ display: "flex", gap: "1px", background: S1, border: `1px solid ${BORDER}`, borderRadius: "9px", padding: "3px", marginBottom: "20px", overflowX: "auto" }}>
-          {TABS.map(tab => (
+          {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ flex: 1, padding: "8px 10px", borderRadius: "6px", border: activeTab === tab.id ? `1px solid ${ACC_BORDER}` : "1px solid transparent", background: activeTab === tab.id ? `linear-gradient(135deg, rgba(122,143,150,0.15), rgba(96,110,116,0.08))` : "transparent", color: activeTab === tab.id ? "#fff" : MUTED, fontSize: "9px", fontWeight: activeTab === tab.id ? 700 : 500, cursor: "pointer", whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "0.06em", ...mono }}>
               {tab.label}
             </button>
@@ -479,6 +578,171 @@ export default function StyleEduPage() {
                     Go to TDLR Website
                   </a>
                 </div>
+              </div>
+            )}
+
+            {/* ═══ SUBMIT VIDEO TAB ═══ */}
+            {activeTab === "submit" && (isOwner || isManager) && (
+              <div>
+                {submitSuccess ? (
+                  <div style={{ background: S1, border: `1px solid ${GREEN}30`, borderRadius: "12px", padding: "40px", textAlign: "center", marginBottom: "20px" }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: "36px", color: GREEN, display: "block", marginBottom: "10px" }}>check_circle</span>
+                    <div style={{ fontSize: "15px", fontWeight: 700, marginBottom: "6px" }}>Video Submitted!</div>
+                    <div style={{ fontSize: "12px", color: MID }}>The owner will review your video and add it to the course library.</div>
+                    <button onClick={() => setSubmitSuccess(false)} style={{ marginTop: "14px", padding: "8px 16px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Submit Another</button>
+                  </div>
+                ) : (
+                  <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "24px", marginBottom: "20px" }}>
+                    <div style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.12em", color: MUTED, marginBottom: "6px" }}>Submit a Video for Review</div>
+                    <p style={{ fontSize: "12px", color: MID, marginBottom: "18px", lineHeight: 1.6 }}>Found a great tutorial? Submit it for owner approval and it will be added to the course library for all stylists.</p>
+
+                    {/* URL input */}
+                    <div style={{ marginBottom: "16px" }}>
+                      <label style={labelStyle}>Video URL</label>
+                      <div style={{ position: "relative" }}>
+                        <input value={submitUrl} onChange={e => handleUrlChange(e.target.value)} placeholder="Paste YouTube, Instagram, TikTok, or Facebook URL..." style={{ ...inputStyle, paddingRight: "90px" }} />
+                        {parsedUrl && (
+                          <div style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "6px" }}>
+                            {parsedUrl.isValid ? (
+                              <>
+                                <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", background: `${getPlatformColor(parsedUrl.platform)}15`, border: `1px solid ${getPlatformColor(parsedUrl.platform)}30`, color: getPlatformColor(parsedUrl.platform) }}>{getPlatformLabel(parsedUrl.platform)}</span>
+                                <span style={{ color: GREEN, fontSize: "14px" }}>&#10003;</span>
+                              </>
+                            ) : (
+                              <span style={{ fontSize: "10px", color: RED }}>Invalid URL</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Video preview */}
+                    {parsedUrl?.isValid && parsedUrl.embedUrl && (
+                      <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "10px", marginBottom: "18px", backgroundColor: "#000" }}>
+                        <iframe src={parsedUrl.embedUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen loading="lazy" title="Preview" />
+                      </div>
+                    )}
+
+                    {/* Course details */}
+                    {parsedUrl?.isValid && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                        <div><label style={labelStyle}>Title</label><input value={submitForm.title} onChange={e => setSubmitForm(p => ({ ...p, title: e.target.value }))} placeholder="e.g. Advanced Balayage Technique" style={inputStyle} /></div>
+                        <div><label style={labelStyle}>Description</label><textarea value={submitForm.description} onChange={e => setSubmitForm(p => ({ ...p, description: e.target.value }))} placeholder="What will stylists learn from this video?" style={{ ...inputStyle, height: "80px", resize: "vertical" as const }} /></div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                          <div><label style={labelStyle}>Category</label>
+                            <select value={submitForm.category} onChange={e => setSubmitForm(p => ({ ...p, category: e.target.value }))} style={inputStyle}>
+                              {SUBMIT_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                            </select>
+                          </div>
+                          <div><label style={labelStyle}>Suggested Hours</label>
+                            <select value={submitForm.suggestedHours} onChange={e => setSubmitForm(p => ({ ...p, suggestedHours: e.target.value }))} style={inputStyle}>
+                              {["0.5", "1", "1.5", "2", "3"].map(h => <option key={h} value={h}>{h} hr{parseFloat(h) !== 1 ? "s" : ""}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <input type="checkbox" checked={submitForm.isTdlrCe} onChange={e => setSubmitForm(p => ({ ...p, isTdlrCe: e.target.checked }))} style={{ accentColor: ACC }} />
+                          <label style={{ fontSize: "12px", color: MID }}>TDLR CE eligible</label>
+                        </div>
+                        <button onClick={handleSubmitVideo} disabled={submitting || !submitForm.title} style={{ padding: "12px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", opacity: (!submitForm.title || submitting) ? 0.5 : 1 }}>
+                          {submitting ? "Submitting..." : "Submit for Owner Review"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* My submissions */}
+                {mySubmissions.length > 0 && (
+                  <div>
+                    <div style={{ ...mono, fontSize: "9px", letterSpacing: "0.15em", textTransform: "uppercase", color: MUTED, marginBottom: "10px" }}>Your Submissions</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                      {mySubmissions.map(sub => (
+                        <div key={sub.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: S1, border: `1px solid ${BORDER}`, borderRadius: "8px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <span style={{ ...mono, fontSize: "9px", padding: "2px 7px", borderRadius: "4px", background: `${getPlatformColor(sub.platform)}12`, color: getPlatformColor(sub.platform) }}>{getPlatformLabel(sub.platform)}</span>
+                            <span style={{ fontSize: "12px", fontWeight: 600 }}>{sub.title}</span>
+                          </div>
+                          <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", textTransform: "uppercase", background: sub.status === "approved" ? `${GREEN}12` : sub.status === "rejected" ? `${RED}12` : `${AMBER}12`, color: sub.status === "approved" ? GREEN : sub.status === "rejected" ? RED : AMBER }}>{sub.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ═══ REVIEW VIDEOS TAB (OWNER ONLY) ═══ */}
+            {activeTab === "review" && isOwner && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "10px" }}>
+                  <div>
+                    <h3 style={{ fontSize: "16px", fontWeight: 700, margin: "0 0 3px" }}>Video Submissions</h3>
+                    <p style={{ fontSize: "12px", color: MUTED, margin: 0 }}>{allSubmissions.filter(s => s.status === "pending").length} awaiting review</p>
+                  </div>
+                  <div style={{ display: "flex", gap: "4px" }}>
+                    {["pending", "approved", "rejected"].map(s => (
+                      <button key={s} onClick={() => setReviewFilter(s)} style={{ padding: "5px 12px", borderRadius: "6px", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", border: `1px solid ${reviewFilter === s ? ACC_BORDER : BORDER}`, background: reviewFilter === s ? ACC_DIM : "transparent", color: reviewFilter === s ? ACC_BRIGHT : MUTED, cursor: "pointer", ...mono }}>{s}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {allSubmissions.filter(s => s.status === reviewFilter).length === 0 ? (
+                  <div style={{ background: S1, border: `1px solid ${BORDER}`, borderRadius: "10px", padding: "40px", textAlign: "center" }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: "32px", color: MUTED, display: "block", marginBottom: "10px" }}>inbox</span>
+                    <p style={{ fontSize: "13px", color: MUTED }}>No {reviewFilter} submissions</p>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {allSubmissions.filter(s => s.status === reviewFilter).map(sub => (
+                      <div key={sub.id} style={{ background: S1, border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden" }}>
+                        <div onClick={() => setExpandedSub(expandedSub === sub.id ? null : sub.id)} style={{ padding: "16px", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                          <span style={{ ...mono, fontSize: "9px", padding: "2px 7px", borderRadius: "4px", background: `${getPlatformColor(sub.platform)}12`, color: getPlatformColor(sub.platform), flexShrink: 0 }}>{getPlatformLabel(sub.platform)}</span>
+                          <div style={{ flex: 1, minWidth: "150px" }}>
+                            <div style={{ fontSize: "14px", fontWeight: 700 }}>{sub.title}</div>
+                            <div style={{ fontSize: "10px", color: MUTED }}>by {sub.submitter?.name || "Unknown"} &middot; {sub.location?.name} &middot; {sub.category}</div>
+                          </div>
+                          <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                            {sub.isTdlrCe && <span style={{ ...mono, fontSize: "8px", padding: "2px 6px", borderRadius: "3px", background: `${AMBER}12`, color: AMBER }}>CE</span>}
+                            <span style={{ ...mono, fontSize: "9px", color: MUTED }}>{sub.suggestedHours}h</span>
+                            <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", textTransform: "uppercase", background: sub.status === "approved" ? `${GREEN}12` : sub.status === "rejected" ? `${RED}12` : `${AMBER}12`, color: sub.status === "approved" ? GREEN : sub.status === "rejected" ? RED : AMBER }}>{sub.status}</span>
+                            <span className="material-symbols-outlined" style={{ fontSize: "18px", color: MUTED, transform: expandedSub === sub.id ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>expand_more</span>
+                          </div>
+                        </div>
+
+                        {expandedSub === sub.id && (
+                          <div style={{ padding: "0 16px 16px", borderTop: `1px solid ${BORDER}` }}>
+                            <p style={{ fontSize: "12px", color: MID, lineHeight: 1.6, margin: "14px 0" }}>{sub.description}</p>
+
+                            {/* Video preview */}
+                            {sub.embedUrl && (
+                              <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "10px", marginBottom: "14px", backgroundColor: "#000" }}>
+                                <iframe src={sub.embedUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen loading="lazy" title={sub.title} />
+                              </div>
+                            )}
+
+                            {sub.status === "pending" && (
+                              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                                <button onClick={() => handleReview(sub.id, "approve")} disabled={reviewing} style={{ padding: "9px 20px", background: `linear-gradient(135deg, ${GREEN}, #059669)`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer", opacity: reviewing ? 0.6 : 1 }}>
+                                  {reviewing ? "..." : "Approve"}
+                                </button>
+                                <div style={{ display: "flex", gap: "6px", flex: 1 }}>
+                                  <input value={rejectReason} onChange={e => setRejectReason(e.target.value)} placeholder="Rejection reason (optional)" style={{ ...inputStyle, flex: 1, fontSize: "12px", padding: "8px 10px" }} />
+                                  <button onClick={() => handleReview(sub.id, "reject")} disabled={reviewing} style={{ padding: "9px 16px", background: "transparent", border: `1px solid ${RED}40`, borderRadius: "7px", color: RED, fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>
+                                    Reject
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            {sub.status === "rejected" && sub.rejectionReason && (
+                              <div style={{ fontSize: "11px", color: RED, marginTop: "6px" }}>Reason: {sub.rejectionReason}</div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </>
