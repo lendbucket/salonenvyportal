@@ -1,13 +1,40 @@
+/* Native app feel — no horizontal scroll */
 html, body {
   overflow-x: hidden;
+  max-width: 100vw;
   width: 100%;
+  position: relative;
+}
+
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+}
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent horizontal overflow from any element */
+p, h1, h2, h3, h4, h5, h6, span, div {
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* PWA Safe Areas */
 @supports (padding-top: env(safe-area-inset-top)) {
-  body {
-    padding-top: env(safe-area-inset-top);
-    background-color: #0a1520;
+  .portal-header {
+    padding-top: calc(12px + env(safe-area-inset-top));
+  }
+  .portal-bottom-nav {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    height: calc(64px + env(safe-area-inset-bottom));
+  }
+  .portal-content {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
   }
 }
 
@@ -190,7 +217,11 @@ html, body {
 }
 
 * { -webkit-tap-highlight-color: transparent; }
-input, select, textarea { font-size: 16px !important; }
+
+/* Prevent iOS zoom on input focus */
+@media (max-width: 768px) {
+  input, textarea, select { font-size: 16px !important; }
+}
 
 @media (max-width: 768px) {
   .desktop-only { display: none !important; }
@@ -214,5 +245,10 @@ input, select, textarea { font-size: 16px !important; }
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     max-width: 100%;
+  }
+  pre, code {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
   }
 }

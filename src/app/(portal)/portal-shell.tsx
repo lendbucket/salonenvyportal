@@ -189,19 +189,17 @@ export default function PortalShell({ children }: { children: React.ReactNode })
      ═══════════════════════════════════════════ */
   if (isMobile) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#1e2d35" }}>
+      <div style={{ position: "fixed", inset: 0, display: "flex", flexDirection: "column", backgroundColor: "#1e2d35", overflow: "hidden" }}>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
         />
 
-        {/* TOP BAR — with safe area */}
-        <header style={{
-          paddingTop: "env(safe-area-inset-top, 0px)",
+        {/* TOP BAR — fixed at top */}
+        <header className="portal-header" style={{
           backgroundColor: "#0a1520",
           borderBottom: "1px solid rgba(205,201,192,0.08)",
-          position: "sticky",
-          top: 0,
+          flexShrink: 0,
           zIndex: 50,
         }}>
         <div style={{
@@ -391,19 +389,21 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           </div>
         </div>
 
-        {/* CONTENT */}
-        <main style={{
+        {/* CONTENT — scrollable area */}
+        <main className="portal-content" style={{
           flex: 1,
           backgroundColor: "#1e2d35",
           overflowY: "auto",
-          paddingBottom: "72px",
+          overflowX: "hidden",
+          WebkitOverflowScrolling: "touch",
+          paddingBottom: "80px",
           width: "100%",
         }}>
           {children}
         </main>
 
         {/* BOTTOM NAV — 64px */}
-        <nav style={{
+        <nav className="portal-bottom-nav" style={{
           position: "fixed",
           bottom: 0,
           left: 0,

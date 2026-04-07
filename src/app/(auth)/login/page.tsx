@@ -40,13 +40,15 @@ function LoginForm() {
 
   return (
     <div style={{
-      minHeight: "100vh",
+      position: "fixed",
+      inset: 0,
+      overflow: "hidden",
       display: "flex",
+      flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "#0f1d24",
-      padding: "24px",
-      paddingTop: "max(24px, env(safe-area-inset-top, 24px))",
+      padding: "20px",
     }}>
       <div style={{
         width: "100%",
