@@ -60,6 +60,7 @@ interface CartItem {
 }
 
 const LOCATIONS = ["Corpus Christi", "San Antonio"]
+// TODO: make configurable per location in Settings page
 const TAX_RATE = 0.0825
 
 export default function POSPage() {

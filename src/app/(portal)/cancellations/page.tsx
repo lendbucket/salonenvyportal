@@ -276,7 +276,7 @@ function CustomerModal({
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Est. Past Spend</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>${(entry.totalPastVisits * 100).toLocaleString()}</span>
+                <span style={{ color: "#fff", fontSize: "12px" }}>${(entry.totalPastVisits * 0).toLocaleString()}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Last Visit</span>
@@ -796,7 +796,7 @@ export default function CancellationsPage() {
                       {c.totalPastVisits}
                     </td>
                     <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.6)", whiteSpace: "nowrap" }}>
-                      ${(c.totalPastVisits * 100).toLocaleString()}
+                      ${(c.totalPastVisits * 0).toLocaleString()}
                     </td>
                     <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.5)", whiteSpace: "nowrap" }}>
                       {c.lastVisitDate ? formatDate(c.lastVisitDate) : "---"}

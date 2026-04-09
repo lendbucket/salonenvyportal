@@ -142,7 +142,7 @@ export default function DashboardPage() {
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
   const [now, setNow] = useState(Date.now()) // for re-rendering timeAgo
 
-  const userName = session?.user?.name?.split(" ")[0] || "Robert"
+  const userName = session?.user?.name?.split(" ")[0] || "User"
   const hour = new Date().getHours()
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening"
   const dateStr = new Date().toLocaleDateString("en-US", {

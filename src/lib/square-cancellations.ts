@@ -260,7 +260,7 @@ export async function getCancellations(
     noShows: cancellations.filter((c) => c.status === "NO_SHOW").length,
     repeatClientCancellations: cancellations.filter((c) => c.isRepeatClient).length,
     newClientCancellations: cancellations.filter((c) => !c.isRepeatClient).length,
-    estimatedRevenueLost: cancellations.length * 100,
+    estimatedRevenueLost: 0, // TODO: calculate from actual average ticket data
     byStylist: {},
     byDay: {},
   }
