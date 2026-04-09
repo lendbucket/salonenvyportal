@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { logAction, AUDIT_ACTIONS } from "@/lib/auditLogger"
 
 export async function GET(_req: NextRequest) {
   const session = await getServerSession(authOptions)
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest) {
       where: { id: existing.id },
       data: { markedPaidAt: new Date(), markedPaidBy: user.id as string },
     })
+    logAction({ action: AUDIT_ACTIONS.PAYROLL_MARKED_PAID, entity: "PayrollPeriod", entityId: updated.id, userId: user.id as string, userEmail: user.email as string, userRole: user.role as string, metadata: { start, end } })
     return NextResponse.json({ period: updated })
   }
 
@@ -52,5 +54,6 @@ export async function POST(req: NextRequest) {
     },
   })
 
+  logAction({ action: AUDIT_ACTIONS.PAYROLL_MARKED_PAID, entity: "PayrollPeriod", entityId: period.id, userId: user.id as string, userEmail: user.email as string, userRole: user.role as string, metadata: { start, end } })
   return NextResponse.json({ period })
 }

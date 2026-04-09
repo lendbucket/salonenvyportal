@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { logAction, AUDIT_ACTIONS } from "@/lib/auditLogger"
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -73,6 +74,7 @@ export async function POST(req: Request) {
     include: { staffMember: true },
   })
 
+  logAction({ action: AUDIT_ACTIONS.CONDUCT_RECORD_CREATED, entity: "ConductRecord", entityId: record.id, userId })
   return NextResponse.json({ record }, { status: 201 })
 }
 

@@ -46,6 +46,7 @@ model User {
   payrollPeriodsPaid   PayrollPeriod[]
   alertsCreated        AdminAlert[]    @relation("AlertsCreated")
   alertReads           AlertRead[]
+  auditLogs            AuditLog[]
   @@map("users")
 }
 
@@ -64,6 +65,7 @@ model Location {
   videoSubmissions       VideoSubmission[]
   payrollPeriods         PayrollPeriod[]
   alerts                 AdminAlert[]
+  auditLogs              AuditLog[]
   @@map("locations")
 }
 
@@ -640,4 +642,21 @@ model PayrollPeriod {
   location     Location? @relation(fields: [locationId], references: [id])
   markedBy     User?     @relation(fields: [markedPaidBy], references: [id])
   @@map("payroll_periods")
+}
+
+model AuditLog {
+  id         String    @id @default(cuid())
+  action     String
+  entity     String
+  entityId   String?
+  userId     String?
+  userEmail  String?
+  userRole   String?
+  locationId String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime  @default(now())
+  user       User?     @relation(fields: [userId], references: [id])
+  location   Location? @relation(fields: [locationId], references: [id])
+  @@map("audit_logs")
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { logAction, AUDIT_ACTIONS } from "@/lib/auditLogger"
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -72,5 +73,6 @@ export async function POST(req: Request) {
     include: { items: true, location: true },
   })
 
+  logAction({ action: AUDIT_ACTIONS.PO_CREATED, entity: "PurchaseOrder", entityId: order.id, userId: (session!.user as Record<string, unknown>).id as string, userEmail: (session!.user as Record<string, unknown>).email as string, userRole: (session!.user as Record<string, unknown>).role as string, locationId: order.locationId })
   return NextResponse.json({ order }, { status: 201 })
 }

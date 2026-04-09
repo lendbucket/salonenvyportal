@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { logAction, AUDIT_ACTIONS } from "@/lib/auditLogger"
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
@@ -160,6 +161,8 @@ export async function POST(req: Request) {
       `,
     })
 
+    const inviter = session.user as Record<string, unknown>
+    logAction({ action: AUDIT_ACTIONS.STAFF_INVITED, entity: "User", userId: inviter.id as string, userEmail: inviter.email as string, userRole: inviter.role as string, metadata: { invitedEmail: body.email, invitedName: body.fullName } })
     return NextResponse.json({ success: true, enrollmentLink })
   } catch (err) {
     console.error("Failed to invite staff:", err)

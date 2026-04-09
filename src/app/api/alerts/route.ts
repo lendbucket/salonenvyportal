@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { generateSystemAlerts } from "@/lib/alertEngine"
+import { logAction, AUDIT_ACTIONS } from "@/lib/auditLogger"
 
 export async function GET(_req: NextRequest) {
   const session = await getServerSession(authOptions)
@@ -89,5 +90,6 @@ export async function POST(req: NextRequest) {
     },
   })
 
+  logAction({ action: AUDIT_ACTIONS.ALERT_CREATED, entity: "AdminAlert", entityId: alert.id, userId: user.id as string, userEmail: user.email as string, userRole: role, metadata: { title, severity, locationId } })
   return NextResponse.json({ alert })
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { requireSession } from "@/lib/api-auth";
+import { logAction, AUDIT_ACTIONS } from "@/lib/auditLogger";
 
 const createSchema = z.object({
   brand: z.string().min(1),
@@ -40,7 +41,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { response } = await requireSession();
+  const { response, session } = await requireSession();
   if (response) return response;
 
   let json: unknown;
@@ -85,5 +86,6 @@ export async function POST(req: Request) {
     include: { location: true },
   });
 
+  logAction({ action: AUDIT_ACTIONS.INVENTORY_ADDED, entity: "InventoryItem", entityId: item.id, userId: (session?.user as Record<string, unknown>)?.id as string, metadata: { brand: item.brand, name: item.productName }, locationId: item.locationId });
   return NextResponse.json({ item });
 }
