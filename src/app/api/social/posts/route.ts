@@ -3,107 +3,153 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
+async function publishPost(post: { id: string; locationId: string; platform: string; content: string; imageUrls: unknown }) {
+  const result: { fbPostId?: string; igPostId?: string } = {}
+  const locations = post.locationId === "BOTH" ? ["CC", "SA"] : [post.locationId]
+  const token = process.env.META_ACCESS_TOKEN
+
+  for (const loc of locations) {
+    const pageId = loc === "CC" ? process.env.META_CC_PAGE_ID : process.env.META_SA_PAGE_ID
+    const igId = loc === "CC" ? process.env.META_CC_INSTAGRAM_ID : process.env.META_SA_INSTAGRAM_ID
+    const images = Array.isArray(post.imageUrls) ? post.imageUrls as string[] : []
+
+    if (post.platform === "facebook" || post.platform === "both") {
+      if (images.length === 1) {
+        const r = await fetch(`https://graph.facebook.com/v18.0/${pageId}/photos`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: post.content, url: images[0], access_token: token }),
+        })
+        const d = await r.json()
+        result.fbPostId = d.post_id || d.id
+      } else if (images.length > 1) {
+        const mediaIds = []
+        for (const url of images) {
+          const r = await fetch(`https://graph.facebook.com/v18.0/${pageId}/photos`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url, published: false, access_token: token }),
+          })
+          const d = await r.json()
+          if (d.id) mediaIds.push({ media_fbid: d.id })
+        }
+        const r = await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: post.content, attached_media: mediaIds, access_token: token }),
+        })
+        result.fbPostId = (await r.json()).id
+      } else {
+        const r = await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: post.content, access_token: token }),
+        })
+        result.fbPostId = (await r.json()).id
+      }
+    }
+
+    if ((post.platform === "instagram" || post.platform === "both") && igId && images.length > 0) {
+      if (images.length === 1) {
+        const cr = await fetch(`https://graph.facebook.com/v18.0/${igId}/media`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image_url: images[0], caption: post.content, access_token: token }),
+        })
+        const cd = await cr.json()
+        if (cd.id) {
+          const pr = await fetch(`https://graph.facebook.com/v18.0/${igId}/media_publish`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ creation_id: cd.id, access_token: token }),
+          })
+          result.igPostId = (await pr.json()).id
+        }
+      } else {
+        const childIds: string[] = []
+        for (const url of images) {
+          const cr = await fetch(`https://graph.facebook.com/v18.0/${igId}/media`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image_url: url, is_carousel_item: true, access_token: token }),
+          })
+          const cd = await cr.json()
+          if (cd.id) childIds.push(cd.id)
+        }
+        const cr = await fetch(`https://graph.facebook.com/v18.0/${igId}/media`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ media_type: "CAROUSEL", caption: post.content, children: childIds.join(","), access_token: token }),
+        })
+        const cd = await cr.json()
+        if (cd.id) {
+          const pr = await fetch(`https://graph.facebook.com/v18.0/${igId}/media_publish`, {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ creation_id: cd.id, access_token: token }),
+          })
+          result.igPostId = (await pr.json()).id
+        }
+      }
+    }
+  }
+  return result
+}
+
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const user = session.user as Record<string, unknown>
-  if (user.role !== "OWNER" && user.role !== "MANAGER") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   const { searchParams } = new URL(req.url)
-  const locationId = searchParams.get("locationId")
   const status = searchParams.get("status")
-  const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 100)
-  const page = parseInt(searchParams.get("page") || "1")
+  const platform = searchParams.get("platform")
+  const locationId = searchParams.get("locationId")
+  const month = searchParams.get("month")
+  const year = searchParams.get("year")
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {}
-  if (locationId) where.locationId = locationId
   if (status) where.status = status
+  if (platform && platform !== "all") where.platform = platform
+  if (locationId && locationId !== "all") where.locationId = locationId
+  if (month && year) {
+    const start = new Date(parseInt(year), parseInt(month) - 1, 1)
+    const end = new Date(parseInt(year), parseInt(month), 0, 23, 59, 59)
+    where.OR = [
+      { scheduledAt: { gte: start, lte: end } },
+      { publishedAt: { gte: start, lte: end } },
+      { createdAt: { gte: start, lte: end } },
+    ]
+  }
 
-  const [posts, total] = await Promise.all([
-    prisma.socialPost.findMany({
-      where,
-      include: { location: { select: { name: true } }, createdBy: { select: { name: true } } },
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * limit,
-      take: limit,
-    }),
-    prisma.socialPost.count({ where }),
-  ])
-
-  return NextResponse.json({ posts, total, page, totalPages: Math.ceil(total / limit) })
+  const posts = await prisma.socialPost.findMany({
+    where,
+    orderBy: [{ scheduledAt: "asc" }, { createdAt: "desc" }],
+    take: 200,
+  })
+  return NextResponse.json({ posts })
 }
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  const user = session.user as Record<string, unknown>
-  if (user.role !== "OWNER" && user.role !== "MANAGER") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  const userId = (session.user as Record<string, unknown>).id as string
+  const body = await req.json()
 
-  const { message, platform, locationId, scheduledAt, imageUrl } = await req.json()
-  if (!message || !platform || !locationId) return NextResponse.json({ error: "message, platform, locationId required" }, { status: 400 })
-
-  // Create draft
-  let post = await prisma.socialPost.create({
+  const post = await prisma.socialPost.create({
     data: {
-      platform,
-      message,
-      imageUrl: imageUrl || null,
-      scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
-      status: scheduledAt && new Date(scheduledAt) > new Date() ? "scheduled" : "draft",
-      locationId,
-      createdById: user.id as string,
+      locationId: body.locationId || "BOTH",
+      platform: body.platform || "both",
+      content: body.content || "",
+      imageUrls: body.imageUrls || [],
+      status: body.status || "draft",
+      scheduledAt: body.scheduledAt ? new Date(body.scheduledAt) : null,
+      createdBy: userId,
     },
   })
 
-  // Publish immediately if no future schedule
-  if (!scheduledAt || new Date(scheduledAt) <= new Date()) {
-    const token = await prisma.socialToken.findUnique({ where: { locationId } })
-    if (!token) return NextResponse.json({ error: "No social token for this location. Configure Meta API credentials first." }, { status: 400 })
-
-    let fbPostId: string | null = null
-    let igPostId: string | null = null
-
+  if (body.status === "published") {
     try {
-      // Facebook
-      if (platform === "facebook" || platform === "both") {
-        const fbRes = await fetch(`https://graph.facebook.com/v19.0/${token.fbPageId}/feed`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message, access_token: token.fbAccessToken }),
-        })
-        const fbData = await fbRes.json()
-        if (fbData.id) fbPostId = fbData.id
-      }
-
-      // Instagram
-      if ((platform === "instagram" || platform === "both") && token.igAccountId) {
-        // Step 1: Create media container
-        const containerRes = await fetch(`https://graph.facebook.com/v19.0/${token.igAccountId}/media`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ caption: message, access_token: token.fbAccessToken, ...(imageUrl ? { image_url: imageUrl } : {}) }),
-        })
-        const containerData = await containerRes.json()
-        if (containerData.id) {
-          // Step 2: Publish
-          const publishRes = await fetch(`https://graph.facebook.com/v19.0/${token.igAccountId}/media_publish`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ creation_id: containerData.id, access_token: token.fbAccessToken }),
-          })
-          const publishData = await publishRes.json()
-          if (publishData.id) igPostId = publishData.id
-        }
-      }
-
-      post = await prisma.socialPost.update({
+      const result = await publishPost(post)
+      const updated = await prisma.socialPost.update({
         where: { id: post.id },
-        data: { status: "published", postedAt: new Date(), fbPostId, igPostId },
+        data: { status: "published", publishedAt: new Date(), fbPostId: result.fbPostId, igPostId: result.igPostId },
       })
-    } catch (err) {
-      console.error("Social publish error:", err)
-      return NextResponse.json({ post, error: "Post created but publishing failed" })
+      return NextResponse.json({ post: updated })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      await prisma.socialPost.update({ where: { id: post.id }, data: { status: "failed", errorMessage: msg } })
+      return NextResponse.json({ error: msg }, { status: 500 })
     }
   }
 

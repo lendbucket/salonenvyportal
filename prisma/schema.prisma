@@ -47,7 +47,6 @@ model User {
   alertsCreated        AdminAlert[]    @relation("AlertsCreated")
   alertReads           AlertRead[]
   auditLogs            AuditLog[]
-  socialPosts          SocialPost[]
   @@map("users")
 }
 
@@ -67,7 +66,6 @@ model Location {
   payrollPeriods         PayrollPeriod[]
   alerts                 AdminAlert[]
   auditLogs              AuditLog[]
-  socialPosts            SocialPost[]
   socialToken            SocialToken?
   socialComments         SocialComment[]
   socialAnalytics        SocialAnalytics[]
@@ -667,20 +665,26 @@ model AuditLog {
 }
 
 model SocialPost {
-  id          String    @id @default(cuid())
-  platform    String
-  message     String
-  imageUrl    String?
-  scheduledAt DateTime?
-  postedAt    DateTime?
-  status      String    @default("draft")
-  locationId  String
-  createdById String
-  fbPostId    String?
-  igPostId    String?
-  createdAt   DateTime  @default(now())
-  location    Location  @relation(fields: [locationId], references: [id])
-  createdBy   User      @relation(fields: [createdById], references: [id])
+  id           String    @id @default(cuid())
+  locationId   String
+  platform     String
+  content      String    @db.Text
+  imageUrls    Json?
+  videoUrl     String?
+  status       String    @default("draft")
+  scheduledAt  DateTime?
+  publishedAt  DateTime?
+  fbPostId     String?
+  igPostId     String?
+  errorMessage String?
+  reach        Int?
+  likes        Int?
+  comments     Int?
+  shares       Int?
+  impressions  Int?
+  createdBy    String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
   @@map("social_posts")
 }
 
