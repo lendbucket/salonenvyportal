@@ -29,6 +29,10 @@ export async function POST(req: NextRequest) {
   const stylistData: Record<string, { name: string; serviceCount: number; serviceSubtotal: number; tips: number }> = {}
   for (const id of memberIds) stylistData[id] = { name: TEAM_MEMBERS[id].name, serviceCount: 0, serviceSubtotal: 0, tips: 0 }
 
+  console.log("[Payroll] locationId:", locationId, "sqLocId:", sqLocId)
+  console.log("[Payroll] memberIds:", memberIds)
+  console.log("[Payroll] period:", startDate.toISOString(), "→", endDate.toISOString())
+
   // STEP 1: Fetch all ACCEPTED bookings with WIDER window (±24h for edge cases)
   const custBookings: Record<string, { teamMemberId: string; startAt: string }[]> = {}
   const bookingStart = new Date(startDate.getTime() - 24 * 60 * 60 * 1000)
@@ -48,7 +52,11 @@ export async function POST(req: NextRequest) {
     bCursor = d.cursor
   } while (bCursor)
 
+  console.log("[Payroll] total unique customers with bookings:", Object.keys(custBookings).length)
+  console.log("[Payroll] total booking entries:", Object.values(custBookings).reduce((s, a) => s + a.length, 0))
+
   // STEP 2: Fetch all COMPLETED payments → match to stylist via customer_id → booking
+  let paymentCount = 0, matchedCount = 0, skippedNoCustomer = 0, skippedNoBooking = 0, skippedWrongTeam = 0
   let pCursor: string | undefined
   do {
     const p = new URLSearchParams({ location_id: sqLocId, begin_time: startDate.toISOString(), end_time: endDate.toISOString(), limit: "100", sort_order: "ASC" })
@@ -56,20 +64,21 @@ export async function POST(req: NextRequest) {
     const d = await sq(`/payments?${p}`)
     for (const pay of (d.payments || [])) {
       if (pay.status !== "COMPLETED") continue
+      paymentCount++
 
       // FIX 1: Strict date guard — exclude anything outside the exact period
       const paymentTime = new Date(pay.created_at).getTime()
       if (paymentTime < startDate.getTime() || paymentTime > endDate.getTime()) continue
 
       const cid = pay.customer_id
-      if (!cid) continue
+      if (!cid) { skippedNoCustomer++; continue }
 
       // FIX 3: Only consider bookings within 24h BEFORE the payment (service before payment)
       const eligibleBookings = (custBookings[cid] || []).filter(b => {
         const bt = new Date(b.startAt).getTime()
         return bt <= paymentTime && bt >= paymentTime - 24 * 60 * 60 * 1000
       })
-      if (eligibleBookings.length === 0) continue
+      if (eligibleBookings.length === 0) { skippedNoBooking++; continue }
 
       // Find closest eligible booking to payment time
       let tmid: string
@@ -78,7 +87,8 @@ export async function POST(req: NextRequest) {
         tmid = eligibleBookings.reduce((prev, curr) => Math.abs(new Date(curr.startAt).getTime() - paymentTime) < Math.abs(new Date(prev.startAt).getTime() - paymentTime) ? curr : prev).teamMemberId
       }
 
-      if (!stylistData[tmid]) continue // Not in this location's team
+      if (!stylistData[tmid]) { skippedWrongTeam++; continue } // Not in this location's team
+      matchedCount++
 
       stylistData[tmid].serviceSubtotal += (pay.amount_money?.amount || 0) / 100
       stylistData[tmid].tips += (pay.tip_money?.amount || 0) / 100
@@ -86,6 +96,9 @@ export async function POST(req: NextRequest) {
     }
     pCursor = d.cursor
   } while (pCursor)
+
+  console.log("[Payroll] payments total:", paymentCount, "matched:", matchedCount, "noCustomer:", skippedNoCustomer, "noBooking:", skippedNoBooking, "wrongTeam:", skippedWrongTeam)
+  console.log("[Payroll] stylistData:", JSON.stringify(stylistData, null, 2))
 
   // STEP 3: Calculate commissions
   let totalComm = 0, totalTips = 0, totalSvc = 0
