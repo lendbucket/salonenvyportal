@@ -613,10 +613,11 @@ export default function PortalShell({ children }: { children: React.ReactNode })
       </aside>
 
       {/* MAIN AREA */}
-      <div style={{ flex: 1, minWidth: 0, overflowY: "auto", height: "100vh" }}>
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
         {/* TOP BAR — 52px */}
         <header style={{
           height: "52px",
+          flexShrink: 0,
           backgroundColor: "#0a1520",
           borderBottom: "1px solid rgba(205,201,192,0.08)",
           display: "flex",
@@ -656,8 +657,11 @@ export default function PortalShell({ children }: { children: React.ReactNode })
 
         {/* PAGE CONTENT */}
         <main style={{
+          flex: 1,
           backgroundColor: "#1e2d35",
-          minHeight: "calc(100vh - 52px)",
+          overflowY: "auto",
+          overflowX: "hidden",
+          WebkitOverflowScrolling: "touch",
         }}>
           {children}
         </main>
