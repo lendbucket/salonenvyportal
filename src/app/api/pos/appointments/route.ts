@@ -4,9 +4,11 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SquareClient, SquareEnvironment } from "square";
 
+import { CC_LOCATION_ID, SA_LOCATION_ID } from "@/lib/staff";
+
 const LOCATION_MAP: Record<string, string> = {
-  "Corpus Christi": "LTJSA6QR1HGW6",
-  "San Antonio": "LXJYXDXWR0XZF",
+  "Corpus Christi": CC_LOCATION_ID,
+  "San Antonio": SA_LOCATION_ID,
 };
 
 function getSquare() {
@@ -86,8 +88,15 @@ export async function GET(request: NextRequest) {
       listParams.teamMemberId = teamMemberFilter;
     }
 
-    const bookingsPage = await square.bookings.list(listParams as Parameters<typeof square.bookings.list>[0]);
-    const bookings = bookingsPage.data || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const allBookings: any[] = [];
+    let bookingsPage = await square.bookings.list(listParams as Parameters<typeof square.bookings.list>[0]);
+    for (const b of bookingsPage.data) allBookings.push(b);
+    while (bookingsPage.hasNextPage()) {
+      bookingsPage = await bookingsPage.getNextPage();
+      for (const b of bookingsPage.data) allBookings.push(b);
+    }
+    const bookings = allBookings;
 
     // Filter by status unless ?all=true
     const filtered = allStatuses

@@ -8,9 +8,17 @@ export async function GET() {
       environment: SquareEnvironment.Production,
     })
 
-    // Get sample customers
-    const customersPage = await square.customers.list({ limit: 10 })
-    const sampleCustomers = customersPage.data?.slice(0, 5).map(c => ({
+    // Get sample customers with pagination
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const allCustomers: any[] = []
+    let customersPage = await square.customers.list({ limit: 100 })
+    for (const c of customersPage.data) allCustomers.push(c)
+    while (customersPage.hasNextPage()) {
+      customersPage = await customersPage.getNextPage()
+      for (const c of customersPage.data) allCustomers.push(c)
+    }
+
+    const sampleCustomers = allCustomers.slice(0, 5).map(c => ({
       id: c.id,
       firstName: c.givenName,
       lastName: c.familyName,
@@ -19,16 +27,23 @@ export async function GET() {
       createdAt: c.createdAt,
     }))
 
-    // Get sample bookings from last year
+    // Get sample bookings from last year with pagination
     const now = new Date()
     const yearAgo = new Date(now.getFullYear() - 1, 0, 1)
-    const bookingsPage = await square.bookings.list({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const allBookings: any[] = []
+    let bookingsPage = await square.bookings.list({
       startAtMin: yearAgo.toISOString(),
       startAtMax: now.toISOString(),
-      limit: 10,
+      limit: 200,
     })
+    for (const b of bookingsPage.data) allBookings.push(b)
+    while (bookingsPage.hasNextPage()) {
+      bookingsPage = await bookingsPage.getNextPage()
+      for (const b of bookingsPage.data) allBookings.push(b)
+    }
 
-    const sampleBookings = bookingsPage.data?.slice(0, 5).map(b => ({
+    const sampleBookings = allBookings.slice(0, 5).map(b => ({
       id: b.id,
       customerId: b.customerId,
       teamMemberId: b.appointmentSegments?.[0]?.teamMemberId,
@@ -38,12 +53,12 @@ export async function GET() {
     }))
 
     return NextResponse.json({
-      customerCount: customersPage.data?.length || 0,
-      hasMoreCustomers: customersPage.hasNextPage(),
+      customerCount: allCustomers.length,
+      hasMoreCustomers: false,
       sampleCustomers,
       sampleBookings,
-      bookingCount: bookingsPage.data?.length || 0,
-      hasMoreBookings: bookingsPage.hasNextPage(),
+      bookingCount: allBookings.length,
+      hasMoreBookings: false,
     })
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error)

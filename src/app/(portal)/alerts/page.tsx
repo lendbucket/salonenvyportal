@@ -47,6 +47,11 @@ export default function AlertsPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [createForm, setCreateForm] = useState({ title: "", body: "", severity: "info", locationId: "", expiresAt: "" })
   const [creating, setCreating] = useState(false)
+  const [locations, setLocations] = useState<{ id: string; name: string }[]>([])
+
+  useEffect(() => {
+    fetch("/api/locations").then(r => r.json()).then(d => setLocations(d.locations || [])).catch(() => {})
+  }, [])
 
   const fetchAlerts = useCallback(async () => {
     try {
@@ -151,7 +156,8 @@ export default function AlertsPage() {
               </div>
               <div><label style={labelStyle}>Location</label>
                 <select value={createForm.locationId} onChange={e => setCreateForm(p => ({ ...p, locationId: e.target.value }))} style={inputStyle}>
-                  <option value="">All Locations</option><option value="cc">Corpus Christi</option><option value="sa">San Antonio</option>
+                  <option value="">All Locations</option>
+                  {locations.map(loc => <option key={loc.id} value={loc.id}>{loc.name}</option>)}
                 </select>
               </div>
               <div><label style={labelStyle}>Auto-dismiss after</label><input type="date" value={createForm.expiresAt} onChange={e => setCreateForm(p => ({ ...p, expiresAt: e.target.value }))} style={inputStyle} /></div>

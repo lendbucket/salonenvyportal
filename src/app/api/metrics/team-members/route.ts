@@ -8,15 +8,20 @@ export async function GET() {
       environment: SquareEnvironment.Production,
     })
 
-    const response = await square.teamMembers.search({
-      query: {
-        filter: {
-          status: "ACTIVE",
-        },
-      },
-    })
+    // Paginated team members search
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const allMembers: any[] = []
+    let cursor: string | undefined
+    do {
+      const response = await square.teamMembers.search({
+        query: { filter: { status: "ACTIVE" } },
+        cursor,
+      })
+      for (const m of (response.teamMembers || [])) allMembers.push(m)
+      cursor = response.cursor || undefined
+    } while (cursor)
 
-    const members = response.teamMembers?.map(m => ({
+    const members = allMembers.map(m => ({
       id: m.id,
       givenName: m.givenName,
       familyName: m.familyName,
@@ -25,7 +30,7 @@ export async function GET() {
       isOwner: m.isOwner,
     }))
 
-    return NextResponse.json({ members, count: members?.length })
+    return NextResponse.json({ members, count: members.length })
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error)
     return NextResponse.json({ error: msg })

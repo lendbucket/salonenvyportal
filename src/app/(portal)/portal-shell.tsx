@@ -125,19 +125,23 @@ export default function PortalShell({ children }: { children: React.ReactNode })
     return seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " ")
   }, [pathname])
 
-  const pendingCount = 0 // TODO: wire up approvals count
+  const [pendingCount, setPendingCount] = useState(0)
   const [alertCount, setAlertCount] = useState(0)
 
   useEffect(() => {
-    const fetchAlerts = () => {
+    if (!isOwner && !isManager) return
+    const fetchCounts = () => {
+      fetch("/api/approvals/pending").then(r => r.json()).then(d => {
+        setPendingCount(d.users?.length || 0)
+      }).catch(() => {})
       fetch("/api/alerts").then(r => r.json()).then(d => {
         if (d.unreadCount !== undefined) setAlertCount(d.unreadCount)
       }).catch(() => {})
     }
-    fetchAlerts()
-    const id = setInterval(fetchAlerts, 60000)
+    fetchCounts()
+    const id = setInterval(fetchCounts, 60000)
     return () => clearInterval(id)
-  }, [])
+  }, [isOwner, isManager])
 
   /* ── Shared helpers ── */
   function navLink(item: NavItem, compact?: boolean) {

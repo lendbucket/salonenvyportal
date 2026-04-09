@@ -3,8 +3,9 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { SquareClient, SquareEnvironment } from "square"
+import { CC_LOCATION_ID, SA_LOCATION_ID } from "@/lib/staff"
 
-const LOCATION_IDS = ["LTJSA6QR1HGW6", "LXJYXDXWR0XZF"] as const
+const LOCATION_IDS = [CC_LOCATION_ID, SA_LOCATION_ID] as const
 
 function getSquare() {
   return new SquareClient({
@@ -97,31 +98,36 @@ export async function GET(request: NextRequest) {
       chunkStart = new Date(chunkEnd)
     }
 
-    // Fetch completed orders
+    // Fetch completed orders with pagination
     interface OrderEntry { subtotal: number; tip: number; createdAt: Date; locationId: string }
     const orders: OrderEntry[] = []
 
-    const ordersRes = await square.orders.search({
-      locationIds: [...LOCATION_IDS],
-      query: {
-        filter: {
-          dateTimeFilter: { closedAt: { startAt, endAt } },
-          stateFilter: { states: ["COMPLETED"] },
+    let ordersCursor: string | undefined
+    do {
+      const ordersRes = await square.orders.search({
+        locationIds: [...LOCATION_IDS],
+        query: {
+          filter: {
+            dateTimeFilter: { closedAt: { startAt, endAt } },
+            stateFilter: { states: ["COMPLETED"] },
+          },
         },
-      },
-      limit: 500,
-    })
+        limit: 500,
+        cursor: ordersCursor,
+      })
 
-    for (const o of (ordersRes.orders || [])) {
-      const totalAmt = Number(o.totalMoney?.amount || 0)
-      const taxAmt = Number(o.totalTaxMoney?.amount || 0)
-      const tipAmt = Number(o.totalTipMoney?.amount || 0)
-      const subtotal = (totalAmt - taxAmt - tipAmt) / 100
-      const tip = tipAmt / 100
-      if (subtotal > 0 && (o.closedAt || o.createdAt)) {
-        orders.push({ subtotal, tip, createdAt: new Date(o.closedAt || o.createdAt!), locationId: o.locationId || "" })
+      for (const o of (ordersRes.orders || [])) {
+        const totalAmt = Number(o.totalMoney?.amount || 0)
+        const taxAmt = Number(o.totalTaxMoney?.amount || 0)
+        const tipAmt = Number(o.totalTipMoney?.amount || 0)
+        const subtotal = (totalAmt - taxAmt - tipAmt) / 100
+        const tip = tipAmt / 100
+        if (subtotal > 0 && (o.closedAt || o.createdAt)) {
+          orders.push({ subtotal, tip, createdAt: new Date(o.closedAt || o.createdAt!), locationId: o.locationId || "" })
+        }
       }
-    }
+      ordersCursor = ordersRes.cursor || undefined
+    } while (ordersCursor)
 
     // Init stylist data
     const data: Record<string, { services: number; subtotal: number; tips: number }> = {}
