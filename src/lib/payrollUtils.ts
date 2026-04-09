@@ -24,7 +24,9 @@ export function formatPeriodLabel(start: Date, end: Date): string {
 }
 
 export function getPayDay(periodEnd: Date): string {
-  return periodEnd.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/Chicago" })
+  // Pay day = Tuesday AFTER the pay period ends (period end + 7 days)
+  const payDate = new Date(periodEnd.getTime() + 7 * 24 * 60 * 60 * 1000)
+  return payDate.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/Chicago" })
 }
 
 export const TEAM_MEMBERS: Record<string, { name: string; location: string; isManager: boolean }> = {
