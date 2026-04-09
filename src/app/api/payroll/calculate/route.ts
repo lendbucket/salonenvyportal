@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { TEAM_MEMBERS, SA_LOCATION_ID } from "@/lib/payrollUtils"
+import { TEAM_MEMBERS, CC_LOCATION_ID, SA_LOCATION_ID } from "@/lib/payrollUtils"
 
 const SQ = "https://connect.squareup.com/v2"
 const TOKEN = () => process.env.SQUARE_ACCESS_TOKEN!
@@ -21,15 +21,16 @@ export async function POST(req: NextRequest) {
   const { locationId, start, end } = await req.json()
   const startDate = new Date(start)
   const endDate = new Date(end)
-  // ALL payments come from SA location regardless of CC/SA payroll tab
-  const sqLocId = SA_LOCATION_ID
+  // Payments all come from SA location; bookings come from the correct location per team
+  const paymentLocId = SA_LOCATION_ID
+  const bookingLocId = locationId === "CC" ? CC_LOCATION_ID : SA_LOCATION_ID
 
   // Get stylist IDs for the requested location
   const memberIds = Object.entries(TEAM_MEMBERS).filter(([, v]) => v.location === locationId).map(([id]) => id)
   const stylistData: Record<string, { name: string; serviceCount: number; serviceSubtotal: number; tips: number }> = {}
   for (const id of memberIds) stylistData[id] = { name: TEAM_MEMBERS[id].name, serviceCount: 0, serviceSubtotal: 0, tips: 0 }
 
-  console.log("[Payroll] locationId:", locationId, "sqLocId:", sqLocId)
+  console.log("[Payroll] locationId:", locationId, "bookingLocId:", bookingLocId, "paymentLocId:", paymentLocId)
   console.log("[Payroll] memberIds:", memberIds)
   console.log("[Payroll] period:", startDate.toISOString(), "→", endDate.toISOString())
 
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
   const bookingEnd = new Date(endDate.getTime() + 24 * 60 * 60 * 1000)
   let bCursor: string | undefined
   do {
-    const p = new URLSearchParams({ location_id: sqLocId, start_at_min: bookingStart.toISOString(), start_at_max: bookingEnd.toISOString(), limit: "100" })
+    const p = new URLSearchParams({ location_id: bookingLocId, start_at_min: bookingStart.toISOString(), start_at_max: bookingEnd.toISOString(), limit: "100" })
     if (bCursor) p.set("cursor", bCursor)
     const d = await sq(`/bookings?${p}`)
     for (const b of (d.bookings || [])) {
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
   let paymentCount = 0, matchedCount = 0, skippedNoCustomer = 0, skippedNoBooking = 0, skippedWrongTeam = 0
   let pCursor: string | undefined
   do {
-    const p = new URLSearchParams({ location_id: sqLocId, begin_time: startDate.toISOString(), end_time: endDate.toISOString(), limit: "100", sort_order: "ASC" })
+    const p = new URLSearchParams({ location_id: paymentLocId, begin_time: startDate.toISOString(), end_time: endDate.toISOString(), limit: "100", sort_order: "ASC" })
     if (pCursor) p.set("cursor", pCursor)
     const d = await sq(`/payments?${p}`)
     for (const pay of (d.payments || [])) {

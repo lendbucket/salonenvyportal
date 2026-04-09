@@ -172,7 +172,7 @@ export default function PayrollPage() {
               <span style={{ fontSize: "14px", fontWeight: 500 }}>Stylist Breakdown</span>
               <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                 {data.status === "pending" && <button onClick={calculate} disabled={calcing} style={{ background: "none", border: "none", color: ACC_B, fontSize: "12px", cursor: "pointer", ...jakarta }}>{calcing ? "Recalculating..." : "Recalculate"}</button>}
-                {isPaid && data.paidAt && <span style={{ ...mono, fontSize: "10px", color: GREEN }}>Paid {new Date(data.paidAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>}
+                {isPaid && data.paidAt && <span style={{ ...mono, fontSize: "10px", color: GREEN }}>Paid {new Date(data.paidAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}</span>}
               </div>
             </div>
             <div className="pr-tbl" style={{ overflowX: "auto" }}>
