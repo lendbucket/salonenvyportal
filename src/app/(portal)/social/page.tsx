@@ -187,12 +187,20 @@ export default function SocialPage() {
           {/* Location selector */}
           <div style={{ display: "flex", gap: "4px", marginBottom: "16px" }}>{[{ id: "CC", label: "Corpus Christi" }, { id: "SA", label: "San Antonio" }].map(l => <button key={l.id} onClick={() => setAnaLoc(l.id)} style={{ padding: "6px 14px", fontSize: "12px", fontWeight: 600, border: anaLoc === l.id ? `1px solid ${ACC_B}` : `1px solid ${BORDER2}`, borderRadius: "8px", backgroundColor: anaLoc === l.id ? ACC_DIM : "transparent", color: anaLoc === l.id ? ACC_B : MUTED, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", ...jakarta }}><div style={{ width: "6px", height: "6px", borderRadius: "50%", background: anaLoc === l.id ? GREEN : MUTED }} />{l.label}</button>)}</div>
 
-          {/* Error state */}
-          {!anaLoad && (analytics?.errors as unknown[])?.length > 0 && !analytics?.fbPage && !analytics?.igProfile && (
-            <div style={{ background: "rgba(255,107,107,0.05)", border: "1px solid rgba(255,107,107,0.2)", borderRadius: "10px", padding: "20px", marginBottom: "16px" }}>
-              <div style={{ fontSize: "14px", fontWeight: 600, color: "#ff6b6b", marginBottom: "6px" }}>Analytics unavailable</div>
-              <div style={{ fontSize: "12px", color: MID, marginBottom: "8px" }}>Token may need refreshing or Meta app needs permissions.</div>
-              {isOwner && <details><summary style={{ ...mono, fontSize: "10px", color: MUTED, cursor: "pointer" }}>View API errors</summary><div style={{ ...mono, fontSize: "10px", color: MUTED, marginTop: "6px", whiteSpace: "pre-wrap" }}>{JSON.stringify(analytics?.errors, null, 2)}</div></details>}
+          {/* Error/debug panel */}
+          {!anaLoad && (analytics?.errors as unknown[])?.length > 0 && (
+            <div style={{ background: !analytics?.fbPage && !analytics?.igProfile ? "rgba(255,107,107,0.05)" : "rgba(255,179,71,0.05)", border: `1px solid ${!analytics?.fbPage && !analytics?.igProfile ? "rgba(255,107,107,0.2)" : "rgba(255,179,71,0.2)"}`, borderRadius: "10px", padding: "16px 20px", marginBottom: "20px" }}>
+              <div style={{ fontSize: "12px", fontWeight: 600, color: !analytics?.fbPage && !analytics?.igProfile ? "#ff6b6b" : AMBER, marginBottom: "8px" }}>
+                {!analytics?.fbPage && !analytics?.igProfile ? "Analytics unavailable" : "API Response Details"}
+              </div>
+              {(analytics?.errors as { source: string; message: string; code?: number }[]).map((err, i) => (
+                <div key={i} style={{ ...mono, fontSize: "11px", color: MUTED, marginBottom: "4px" }}>
+                  {err.source}: {err.message}{err.code ? ` [${err.code}]` : ""}
+                </div>
+              ))}
+              {!analytics?.fbPage && !analytics?.igProfile && (
+                <div style={{ fontSize: "11px", color: MID, marginTop: "8px" }}>This usually means the page access token needs to be refreshed or the Meta app needs additional permissions.</div>
+              )}
             </div>
           )}
 
