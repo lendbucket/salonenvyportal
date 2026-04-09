@@ -4,7 +4,7 @@ import { useUserRole } from "@/hooks/useUserRole"
 
 type SPost = { id: string; locationId: string; platform: string; content: string; imageUrls: string[] | null; status: string; scheduledAt: string | null; publishedAt: string | null; fbPostId: string | null; igPostId: string | null; errorMessage: string | null; likes: number | null; comments: number | null; shares: number | null; createdAt: string }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Analytics = { igProfile: any; fbPosts: any; locationId: string } | null
+type Analytics = Record<string, any> | null
 type Tab = "calendar" | "scheduled" | "drafts" | "published" | "analytics" | "design"
 type Toast = { message: string; type: "success" | "error" } | null
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -184,37 +184,95 @@ export default function SocialPage() {
 
         {/* ═══ ANALYTICS ═══ */}
         {tab === "analytics" && (<div>
-          <div style={{ display: "flex", gap: "4px", marginBottom: "16px" }}>{["CC", "SA"].map(l => <button key={l} onClick={() => setAnaLoc(l)} style={{ ...mono, padding: "5px 12px", fontSize: "9px", fontWeight: 700, textTransform: "uppercase", border: anaLoc === l ? `1px solid ${ACC_B}` : `1px solid ${BORDER2}`, borderRadius: "5px", backgroundColor: anaLoc === l ? ACC_DIM : "transparent", color: anaLoc === l ? ACC_B : MUTED, cursor: "pointer" }}>{l}</button>)}</div>
+          {/* Location selector */}
+          <div style={{ display: "flex", gap: "4px", marginBottom: "16px" }}>{[{ id: "CC", label: "Corpus Christi" }, { id: "SA", label: "San Antonio" }].map(l => <button key={l.id} onClick={() => setAnaLoc(l.id)} style={{ padding: "6px 14px", fontSize: "12px", fontWeight: 600, border: anaLoc === l.id ? `1px solid ${ACC_B}` : `1px solid ${BORDER2}`, borderRadius: "8px", backgroundColor: anaLoc === l.id ? ACC_DIM : "transparent", color: anaLoc === l.id ? ACC_B : MUTED, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", ...jakarta }}><div style={{ width: "6px", height: "6px", borderRadius: "50%", background: anaLoc === l.id ? GREEN : MUTED }} />{l.label}</button>)}</div>
+
+          {/* Error state */}
+          {!anaLoad && (analytics?.errors as unknown[])?.length > 0 && !analytics?.fbPage && !analytics?.igProfile && (
+            <div style={{ background: "rgba(255,107,107,0.05)", border: "1px solid rgba(255,107,107,0.2)", borderRadius: "10px", padding: "20px", marginBottom: "16px" }}>
+              <div style={{ fontSize: "14px", fontWeight: 600, color: "#ff6b6b", marginBottom: "6px" }}>Analytics unavailable</div>
+              <div style={{ fontSize: "12px", color: MID, marginBottom: "8px" }}>Token may need refreshing or Meta app needs permissions.</div>
+              {isOwner && <details><summary style={{ ...mono, fontSize: "10px", color: MUTED, cursor: "pointer" }}>View API errors</summary><div style={{ ...mono, fontSize: "10px", color: MUTED, marginTop: "6px", whiteSpace: "pre-wrap" }}>{JSON.stringify(analytics?.errors, null, 2)}</div></details>}
+            </div>
+          )}
+
+          {/* KPI cards */}
           <div className="sg4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "20px" }}>
-            {[{ label: "IG Followers", val: anaLoad ? null : igP ? String(igP.followers_count || 0) : "\u2014", border: IG }, { label: "IG Posts", val: anaLoad ? null : igP ? String(igP.media_count || 0) : "\u2014", border: IG }, { label: "FB Posts", val: anaLoad ? null : String(fbP.length), border: FB }, { label: "Published (DB)", val: loading ? null : String(posts.filter(p => p.status === "published").length), border: GREEN }].map(k => (
-              <div key={k.label} style={{ ...cs, borderLeft: `3px solid ${k.border}`, borderRadius: "0 14px 14px 0" }}><div style={lblS}>{k.label}</div>{k.val === null ? <Sk /> : <div style={{ ...mono, fontSize: "28px", fontWeight: 600 }}>{k.val}</div>}</div>))}
+            {[
+              { label: "Facebook Followers", val: anaLoad ? null : analytics?.fbPage?.fan_count?.toLocaleString() || "\u2014", sub: analytics?.fbPage?.name, border: FB },
+              { label: "Instagram Followers", val: anaLoad ? null : analytics?.igProfile?.followers_count?.toLocaleString() || "\u2014", sub: analytics?.igProfile?.username ? `@${analytics.igProfile.username}` : "", border: IG },
+              { label: "Total Posts", val: anaLoad ? null : analytics?.igProfile?.media_count?.toLocaleString() || "\u2014", sub: "All time", border: ACC_B },
+              { label: "Avg Engagement", val: anaLoad ? null : (() => { const fp = analytics?.fbPosts || []; if (fp.length === 0) return "\u2014"; const total = fp.reduce((s: number, p: { likes?: { summary?: { total_count?: number } }; comments?: { summary?: { total_count?: number } }; shares?: { count?: number } }) => s + (p.likes?.summary?.total_count || 0) + (p.comments?.summary?.total_count || 0) + (p.shares?.count || 0), 0); return String(Math.round(total / fp.length)) })(), sub: "Per Facebook post", border: GREEN },
+            ].map(k => (
+              <div key={k.label} style={{ ...cs, borderLeft: `3px solid ${k.border}`, borderRadius: "0 14px 14px 0" }}>
+                <div style={lblS}>{k.label}</div>
+                {k.val === null ? <Sk /> : <div style={{ ...mono, fontSize: "28px", fontWeight: 500 }}>{k.val}</div>}
+                {k.sub && <div style={{ fontSize: "11px", color: MID, marginTop: "4px" }}>{k.sub}</div>}
+              </div>
+            ))}
           </div>
-          {igP && <div style={{ ...cs, borderLeft: `3px solid ${IG}`, borderRadius: "0 14px 14px 0", marginBottom: "16px" }}><div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "4px" }}>@{igP.username || "salonenvyusa"}</div><div style={{ ...mono, fontSize: "12px", color: MUTED }}>{(igP.followers_count || 0).toLocaleString()} followers · {igP.media_count || 0} posts</div></div>}
-          <div style={cs}><div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "12px" }}>Recent FB Posts</div>
-            {fbP.length === 0 ? <div style={{ color: MUTED, textAlign: "center", padding: "20px" }}>No data</div> : <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr>{["Preview","Date","Likes","Comments","Shares"].map(h => <th key={h} style={{ padding: "8px", textAlign: h === "Preview" ? "left" : "right", fontSize: "9px", fontWeight: 700, color: MUTED, textTransform: "uppercase", borderBottom: `1px solid ${BORDER}`, ...mono }}>{h}</th>)}</tr></thead><tbody>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {fbP.map((p: any, i: number) => <tr key={i} style={{ borderBottom: `1px solid ${BORDER}` }}><td style={{ padding: "8px", fontSize: "12px", color: MID, maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{(p.message || "").slice(0, 50) || "(no text)"}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "11px", color: MUTED }}>{p.created_time ? new Date(p.created_time).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : ""}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "12px", color: ACC_B }}>{p.likes?.summary?.total_count || 0}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "12px", color: ACC_B }}>{p.comments?.summary?.total_count || 0}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "12px", color: ACC_B }}>{p.shares?.count || 0}</td></tr>)}
-            </tbody></table></div>}
+
+          {/* Two column: FB posts table + IG grid */}
+          <div className="sg2c" style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "14px", marginBottom: "16px" }}>
+            {/* FB posts table */}
+            <div style={cs}>
+              <div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "12px" }}>Recent Facebook Posts</div>
+              {(analytics?.fbPosts || []).length === 0 ? <div style={{ color: MUTED, textAlign: "center", padding: "20px", fontSize: "12px" }}>No posts</div> : (
+                <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr>{["Post","Date","Likes","Comments","Shares"].map(h => <th key={h} style={{ padding: "8px", textAlign: h === "Post" ? "left" : "right", fontSize: "9px", fontWeight: 700, color: MUTED, textTransform: "uppercase", borderBottom: `1px solid ${BORDER}`, ...mono }}>{h}</th>)}</tr></thead><tbody>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {(analytics?.fbPosts || []).map((p: any, i: number) => <tr key={i} style={{ borderBottom: `1px solid ${BORDER}` }}><td style={{ padding: "10px 8px", fontSize: "12px", color: MID, maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{(p.message || "").slice(0, 60) || "(no caption)"}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "11px", color: MUTED }}>{p.created_time ? new Date(p.created_time).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : ""}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "12px", color: ACC_B }}>{p.likes?.summary?.total_count || 0}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "12px", color: ACC_B }}>{p.comments?.summary?.total_count || 0}</td><td style={{ ...mono, padding: "8px", textAlign: "right", fontSize: "12px", color: ACC_B }}>{p.shares?.count || 0}</td></tr>)}
+                </tbody></table></div>
+              )}
+            </div>
+            {/* IG media grid */}
+            <div style={cs}>
+              <div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "12px" }}>Recent Instagram Posts</div>
+              {(analytics?.igMedia || []).length === 0 ? <div style={{ color: MUTED, textAlign: "center", padding: "20px", fontSize: "12px" }}>No media</div> : (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "4px" }}>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {(analytics?.igMedia || []).map((m: any) => (
+                    <div key={m.id} style={{ position: "relative", aspectRatio: "1", overflow: "hidden", borderRadius: "6px", background: S2 }}>
+                      {(m.media_url || m.thumbnail_url) ? <img src={m.media_url || m.thumbnail_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: MUTED, fontSize: "10px" }}>TEXT</div>}
+                      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", opacity: 0, display: "flex", alignItems: "center", justifyContent: "center", transition: "opacity 0.2s" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0")}>
+                        <span style={{ ...mono, fontSize: "11px", color: "#fff" }}>{m.like_count || 0} likes · {m.comments_count || 0} comments</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>)}
 
         {/* ═══ CANVA DESIGN TAB ═══ */}
         {tab === "design" && (<div>
           {!canvaOk ? (
-            <div style={{ textAlign: "center", padding: "60px 20px", maxWidth: "480px", margin: "0 auto" }}>
-              <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: CANVA, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "32px", fontWeight: 700, color: "#fff" }}>C</div>
-              <div style={{ fontSize: "24px", fontWeight: 500, marginBottom: "10px" }}>Design with Canva</div>
-              <p style={{ fontSize: "14px", color: MID, lineHeight: 1.7, marginBottom: "24px" }}>Connect your Canva account to browse designs, create new ones, and publish directly to Facebook and Instagram.</p>
-              <button onClick={() => { window.location.href = "/api/social/canva?action=auth" }} style={{ padding: "12px 28px", background: CANVA, border: "none", borderRadius: "9px", color: "#fff", fontSize: "14px", fontWeight: 600, cursor: "pointer", ...jakarta }}>Connect Canva Account</button>
-              <p style={{ fontSize: "11px", color: MUTED, marginTop: "12px" }}>You will be redirected to Canva to authorize read access to your designs.</p>
-            </div>
+            isOwner ? (
+              <div style={{ textAlign: "center", padding: "60px 20px", maxWidth: "480px", margin: "0 auto" }}>
+                <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: CANVA, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "32px", fontWeight: 700, color: "#fff" }}>C</div>
+                <div style={{ fontSize: "24px", fontWeight: 500, marginBottom: "10px" }}>Connect Your Canva Account</div>
+                <p style={{ fontSize: "14px", color: MID, lineHeight: 1.7, marginBottom: "24px" }}>Connect once and your entire team will have access to your designs for posting to Facebook and Instagram.</p>
+                <button onClick={() => { window.location.href = "/api/social/canva?action=auth" }} style={{ padding: "12px 28px", background: CANVA, border: "none", borderRadius: "9px", color: "#fff", fontSize: "14px", fontWeight: 600, cursor: "pointer", ...jakarta }}>Connect Canva Account</button>
+                <p style={{ fontSize: "11px", color: MUTED, marginTop: "12px" }}>You will be redirected to Canva to authorize read access to your designs.</p>
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "60px 20px", maxWidth: "440px", margin: "0 auto" }}>
+                <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: CANVA, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "32px", fontWeight: 700, color: "#fff", opacity: 0.5 }}>C</div>
+                <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: "10px" }}>Canva not connected</div>
+                <p style={{ fontSize: "14px", color: MID, lineHeight: 1.7 }}>The salon owner hasn&apos;t connected a Canva account yet. Once connected, designs will appear here for the whole team.</p>
+              </div>
+            )
           ) : (
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "8px" }}>
-                <span style={{ ...mono, fontSize: "11px", padding: "4px 10px", borderRadius: "20px", background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: GREEN }}>Connected{canvaUser?.profile?.display_name ? ` as ${canvaUser.profile.display_name}` : ""}</span>
-                <div style={{ display: "flex", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <span style={{ fontSize: "16px", fontWeight: 500 }}>Salon Envy Designs</span>
+                  <span style={{ fontSize: "10px", color: CANVA }}>Powered by Canva</span>
+                </div>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  {isOwner && canvaUser?.profile?.display_name && <span style={{ ...mono, fontSize: "10px", color: MUTED }}>Connected as {canvaUser.profile.display_name}</span>}
                   <button onClick={() => window.open("https://www.canva.com/design/new", "_blank")} style={{ padding: "7px 14px", border: `1px solid ${CANVA}40`, borderRadius: "7px", background: "none", color: CANVA, fontSize: "12px", fontWeight: 600, cursor: "pointer", ...jakarta }}>New Design</button>
-                  <button onClick={async () => { await fetch("/api/social/canva?action=disconnect"); setCanvaOk(false); setCanvaDesigns([]) }} style={{ padding: "7px 14px", border: `1px solid ${BORDER2}`, borderRadius: "7px", background: "none", color: MUTED, fontSize: "12px", cursor: "pointer", ...jakarta }}>Disconnect</button>
+                  {isOwner && <button onClick={async () => { await fetch("/api/social/canva?action=disconnect"); setCanvaOk(false); setCanvaDesigns([]) }} style={{ padding: "7px 14px", border: `1px solid ${BORDER2}`, borderRadius: "7px", background: "none", color: MUTED, fontSize: "12px", cursor: "pointer", ...jakarta }}>Disconnect</button>}
                 </div>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "14px" }}>
