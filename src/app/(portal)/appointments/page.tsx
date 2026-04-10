@@ -115,6 +115,21 @@ export default function AppointmentsPage() {
   const [historyLoading, setHistoryLoading] = useState(false)
   const [historyLimit, setHistoryLimit] = useState(20)
 
+  // ── Block time modal ──
+  const [showBlock, setShowBlock] = useState(false)
+  const [blockStylist, setBlockStylist] = useState("")
+  const [blockDate, setBlockDate] = useState(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}` })
+  const [blockStart, setBlockStart] = useState("12:00")
+  const [blockEnd, setBlockEnd] = useState("13:00")
+  const [blockReason, setBlockReason] = useState("Lunch")
+  const [blockNotes, setBlockNotes] = useState("")
+  const [blockSaving, setBlockSaving] = useState(false)
+  const [blockError, setBlockError] = useState("")
+
+  // ── Send reminder ──
+  const [reminderSent, setReminderSent] = useState<Set<string>>(new Set())
+  const [reminderSending, setReminderSending] = useState<string | null>(null)
+
   // ── Day view drag/drop ──
   const [dragApptId, setDragApptId] = useState<string | null>(null)
   const [dragGhostTime, setDragGhostTime] = useState<number | null>(null)
@@ -233,6 +248,55 @@ export default function AppointmentsPage() {
   function resetBooking() { setBookStep(1); setBookClient(null); setBookStylist(""); setBookDate(date); setBookTime("10:00"); setBookSelectedSvcs([]); setBookNotes(""); setBookError(""); setBookOverlap(false); setClientSearch(""); setClientResults([]); setNewClient(false); setNewClientForm({ givenName: "", familyName: "", phone: "", email: "" }) }
 
   function openBookingModal() { resetBooking(); setShowBooking(true) }
+
+  // ── Block time ──
+  function openBlockModal() {
+    setBlockStylist("")
+    setBlockDate(date)
+    setBlockStart("12:00")
+    setBlockEnd("13:00")
+    setBlockReason("Lunch")
+    setBlockNotes("")
+    setBlockError("")
+    setShowBlock(true)
+  }
+
+  async function submitBlock() {
+    if (!blockStylist) return
+    const startParts = blockStart.split(":").map(Number)
+    const endParts = blockEnd.split(":").map(Number)
+    const durationMinutes = (endParts[0] * 60 + endParts[1]) - (startParts[0] * 60 + startParts[1])
+    if (durationMinutes <= 0) { setBlockError("End time must be after start time"); return }
+    setBlockSaving(true); setBlockError("")
+    const startAt = new Date(`${blockDate}T${blockStart}:00`).toISOString()
+    try {
+      const r = await fetch("/api/bookings/block", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ locationId: location === "San Antonio" ? "SA" : "CC", stylistId: blockStylist, startAt, durationMinutes, reason: blockReason, notes: blockNotes }),
+      })
+      const d = await r.json()
+      if (!r.ok || d.error) throw new Error(d.error || "Block failed")
+      setShowBlock(false); fetchAppointments()
+      setToast("Time blocked successfully"); setTimeout(() => setToast(null), 3000)
+    } catch (e: unknown) { setBlockError(e instanceof Error ? e.message : "Failed") }
+    setBlockSaving(false)
+  }
+
+  // ── Send reminder ──
+  async function sendReminder(apptId: string) {
+    setReminderSending(apptId)
+    try {
+      const r = await fetch(`/api/appointments/${apptId}/reminder`, { method: "POST" })
+      const d = await r.json()
+      if (!r.ok || d.error) throw new Error(d.error || "Send failed")
+      setReminderSent(prev => new Set(prev).add(apptId))
+      setToast("Reminder sent"); setTimeout(() => setToast(null), 3000)
+    } catch (e: unknown) {
+      setToast(e instanceof Error ? e.message : "Failed to send reminder"); setTimeout(() => setToast(null), 3000)
+    }
+    setReminderSending(null)
+  }
 
   // ── Client history ──
   async function openClientHistory(customerId: string) {
@@ -433,6 +497,18 @@ export default function AppointmentsPage() {
 
   const getStatusStyle = (status: string) => STATUS_COLORS[status] || DEFAULT_STATUS
 
+  const BLOCK_REASONS = ["Lunch", "Break", "Personal", "Training", "Other"]
+  const isBlockedTime = (appt: Appointment) => {
+    if (!appt.customerId && appt.note) {
+      return BLOCK_REASONS.some(r => appt.note?.startsWith(r + ":") || appt.note === r)
+    }
+    if (!appt.customerId && (!appt.customerName || appt.customerName === "Walk-in" || appt.customerName === "Client")) {
+      return !appt.services?.length || appt.services.every(s => !s.serviceVariationId)
+    }
+    return false
+  }
+  const getBlockReason = (appt: Appointment) => appt.note || "Blocked"
+
   return (
     <div style={{ padding: isMobile ? "16px" : "24px", maxWidth: "900px", margin: "0 auto" }}>
       {/* Header */}
@@ -483,6 +559,11 @@ export default function AppointmentsPage() {
               padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
               borderRadius: "6px", border: "none", cursor: "pointer", backgroundColor: "#CDC9C0", color: "#0f1d24",
             }}>New Appointment</button>
+            <button onClick={openBlockModal} style={{
+              padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+              borderRadius: "6px", border: "1px solid rgba(205,201,192,0.15)", cursor: "pointer",
+              backgroundColor: "transparent", color: "rgba(205,201,192,0.6)",
+            }}>Block Time</button>
             <button onClick={() => setShowWaitlist(!showWaitlist)} style={{
               padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
               borderRadius: "6px", border: showWaitlist ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)",
@@ -742,7 +823,8 @@ export default function AppointmentsPage() {
                     const duration = appt.totalDurationMinutes || 60
                     const topPx = (startMin - DAY_START_HOUR * 60) * (HOUR_PX / 60)
                     const heightPx = Math.max(duration * (HOUR_PX / 60), 30)
-                    const color = (appt.teamMemberId && STYLIST_COLORS[appt.teamMemberId]) || "#607D8B"
+                    const blocked = isBlockedTime(appt)
+                    const color = blocked ? "#3a3f47" : ((appt.teamMemberId && STYLIST_COLORS[appt.teamMemberId]) || "#607D8B")
 
                     // Detect overlaps for same stylist → offset side by side
                     const sameStylists = stylistColumns[appt.teamMemberId || "_none"] || []
@@ -762,52 +844,67 @@ export default function AppointmentsPage() {
                     const leftPct = overlapIdx * widthPct
 
                     // Is in progress?
-                    const isInProgress = isToday && appt.status === "ACCEPTED" && startMin <= nowMinutes && (startMin + duration) > nowMinutes
+                    const isInProgress = !blocked && isToday && appt.status === "ACCEPTED" && startMin <= nowMinutes && (startMin + duration) > nowMinutes
 
                     return (
                       <div
                         key={appt.id}
-                        draggable
-                        onDragStart={() => setDragApptId(appt.id)}
+                        draggable={!blocked}
+                        onDragStart={() => { if (!blocked) setDragApptId(appt.id) }}
                         onDragEnd={() => { setDragApptId(null); setDragGhostTime(null) }}
-                        onClick={() => setExpandedId(expandedId === appt.id ? null : appt.id)}
+                        onClick={() => { if (!blocked) setExpandedId(expandedId === appt.id ? null : appt.id) }}
                         style={{
                           position: "absolute",
                           top: `${topPx}px`,
                           left: `calc(${leftPct}% + 4px)`,
                           width: `calc(${widthPct}% - 8px)`,
                           height: `${heightPx}px`,
-                          backgroundColor: `${color}CC`,
+                          backgroundColor: blocked ? "rgba(58,63,71,0.7)" : `${color}CC`,
                           borderRadius: "6px",
                           padding: "6px 8px",
-                          cursor: "grab",
+                          cursor: blocked ? "default" : "grab",
                           overflow: "hidden",
                           zIndex: dragApptId === appt.id ? 20 : 2,
                           opacity: dragApptId === appt.id ? 0.5 : appt.isCheckedOut ? 0.4 : 1,
-                          border: expandedId === appt.id ? "2px solid #fff" : "1px solid rgba(0,0,0,0.2)",
+                          border: blocked ? "1px dashed rgba(205,201,192,0.2)" : expandedId === appt.id ? "2px solid #fff" : "1px solid rgba(0,0,0,0.2)",
                           transition: "opacity 0.15s",
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                          {isInProgress && (
-                            <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10B981", display: "inline-block", animation: "pulse 1.5s ease-in-out infinite" }} />
-                          )}
-                          <span
-                            onClick={e => { e.stopPropagation(); if (appt.customerId) openClientHistory(appt.customerId) }}
-                            style={{ color: "#fff", fontSize: "11px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(255,255,255,0.3)" }}
-                          >
-                            {appt.customerName}
-                          </span>
-                        </div>
-                        {heightPx > 40 && appt.services?.[0] && (
-                          <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.7)", marginTop: "2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                            {appt.services.map(s => s.serviceName).join(", ")}
-                          </div>
-                        )}
-                        {heightPx > 55 && appt.teamMemberId && (
-                          <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)", marginTop: "1px" }}>
-                            {TEAM_NAMES[appt.teamMemberId] || ""}
-                          </div>
+                        {blocked ? (
+                          <>
+                            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.5)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                              BLOCKED — {getBlockReason(appt)}
+                            </div>
+                            {heightPx > 40 && appt.teamMemberId && (
+                              <div style={{ fontSize: "9px", color: "rgba(205,201,192,0.35)", marginTop: "2px" }}>
+                                {TEAM_NAMES[appt.teamMemberId] || ""}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                              {isInProgress && (
+                                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10B981", display: "inline-block", animation: "pulse 1.5s ease-in-out infinite" }} />
+                              )}
+                              <span
+                                onClick={e => { e.stopPropagation(); if (appt.customerId) openClientHistory(appt.customerId) }}
+                                style={{ color: "#fff", fontSize: "11px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(255,255,255,0.3)" }}
+                              >
+                                {appt.customerName}
+                              </span>
+                            </div>
+                            {heightPx > 40 && appt.services?.[0] && (
+                              <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.7)", marginTop: "2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                {appt.services.map(s => s.serviceName).join(", ")}
+                              </div>
+                            )}
+                            {heightPx > 55 && appt.teamMemberId && (
+                              <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)", marginTop: "1px" }}>
+                                {TEAM_NAMES[appt.teamMemberId] || ""}
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     )
@@ -827,6 +924,39 @@ export default function AppointmentsPage() {
           {sorted.map((appt) => {
             const isExpanded = expandedId === appt.id
             const statusStyle = getStatusStyle(appt.status)
+            const blocked = isBlockedTime(appt)
+
+            if (blocked) {
+              return (
+                <div key={appt.id} style={{
+                  padding: "14px 16px",
+                  backgroundColor: "rgba(205,201,192,0.03)",
+                  border: "1px solid rgba(205,201,192,0.06)",
+                  borderLeft: "3px solid rgba(205,201,192,0.25)",
+                  borderRadius: "10px",
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.35)" }}>block</span>
+                      <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(205,201,192,0.55)" }}>
+                        {appt.teamMemberId ? (TEAM_NAMES[appt.teamMemberId] || "") : ""} — Blocked: {getBlockReason(appt)}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.35)", display: "flex", alignItems: "center", gap: "4px" }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>schedule</span>
+                      {fmtTime(appt.startTime)}{appt.endTime ? ` - ${fmtTime(appt.endTime)}` : appt.totalDurationMinutes ? ` (${appt.totalDurationMinutes} min)` : ""}
+                    </div>
+                  </div>
+                  <span style={{
+                    fontSize: "8px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px",
+                    backgroundColor: "rgba(205,201,192,0.06)", color: "rgba(205,201,192,0.4)",
+                    textTransform: "uppercase", letterSpacing: "0.06em",
+                  }}>BLOCKED</span>
+                </div>
+              )
+            }
+
             return (
               <div key={appt.id}>
                 <button
@@ -999,6 +1129,27 @@ export default function AppointmentsPage() {
                         </div>
                       </div>
                     )}
+
+                    {/* Send Reminder */}
+                    {appt.status === "ACCEPTED" && !appt.isCheckedOut && (
+                      <button
+                        onClick={() => sendReminder(appt.id)}
+                        disabled={reminderSent.has(appt.id) || reminderSending === appt.id}
+                        style={{
+                          padding: "8px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+                          borderRadius: "6px", border: "none", cursor: reminderSent.has(appt.id) ? "default" : "pointer",
+                          backgroundColor: reminderSent.has(appt.id) ? "rgba(16,185,129,0.12)" : "rgba(79,142,247,0.12)",
+                          color: reminderSent.has(appt.id) ? "#10B981" : "#4F8EF7",
+                          display: "inline-flex", alignItems: "center", gap: "6px",
+                          opacity: reminderSending === appt.id ? 0.6 : 1,
+                        }}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>
+                          {reminderSent.has(appt.id) ? "check_circle" : "send"}
+                        </span>
+                        {reminderSending === appt.id ? "Sending..." : reminderSent.has(appt.id) ? "Reminder Sent" : "Send Reminder"}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -1054,6 +1205,72 @@ export default function AppointmentsPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Block Time Modal */}
+      {showBlock && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "420px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>Block Time</h2>
+              <button onClick={() => setShowBlock(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer", fontSize: "20px" }}>&times;</button>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {/* Stylist */}
+              <div>
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Stylist</div>
+                <select value={blockStylist} onChange={e => setBlockStylist(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                  <option value="">Select stylist...</option>
+                  {getLocationStylists(location).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </select>
+              </div>
+
+              {/* Date */}
+              <div>
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Date</div>
+                <input type="date" value={blockDate} onChange={e => setBlockDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
+              </div>
+
+              {/* Start / End time */}
+              <div style={{ display: "flex", gap: "10px" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Start</div>
+                  <select value={blockStart} onChange={e => setBlockStart(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                    {Array.from({ length: 53 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 21) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); return <option key={t} value={t}>{label}</option> }).filter(Boolean)}
+                  </select>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>End</div>
+                  <select value={blockEnd} onChange={e => setBlockEnd(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                    {Array.from({ length: 53 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 21) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); return <option key={t} value={t}>{label}</option> }).filter(Boolean)}
+                  </select>
+                </div>
+              </div>
+
+              {/* Reason */}
+              <div>
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Reason</div>
+                <select value={blockReason} onChange={e => setBlockReason(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                  {["Lunch", "Break", "Personal", "Training", "Other"].map(r => <option key={r} value={r}>{r}</option>)}
+                </select>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Notes (optional)</div>
+                <input value={blockNotes} onChange={e => setBlockNotes(e.target.value)} placeholder="Additional details..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+              </div>
+
+              {blockError && <div style={{ fontSize: "12px", color: "#EF4444" }}>{blockError}</div>}
+
+              <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
+                <button onClick={() => setShowBlock(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Cancel</button>
+                <button onClick={submitBlock} disabled={blockSaving || !blockStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !blockStylist || blockSaving ? 0.5 : 1 }}>{blockSaving ? "Blocking..." : "Block Time"}</button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
