@@ -70,6 +70,26 @@ export default function AppointmentsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [stylistFilter, setStylistFilter] = useState<string>("all")
   const [viewMode, setViewMode] = useState<"list" | "day">("list")
+  const [showBooking, setShowBooking] = useState(false)
+  const [bookStep, setBookStep] = useState(1)
+  const [bookClient, setBookClient] = useState<{ id: string; name: string } | null>(null)
+  const [bookStylist, setBookStylist] = useState("")
+  const [bookDate, setBookDate] = useState(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}` })
+  const [bookTime, setBookTime] = useState("10:00")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [bookServices, setBookServices] = useState<any[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [bookSelectedSvcs, setBookSelectedSvcs] = useState<any[]>([])
+  const [bookNotes, setBookNotes] = useState("")
+  const [bookSaving, setBookSaving] = useState(false)
+  const [bookError, setBookError] = useState("")
+  const [clientSearch, setClientSearch] = useState("")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [clientResults, setClientResults] = useState<any[]>([])
+  const [clientSearching, setClientSearching] = useState(false)
+  const [newClient, setNewClient] = useState(false)
+  const [newClientForm, setNewClientForm] = useState({ givenName: "", familyName: "", phone: "", email: "" })
+  const [bookOverlap, setBookOverlap] = useState(false)
   const [showWaitlist, setShowWaitlist] = useState(false)
   const [waitlist, setWaitlist] = useState<WaitlistItem[]>([])
   const [wlForm, setWlForm] = useState({ customerName: "", customerPhone: "", requestedDate: "", requestedStylist: "", notes: "" })
@@ -125,6 +145,60 @@ export default function AppointmentsPage() {
     await fetch("/api/waitlist", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, status }) })
     fetchWaitlist()
   }
+
+  // Booking modal handlers
+  async function searchClients(q: string) {
+    setClientSearch(q); if (q.length < 2) { setClientResults([]); return }
+    setClientSearching(true)
+    try { const r = await fetch(`/api/customers/search?q=${encodeURIComponent(q)}`); const d = await r.json(); setClientResults(d.customers || []) } catch { /**/ }
+    setClientSearching(false)
+  }
+
+  async function createNewClient() {
+    if (!newClientForm.givenName) return
+    setBookSaving(true)
+    try {
+      const r = await fetch("/api/customers/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(newClientForm) })
+      const d = await r.json()
+      if (d.customer?.id) { setBookClient({ id: d.customer.id, name: `${d.customer.givenName} ${d.customer.familyName}`.trim() }); setNewClient(false); setBookStep(2) }
+      else setBookError(d.error || "Failed to create client")
+    } catch { setBookError("Network error") }
+    setBookSaving(false)
+  }
+
+  useEffect(() => { if (showBooking && bookStep === 3 && bookServices.length === 0) { fetch("/api/catalog/services").then(r => r.json()).then(d => setBookServices(d.services || [])).catch(() => {}) } }, [showBooking, bookStep, bookServices.length])
+
+  function checkOverlap(): boolean {
+    const startH = parseInt(bookTime.split(":")[0]); const startM = parseInt(bookTime.split(":")[1])
+    const dur = bookSelectedSvcs.reduce((s, sv) => s + (sv.durationMinutes || 60), 0)
+    const newStart = new Date(`${bookDate}T${bookTime}:00`).getTime(); const newEnd = newStart + dur * 60000
+    return appointments.some(a => {
+      if (a.teamMemberId !== bookStylist || !a.startTime) return false
+      const aStart = new Date(a.startTime).getTime(); const aEnd = aStart + (a.totalDurationMinutes || 60) * 60000
+      return aStart < newEnd && aEnd > newStart
+    })
+  }
+
+  async function submitBooking() {
+    if (!bookClient || !bookStylist || bookSelectedSvcs.length === 0) return
+    if (!bookOverlap && checkOverlap()) { setBookOverlap(true); return }
+    setBookSaving(true); setBookError("")
+    // Convert local time to UTC ISO
+    const localDate = new Date(`${bookDate}T${bookTime}:00`)
+    const utcISO = localDate.toISOString()
+    try {
+      const r = await fetch("/api/bookings/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ locationId: location === "San Antonio" ? "SA" : "CC", customerId: bookClient.id, stylistId: bookStylist, startAt: utcISO, services: bookSelectedSvcs, notes: bookNotes }) })
+      const d = await r.json()
+      if (!r.ok || d.error) throw new Error(d.error || "Booking failed")
+      setShowBooking(false); resetBooking(); fetchAppointments()
+      setToast("Appointment booked successfully"); setTimeout(() => setToast(null), 3000)
+    } catch (e: unknown) { setBookError(e instanceof Error ? e.message : "Failed") }
+    setBookSaving(false)
+  }
+
+  function resetBooking() { setBookStep(1); setBookClient(null); setBookStylist(""); setBookDate(date); setBookTime("10:00"); setBookSelectedSvcs([]); setBookNotes(""); setBookError(""); setBookOverlap(false); setClientSearch(""); setClientResults([]); setNewClient(false); setNewClientForm({ givenName: "", familyName: "", phone: "", email: "" }) }
+
+  function openBookingModal() { resetBooking(); setShowBooking(true) }
 
   // Filter by stylist and sort by startTime
   const sorted = useMemo(() => {
@@ -202,6 +276,10 @@ export default function AppointmentsPage() {
               ))}
             </div>
           )}
+          <button onClick={openBookingModal} style={{
+            padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+            borderRadius: "6px", border: "none", cursor: "pointer", backgroundColor: "#CDC9C0", color: "#0f1d24",
+          }}>New Appointment</button>
           <button onClick={() => setShowWaitlist(!showWaitlist)} style={{
             padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
             borderRadius: "6px", border: showWaitlist ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)",
@@ -686,6 +764,144 @@ export default function AppointmentsPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Booking Modal */}
+      {showBooking && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
+            {/* Header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>New Appointment</h2>
+              <button onClick={() => setShowBooking(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer", fontSize: "20px" }}>&times;</button>
+            </div>
+            {/* Step indicator */}
+            <div style={{ display: "flex", gap: "4px", marginBottom: "20px" }}>
+              {[1,2,3,4].map(s => <div key={s} style={{ flex: 1, height: "3px", borderRadius: "2px", backgroundColor: bookStep >= s ? "#CDC9C0" : "rgba(205,201,192,0.15)" }} />)}
+            </div>
+
+            {/* Step 1 — Client */}
+            {bookStep === 1 && (
+              <div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 1 — Client</div>
+                {!newClient ? (<>
+                  <input value={clientSearch} onChange={e => searchClients(e.target.value)} placeholder="Search client by name, phone, or email..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", marginBottom: "8px", boxSizing: "border-box" }} />
+                  {clientSearching && <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.4)", padding: "8px 0" }}>Searching...</div>}
+                  {clientResults.map(c => (
+                    <div key={c.id} onClick={() => { setBookClient({ id: c.id, name: `${c.givenName} ${c.familyName}`.trim() }); setBookStep(2) }} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: "rgba(205,201,192,0.04)", border: "1px solid rgba(205,201,192,0.08)" }}>
+                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>{c.givenName} {c.familyName}</div>
+                      <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)" }}>{c.phone}{c.email ? ` · ${c.email}` : ""}</div>
+                    </div>
+                  ))}
+                  <button onClick={() => setNewClient(true)} style={{ marginTop: "8px", padding: "8px 14px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", width: "100%" }}>New Client</button>
+                </>) : (<>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <input value={newClientForm.givenName} onChange={e => setNewClientForm(p => ({ ...p, givenName: e.target.value }))} placeholder="First name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.familyName} onChange={e => setNewClientForm(p => ({ ...p, familyName: e.target.value }))} placeholder="Last name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.phone} onChange={e => setNewClientForm(p => ({ ...p, phone: e.target.value }))} placeholder="Phone" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.email} onChange={e => setNewClientForm(p => ({ ...p, email: e.target.value }))} placeholder="Email (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button onClick={() => setNewClient(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                      <button onClick={createNewClient} disabled={bookSaving || !newClientForm.givenName} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !newClientForm.givenName ? 0.5 : 1 }}>{bookSaving ? "Creating..." : "Create Client"}</button>
+                    </div>
+                  </div>
+                </>)}
+              </div>
+            )}
+
+            {/* Step 2 — Stylist + Date/Time */}
+            {bookStep === 2 && (
+              <div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 2 — {bookClient?.name}</div>
+                <div style={{ marginBottom: "12px" }}>
+                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Stylist</div>
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    {getLocationStylists(location).map(s => (
+                      <button key={s.id} onClick={() => setBookStylist(s.id)} style={{ padding: "6px 12px", borderRadius: "6px", border: bookStylist === s.id ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)", backgroundColor: bookStylist === s.id ? "rgba(205,201,192,0.12)" : "transparent", color: bookStylist === s.id ? "#fff" : "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+                        <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: STYLIST_COLORS[s.id] || "#666" }} />{s.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "10px", marginBottom: "12px" }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Date</div>
+                    <input type="date" value={bookDate} onChange={e => setBookDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Time</div>
+                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                      {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ color: busy ? "#666" : "#fff" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
+                    </select>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button onClick={() => setBookStep(1)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(3)} disabled={!bookStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !bookStylist ? 0.5 : 1 }}>Next</button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3 — Services */}
+            {bookStep === 3 && (
+              <div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 3 — Select Services</div>
+                <div style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "12px" }}>
+                  {bookServices.length === 0 ? <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px", padding: "20px 0", textAlign: "center" }}>Loading services...</div> : bookServices.map((s: { id: string; name: string; price: number; durationMinutes: number; version?: number }) => {
+                    const sel = bookSelectedSvcs.some(x => x.id === s.id)
+                    return (
+                      <div key={s.id} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(205,201,192,0.08)" : "rgba(205,201,192,0.02)", border: sel ? "1px solid rgba(205,201,192,0.25)" : "1px solid rgba(205,201,192,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div>
+                          <div style={{ fontSize: "13px", fontWeight: sel ? 600 : 400, color: sel ? "#fff" : "rgba(205,201,192,0.7)" }}>{s.name}</div>
+                          <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)" }}>{s.durationMinutes} min</div>
+                        </div>
+                        <div style={{ fontSize: "13px", fontWeight: 600, color: sel ? "#CDC9C0" : "rgba(205,201,192,0.5)", fontFamily: "monospace" }}>${s.price.toFixed(2)}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+                {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#CDC9C0", textAlign: "right", marginBottom: "12px", fontFamily: "monospace" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(4)} disabled={bookSelectedSvcs.length === 0} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSelectedSvcs.length === 0 ? 0.5 : 1 }}>Next</button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4 — Confirm */}
+            {bookStep === 4 && (
+              <div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 4 — Confirm</div>
+                <div style={{ backgroundColor: "rgba(205,201,192,0.04)", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "10px", padding: "14px", marginBottom: "14px" }}>
+                  <div style={{ fontSize: "14px", fontWeight: 600, color: "#fff", marginBottom: "6px" }}>{bookClient?.name}</div>
+                  <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.6)", marginBottom: "4px" }}>{TEAM_NAMES[bookStylist] || "Stylist"} · {location === "Corpus Christi" ? "CC" : "SA"}</div>
+                  <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.6)", marginBottom: "8px", fontFamily: "monospace" }}>{new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</div>
+                  {bookSelectedSvcs.map((s: { id: string; name: string; price: number }) => (
+                    <div key={s.id} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", fontSize: "12px" }}>
+                      <span style={{ color: "rgba(205,201,192,0.7)" }}>{s.name}</span>
+                      <span style={{ color: "#CDC9C0", fontFamily: "monospace" }}>${s.price.toFixed(2)}</span>
+                    </div>
+                  ))}
+                  <div style={{ borderTop: "1px solid rgba(205,201,192,0.1)", marginTop: "8px", paddingTop: "8px", display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: "13px" }}>
+                    <span style={{ color: "#fff" }}>Total</span>
+                    <span style={{ color: "#CDC9C0", fontFamily: "monospace" }}>${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</span>
+                  </div>
+                </div>
+                {bookOverlap && (
+                  <div style={{ backgroundColor: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.2)", borderRadius: "8px", padding: "12px", marginBottom: "12px", fontSize: "12px", color: "#FBBF24" }}>
+                    {TEAM_NAMES[bookStylist] || "Stylist"} already has an appointment at this time. Book anyway?
+                  </div>
+                )}
+                <textarea value={bookNotes} onChange={e => setBookNotes(e.target.value)} placeholder="Notes (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", minHeight: "60px", resize: "vertical", marginBottom: "12px", boxSizing: "border-box" }} />
+                {bookError && <div style={{ fontSize: "12px", color: "#EF4444", marginBottom: "10px" }}>{bookError}</div>}
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={submitBooking} disabled={bookSaving} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSaving ? 0.5 : 1 }}>{bookSaving ? "Booking..." : bookOverlap ? "Book Anyway" : "Book Appointment"}</button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
