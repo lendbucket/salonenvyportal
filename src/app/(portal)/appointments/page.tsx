@@ -20,6 +20,17 @@ const STATUS_COLORS: Record<string, { bg: string; text: string; border: string }
 
 const DEFAULT_STATUS = { bg: "rgba(205,201,192,0.06)", text: "rgba(205,201,192,0.5)", border: "rgba(205,201,192,0.3)" }
 
+const STYLIST_COLORS: Record<string, string> = {
+  // SA
+  TMMJKxeQuMlMW1Dw: "#4F8EF7", TMcc0QbHuUZfgcIB: "#9B59B6", "TMfFCmgJ5RV-WCBq": "#E67E22",
+  TM5CjcvcHRXZQ4hP: "#E91E8C", TMk1YstlrnPrKw8p: "#1ABC9C", TMltRlD4OaczAnJr: "#1ABC9C",
+  // CC
+  TMbc13IBzS8Z43AO: "#F44336", TMaExUyYaWYlvSqh: "#FF9800", TMCzd3unwciKEVX7: "#8BC34A",
+  TMn7kInT8g7Vrgxi: "#00BCD4", TMMdDDwU8WXpCZ9m: "#9C27B0", TM_xI40vPph2_Cos: "#795548",
+}
+
+type WaitlistItem = { id: string; customerName: string; customerPhone: string; requestedDate: string; requestedStylist: string | null; requestedService: string | null; notes: string | null; status: string; createdAt: string }
+
 interface AppointmentService {
   serviceName: string
   price: number
@@ -59,6 +70,11 @@ export default function AppointmentsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [stylistFilter, setStylistFilter] = useState<string>("all")
   const [viewMode, setViewMode] = useState<"list" | "day">("list")
+  const [showWaitlist, setShowWaitlist] = useState(false)
+  const [waitlist, setWaitlist] = useState<WaitlistItem[]>([])
+  const [wlForm, setWlForm] = useState({ customerName: "", customerPhone: "", requestedDate: "", requestedStylist: "", notes: "" })
+  const [wlSaving, setWlSaving] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -85,6 +101,30 @@ export default function AppointmentsPage() {
   }, [date, isOwner, location])
 
   useEffect(() => { fetchAppointments() }, [fetchAppointments])
+
+  const locCode = location === "San Antonio" ? "SA" : "CC"
+  const fetchWaitlist = useCallback(async () => {
+    try { const r = await fetch(`/api/waitlist?locationId=${locCode}`); const d = await r.json(); setWaitlist(d.entries || []) } catch { /* */ }
+  }, [locCode])
+  useEffect(() => { fetchWaitlist() }, [fetchWaitlist])
+
+  async function addToWaitlist() {
+    if (!wlForm.customerName || !wlForm.customerPhone) return
+    setWlSaving(true)
+    try {
+      await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...wlForm, locationId: locCode }) })
+      setWlForm({ customerName: "", customerPhone: "", requestedDate: "", requestedStylist: "", notes: "" })
+      fetchWaitlist()
+      setToast("Added to waitlist")
+      setTimeout(() => setToast(null), 3000)
+    } catch { /* */ }
+    setWlSaving(false)
+  }
+
+  async function updateWaitlistStatus(id: string, status: string) {
+    await fetch("/api/waitlist", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, status }) })
+    fetchWaitlist()
+  }
 
   // Filter by stylist and sort by startTime
   const sorted = useMemo(() => {
@@ -162,6 +202,12 @@ export default function AppointmentsPage() {
               ))}
             </div>
           )}
+          <button onClick={() => setShowWaitlist(!showWaitlist)} style={{
+            padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+            borderRadius: "6px", border: showWaitlist ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)",
+            backgroundColor: showWaitlist ? "rgba(205,201,192,0.12)" : "transparent",
+            color: showWaitlist ? "#CDC9C0" : "rgba(205,201,192,0.45)", cursor: "pointer",
+          }}>Waitlist{waitlist.length > 0 ? ` (${waitlist.length})` : ""}</button>
         </div>
 
         {/* Date navigator */}
@@ -362,7 +408,7 @@ export default function AppointmentsPage() {
                         padding: "8px 12px",
                         backgroundColor: "#1a2a32",
                         border: "1px solid rgba(205,201,192,0.08)",
-                        borderLeft: `3px solid ${statusStyle.border}`,
+                        borderLeft: `3px solid ${(appt.teamMemberId && STYLIST_COLORS[appt.teamMemberId]) || statusStyle.border}`,
                         borderRadius: "6px",
                         display: "flex",
                         flexDirection: "column",
@@ -426,7 +472,7 @@ export default function AppointmentsPage() {
                     padding: "16px",
                     backgroundColor: "#1a2a32",
                     border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(205,201,192,0.08)",
-                    borderLeft: `3px solid ${appt.isCheckedOut ? "rgba(16,185,129,0.3)" : statusStyle.border}`,
+                    borderLeft: `3px solid ${(appt.teamMemberId && STYLIST_COLORS[appt.teamMemberId]) || (appt.isCheckedOut ? "rgba(16,185,129,0.3)" : statusStyle.border)}`,
                     borderRadius: "10px",
                     cursor: "pointer",
                     transition: "all 0.15s",
@@ -592,6 +638,59 @@ export default function AppointmentsPage() {
           })}
         </div>
       )}
+
+      {/* Stylist color legend */}
+      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "16px", marginBottom: "12px" }}>
+        {getLocationStylists(location).map(s => (
+          <div key={s.id} style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "10px", color: "rgba(205,201,192,0.6)" }}>
+            <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: STYLIST_COLORS[s.id] || "#666" }} />
+            {s.name}
+          </div>
+        ))}
+      </div>
+
+      {/* Waitlist panel */}
+      {showWaitlist && (
+        <div style={{ marginTop: "16px", backgroundColor: "#1a2a32", borderRadius: "12px", border: "1px solid rgba(205,201,192,0.08)", overflow: "hidden" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(205,201,192,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>Waitlist — {location === "Corpus Christi" ? "CC" : "SA"}</span>
+          </div>
+          {/* Add form */}
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(205,201,192,0.08)", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
+            <div style={{ flex: 1, minWidth: "120px" }}>
+              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Name</div>
+              <input value={wlForm.customerName} onChange={e => setWlForm(p => ({ ...p, customerName: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+            </div>
+            <div style={{ flex: 1, minWidth: "120px" }}>
+              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Phone</div>
+              <input value={wlForm.customerPhone} onChange={e => setWlForm(p => ({ ...p, customerPhone: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+            </div>
+            <div style={{ flex: 1, minWidth: "100px" }}>
+              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Notes</div>
+              <input value={wlForm.notes} onChange={e => setWlForm(p => ({ ...p, notes: e.target.value }))} placeholder="Service, stylist..." style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+            </div>
+            <button onClick={addToWaitlist} disabled={wlSaving || !wlForm.customerName} style={{ padding: "7px 16px", backgroundColor: "#CDC9C0", color: "#0f1d24", border: "none", borderRadius: "6px", fontSize: "11px", fontWeight: 700, cursor: "pointer", opacity: !wlForm.customerName ? 0.5 : 1 }}>{wlSaving ? "..." : "Add"}</button>
+          </div>
+          {/* Entries */}
+          {waitlist.length === 0 ? (
+            <div style={{ padding: "32px 20px", textAlign: "center", color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>No one on the waitlist</div>
+          ) : waitlist.map(w => (
+            <div key={w.id} style={{ padding: "12px 20px", borderBottom: "1px solid rgba(205,201,192,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>{w.customerName}</div>
+                <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)" }}>{w.customerPhone}{w.notes ? ` — ${w.notes}` : ""}</div>
+              </div>
+              <div style={{ display: "flex", gap: "6px" }}>
+                <button onClick={() => updateWaitlistStatus(w.id, "booked")} style={{ padding: "4px 10px", fontSize: "9px", fontWeight: 700, textTransform: "uppercase", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "4px", backgroundColor: "transparent", color: "#10B981", cursor: "pointer" }}>Booked</button>
+                <button onClick={() => updateWaitlistStatus(w.id, "removed")} style={{ padding: "4px 10px", fontSize: "9px", fontWeight: 700, textTransform: "uppercase", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "4px", backgroundColor: "transparent", color: "#EF4444", cursor: "pointer" }}>Remove</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && <div style={{ position: "fixed", bottom: "90px", right: "20px", background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "10px", padding: "12px 20px", color: "#fff", fontSize: "13px", zIndex: 999 }}>{toast}</div>}
 
       {/* Suppress unused vars */}
       {isManager ? null : null}

@@ -762,3 +762,19 @@ model SystemSetting {
   updatedAt DateTime @default(now()) @updatedAt
   @@map("system_settings")
 }
+
+model WaitlistEntry {
+  id               String   @id @default(cuid())
+  locationId       String
+  customerName     String
+  customerPhone    String
+  customerEmail    String?
+  requestedDate    DateTime
+  requestedStylist String?
+  requestedService String?
+  notes            String?
+  status           String   @default("waiting")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+  @@map("waitlist_entries")
+}
