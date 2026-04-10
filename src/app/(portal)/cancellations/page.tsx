@@ -19,6 +19,8 @@ interface CancellationEntry {
   stylistName: string
   location: string
   locationId: string
+  visitCount?: number
+  cancelledBy?: string
 }
 
 interface CancellationStats {
@@ -263,20 +265,20 @@ function CustomerModal({
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Client Type</span>
+                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Total Visits</span>
+                <span style={{ color: "#fff", fontSize: "12px", fontWeight: 600 }}>{entry.visitCount ?? entry.totalPastVisits}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Repeat Client</span>
                 <span
                   style={{
                     fontSize: "11px",
                     fontWeight: 700,
-                    color: entry.isRepeatClient ? "#10B981" : "#CDC9C0",
+                    color: (entry.visitCount ?? entry.totalPastVisits) > 1 ? "#10B981" : "#F59E0B",
                   }}
                 >
-                  {entry.isRepeatClient ? "Repeat Client" : "New Client"}
+                  {(entry.visitCount ?? entry.totalPastVisits) > 1 ? "Yes" : "First visit"}
                 </span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Past Visits</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>{entry.totalPastVisits}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Est. Past Spend</span>
@@ -599,22 +601,40 @@ export default function CancellationsPage() {
           {/* Table Controls */}
           <div style={{ ...cardStyle, marginBottom: "0", borderRadius: "10px 10px 0 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px", borderBottom: "none" }}>
             <div style={{ display: "flex", gap: "4px" }}>
-              {STATUS_FILTERS.map((sf) => (
-                <button
-                  key={sf.value}
-                  onClick={() => setStatusFilter(sf.value)}
-                  style={{
-                    ...pillBase,
-                    padding: "5px 12px",
-                    fontSize: "10px",
-                    backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.15)" : "transparent",
-                    color: statusFilter === sf.value ? "#FFFFFF" : "rgba(205,201,192,0.5)",
-                    border: statusFilter === sf.value ? "1px solid rgba(205,201,192,0.2)" : "1px solid transparent",
-                  }}
-                >
-                  {sf.label}
-                </button>
-              ))}
+              {STATUS_FILTERS.map((sf) => {
+                const count = sf.value === "All"
+                  ? data?.cancellations.length || 0
+                  : data?.cancellations.filter((c) => c.status === sf.value).length || 0
+                return (
+                  <button
+                    key={sf.value}
+                    onClick={() => setStatusFilter(sf.value)}
+                    style={{
+                      ...pillBase,
+                      padding: "5px 12px",
+                      fontSize: "10px",
+                      backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.15)" : "transparent",
+                      color: statusFilter === sf.value ? "#FFFFFF" : "rgba(205,201,192,0.5)",
+                      border: statusFilter === sf.value ? "1px solid rgba(205,201,192,0.2)" : "1px solid transparent",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    {sf.label}
+                    <span style={{
+                      fontSize: "9px",
+                      fontWeight: 700,
+                      padding: "1px 5px",
+                      borderRadius: "8px",
+                      backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.2)" : "rgba(205,201,192,0.08)",
+                      color: statusFilter === sf.value ? "#fff" : "rgba(205,201,192,0.4)",
+                    }}>
+                      {count}
+                    </span>
+                  </button>
+                )
+              })}
             </div>
             <input
               type="text"
@@ -651,7 +671,19 @@ export default function CancellationsPage() {
                     <span style={{ padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(16,185,129,0.15)", color: "#10B981" }}>REPEAT</span>
                   )}
                 </div>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginBottom: "6px" }}>{c.customerName}</div>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginBottom: "6px" }}>
+                  {c.customerName}
+                  {(c.visitCount ?? c.totalPastVisits) > 1 && (
+                    <span style={{ marginLeft: "6px", padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(205,201,192,0.08)", color: "rgba(205,201,192,0.5)" }}>
+                      {c.visitCount ?? c.totalPastVisits} visits
+                    </span>
+                  )}
+                  {(c.visitCount ?? c.totalPastVisits) === 1 && (
+                    <span style={{ marginLeft: "6px", padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(245,158,11,0.12)", color: "#F59E0B" }}>
+                      1st visit
+                    </span>
+                  )}
+                </div>
                 {c.customerPhone && (
                   <a href={`tel:${c.customerPhone}`} onClick={e => e.stopPropagation()} style={{ fontSize: "12px", color: "#CDC9C0", textDecoration: "none", display: "block", marginBottom: "4px" }}>{c.customerPhone}</a>
                 )}
@@ -759,7 +791,7 @@ export default function CancellationsPage() {
                     </td>
                     <td style={{ padding: "10px 12px", color: "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>
                       {c.customerName}
-                      {c.isRepeatClient && (
+                      {(c.visitCount ?? c.totalPastVisits) > 1 && (
                         <span
                           style={{
                             marginLeft: "6px",
@@ -767,12 +799,28 @@ export default function CancellationsPage() {
                             borderRadius: "3px",
                             fontSize: "8px",
                             fontWeight: 700,
-                            backgroundColor: "rgba(16,185,129,0.15)",
-                            color: "#10B981",
+                            backgroundColor: "rgba(205,201,192,0.08)",
+                            color: "rgba(205,201,192,0.5)",
                             letterSpacing: "0.06em",
                           }}
                         >
-                          REPEAT
+                          {c.visitCount ?? c.totalPastVisits} visits
+                        </span>
+                      )}
+                      {(c.visitCount ?? c.totalPastVisits) === 1 && (
+                        <span
+                          style={{
+                            marginLeft: "6px",
+                            padding: "2px 6px",
+                            borderRadius: "3px",
+                            fontSize: "8px",
+                            fontWeight: 700,
+                            backgroundColor: "rgba(245,158,11,0.12)",
+                            color: "#F59E0B",
+                            letterSpacing: "0.06em",
+                          }}
+                        >
+                          1st visit
                         </span>
                       )}
                     </td>

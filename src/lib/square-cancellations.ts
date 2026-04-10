@@ -54,6 +54,7 @@ export interface CancellationEntry {
   lostRevenue: number
   updatedAt: string
   customer: CustomerProfile | null
+  visitCount: number
 }
 
 export interface CancellationStats {
@@ -141,70 +142,41 @@ export async function getCancellations(
     if (b.customerId) customerIds.add(b.customerId)
   }
 
-  // Step 5: Get historical booking data (2 years back in 30-day chunks) for repeat client detection
-  const historicalVisits: Record<string, { count: number; lastDate: string | null }> = {}
-  const twoYearsAgo = new Date(Date.now() - 730 * 24 * 60 * 60 * 1000)
-  const now = new Date()
+  // Step 5: Get visit counts per customer (ACCEPTED bookings only)
+  const visitCounts: Record<string, { count: number; lastDate: string | null }> = {}
+  const custArr5 = Array.from(customerIds)
 
-  // Fetch historical data in 30-day chunks
-  const chunkMs = 30 * 24 * 60 * 60 * 1000
-  const historyPromises: Promise<void>[] = []
-
-  for (
-    let chunkStart = twoYearsAgo.getTime();
-    chunkStart < now.getTime();
-    chunkStart += chunkMs
-  ) {
-    const chunkEnd = Math.min(chunkStart + chunkMs, now.getTime())
-    const csISO = new Date(chunkStart).toISOString()
-    const ceISO = new Date(chunkEnd).toISOString()
-
-    historyPromises.push(
-      (async () => {
-        try {
-          let hPage = await square.bookings.list({
-            startAtMin: csISO,
-            startAtMax: ceISO,
-            limit: 200,
-          })
-
-          const processBooking = (hb: { customerId?: string | null; status?: string; startAt?: string | null }) => {
-            if (
-              hb.customerId &&
-              customerIds.has(hb.customerId) &&
-              hb.status !== "CANCELLED_BY_CUSTOMER" &&
-              hb.status !== "CANCELLED_BY_SELLER" &&
-              hb.status !== "DECLINED"
-            ) {
-              if (!historicalVisits[hb.customerId]) {
-                historicalVisits[hb.customerId] = { count: 0, lastDate: null }
-              }
-              historicalVisits[hb.customerId].count += 1
-              if (
-                hb.startAt &&
-                (!historicalVisits[hb.customerId].lastDate ||
-                  hb.startAt > historicalVisits[hb.customerId].lastDate!)
-              ) {
-                historicalVisits[hb.customerId].lastDate = hb.startAt
-              }
+  for (let i = 0; i < custArr5.length; i += 5) {
+    const batch = custArr5.slice(i, i + 5)
+    await Promise.all(batch.map(async (cid) => {
+      try {
+        let count = 0
+        let lastDate: string | null = null
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let bPage: any = await square.bookings.list({ limit: 100 })
+        // Square bookings.list doesn't support customer_id filter directly,
+        // so we fetch recent bookings and filter client-side
+        const processPage = (data: { customerId?: string | null; status?: string; startAt?: string | null }[]) => {
+          for (const b of data) {
+            if (b.customerId === cid && b.status === "ACCEPTED") {
+              count++
+              if (b.startAt && (!lastDate || b.startAt > lastDate)) lastDate = b.startAt
             }
           }
-
-          for (const hb of hPage.data) processBooking(hb)
-          while (hPage.hasNextPage()) {
-            hPage = await hPage.getNextPage()
-            for (const hb of hPage.data) processBooking(hb)
-          }
-        } catch (e) {
-          console.error("Historical chunk error:", e)
         }
-      })()
-    )
-  }
-
-  // Run history chunks with concurrency limit of 3
-  for (let i = 0; i < historyPromises.length; i += 3) {
-    await Promise.all(historyPromises.slice(i, i + 3))
+        processPage(bPage.data || [])
+        // Only paginate up to 3 pages to keep it fast
+        let pages = 0
+        while (bPage.hasNextPage() && pages < 3) {
+          bPage = await bPage.getNextPage()
+          processPage(bPage.data || [])
+          pages++
+        }
+        visitCounts[cid] = { count, lastDate }
+      } catch {
+        visitCounts[cid] = { count: 0, lastDate: null }
+      }
+    }))
   }
 
   // Step 6: Fetch full customer profiles (up to 100)
@@ -311,7 +283,7 @@ export async function getCancellations(
     const tmId = b.appointmentSegments?.[0]?.teamMemberId || ""
     const cid = b.customerId || null
     const cust = cid ? customerProfiles[cid] : null
-    const hist = cid ? historicalVisits[cid] : null
+    const hist = cid ? visitCounts[cid] : null
 
     // Extract services and duration from appointment segments
     const segments = b.appointmentSegments || []
@@ -352,6 +324,7 @@ export async function getCancellations(
       lostRevenue: totalServicePrice > 0 ? Math.round(totalServicePrice * 100) / 100 : avgTicket,
       updatedAt: b.updatedAt || b.createdAt || "",
       customer: cust,
+      visitCount: hist?.count || 0,
     }
   })
 
