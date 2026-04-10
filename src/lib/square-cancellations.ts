@@ -4,7 +4,7 @@ import {
   TEAM_MEMBER_LOCATIONS,
   getDateRange,
 } from "./square-metrics"
-import { getFullCache } from "./catalogCache"
+import { getFullCache, fetchVariationDirect } from "./catalogCache"
 import { CC_STYLISTS_MAP, SA_STYLISTS_MAP } from "./staff"
 
 function getSquare() {
@@ -281,6 +281,32 @@ export async function getCancellations(
     NO_SHOW: "No Show",
   }
 
+  // Collect variation IDs that need direct lookup (not in cache)
+  const missingVarIds = new Set<string>()
+  for (const b of filtered) {
+    for (const seg of b.appointmentSegments || []) {
+      const varId = seg.serviceVariationId
+      if (varId && !catalog[varId]) missingVarIds.add(varId)
+    }
+  }
+
+  // Fetch missing variations directly from Square API
+  const directLookups: Record<string, { name: string; price: number; durationMinutes: number }> = {}
+  if (missingVarIds.size > 0) {
+    const missArr = Array.from(missingVarIds)
+    for (let i = 0; i < missArr.length; i += 5) {
+      const batch = missArr.slice(i, i + 5)
+      await Promise.all(batch.map(async (vid) => {
+        directLookups[vid] = await fetchVariationDirect(vid)
+      }))
+    }
+  }
+
+  // Merge direct lookups into catalog for this run
+  const fullCatalog = { ...catalog, ...Object.fromEntries(
+    Object.entries(directLookups).map(([id, info]) => [id, info])
+  ) }
+
   const cancellations: CancellationEntry[] = filtered.map((b) => {
     const tmId = b.appointmentSegments?.[0]?.teamMemberId || ""
     const cid = b.customerId || null
@@ -296,9 +322,9 @@ export async function getCancellations(
       const dur = seg.durationMinutes || 0
       totalDuration += dur
       const varId = seg.serviceVariationId
-      if (varId && catalog[varId]) {
-        services.push(catalog[varId].name)
-        totalServicePrice += catalog[varId].price / 100 // cents to dollars
+      if (varId && fullCatalog[varId]) {
+        services.push(fullCatalog[varId].name)
+        totalServicePrice += fullCatalog[varId].price / 100 // cents to dollars
       } else {
         services.push("Service")
       }
