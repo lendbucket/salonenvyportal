@@ -116,7 +116,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Load shared catalog cache for service names
-    const sharedCatalog = await getFullCache();
+    const sharedCatalog = getFullCache();
 
     // Fetch customer details and service info
     const appointments = await Promise.all(
@@ -149,7 +149,7 @@ export async function GET(request: NextRequest) {
 
           if (varId && sharedCatalog[varId]) {
             const cached = sharedCatalog[varId];
-            services.push({ serviceName: cached.name, price: cached.price / 100, durationMinutes: dur || cached.durationMinutes, serviceVariationId: varId });
+            services.push({ serviceName: cached.name, price: cached.price, durationMinutes: dur || cached.durationMinutes, serviceVariationId: varId });
           } else {
             services.push({ serviceName: "Service", price: 0, durationMinutes: dur, serviceVariationId: varId || "" });
           }
