@@ -1,5 +1,5 @@
 "use client"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useUserRole } from "@/hooks/useUserRole"
 import Link from "next/link"
 import { TEAM_NAMES, CC_STYLISTS, SA_STYLISTS } from "@/lib/staff"
@@ -54,6 +54,7 @@ interface Appointment {
   note?: string | null
   isCheckedOut?: boolean
   orderId?: string
+  version?: number
 }
 
 export default function AppointmentsPage() {
@@ -107,12 +108,34 @@ export default function AppointmentsPage() {
   const [txPage, setTxPage] = useState(0)
   const TX_PER_PAGE = 25
 
+  // ── Client history panel ──
+  const [historyClientId, setHistoryClientId] = useState<string | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [historyData, setHistoryData] = useState<any>(null)
+  const [historyLoading, setHistoryLoading] = useState(false)
+  const [historyLimit, setHistoryLimit] = useState(20)
+
+  // ── Day view drag/drop ──
+  const [dragApptId, setDragApptId] = useState<string | null>(null)
+  const [dragGhostTime, setDragGhostTime] = useState<number | null>(null)
+  const dayViewRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
   }, [])
+
+  // Auto-scroll day view to current time
+  useEffect(() => {
+    if (viewMode === "day" && !loading && dayViewRef.current) {
+      const now = new Date()
+      const nowMin = now.getHours() * 60 + now.getMinutes()
+      const offset = (nowMin - DAY_START_HOUR * 60) * (HOUR_PX / 60) - 100
+      if (offset > 0) dayViewRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }, [viewMode, loading])
 
   const fetchAppointments = useCallback(async () => {
     setLoading(true)
@@ -210,6 +233,58 @@ export default function AppointmentsPage() {
   function resetBooking() { setBookStep(1); setBookClient(null); setBookStylist(""); setBookDate(date); setBookTime("10:00"); setBookSelectedSvcs([]); setBookNotes(""); setBookError(""); setBookOverlap(false); setClientSearch(""); setClientResults([]); setNewClient(false); setNewClientForm({ givenName: "", familyName: "", phone: "", email: "" }) }
 
   function openBookingModal() { resetBooking(); setShowBooking(true) }
+
+  // ── Client history ──
+  async function openClientHistory(customerId: string) {
+    if (!customerId) return
+    setHistoryClientId(customerId)
+    setHistoryLoading(true)
+    setHistoryData(null)
+    setHistoryLimit(20)
+    try {
+      const r = await fetch(`/api/customers/${customerId}/history`)
+      const d = await r.json()
+      if (!r.ok) throw new Error(d.error)
+      setHistoryData(d)
+    } catch { setHistoryData(null) }
+    setHistoryLoading(false)
+  }
+
+  // ── Day view drag/drop reschedule ──
+  const HOUR_PX = 80
+  const DAY_START_HOUR = 8
+  const DAY_END_HOUR = 22
+
+  async function handleDrop(apptId: string, newMinuteOffset: number) {
+    const totalMinutes = DAY_START_HOUR * 60 + newMinuteOffset
+    const newHour = Math.floor(totalMinutes / 60)
+    const newMin = Math.round((totalMinutes % 60) / 15) * 15
+    const appt = appointments.find(a => a.id === apptId)
+    if (!appt) return
+
+    // Optimistic update
+    const newStartLocal = new Date(`${date}T${String(newHour).padStart(2, "0")}:${String(newMin).padStart(2, "0")}:00`)
+    const oldStart = appt.startTime
+    setAppointments(prev => prev.map(a => a.id === apptId ? { ...a, startTime: newStartLocal.toISOString() } : a))
+
+    try {
+      const r = await fetch(`/api/bookings/${apptId}/reschedule`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ startAt: newStartLocal.toISOString(), version: appt.version }),
+      })
+      const d = await r.json()
+      if (!r.ok || d.error) throw new Error(d.error || "Reschedule failed")
+      setToast("Appointment rescheduled"); setTimeout(() => setToast(null), 3000)
+      fetchAppointments()
+    } catch (e: unknown) {
+      // Revert
+      setAppointments(prev => prev.map(a => a.id === apptId ? { ...a, startTime: oldStart } : a))
+      setToast(e instanceof Error ? e.message : "Reschedule failed"); setTimeout(() => setToast(null), 3000)
+    }
+    setDragApptId(null)
+    setDragGhostTime(null)
+  }
 
   // ── Transactions helpers ──
   const getTxDateRange = useCallback((): { start: string; end: string } => {
@@ -579,80 +654,159 @@ export default function AppointmentsPage() {
           </div>
         </div>
       ) : viewMode === "day" ? (
-        /* ── Day View (24-hour timeline) ── */
-        <div style={{ display: "flex", flexDirection: "column", gap: "0px", marginTop: "8px" }}>
-          <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
-            {sorted.length} Appointment{sorted.length !== 1 ? "s" : ""} &middot; Day View
-          </div>
-          {Array.from({ length: 24 }, (_, hour) => {
-            const isBusinessHour = hour >= 9 && hour <= 20
-            const hourAppts = sorted.filter(a => {
-              try { return new Date(a.startTime).getHours() === hour } catch { return false }
-            })
-            return (
-              <div key={hour} style={{
-                display: "flex",
-                minHeight: hourAppts.length > 0 ? "auto" : "36px",
-                borderBottom: "1px solid rgba(205,201,192,0.06)",
-                backgroundColor: isBusinessHour ? "rgba(205,201,192,0.02)" : "transparent",
-              }}>
-                {/* Hour label */}
-                <div style={{
-                  width: "60px",
-                  flexShrink: 0,
-                  padding: "8px 8px 8px 0",
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  color: isBusinessHour ? "rgba(205,201,192,0.5)" : "rgba(205,201,192,0.2)",
-                  textAlign: "right",
-                  borderRight: "1px solid rgba(205,201,192,0.08)",
-                }}>
-                  {hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`}
-                </div>
-                {/* Appointments in this hour */}
-                <div style={{ flex: 1, padding: hourAppts.length > 0 ? "6px 10px" : "0 10px", display: "flex", flexDirection: "column", gap: "4px" }}>
-                  {hourAppts.map(appt => {
-                    const statusStyle = getStatusStyle(appt.status)
+        /* ── Day View Calendar ── */
+        (() => {
+          const totalHours = DAY_END_HOUR - DAY_START_HOUR
+          const totalHeight = totalHours * HOUR_PX
+          // Current time indicator
+          const now = new Date()
+          const nowMinutes = now.getHours() * 60 + now.getMinutes()
+          const nowOffset = (nowMinutes - DAY_START_HOUR * 60) * (HOUR_PX / 60)
+          const showNowLine = isToday && nowMinutes >= DAY_START_HOUR * 60 && nowMinutes <= DAY_END_HOUR * 60
+
+          // Group overlapping appointments by stylist for side-by-side
+          const stylistColumns: Record<string, Appointment[]> = {}
+          for (const a of sorted) {
+            const key = a.teamMemberId || "_none"
+            if (!stylistColumns[key]) stylistColumns[key] = []
+            stylistColumns[key].push(a)
+          }
+
+          return (
+            <div ref={dayViewRef} style={{ position: "relative", marginTop: "8px" }}>
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
+                {sorted.length} Appointment{sorted.length !== 1 ? "s" : ""} &middot; Day View
+              </div>
+              <div style={{ display: "flex", position: "relative", minHeight: `${totalHeight}px` }}
+                onDragOver={e => {
+                  e.preventDefault()
+                  if (!dragApptId || !dayViewRef.current) return
+                  const rect = dayViewRef.current.getBoundingClientRect()
+                  const offsetY = e.clientY - rect.top - 40 // account for header
+                  const minutes = Math.max(0, Math.round(offsetY / (HOUR_PX / 60) / 15) * 15)
+                  setDragGhostTime(minutes)
+                }}
+                onDrop={e => {
+                  e.preventDefault()
+                  if (dragApptId && dragGhostTime !== null) handleDrop(dragApptId, dragGhostTime)
+                }}
+              >
+                {/* Time labels */}
+                <div style={{ width: "56px", flexShrink: 0, position: "relative" }}>
+                  {Array.from({ length: totalHours + 1 }, (_, i) => {
+                    const hour = DAY_START_HOUR + i
                     return (
-                      <div key={appt.id} style={{
-                        padding: "8px 12px",
-                        backgroundColor: "#1a2a32",
-                        border: "1px solid rgba(205,201,192,0.08)",
-                        borderLeft: `3px solid ${(appt.teamMemberId && STYLIST_COLORS[appt.teamMemberId]) || statusStyle.border}`,
-                        borderRadius: "6px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "3px",
+                      <div key={hour} style={{
+                        position: "absolute", top: `${i * HOUR_PX - 7}px`, right: "8px",
+                        fontSize: "10px", fontWeight: 600, color: "rgba(205,201,192,0.4)",
+                        lineHeight: "14px",
                       }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ color: "#FFFFFF", fontSize: "13px", fontWeight: 700 }}>
+                        {hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Grid + appointments */}
+                <div style={{ flex: 1, position: "relative", borderLeft: "1px solid rgba(205,201,192,0.08)" }}>
+                  {/* Hour grid lines */}
+                  {Array.from({ length: totalHours + 1 }, (_, i) => (
+                    <div key={i} style={{ position: "absolute", top: `${i * HOUR_PX}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(205,201,192,0.06)" }} />
+                  ))}
+                  {/* Half-hour grid lines */}
+                  {Array.from({ length: totalHours }, (_, i) => (
+                    <div key={`h${i}`} style={{ position: "absolute", top: `${i * HOUR_PX + HOUR_PX / 2}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(205,201,192,0.03)" }} />
+                  ))}
+
+                  {/* Current time line */}
+                  {showNowLine && (
+                    <div style={{ position: "absolute", top: `${nowOffset}px`, left: "-4px", right: 0, zIndex: 10, display: "flex", alignItems: "center" }}>
+                      <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#EF4444", flexShrink: 0 }} />
+                      <div style={{ flex: 1, height: "2px", backgroundColor: "#EF4444" }} />
+                    </div>
+                  )}
+
+                  {/* Drag ghost preview */}
+                  {dragApptId && dragGhostTime !== null && (
+                    <div style={{
+                      position: "absolute", top: `${dragGhostTime * (HOUR_PX / 60)}px`, left: "4px", right: "4px",
+                      height: "40px", backgroundColor: "rgba(205,201,192,0.08)", border: "2px dashed rgba(205,201,192,0.3)",
+                      borderRadius: "6px", zIndex: 5, pointerEvents: "none",
+                    }} />
+                  )}
+
+                  {/* Appointment blocks */}
+                  {sorted.map(appt => {
+                    const startDate = new Date(appt.startTime)
+                    const startMin = startDate.getHours() * 60 + startDate.getMinutes()
+                    const duration = appt.totalDurationMinutes || 60
+                    const topPx = (startMin - DAY_START_HOUR * 60) * (HOUR_PX / 60)
+                    const heightPx = Math.max(duration * (HOUR_PX / 60), 30)
+                    const color = (appt.teamMemberId && STYLIST_COLORS[appt.teamMemberId]) || "#607D8B"
+
+                    // Detect overlaps for same stylist → offset side by side
+                    const sameStylists = stylistColumns[appt.teamMemberId || "_none"] || []
+                    const overlapping = sameStylists.filter(o => {
+                      if (o.id === appt.id) return false
+                      const oStart = new Date(o.startTime).getHours() * 60 + new Date(o.startTime).getMinutes()
+                      const oEnd = oStart + (o.totalDurationMinutes || 60)
+                      return startMin < oEnd && (startMin + duration) > oStart
+                    })
+                    const overlapIdx = overlapping.length > 0 ? sameStylists.filter(o => {
+                      const oStart = new Date(o.startTime).getHours() * 60 + new Date(o.startTime).getMinutes()
+                      const oEnd = oStart + (o.totalDurationMinutes || 60)
+                      return startMin < oEnd && (startMin + duration) > oStart
+                    }).findIndex(o => o.id === appt.id) : 0
+                    const overlapTotal = overlapping.length > 0 ? overlapping.length + 1 : 1
+                    const widthPct = 100 / overlapTotal
+                    const leftPct = overlapIdx * widthPct
+
+                    // Is in progress?
+                    const isInProgress = isToday && appt.status === "ACCEPTED" && startMin <= nowMinutes && (startMin + duration) > nowMinutes
+
+                    return (
+                      <div
+                        key={appt.id}
+                        draggable
+                        onDragStart={() => setDragApptId(appt.id)}
+                        onDragEnd={() => { setDragApptId(null); setDragGhostTime(null) }}
+                        onClick={() => setExpandedId(expandedId === appt.id ? null : appt.id)}
+                        style={{
+                          position: "absolute",
+                          top: `${topPx}px`,
+                          left: `calc(${leftPct}% + 4px)`,
+                          width: `calc(${widthPct}% - 8px)`,
+                          height: `${heightPx}px`,
+                          backgroundColor: `${color}CC`,
+                          borderRadius: "6px",
+                          padding: "6px 8px",
+                          cursor: "grab",
+                          overflow: "hidden",
+                          zIndex: dragApptId === appt.id ? 20 : 2,
+                          opacity: dragApptId === appt.id ? 0.5 : appt.isCheckedOut ? 0.4 : 1,
+                          border: expandedId === appt.id ? "2px solid #fff" : "1px solid rgba(0,0,0,0.2)",
+                          transition: "opacity 0.15s",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                          {isInProgress && (
+                            <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10B981", display: "inline-block", animation: "pulse 1.5s ease-in-out infinite" }} />
+                          )}
+                          <span
+                            onClick={e => { e.stopPropagation(); if (appt.customerId) openClientHistory(appt.customerId) }}
+                            style={{ color: "#fff", fontSize: "11px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(255,255,255,0.3)" }}
+                          >
                             {appt.customerName}
                           </span>
-                          <span style={{
-                            fontSize: "8px", fontWeight: 700, padding: "2px 6px", borderRadius: "3px",
-                            backgroundColor: statusStyle.bg, color: statusStyle.text,
-                            textTransform: "uppercase", letterSpacing: "0.06em",
-                          }}>
-                            {appt.status.replace(/_/g, " ")}
-                          </span>
                         </div>
-                        <div style={{ display: "flex", gap: "12px", fontSize: "11px", color: "rgba(205,201,192,0.55)", fontWeight: 500 }}>
-                          <span>{fmtTime(appt.startTime)}{appt.endTime ? ` - ${fmtTime(appt.endTime)}` : ""}</span>
-                          {appt.teamMemberId && (
-                            <span>{TEAM_NAMES[appt.teamMemberId] || appt.teamMemberId.slice(0, 8)}</span>
-                          )}
-                        </div>
-                        {appt.services && appt.services.length > 0 && (
-                          <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
-                            {appt.services.map((s, i) => (
-                              <span key={i} style={{
-                                fontSize: "9px", fontWeight: 600, padding: "2px 6px",
-                                borderRadius: "3px", backgroundColor: "rgba(205,201,192,0.06)",
-                                color: "rgba(205,201,192,0.5)",
-                              }}>
-                                {s.serviceName}
-                              </span>
-                            ))}
+                        {heightPx > 40 && appt.services?.[0] && (
+                          <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.7)", marginTop: "2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {appt.services.map(s => s.serviceName).join(", ")}
+                          </div>
+                        )}
+                        {heightPx > 55 && appt.teamMemberId && (
+                          <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)", marginTop: "1px" }}>
+                            {TEAM_NAMES[appt.teamMemberId] || ""}
                           </div>
                         )}
                       </div>
@@ -660,9 +814,10 @@ export default function AppointmentsPage() {
                   })}
                 </div>
               </div>
-            )
-          })}
-        </div>
+              <style>{`@keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }`}</style>
+            </div>
+          )
+        })()
       ) : (
         /* ── List View ── */
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -694,7 +849,10 @@ export default function AppointmentsPage() {
                 >
                   {/* Top row: name + status */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700 }}>
+                    <span
+                      onClick={e => { if (appt.customerId) { e.stopPropagation(); openClientHistory(appt.customerId) } }}
+                      style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(255,255,255,0.2)" }}
+                    >
                       {appt.customerName}
                     </span>
                     <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
@@ -1184,6 +1342,130 @@ export default function AppointmentsPage() {
               </div>
             </>
           )}
+        </div>
+      )}
+
+      {/* ══════════ CLIENT HISTORY SLIDE-OVER ══════════ */}
+      {historyClientId && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", justifyContent: "flex-end" }}>
+          <div onClick={() => setHistoryClientId(null)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" }} />
+          <div style={{
+            position: "relative", width: isMobile ? "100%" : "420px", maxWidth: "100%",
+            background: "#0d1117", borderLeft: "1px solid rgba(205,201,192,0.12)",
+            display: "flex", flexDirection: "column", overflow: "hidden",
+          }}>
+            {/* Close button */}
+            <button onClick={() => setHistoryClientId(null)} style={{
+              position: "absolute", top: "16px", right: "16px", zIndex: 2,
+              background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer", fontSize: "22px",
+            }}>&times;</button>
+
+            {historyLoading ? (
+              <div style={{ padding: "60px 20px", textAlign: "center" }}>
+                <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "rgba(205,201,192,0.3)", display: "block", marginBottom: "8px" }}>hourglass_empty</span>
+                <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>Loading client history...</div>
+              </div>
+            ) : !historyData ? (
+              <div style={{ padding: "60px 20px", textAlign: "center", color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>Failed to load client data</div>
+            ) : (
+              <>
+                {/* Header */}
+                <div style={{ padding: "24px 20px 16px", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>
+                  <div style={{ fontSize: "20px", fontWeight: 800, color: "#fff", marginBottom: "6px" }}>{historyData.customer.name}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "3px", marginBottom: "10px" }}>
+                    {historyData.customer.phone && (
+                      <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.55)", display: "flex", alignItems: "center", gap: "4px" }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>phone</span>
+                        {historyData.customer.phone}
+                      </div>
+                    )}
+                    {historyData.customer.email && (
+                      <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.55)", display: "flex", alignItems: "center", gap: "4px" }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>mail</span>
+                        {historyData.customer.email}
+                      </div>
+                    )}
+                    {historyData.customer.createdAt && (
+                      <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.35)", marginTop: "2px" }}>
+                        Customer since {new Date(historyData.customer.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "America/Chicago" })}
+                      </div>
+                    )}
+                  </div>
+                  {/* Stat pills */}
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(79,142,247,0.12)", color: "#4F8EF7", fontSize: "11px", fontWeight: 700 }}>
+                      {historyData.stats.totalVisits} visits
+                    </span>
+                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(16,185,129,0.12)", color: "#10B981", fontSize: "11px", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>
+                      Total {fmtCurrency(historyData.stats.totalSpend)}
+                    </span>
+                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(205,201,192,0.08)", color: "rgba(205,201,192,0.7)", fontSize: "11px", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>
+                      Avg {fmtCurrency(historyData.stats.avgTicket)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Visit history */}
+                <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
+                  <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>
+                    Visit History
+                  </div>
+                  {historyData.visits.length === 0 ? (
+                    <div style={{ padding: "30px 0", textAlign: "center", color: "rgba(205,201,192,0.3)", fontSize: "13px" }}>No visit history</div>
+                  ) : (
+                    <>
+                      {historyData.visits.slice(0, historyLimit).map((v: { date: string; stylist: string; services: string[]; amount: number; tips: number; status: string }, i: number) => (
+                        <div key={i} style={{
+                          padding: "12px 14px", marginBottom: "6px",
+                          backgroundColor: "rgba(205,201,192,0.03)", border: "1px solid rgba(205,201,192,0.06)",
+                          borderRadius: "8px",
+                        }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(205,201,192,0.7)" }}>
+                              {new Date(v.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}
+                            </span>
+                            <span style={{
+                              fontSize: "8px", fontWeight: 700, padding: "2px 6px", borderRadius: "3px",
+                              backgroundColor: (STATUS_COLORS[v.status] || DEFAULT_STATUS).bg,
+                              color: (STATUS_COLORS[v.status] || DEFAULT_STATUS).text,
+                              textTransform: "uppercase", letterSpacing: "0.06em",
+                            }}>
+                              {v.status.replace(/_/g, " ")}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)", marginBottom: "4px" }}>
+                            {v.stylist}
+                          </div>
+                          <div style={{ display: "flex", gap: "4px", flexWrap: "wrap", marginBottom: "4px" }}>
+                            {v.services.map((s: string, j: number) => (
+                              <span key={j} style={{
+                                fontSize: "9px", fontWeight: 600, padding: "2px 6px",
+                                borderRadius: "3px", backgroundColor: "rgba(205,201,192,0.06)",
+                                color: "rgba(205,201,192,0.5)",
+                              }}>{s}</span>
+                            ))}
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
+                            <span style={{ color: "#CDC9C0", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>{fmtCurrency(v.amount)}</span>
+                            {v.tips > 0 && <span style={{ color: "#10B981", fontFamily: "'Fira Code', monospace" }}>+{fmtCurrency(v.tips)} tip</span>}
+                          </div>
+                        </div>
+                      ))}
+                      {historyData.visits.length > historyLimit && (
+                        <button onClick={() => setHistoryLimit(l => l + 20)} style={{
+                          width: "100%", padding: "10px", marginTop: "8px",
+                          backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.12)",
+                          borderRadius: "8px", color: "rgba(205,201,192,0.6)", fontSize: "12px", fontWeight: 600, cursor: "pointer",
+                        }}>
+                          Load more ({historyData.visits.length - historyLimit} remaining)
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
 
