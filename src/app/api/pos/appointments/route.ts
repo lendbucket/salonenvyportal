@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { SquareClient, SquareEnvironment } from "square";
 
 import { CC_LOCATION_ID, SA_LOCATION_ID, CC_STYLISTS_MAP, SA_STYLISTS_MAP, TEAM_NAMES } from "@/lib/staff";
+import { getFullCache } from "@/lib/catalogCache";
 
 const LOCATION_MAP: Record<string, string> = {
   "Corpus Christi": CC_LOCATION_ID,
@@ -114,8 +115,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Cache for catalog lookups to avoid duplicate fetches
-    const catalogCache = new Map<string, { serviceName: string; price: number; durationMinutes: number }>();
+    // Load shared catalog cache for service names
+    const sharedCatalog = await getFullCache();
 
     // Fetch customer details and service info
     const appointments = await Promise.all(
@@ -146,36 +147,12 @@ export async function GET(request: NextRequest) {
           const varId = seg.serviceVariationId;
           const dur = seg.durationMinutes ?? 0;
 
-          if (varId && catalogCache.has(varId)) {
-            const cached = catalogCache.get(varId)!;
-            services.push({ ...cached, serviceVariationId: varId });
-            continue;
+          if (varId && sharedCatalog[varId]) {
+            const cached = sharedCatalog[varId];
+            services.push({ serviceName: cached.name, price: cached.price / 100, durationMinutes: dur || cached.durationMinutes, serviceVariationId: varId });
+          } else {
+            services.push({ serviceName: "Service", price: 0, durationMinutes: dur, serviceVariationId: varId || "" });
           }
-
-          let serviceName = "Service";
-          let price = 0;
-
-          if (varId) {
-            try {
-              const catRes = await square.catalog.object.get({ objectId: varId });
-              const obj = catRes.object as unknown as Record<string, unknown>;
-              if (obj) {
-                const varData = obj.itemVariationData as Record<string, unknown> | undefined;
-                if (varData) {
-                  serviceName = (varData.name as string) || "Service";
-                  const priceMoney = varData.priceMoney as { amount?: bigint | number } | undefined;
-                  if (priceMoney?.amount != null) {
-                    price = Number(priceMoney.amount) / 100;
-                  }
-                }
-              }
-            } catch {
-              // Catalog lookup failed — use defaults
-            }
-            catalogCache.set(varId, { serviceName, price, durationMinutes: dur });
-          }
-
-          services.push({ serviceName, price, durationMinutes: dur, serviceVariationId: varId || "" });
         }
 
         // Calculate endTime from startTime + total segment durations

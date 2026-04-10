@@ -4,6 +4,7 @@ import {
   TEAM_MEMBER_LOCATIONS,
   getDateRange,
 } from "./square-metrics"
+import { getFullCache } from "./catalogCache"
 
 function getSquare() {
   return new SquareClient({
@@ -36,6 +37,11 @@ export interface CancellationEntry {
   stylistName: string
   location: "Corpus Christi" | "San Antonio" | "Unknown"
   locationId: string
+  services: string[]
+  durationMinutes: number
+  cancelledBy: "Customer" | "Salon" | "No Show"
+  lostRevenue: number
+  updatedAt: string
 }
 
 export interface CancellationStats {
@@ -220,40 +226,7 @@ export async function getCancellations(
     )
   }
 
-  // Step 7: Enrich cancellations
-  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-
-  const cancellations: CancellationEntry[] = filtered.map((b) => {
-    const tmId = b.appointmentSegments?.[0]?.teamMemberId || ""
-    const cid = b.customerId || null
-    const cust = cid ? customerDetails[cid] : null
-    const hist = cid ? historicalVisits[cid] : null
-
-    return {
-      bookingId: b.id || "",
-      status: b.status as CancellationStatus,
-      scheduledAt: b.startAt || "",
-      createdAt: b.createdAt || "",
-      customerId: cid,
-      customerName: cust?.name || "Walk-in",
-      customerEmail: cust?.email || "",
-      customerPhone: cust?.phone || "",
-      isRepeatClient: (hist?.count || 0) >= 2,
-      totalPastVisits: hist?.count || 0,
-      lastVisitDate: hist?.lastDate || null,
-      stylistId: tmId,
-      stylistName: TEAM_MEMBER_NAMES[tmId] || "Unknown",
-      location: getLocationForBooking(b.locationId, tmId),
-      locationId: b.locationId || "",
-    }
-  })
-
-  // Sort by scheduledAt desc
-  cancellations.sort(
-    (a, b) => new Date(b.scheduledAt).getTime() - new Date(a.scheduledAt).getTime()
-  )
-
-  // Step 8: Calculate avg ticket from recent completed orders
+  // Step 6.5: Calculate avg ticket first (needed for lost revenue fallback)
   let avgTicket = 75 // fallback
   try {
     const LOCATION_IDS = ["LTJSA6QR1HGW6", "LXJYXDXWR0XZF"]
@@ -282,7 +255,70 @@ export async function getCancellations(
     // Use fallback
   }
 
-  // Step 9: Calculate stats
+  // Step 6.6: Load catalog cache for service names
+  const catalog = await getFullCache()
+
+  // Step 7: Enrich cancellations
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  const cancelledByMap: Record<string, "Customer" | "Salon" | "No Show"> = {
+    CANCELLED_BY_CUSTOMER: "Customer",
+    CANCELLED_BY_SELLER: "Salon",
+    NO_SHOW: "No Show",
+  }
+
+  const cancellations: CancellationEntry[] = filtered.map((b) => {
+    const tmId = b.appointmentSegments?.[0]?.teamMemberId || ""
+    const cid = b.customerId || null
+    const cust = cid ? customerDetails[cid] : null
+    const hist = cid ? historicalVisits[cid] : null
+
+    // Extract services and duration from appointment segments
+    const segments = b.appointmentSegments || []
+    const services: string[] = []
+    let totalDuration = 0
+    let totalServicePrice = 0
+    for (const seg of segments) {
+      const dur = seg.durationMinutes || 0
+      totalDuration += dur
+      const varId = seg.serviceVariationId
+      if (varId && catalog[varId]) {
+        services.push(catalog[varId].name)
+        totalServicePrice += catalog[varId].price / 100 // cents to dollars
+      } else {
+        services.push("Service")
+      }
+    }
+
+    return {
+      bookingId: b.id || "",
+      status: b.status as CancellationStatus,
+      scheduledAt: b.startAt || "",
+      createdAt: b.createdAt || "",
+      customerId: cid,
+      customerName: cust?.name || "Walk-in",
+      customerEmail: cust?.email || "",
+      customerPhone: cust?.phone || "",
+      isRepeatClient: (hist?.count || 0) >= 2,
+      totalPastVisits: hist?.count || 0,
+      lastVisitDate: hist?.lastDate || null,
+      stylistId: tmId,
+      stylistName: TEAM_MEMBER_NAMES[tmId] || "Unknown",
+      location: getLocationForBooking(b.locationId, tmId),
+      locationId: b.locationId || "",
+      services,
+      durationMinutes: totalDuration,
+      cancelledBy: cancelledByMap[b.status as string] || "Customer",
+      lostRevenue: totalServicePrice > 0 ? Math.round(totalServicePrice * 100) / 100 : avgTicket,
+      updatedAt: b.updatedAt || b.createdAt || "",
+    }
+  })
+
+  // Sort by scheduledAt desc
+  cancellations.sort(
+    (a, b) => new Date(b.scheduledAt).getTime() - new Date(a.scheduledAt).getTime()
+  )
+
+  // Step 8: Calculate stats
   const stats: CancellationStats = {
     totalCancellations: cancellations.length,
     cancelledByCustomer: cancellations.filter((c) => c.status === "CANCELLED_BY_CUSTOMER").length,
@@ -290,7 +326,7 @@ export async function getCancellations(
     noShows: cancellations.filter((c) => c.status === "NO_SHOW").length,
     repeatClientCancellations: cancellations.filter((c) => c.isRepeatClient).length,
     newClientCancellations: cancellations.filter((c) => !c.isRepeatClient).length,
-    estimatedRevenueLost: cancellations.length * avgTicket,
+    estimatedRevenueLost: Math.round(cancellations.reduce((sum, c) => sum + c.lostRevenue, 0) * 100) / 100,
     avgTicket,
     byStylist: {},
     byDay: {},
