@@ -196,20 +196,29 @@ export async function GET(request: NextRequest) {
       })
     );
 
-    // Check for completed orders matching each appointment (checked-out detection)
-    let completedOrders: Array<{ id?: string; createdAt?: string }> = [];
+    // Check for completed orders — fetch from BOTH locations since all payments go through SA
+    // SALONTRANSACT: Currently powered by Square API
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ordersByCustomer: Record<string, any> = {};
     try {
       const ordersRes = await square.orders.search({
-        locationIds: [locationId],
+        locationIds: [CC_LOCATION_ID, SA_LOCATION_ID],
         query: {
           filter: {
-            dateTimeFilter: { createdAt: { startAt: startOfDay.toISOString(), endAt: new Date(endOfDay.getTime() + 4 * 60 * 60 * 1000).toISOString() } },
+            dateTimeFilter: { closedAt: { startAt: startOfDay.toISOString(), endAt: new Date(endOfDay.getTime() + 12 * 60 * 60 * 1000).toISOString() } },
             stateFilter: { states: ["COMPLETED"] },
           },
         },
         limit: 200,
       });
-      completedOrders = (ordersRes.orders || []).map(o => ({ id: o.id, createdAt: o.createdAt }));
+      for (const o of (ordersRes.orders || [])) {
+        if (o.customerId) {
+          // Keep the most recent order per customer
+          if (!ordersByCustomer[o.customerId] || new Date(o.closedAt || "").getTime() > new Date(ordersByCustomer[o.customerId].closedAt || "").getTime()) {
+            ordersByCustomer[o.customerId] = o;
+          }
+        }
+      }
     } catch {
       // Orders lookup failed — skip checkout detection
     }
@@ -217,20 +226,47 @@ export async function GET(request: NextRequest) {
     const enrichedAppointments = appointments.map(appt => {
       let isCheckedOut = false;
       let orderId: string | undefined;
-      if (appt.startTime && completedOrders.length > 0) {
-        const apptStart = new Date(appt.startTime).getTime();
-        for (const order of completedOrders) {
-          if (!order.createdAt) continue;
-          const orderTime = new Date(order.createdAt).getTime();
-          const diffHours = (orderTime - apptStart) / (1000 * 60 * 60);
-          if (diffHours >= -0.5 && diffHours <= 4) {
-            isCheckedOut = true;
-            orderId = order.id;
-            break;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let checkoutDetails: any = null;
+
+      if (appt.customerId && ordersByCustomer[appt.customerId]) {
+        const order = ordersByCustomer[appt.customerId];
+        const bookingTime = new Date(appt.startTime || "").getTime();
+        const orderTime = new Date(order.closedAt || order.createdAt || "").getTime();
+        const diffH = Math.abs(orderTime - bookingTime) / (1000 * 60 * 60);
+
+        if (diffH < 12) {
+          isCheckedOut = true;
+          orderId = order.id;
+
+          // Build checkout details
+          const lineItems = (order.lineItems || []).map((li: { name?: string; grossSalesMoney?: { amount?: bigint | number } }) => ({
+            name: li.name || "Service",
+            price: Number(li.grossSalesMoney?.amount || 0) / 100,
+          }));
+          const subtotal = lineItems.reduce((s: number, li: { price: number }) => s + li.price, 0);
+          const tips = Number(order.totalTipMoney?.amount || 0) / 100;
+          const tax = Number(order.totalTaxMoney?.amount || 0) / 100;
+          const total = Number(order.totalMoney?.amount || 0) / 100;
+
+          // Payment method from tenders
+          let paymentMethod = "Card";
+          const tender = order.tenders?.[0];
+          if (tender) {
+            if (tender.type === "CASH") paymentMethod = "Cash";
+            else if (tender.type === "WALLET") paymentMethod = "Apple Pay";
+            else if (tender.cardDetails?.card) {
+              const card = tender.cardDetails.card;
+              const brand = (card.cardBrand || "Card").replace(/_/g, " ");
+              paymentMethod = `${brand} •••• ${card.last4 || "****"}`;
+            }
           }
+
+          checkoutDetails = { services: lineItems, subtotal, tips, tax, total, paymentMethod, closedAt: order.closedAt };
         }
       }
-      return { ...appt, isCheckedOut, ...(orderId ? { orderId } : {}) };
+
+      return { ...appt, isCheckedOut, ...(orderId ? { orderId } : {}), ...(checkoutDetails ? { checkoutDetails } : {}) };
     });
 
     return NextResponse.json({ appointments: enrichedAppointments });
