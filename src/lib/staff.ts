@@ -20,6 +20,7 @@ export const SA_STYLISTS_MAP: Record<string, string> = {
   TMcc0QbHuUZfgcIB: "Jaylee Jaeger",
   "TMfFCmgJ5RV-WCBq": "Aubree Saldana",
   TMk1YstlrnPrKw8p: "Kiyara Smith",
+  TMltRlD4OaczAnJr: "Kiyara Smith",
 }
 
 /** All team member names (CC + SA). Used as fallback lookup when Square returns a team member ID. */

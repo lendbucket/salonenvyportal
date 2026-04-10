@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SquareClient, SquareEnvironment } from "square";
 
-import { CC_LOCATION_ID, SA_LOCATION_ID } from "@/lib/staff";
+import { CC_LOCATION_ID, SA_LOCATION_ID, CC_STYLISTS_MAP, SA_STYLISTS_MAP, TEAM_NAMES } from "@/lib/staff";
 
 const LOCATION_MAP: Record<string, string> = {
   "Corpus Christi": CC_LOCATION_ID,
@@ -99,9 +99,20 @@ export async function GET(request: NextRequest) {
     const bookings = allBookings;
 
     // Filter by status unless ?all=true
-    const filtered = allStatuses
+    let filtered = allStatuses
       ? bookings
       : bookings.filter((b) => b.status === "ACCEPTED" || b.status === "PENDING");
+
+    // Filter by location's stylists — only show team members belonging to the selected location
+    const locationStylistIds = locationId === CC_LOCATION_ID
+      ? new Set(Object.keys(CC_STYLISTS_MAP))
+      : new Set(Object.keys(SA_STYLISTS_MAP));
+    if (!teamMemberFilter) {
+      filtered = filtered.filter(b => {
+        const tmId = b.appointmentSegments?.[0]?.teamMemberId;
+        return !tmId || locationStylistIds.has(tmId);
+      });
+    }
 
     // Cache for catalog lookups to avoid duplicate fetches
     const catalogCache = new Map<string, { serviceName: string; price: number; durationMinutes: number }>();

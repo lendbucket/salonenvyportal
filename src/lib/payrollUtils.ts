@@ -41,6 +41,7 @@ export const TEAM_MEMBERS: Record<string, { name: string; location: string; isMa
   TMcc0QbHuUZfgcIB: { name: "Jaylee", location: "SA", isManager: false },
   "TMfFCmgJ5RV-WCBq": { name: "Aubree", location: "SA", isManager: false },
   TMk1YstlrnPrKw8p: { name: "Kiyara", location: "SA", isManager: false },
+  TMltRlD4OaczAnJr: { name: "Kiyara", location: "SA", isManager: false },
 }
 
 export const CC_LOCATION_ID = "LTJSA6QR1HGW6"
