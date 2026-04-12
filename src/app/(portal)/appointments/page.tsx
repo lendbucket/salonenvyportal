@@ -55,6 +55,11 @@ function formatDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
 }
 
+// CST-explicit date string — always uses America/Chicago timezone
+function getCSTDateStr(d: Date): string {
+  return d.toLocaleDateString("en-CA", { timeZone: "America/Chicago" }) // "YYYY-MM-DD"
+}
+
 function clientShortName(name: string): string {
   const parts = name.trim().split(" ")
   if (parts.length <= 1) return name
@@ -1044,13 +1049,14 @@ export default function AppointmentsPage() {
             day.setDate(calStart.getDate() + i)
             cells.push(day)
           }
-          const todayStr = (() => { const n = new Date(); return formatDateStr(n) })()
+          const todayStr = getCSTDateStr(new Date())
           // Use dedicated monthAppointments data (not single-day appointments)
           const monthData = monthAppointments.length > 0 ? monthAppointments : appointments
+          console.log("[Month render] monthAppointments:", monthAppointments.length, "monthData:", monthData.length)
           const totalMonthAppts = monthData.filter(a => {
             if (!a.startTime || isBlockedTime(a)) return false
-            const ad = new Date(a.startTime)
-            return ad.getMonth() === month && ad.getFullYear() === year
+            const ad = getCSTDateStr(new Date(a.startTime))
+            return ad.startsWith(`${year}-${String(month + 1).padStart(2, "0")}`)
           }).length
 
           return (
@@ -1070,15 +1076,19 @@ export default function AppointmentsPage() {
               {/* Calendar grid */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "1px", opacity: loadingMonth ? 0.4 : 1, transition: "opacity 0.2s" }}>
                 {cells.map((day, i) => {
-                  const dayStr = formatDateStr(day)
+                  const dayStr = getCSTDateStr(day)
                   const isCurrentMonth = day.getMonth() === month
                   const isDayToday = dayStr === todayStr
-                  // Filter from monthData (dedicated month fetch) with optional stylist filter
+                  // Filter from monthData using CST date comparison
                   const dayAppts = monthData.filter(a => {
                     if (!a.startTime || isBlockedTime(a)) return false
                     if (stylistFilter !== "all" && a.teamMemberId !== stylistFilter) return false
-                    return formatDateStr(new Date(a.startTime)) === dayStr
+                    return getCSTDateStr(new Date(a.startTime)) === dayStr
                   })
+                  // Debug: log one specific day
+                  if (day.getDate() === 12 && day.getMonth() === month) {
+                    console.log("[Month cell Apr 12]", { dayStr, dayAppts: dayAppts.length, monthDataLen: monthData.length, sampleAptDates: monthData.slice(0, 3).map(a => ({ raw: a.startTime, cst: getCSTDateStr(new Date(a.startTime)) })) })
+                  }
                   const MAX_PILLS = 4
                   return (
                     <div
