@@ -186,12 +186,12 @@ export default function MetricsPage() {
 
       {/* Selectors */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "24px", flexWrap: "nowrap" as const, overflowX: "auto" }}>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#1a2a32", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
           {PERIODS.map(p => (
             <button key={p.value} onClick={() => setPeriod(p.value)} style={pill(period === p.value)}>{p.label}</button>
           ))}
         </div>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#1a2a32", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
           {(isOwner ? ["Both", "Corpus Christi", "San Antonio"] : [userLocation || "Both"]).map(loc => (
             <button key={loc} onClick={() => setLocation(loc)} style={pill(location === loc)}>
               {loc === "Corpus Christi" ? "CC" : loc === "San Antonio" ? "SA" : loc}
@@ -211,7 +211,7 @@ export default function MetricsPage() {
       {loading ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "14px", marginBottom: "24px" }}>
           {[1, 2, 3, 4].map(i => (
-            <div key={i} style={{ backgroundColor: "#1a2a32", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div key={i} style={{ backgroundColor: "#0d1117", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
           ))}
         </div>
       ) : (
@@ -224,7 +224,7 @@ export default function MetricsPage() {
               { label: "Avg Ticket", current: fmt(currentTotal.avgTicket), change: ticketChange, prev: fmt(prevTotal.avgTicket), icon: "receipt" },
               { label: "Locations Active", current: String(data?.currentMetrics.filter(m => m.serviceCount > 0).length || 0), change: null, prev: "2 total", icon: "location_on" },
             ].map(card => (
-              <div key={card.label} style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "20px" }}>
+              <div key={card.label} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
                   <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>{card.label}</span>
                   <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.3)" }}>{card.icon}</span>
@@ -240,7 +240,7 @@ export default function MetricsPage() {
 
           {/* Annual Goal */}
           {annualGoalProgress !== null && (
-            <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "20px", marginBottom: "24px" }}>
+            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px", marginBottom: "24px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                 <div>
                   <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "4px" }}>Annual Net Sales Goal — +10% vs Last Year</div>
@@ -265,7 +265,7 @@ export default function MetricsPage() {
                 const prevLoc = data.previousMetrics.find(p => p.location === loc.location)
                 const revChange = prevLoc ? getChange(loc.revenue, prevLoc.revenue) : null
                 return (
-                  <div key={loc.location} style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "20px" }}>
+                  <div key={loc.location} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                       <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#FFFFFF", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>{loc.location}</h3>
                       <ChangeIndicator change={revChange} />
@@ -282,7 +282,7 @@ export default function MetricsPage() {
                         </div>
                       ))}
                     </div>
-                    <div style={{ borderTop: "1px solid rgba(205,201,192,0.08)", paddingTop: "12px" }}>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "12px" }}>
                       {loc.stylistBreakdown.slice(0, 3).map((s, i) => (
                         <div key={s.teamMemberId} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -303,8 +303,8 @@ export default function MetricsPage() {
           )}
 
           {/* Stylist Comparison Table */}
-          <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", marginBottom: "24px", overflow: "hidden" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>
+          <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", marginBottom: "24px", overflow: "hidden" }}>
+            <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
               <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FFFFFF", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Stylist Performance — Current vs Previous Period
               </h3>
@@ -331,7 +331,7 @@ export default function MetricsPage() {
                         <tr key={stylist.teamMemberId} onClick={() => router.push(`/stylist/${stylist.teamMemberId}`)} style={{ borderBottom: "1px solid rgba(205,201,192,0.06)", cursor: "pointer" }}>
                           <td style={{ padding: "12px 14px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                              <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
+                              <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
                                 {stylist.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                               </div>
                               <span style={{ fontSize: "13px", fontWeight: 600, color: "#FFFFFF" }}>{stylist.name}</span>
@@ -358,7 +358,7 @@ export default function MetricsPage() {
           </div>
 
           {/* AI Business Coach */}
-          <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "24px" }}>
+          <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "24px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
               <div style={{ width: "36px", height: "36px", borderRadius: "8px", backgroundColor: "rgba(205,201,192,0.1)", border: "1px solid rgba(205,201,192,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#CDC9C0" }}>auto_awesome</span>

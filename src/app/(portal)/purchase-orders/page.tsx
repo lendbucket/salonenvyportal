@@ -20,28 +20,32 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)",
+  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)",
   borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)",
 }
 
 const btnPrimary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "none", cursor: "pointer",
-  backgroundColor: "#CDC9C0", color: "#0f1d24", fontSize: "12px", fontWeight: 700,
+  padding: "8px 16px", borderRadius: "8px", border: "1px solid #606E74", cursor: "pointer",
+  backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", fontWeight: 500,
+  letterSpacing: "0.01em", transition: "all 0.15s ease",
 }
 
 const btnSecondary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)",
-  cursor: "pointer", backgroundColor: "transparent", color: "#CDC9C0", fontSize: "12px", fontWeight: 600,
+  padding: "8px 16px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.08)",
+  cursor: "pointer", backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", fontWeight: 500,
+  letterSpacing: "0.01em", transition: "all 0.15s ease",
 }
 
 const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "8px 12px", boxSizing: "border-box",
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)",
-  borderRadius: "8px", color: "#FFFFFF", fontSize: "13px", outline: "none",
+  width: "100%", padding: "10px 14px", boxSizing: "border-box",
+  backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: "8px", color: "#FFFFFF", fontSize: "14px", outline: "none",
+  transition: "border-color 0.15s, box-shadow 0.15s",
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: "11px", fontWeight: 600, color: "rgba(205,201,192,0.6)",
+  fontSize: "11px", fontWeight: 600, color: "#606E74",
   textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px", display: "block",
 }
 

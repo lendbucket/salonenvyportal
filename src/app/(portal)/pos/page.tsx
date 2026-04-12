@@ -355,10 +355,10 @@ export default function POSPage() {
           width: "100%",
           textAlign: "left",
           padding: "14px 16px",
-          backgroundColor: isSelected ? "rgba(205,201,192,0.1)" : "#1a2a32",
+          backgroundColor: isSelected ? "rgba(205,201,192,0.1)" : "#0d1117",
           border: isSelected
             ? "1px solid rgba(205,201,192,0.3)"
-            : "1px solid rgba(205,201,192,0.08)",
+            : "1px solid rgba(255,255,255,0.06)",
           borderRadius: "10px",
           cursor: "pointer",
           transition: "all 0.15s",
@@ -389,7 +389,7 @@ export default function POSPage() {
               backgroundColor:
                 appt.status === "ACCEPTED"
                   ? "rgba(16,185,129,0.12)"
-                  : "rgba(205,201,192,0.08)",
+                  : "rgba(255,255,255,0.06)",
               color:
                 appt.status === "ACCEPTED" ? "#10B981" : "rgba(205,201,192,0.5)",
               textTransform: "uppercase",
@@ -520,8 +520,8 @@ export default function POSPage() {
                   onClick={() => addToCart(service, v)}
                   style={{
                     padding: "14px 12px",
-                    backgroundColor: "#1a2a32",
-                    border: "1px solid rgba(205,201,192,0.08)",
+                    backgroundColor: "#0d1117",
+                    border: "1px solid rgba(255,255,255,0.06)",
                     borderRadius: "10px",
                     cursor: "pointer",
                     textAlign: "left",
@@ -585,7 +585,7 @@ export default function POSPage() {
             style={{
               padding: "14px 16px",
               backgroundColor: "rgba(205,201,192,0.04)",
-              border: "1px solid rgba(205,201,192,0.08)",
+              border: "1px solid rgba(255,255,255,0.06)",
               borderRadius: "10px",
               marginBottom: "14px",
             }}
@@ -656,8 +656,8 @@ export default function POSPage() {
                   alignItems: "center",
                   gap: "10px",
                   padding: "10px 12px",
-                  backgroundColor: "#1a2a32",
-                  border: "1px solid rgba(205,201,192,0.08)",
+                  backgroundColor: "#0d1117",
+                  border: "1px solid rgba(255,255,255,0.06)",
                   borderRadius: "8px",
                 }}
               >
@@ -718,7 +718,7 @@ export default function POSPage() {
                       width: "26px",
                       height: "26px",
                       borderRadius: "6px",
-                      backgroundColor: "rgba(205,201,192,0.08)",
+                      backgroundColor: "rgba(255,255,255,0.06)",
                       border: "1px solid rgba(205,201,192,0.15)",
                       color: "#CDC9C0",
                       cursor: "pointer",
@@ -748,7 +748,7 @@ export default function POSPage() {
                       width: "26px",
                       height: "26px",
                       borderRadius: "6px",
-                      backgroundColor: "rgba(205,201,192,0.08)",
+                      backgroundColor: "rgba(255,255,255,0.06)",
                       border: "1px solid rgba(205,201,192,0.15)",
                       color: "#CDC9C0",
                       cursor: "pointer",
@@ -816,7 +816,7 @@ export default function POSPage() {
                         ? "1px solid #CDC9C0"
                         : "1px solid rgba(205,201,192,0.15)",
                     backgroundColor:
-                      tipPercent === pct ? "rgba(205,201,192,0.12)" : "transparent",
+                      tipPercent === pct ? "rgba(255,255,255,0.06)" : "transparent",
                     color: tipPercent === pct ? "#CDC9C0" : "rgba(205,201,192,0.5)",
                     cursor: "pointer",
                     fontSize: "12px",
@@ -929,7 +929,7 @@ export default function POSPage() {
                       borderRadius: "7px",
                       border: paymentMethod === method ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)",
                       cursor: "pointer",
-                      backgroundColor: paymentMethod === method ? "rgba(205,201,192,0.12)" : "transparent",
+                      backgroundColor: paymentMethod === method ? "rgba(255,255,255,0.06)" : "transparent",
                       color: paymentMethod === method ? "#CDC9C0" : "rgba(205,201,192,0.5)",
                       display: "flex",
                       alignItems: "center",
@@ -1195,7 +1195,7 @@ export default function POSPage() {
                 onChange={(e) => setLocation(e.target.value)}
                 style={{
                   padding: "6px 10px",
-                  backgroundColor: "#1a2a32",
+                  backgroundColor: "#0d1117",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "6px",
                   color: "#CDC9C0",
@@ -1230,10 +1230,10 @@ export default function POSPage() {
           style={{
             display: "flex",
             gap: "2px",
-            backgroundColor: "#1a2a32",
+            backgroundColor: "#0d1117",
             padding: "3px",
             borderRadius: "8px",
-            border: "1px solid rgba(205,201,192,0.08)",
+            border: "1px solid rgba(255,255,255,0.06)",
             marginBottom: "16px",
           }}
         >
@@ -1327,7 +1327,7 @@ export default function POSPage() {
       <div
         style={{
           padding: "16px 24px",
-          borderBottom: "1px solid rgba(205,201,192,0.08)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -1398,7 +1398,7 @@ export default function POSPage() {
         {/* LEFT — Appointments */}
         <div
           style={{
-            borderRight: "1px solid rgba(205,201,192,0.08)",
+            borderRight: "1px solid rgba(255,255,255,0.06)",
             overflowY: "auto",
             padding: "16px",
             display: "flex",
@@ -1450,7 +1450,7 @@ export default function POSPage() {
         {/* CENTER — Catalog */}
         <div
           style={{
-            borderRight: "1px solid rgba(205,201,192,0.08)",
+            borderRight: "1px solid rgba(255,255,255,0.06)",
             overflowY: "auto",
             padding: "16px",
           }}

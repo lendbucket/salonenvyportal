@@ -25,7 +25,7 @@ type LocationData = {
 
 /* ── Constants ── */
 const STAR_COLOR = "#F59E0B";
-const CARD_BG = "#1a2a32";
+const CARD_BG = "#0d1117";
 const ACCENT = "#CDC9C0";
 const TIPS = [
   { icon: "qr_code_2", title: "Table Cards", desc: "Place QR codes at each station linking to your Google review page." },
@@ -216,7 +216,7 @@ export default function ReviewsPage() {
                 padding: "16px 20px",
                 backgroundColor: CARD_BG,
                 borderRadius: "10px",
-                border: "1px solid rgba(205,201,192,0.08)",
+                border: "1px solid rgba(255,255,255,0.06)",
                 marginBottom: "20px",
                 flexWrap: "wrap",
               }}
@@ -239,7 +239,7 @@ export default function ReviewsPage() {
                 style={{
                   backgroundColor: CARD_BG,
                   borderRadius: "12px",
-                  border: "1px solid rgba(205,201,192,0.08)",
+                  border: "1px solid rgba(255,255,255,0.06)",
                   padding: "20px",
                 }}
               >
@@ -274,7 +274,7 @@ export default function ReviewsPage() {
                       minWidth: "100px",
                       padding: "8px 10px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(205,201,192,0.12)",
+                      border: "1px solid rgba(255,255,255,0.06)",
                       backgroundColor: "rgba(205,201,192,0.06)",
                       color: copiedId === `link-${loc.location}` ? "#22c55e" : "rgba(205,201,192,0.6)",
                       fontSize: "10px",
@@ -300,7 +300,7 @@ export default function ReviewsPage() {
                       minWidth: "80px",
                       padding: "8px 10px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(205,201,192,0.12)",
+                      border: "1px solid rgba(255,255,255,0.06)",
                       backgroundColor: "rgba(205,201,192,0.06)",
                       color: "rgba(205,201,192,0.6)",
                       fontSize: "10px",
@@ -326,7 +326,7 @@ export default function ReviewsPage() {
                       minWidth: "80px",
                       padding: "8px 10px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(205,201,192,0.12)",
+                      border: "1px solid rgba(255,255,255,0.06)",
                       backgroundColor: "rgba(205,201,192,0.06)",
                       color: "rgba(205,201,192,0.6)",
                       fontSize: "10px",
@@ -357,7 +357,7 @@ export default function ReviewsPage() {
                 style={{
                   padding: "6px 14px",
                   borderRadius: "20px",
-                  border: `1px solid ${ratingFilter === r ? STAR_COLOR : "rgba(205,201,192,0.12)"}`,
+                  border: `1px solid ${ratingFilter === r ? STAR_COLOR : "rgba(255,255,255,0.06)"}`,
                   backgroundColor: ratingFilter === r ? "rgba(245,158,11,0.12)" : "transparent",
                   color: ratingFilter === r ? STAR_COLOR : "rgba(205,201,192,0.5)",
                   fontSize: "11px",
@@ -393,7 +393,7 @@ export default function ReviewsPage() {
                 style={{
                   backgroundColor: CARD_BG,
                   borderRadius: "10px",
-                  border: "1px solid rgba(205,201,192,0.08)",
+                  border: "1px solid rgba(255,255,255,0.06)",
                   padding: "16px 20px",
                 }}
               >
@@ -437,7 +437,7 @@ export default function ReviewsPage() {
                             textTransform: "uppercase",
                             padding: "2px 8px",
                             borderRadius: "4px",
-                            backgroundColor: "rgba(205,201,192,0.08)",
+                            backgroundColor: "rgba(255,255,255,0.06)",
                             color: "rgba(205,201,192,0.5)",
                           }}
                         >
@@ -487,7 +487,7 @@ export default function ReviewsPage() {
                   style={{
                     backgroundColor: CARD_BG,
                     borderRadius: "10px",
-                    border: "1px solid rgba(205,201,192,0.08)",
+                    border: "1px solid rgba(255,255,255,0.06)",
                     padding: "16px",
                     display: "flex",
                     gap: "12px",

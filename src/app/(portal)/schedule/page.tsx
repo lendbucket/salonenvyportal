@@ -166,7 +166,7 @@ export default function SchedulePage() {
           <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Schedule Builder</h1>
           <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>Build weekly schedules and submit for owner approval</p>
         </div>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#1a2a32", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
           <button onClick={() => setView("builder")} style={pill(view === "builder")}>Builder</button>
           <button onClick={() => setView("list")} style={pill(view === "list")}>History</button>
         </div>
@@ -174,20 +174,20 @@ export default function SchedulePage() {
 
       {/* Controls */}
       <div style={{ display: "flex", gap: "12px", marginBottom: "20px", alignItems: "center", flexWrap: "wrap" }}>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#1a2a32", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
           {(isOwner ? locations : locations.filter(l => l.name === userLocation)).map(loc => (
             <button key={loc.id} onClick={() => setSelLoc(loc)} style={pill(selLoc?.id === loc.id)}>
               {loc.name === "Corpus Christi" ? "CC" : "SA"}
             </button>
           ))}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#1a2a32", padding: "6px 12px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#0d1117", padding: "6px 12px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
           <button onClick={() => { const d = new Date(weekStart); d.setDate(d.getDate() - 7); setWeekStart(d) }} style={{ background: "none", border: "none", color: "#CDC9C0", cursor: "pointer", fontSize: "16px", padding: "0 4px" }}>{"\u2039"}</button>
           <span style={{ fontSize: "12px", fontWeight: 700, color: "#FFFFFF", whiteSpace: "nowrap" }}>Week of {weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
           <button onClick={() => { const d = new Date(weekStart); d.setDate(d.getDate() + 7); setWeekStart(d) }} style={{ background: "none", border: "none", color: "#CDC9C0", cursor: "pointer", fontSize: "16px", padding: "0 4px" }}>{"\u203A"}</button>
         </div>
         {schedule && (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 14px", backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "8px", border: `1px solid ${STATUS_COLOR[schedule.status]}40` }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 14px", backgroundColor: "rgba(255,255,255,0.04)", borderRadius: "8px", border: `1px solid ${STATUS_COLOR[schedule.status]}40` }}>
             <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: STATUS_COLOR[schedule.status] }} />
             <span style={{ fontSize: "11px", fontWeight: 700, color: STATUS_COLOR[schedule.status], textTransform: "uppercase", letterSpacing: "0.08em" }}>{STATUS_LABEL[schedule.status]}</span>
           </div>
@@ -219,7 +219,7 @@ export default function SchedulePage() {
       {view === "builder" && (
         <>
           {!schedule ? (
-            <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
+            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "16px" }}>calendar_month</span>
               <p style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 8px" }}>No schedule for this week</p>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Create a new schedule to start assigning shifts.</p>
@@ -228,32 +228,32 @@ export default function SchedulePage() {
           ) : loading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
               {[1,2,3,4].map(i => (
-                <div key={i} style={{ height: 60, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+                <div key={i} style={{ height: 60, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
               ))}
             </div>
           ) : (
             !isMobile ? (
-            <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", overflow: "auto" }}>
+            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", overflow: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
                 <thead>
                   <tr style={{ backgroundColor: "#0f1d24" }}>
-                    <th style={{ padding: "12px 16px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", textAlign: "left", width: "160px", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>Staff</th>
+                    <th style={{ padding: "12px 16px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", textAlign: "left", width: "160px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>Staff</th>
                     {weekDates.map((date, i) => {
                       const isToday = date.toDateString() === new Date().toDateString()
                       return (
-                        <th key={i} style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: isToday ? "#CDC9C0" : "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(205,201,192,0.08)", borderLeft: "1px solid rgba(205,201,192,0.06)" }}>
+                        <th key={i} style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: isToday ? "#CDC9C0" : "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
                           <div>{DAYS[date.getDay()]}</div>
                           <div style={{ fontSize: "11px", fontWeight: 800, color: isToday ? "#CDC9C0" : "#FFFFFF", marginTop: "2px" }}>{date.getDate()}</div>
                         </th>
                       )
                     })}
-                    <th style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(205,201,192,0.08)", borderLeft: "1px solid rgba(205,201,192,0.06)", width: "70px" }}>Total</th>
+                    <th style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", borderLeft: "1px solid rgba(255,255,255,0.04)", width: "70px" }}>Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {staff.map((m, ri) => (
                     <tr key={m.id} style={{ backgroundColor: ri % 2 === 0 ? "transparent" : "rgba(205,201,192,0.02)" }}>
-                      <td style={{ padding: "10px 16px", borderBottom: "1px solid rgba(205,201,192,0.06)", borderRight: "1px solid rgba(205,201,192,0.06)" }}>
+                      <td style={{ padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)", borderRight: "1px solid rgba(255,255,255,0.04)" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
                             {m.fullName.split(" ").map(n => n[0]).join("").slice(0, 2)}
@@ -268,7 +268,7 @@ export default function SchedulePage() {
                         const dk = fmtDate(date)
                         const sh = shifts[m.id]?.[dk]
                         return (
-                          <td key={dk} style={{ padding: "6px", borderBottom: "1px solid rgba(205,201,192,0.06)", borderLeft: "1px solid rgba(205,201,192,0.04)", textAlign: "center", verticalAlign: "middle" }}>
+                          <td key={dk} style={{ padding: "6px", borderBottom: "1px solid rgba(255,255,255,0.04)", borderLeft: "1px solid rgba(205,201,192,0.04)", textAlign: "center", verticalAlign: "middle" }}>
                             {canEdit ? (
                               sh?.isOff ? (
                                 <div style={{ display: "flex", flexDirection: "column", gap: "3px", alignItems: "center" }}>
@@ -304,7 +304,7 @@ export default function SchedulePage() {
                           </td>
                         )
                       })}
-                      <td style={{ padding: "6px 8px", borderBottom: "1px solid rgba(205,201,192,0.06)", borderLeft: "1px solid rgba(205,201,192,0.06)", textAlign: "center", verticalAlign: "middle" }}>
+                      <td style={{ padding: "6px 8px", borderBottom: "1px solid rgba(255,255,255,0.04)", borderLeft: "1px solid rgba(255,255,255,0.04)", textAlign: "center", verticalAlign: "middle" }}>
                         {(() => { const hrs = calcTotalHours(shifts[m.id]); return hrs > 0 ? (
                           <span style={{ display: "inline-block", padding: "3px 8px", borderRadius: "10px", backgroundColor: "rgba(205,201,192,0.1)", fontSize: "10px", fontWeight: 700, color: "#CDC9C0" }}>{hrs % 1 === 0 ? hrs : hrs.toFixed(1)} hrs</span>
                         ) : <span style={{ fontSize: "10px", color: "rgba(205,201,192,0.2)" }}>{"\u2014"}</span> })()}
@@ -319,7 +319,7 @@ export default function SchedulePage() {
               {staff.map(m => {
                 const hrs = calcTotalHours(shifts[m.id])
                 return (
-                  <div key={m.id} style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "16px" }}>
+                  <div key={m.id} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "16px" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
@@ -338,7 +338,7 @@ export default function SchedulePage() {
                         const sh = shifts[m.id]?.[dk]
                         const isToday = date.toDateString() === new Date().toDateString()
                         return (
-                          <div key={dk} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(205,201,192,0.06)" }}>
+                          <div key={dk} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                             <span style={{ fontSize: "11px", fontWeight: 700, color: isToday ? "#CDC9C0" : "rgba(205,201,192,0.5)", width: "36px", flexShrink: 0 }}>{DAYS[date.getDay()]}</span>
                             {canEdit ? (
                               sh?.isOff ? (
@@ -388,9 +388,9 @@ export default function SchedulePage() {
               <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "12px" }}>
                 Visual Overview
               </div>
-              <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", overflow: "hidden" }}>
                 {/* Day headers */}
-                <div style={{ display: "grid", gridTemplateColumns: "60px repeat(7, 1fr)", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "60px repeat(7, 1fr)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                   <div style={{ padding: "8px", fontSize: "9px", color: "rgba(205,201,192,0.3)" }} />
                   {weekDates.map((date, i) => {
                     const today = date.toDateString() === new Date().toDateString()
@@ -445,11 +445,11 @@ export default function SchedulePage() {
       {view === "list" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {schedules.length === 0 ? (
-            <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
+            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
               <p style={{ color: "#94A3B8" }}>No schedules found.</p>
             </div>
           ) : schedules.map(s => (
-            <div key={s.id} style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+            <div key={s.id} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: STATUS_COLOR[s.status], flexShrink: 0 }} />
                 <div>
@@ -479,7 +479,7 @@ export default function SchedulePage() {
       {/* Reject Modal */}
       {rejectModal && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
-          <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "12px", padding: "28px", width: "100%", maxWidth: "440px", margin: "20px" }}>
+          <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "28px", width: "100%", maxWidth: "440px", margin: "20px" }}>
             <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Reject Schedule</h3>
             <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 16px" }}>Provide a reason so the manager knows what to fix.</p>
             <textarea value={rejectNote} onChange={e => setRejectNote(e.target.value)} placeholder="e.g. Please add coverage for Saturday afternoon..." rows={3} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "7px", color: "#FFFFFF", fontSize: "13px", resize: "none", outline: "none", boxSizing: "border-box", marginBottom: "16px" }} />

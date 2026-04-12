@@ -9,7 +9,7 @@ type Complaint = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)",
+  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)",
   borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
 }
 
@@ -25,7 +25,7 @@ const btnSecondary: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)",
+  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "8px", color: "#FFFFFF", fontSize: "13px", outline: "none",
 }
 
@@ -70,7 +70,7 @@ export default function ComplaintsPage() {
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {[1,2,3].map(i => (
-          <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+          <div key={i} style={{ height: 80, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
         ))}
       </div>
     </div>
@@ -84,8 +84,8 @@ export default function ComplaintsPage() {
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
         {(["all", "new", "reviewed"] as const).map(s => (
           <button key={s} onClick={() => setFilter(s)} style={{
-            padding: "6px 14px", borderRadius: "6px", border: "1px solid rgba(205,201,192,0.15)",
-            backgroundColor: filter === s ? "rgba(205,201,192,0.12)" : "transparent",
+            padding: "6px 14px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.08)",
+            backgroundColor: filter === s ? "rgba(255,255,255,0.06)" : "transparent",
             color: filter === s ? "#CDC9C0" : "rgba(205,201,192,0.5)", cursor: "pointer",
             fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
           }}>

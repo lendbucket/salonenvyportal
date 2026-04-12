@@ -11,7 +11,8 @@ type Toast = { message: string; type: "success" | "error" } | null
 type CanvaDesign = { id: string; title: string; thumbnail?: { url: string }; created_at?: number; urls?: { edit_url?: string } }
 
 const ACC = "#606E74", ACC_B = "#7a8f96", ACC_DIM = "rgba(96,110,116,0.08)", ACC_BDR = "rgba(96,110,116,0.2)"
-const BORDER = "rgba(255,255,255,0.07)", BORDER2 = "rgba(255,255,255,0.12)", S1 = "rgba(255,255,255,0.03)", S2 = "rgba(255,255,255,0.05)"
+const BORDER = "rgba(255,255,255,0.06)", BORDER2 = "rgba(255,255,255,0.08)", S1 = "rgba(255,255,255,0.03)", S2 = "rgba(255,255,255,0.05)"
+const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
 const MUTED = "rgba(255,255,255,0.3)", MID = "rgba(255,255,255,0.6)", GREEN = "#10B981", AMBER = "#ffb347"
 const FB = "#1877F2", IG = "#bc1888", CANVA = "#00C4CC"
 const mono: React.CSSProperties = { fontFamily: "'Fira Code', 'Courier New', monospace" }

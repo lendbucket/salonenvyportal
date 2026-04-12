@@ -8,7 +8,8 @@ const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', -apple-
 
 const ACC = "#606E74"
 const ACC_BRIGHT = "#7a8f96"
-const BORDER2 = "rgba(255,255,255,0.12)"
+const BORDER2 = "rgba(255,255,255,0.08)"
+const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
 const MUTED = "rgba(255,255,255,0.3)"
 const MID = "rgba(255,255,255,0.6)"
 const GREEN = "#22c55e"

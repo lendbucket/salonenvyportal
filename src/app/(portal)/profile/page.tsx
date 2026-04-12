@@ -31,10 +31,11 @@ const disabledInputStyle: React.CSSProperties = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#1a2a32",
-  border: "1px solid rgba(205,201,192,0.1)",
+  backgroundColor: "#0d1117",
+  border: "1px solid rgba(255,255,255,0.06)",
   borderRadius: "10px",
   padding: "28px",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)",
 }
 
 export default function ProfilePage() {

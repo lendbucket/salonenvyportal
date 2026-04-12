@@ -103,11 +103,11 @@ export default function MySchedulePage() {
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : shifts.length === 0 ? (
-        <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
+        <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "16px" }}>event_busy</span>
           <p style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 8px" }}>No shifts scheduled</p>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>Your upcoming shifts will appear here once assigned.</p>
@@ -119,7 +119,7 @@ export default function MySchedulePage() {
             return (
               <div key={sh.id} style={{
                 backgroundColor: sh.isTimeOff ? "rgba(239,68,68,0.06)" : "#1a2a32",
-                border: `1px solid ${sh.isTimeOff ? "rgba(239,68,68,0.2)" : "rgba(205,201,192,0.12)"}`,
+                border: `1px solid ${sh.isTimeOff ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.06)"}`,
                 borderRadius: "12px",
                 padding: "16px 20px",
               }}>

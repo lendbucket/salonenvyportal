@@ -175,6 +175,8 @@ p, h1, h2, h3, h4, h5, h6, span, div {
   * {
     @apply border-border outline-ring/50;
     box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     @apply bg-background text-foreground;
@@ -198,16 +200,22 @@ p, h1, h2, h3, h4, h5, h6, span, div {
 /* Smooth scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(205,201,192,0.2);
-  border-radius: 4px;
+  background: rgba(96,110,116,0.3);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(205,201,192,0.4);
+  background: rgba(96,110,116,0.5);
+}
+
+::selection {
+  background: rgba(122,143,150,0.2);
+  color: #ffffff;
 }
 
 /* Page transition */

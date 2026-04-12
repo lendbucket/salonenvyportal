@@ -254,7 +254,7 @@ export default function ReynaAIPage() {
             <div style={{
               padding: "12px 16px",
               borderRadius: message.role === "user" ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
-              backgroundColor: message.role === "user" ? "rgba(205,201,192,0.12)" : "rgba(255,255,255,0.04)",
+              backgroundColor: message.role === "user" ? "rgba(96,110,116,0.15)" : "#0d1117",
               border: message.role === "user" ? "1px solid rgba(205,201,192,0.2)" : "1px solid rgba(255,255,255,0.06)",
               fontSize: "14px", lineHeight: 1.65, color: "rgba(255,255,255,0.88)",
             }}>

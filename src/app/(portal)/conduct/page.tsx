@@ -14,7 +14,7 @@ const SEVERITY_COLORS: Record<string, string> = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)",
+  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)",
   borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
 }
 
@@ -30,7 +30,7 @@ const btnSecondary: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)",
+  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "8px", color: "#FFFFFF", fontSize: "13px", outline: "none",
 }
 
@@ -100,7 +100,7 @@ export default function ConductPage() {
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {[1,2,3].map(i => (
-          <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+          <div key={i} style={{ height: 80, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
         ))}
       </div>
     </div>
@@ -135,7 +135,7 @@ export default function ConductPage() {
                 <span style={{
                   padding: "3px 10px", borderRadius: "6px", fontSize: "10px", fontWeight: 700,
                   textTransform: "uppercase",
-                  backgroundColor: "rgba(205,201,192,0.08)", color: "rgba(205,201,192,0.5)",
+                  backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.5)",
                 }}>{r.category}</span>
               </div>
             </div>

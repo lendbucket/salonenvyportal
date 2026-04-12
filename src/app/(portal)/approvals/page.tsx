@@ -68,14 +68,14 @@ export default function ApprovalsPage() {
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : pending.length === 0 ? (
         <div
           style={{
             backgroundColor: "#1a2a32",
-            border: "1px solid rgba(205,201,192,0.12)",
+            border: "1px solid rgba(255,255,255,0.06)",
             borderRadius: "12px",
             padding: "60px",
             textAlign: "center",
@@ -97,7 +97,7 @@ export default function ApprovalsPage() {
               key={user.id}
               style={{
                 backgroundColor: "#1a2a32",
-                border: "1px solid rgba(205,201,192,0.12)",
+                border: "1px solid rgba(255,255,255,0.06)",
                 borderRadius: "10px",
                 padding: "20px 24px",
                 display: "flex",

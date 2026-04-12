@@ -453,7 +453,7 @@ export default function AppointmentsPage() {
     const brand = parts[0]?.toUpperCase() || ""
     const info = CARD_BRANDS[brand]
     if (info) return <span style={{ fontSize: "9px", fontWeight: 700, padding: "2px 6px", borderRadius: "3px", backgroundColor: `${info.color}22`, color: info.color === "#1A1F71" ? "#4F8EF7" : info.color }}>{info.abbr} {parts.slice(1).join(" ")}</span>
-    return <span style={{ fontSize: "9px", fontWeight: 700, padding: "2px 6px", borderRadius: "3px", backgroundColor: "rgba(205,201,192,0.08)", color: "rgba(205,201,192,0.6)" }}>{method}</span>
+    return <span style={{ fontSize: "9px", fontWeight: 700, padding: "2px 6px", borderRadius: "3px", backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.6)" }}>{method}</span>
   }
 
   // Filter by stylist and sort by startTime
@@ -564,13 +564,13 @@ export default function AppointmentsPage() {
             }}>New Appointment</button>
             <button onClick={openBlockModal} style={{
               padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-              borderRadius: "6px", border: "1px solid rgba(205,201,192,0.15)", cursor: "pointer",
+              borderRadius: "6px", border: "1px solid rgba(255,255,255,0.08)", cursor: "pointer",
               backgroundColor: "transparent", color: "rgba(205,201,192,0.6)",
             }}>Block Time</button>
             <button onClick={() => setShowWaitlist(!showWaitlist)} style={{
               padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-              borderRadius: "6px", border: showWaitlist ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)",
-              backgroundColor: showWaitlist ? "rgba(205,201,192,0.12)" : "transparent",
+              borderRadius: "6px", border: showWaitlist ? "1px solid #CDC9C0" : "1px solid rgba(255,255,255,0.08)",
+              backgroundColor: showWaitlist ? "rgba(255,255,255,0.06)" : "transparent",
               color: showWaitlist ? "#CDC9C0" : "rgba(205,201,192,0.45)", cursor: "pointer",
             }}>Waitlist{waitlist.length > 0 ? ` (${waitlist.length})` : ""}</button>
           </>}
@@ -586,7 +586,7 @@ export default function AppointmentsPage() {
         }}>
           <button onClick={() => navigateDate(-1)} style={{
             width: "36px", height: "36px", borderRadius: "8px",
-            backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.12)",
+            backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.06)",
             color: "rgba(205,201,192,0.6)", cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
@@ -600,8 +600,8 @@ export default function AppointmentsPage() {
               onChange={(e) => setDate(e.target.value)}
               style={{
                 padding: "8px 12px",
-                backgroundColor: "#1a2a32",
-                border: "1px solid rgba(205,201,192,0.15)",
+                backgroundColor: "#0d1117",
+                border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "8px",
                 color: "#FFFFFF",
                 fontSize: "13px",
@@ -618,7 +618,7 @@ export default function AppointmentsPage() {
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 borderRadius: "6px",
-                border: "1px solid rgba(205,201,192,0.15)",
+                border: "1px solid rgba(255,255,255,0.08)",
                 backgroundColor: "transparent",
                 color: "#CDC9C0",
                 cursor: "pointer",
@@ -630,7 +630,7 @@ export default function AppointmentsPage() {
 
           <button onClick={() => navigateDate(1)} style={{
             width: "36px", height: "36px", borderRadius: "8px",
-            backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.12)",
+            backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.06)",
             color: "rgba(205,201,192,0.6)", cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
@@ -728,14 +728,14 @@ export default function AppointmentsPage() {
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : sorted.length === 0 ? (
         <div style={{
           textAlign: "center", padding: "60px 20px",
-          backgroundColor: "#1a2a32", borderRadius: "12px",
-          border: "1px solid rgba(205,201,192,0.08)",
+          backgroundColor: "#0d1117", borderRadius: "12px",
+          border: "1px solid rgba(255,255,255,0.06)",
         }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(205,201,192,0.2)" }}>event_busy</span>
           <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "14px", fontWeight: 600 }}>
@@ -800,7 +800,7 @@ export default function AppointmentsPage() {
                 </div>
 
                 {/* Grid + appointments */}
-                <div style={{ flex: 1, position: "relative", borderLeft: "1px solid rgba(205,201,192,0.08)" }}>
+                <div style={{ flex: 1, position: "relative", borderLeft: "1px solid rgba(255,255,255,0.06)" }}>
                   {/* Hour grid lines */}
                   {Array.from({ length: totalHours + 1 }, (_, i) => (
                     <div key={i} style={{ position: "absolute", top: `${i * HOUR_PX}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(205,201,192,0.06)" }} />
@@ -822,7 +822,7 @@ export default function AppointmentsPage() {
                   {dragApptId && dragGhostTime !== null && (
                     <div style={{
                       position: "absolute", top: `${dragGhostTime * (HOUR_PX / 60)}px`, left: "4px", right: "4px",
-                      height: "40px", backgroundColor: "rgba(205,201,192,0.08)", border: "2px dashed rgba(205,201,192,0.3)",
+                      height: "40px", backgroundColor: "rgba(255,255,255,0.06)", border: "2px dashed rgba(205,201,192,0.3)",
                       borderRadius: "6px", zIndex: 5, pointerEvents: "none",
                     }} />
                   )}
@@ -976,8 +976,8 @@ export default function AppointmentsPage() {
                     width: "100%",
                     textAlign: "left",
                     padding: "16px",
-                    backgroundColor: "#1a2a32",
-                    border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(205,201,192,0.08)",
+                    backgroundColor: "#0d1117",
+                    border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(255,255,255,0.06)",
                     borderLeft: `3px solid ${(appt.teamMemberId && stylistColorMap[appt.teamMemberId]) || (appt.isCheckedOut ? "rgba(16,185,129,0.3)" : statusStyle.border)}`,
                     borderRadius: "10px",
                     cursor: "pointer",
@@ -1079,7 +1079,7 @@ export default function AppointmentsPage() {
                     margin: "-6px 0 0 3px",
                     padding: "14px 16px",
                     backgroundColor: "rgba(26,42,50,0.7)",
-                    border: "1px solid rgba(205,201,192,0.08)",
+                    border: "1px solid rgba(255,255,255,0.06)",
                     borderTop: "none",
                     borderRadius: "0 0 10px 10px",
                     display: "flex",
@@ -1181,23 +1181,23 @@ export default function AppointmentsPage() {
 
       {/* Waitlist panel */}
       {showWaitlist && (
-        <div style={{ marginTop: "16px", backgroundColor: "#1a2a32", borderRadius: "12px", border: "1px solid rgba(205,201,192,0.08)", overflow: "hidden" }}>
-          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(205,201,192,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ marginTop: "16px", backgroundColor: "#0d1117", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>Waitlist — {location === "Corpus Christi" ? "CC" : "SA"}</span>
           </div>
           {/* Add form */}
-          <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(205,201,192,0.08)", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
             <div style={{ flex: 1, minWidth: "120px" }}>
               <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Name</div>
-              <input value={wlForm.customerName} onChange={e => setWlForm(p => ({ ...p, customerName: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+              <input value={wlForm.customerName} onChange={e => setWlForm(p => ({ ...p, customerName: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
             </div>
             <div style={{ flex: 1, minWidth: "120px" }}>
               <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Phone</div>
-              <input value={wlForm.customerPhone} onChange={e => setWlForm(p => ({ ...p, customerPhone: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+              <input value={wlForm.customerPhone} onChange={e => setWlForm(p => ({ ...p, customerPhone: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
             </div>
             <div style={{ flex: 1, minWidth: "100px" }}>
               <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Notes</div>
-              <input value={wlForm.notes} onChange={e => setWlForm(p => ({ ...p, notes: e.target.value }))} placeholder="Service, stylist..." style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+              <input value={wlForm.notes} onChange={e => setWlForm(p => ({ ...p, notes: e.target.value }))} placeholder="Service, stylist..." style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
             </div>
             <button onClick={addToWaitlist} disabled={wlSaving || !wlForm.customerName} style={{ padding: "7px 16px", backgroundColor: "#CDC9C0", color: "#0f1d24", border: "none", borderRadius: "6px", fontSize: "11px", fontWeight: 700, cursor: "pointer", opacity: !wlForm.customerName ? 0.5 : 1 }}>{wlSaving ? "..." : "Add"}</button>
           </div>
@@ -1232,7 +1232,7 @@ export default function AppointmentsPage() {
               {/* Stylist */}
               <div>
                 <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Stylist</div>
-                <select value={blockStylist} onChange={e => setBlockStylist(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                <select value={blockStylist} onChange={e => setBlockStylist(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                   <option value="">Select stylist...</option>
                   {getLocationStylists(location).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
@@ -1241,20 +1241,20 @@ export default function AppointmentsPage() {
               {/* Date */}
               <div>
                 <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Date</div>
-                <input type="date" value={blockDate} onChange={e => setBlockDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
+                <input type="date" value={blockDate} onChange={e => setBlockDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
               </div>
 
               {/* Start / End time */}
               <div style={{ display: "flex", gap: "10px" }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Start</div>
-                  <select value={blockStart} onChange={e => setBlockStart(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                  <select value={blockStart} onChange={e => setBlockStart(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                     {Array.from({ length: 53 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 21) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); return <option key={t} value={t}>{label}</option> }).filter(Boolean)}
                   </select>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>End</div>
-                  <select value={blockEnd} onChange={e => setBlockEnd(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                  <select value={blockEnd} onChange={e => setBlockEnd(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                     {Array.from({ length: 53 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 21) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); return <option key={t} value={t}>{label}</option> }).filter(Boolean)}
                   </select>
                 </div>
@@ -1263,7 +1263,7 @@ export default function AppointmentsPage() {
               {/* Reason */}
               <div>
                 <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Reason</div>
-                <select value={blockReason} onChange={e => setBlockReason(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                <select value={blockReason} onChange={e => setBlockReason(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                   {["Lunch", "Break", "Personal", "Training", "Other"].map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
@@ -1271,13 +1271,13 @@ export default function AppointmentsPage() {
               {/* Notes */}
               <div>
                 <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Notes (optional)</div>
-                <input value={blockNotes} onChange={e => setBlockNotes(e.target.value)} placeholder="Additional details..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                <input value={blockNotes} onChange={e => setBlockNotes(e.target.value)} placeholder="Additional details..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
               </div>
 
               {blockError && <div style={{ fontSize: "12px", color: "#EF4444" }}>{blockError}</div>}
 
               <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
-                <button onClick={() => setShowBlock(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Cancel</button>
+                <button onClick={() => setShowBlock(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Cancel</button>
                 <button onClick={submitBlock} disabled={blockSaving || !blockStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !blockStylist || blockSaving ? 0.5 : 1 }}>{blockSaving ? "Blocking..." : "Block Time"}</button>
               </div>
             </div>
@@ -1296,7 +1296,7 @@ export default function AppointmentsPage() {
             </div>
             {/* Step indicator */}
             <div style={{ display: "flex", gap: "4px", marginBottom: "20px" }}>
-              {[1,2,3,4].map(s => <div key={s} style={{ flex: 1, height: "3px", borderRadius: "2px", backgroundColor: bookStep >= s ? "#CDC9C0" : "rgba(205,201,192,0.15)" }} />)}
+              {[1,2,3,4].map(s => <div key={s} style={{ flex: 1, height: "3px", borderRadius: "2px", backgroundColor: bookStep >= s ? "#CDC9C0" : "rgba(255,255,255,0.08)" }} />)}
             </div>
 
             {/* Step 1 — Client */}
@@ -1304,23 +1304,23 @@ export default function AppointmentsPage() {
               <div>
                 <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 1 — Client</div>
                 {!newClient ? (<>
-                  <input value={clientSearch} onChange={e => searchClients(e.target.value)} placeholder="Search client by name, phone, or email..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", marginBottom: "8px", boxSizing: "border-box" }} />
+                  <input value={clientSearch} onChange={e => searchClients(e.target.value)} placeholder="Search client by name, phone, or email..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", marginBottom: "8px", boxSizing: "border-box" }} />
                   {clientSearching && <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.4)", padding: "8px 0" }}>Searching...</div>}
                   {clientResults.map(c => (
-                    <div key={c.id} onClick={() => { setBookClient({ id: c.id, name: `${c.givenName} ${c.familyName}`.trim() }); setBookStep(2) }} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: "rgba(205,201,192,0.04)", border: "1px solid rgba(205,201,192,0.08)" }}>
+                    <div key={c.id} onClick={() => { setBookClient({ id: c.id, name: `${c.givenName} ${c.familyName}`.trim() }); setBookStep(2) }} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: "rgba(205,201,192,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                       <div style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>{c.givenName} {c.familyName}</div>
                       <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)" }}>{c.phone}{c.email ? ` · ${c.email}` : ""}</div>
                     </div>
                   ))}
-                  <button onClick={() => setNewClient(true)} style={{ marginTop: "8px", padding: "8px 14px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "6px", color: "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", width: "100%" }}>New Client</button>
+                  <button onClick={() => setNewClient(true)} style={{ marginTop: "8px", padding: "8px 14px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", width: "100%" }}>New Client</button>
                 </>) : (<>
                   <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    <input value={newClientForm.givenName} onChange={e => setNewClientForm(p => ({ ...p, givenName: e.target.value }))} placeholder="First name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
-                    <input value={newClientForm.familyName} onChange={e => setNewClientForm(p => ({ ...p, familyName: e.target.value }))} placeholder="Last name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
-                    <input value={newClientForm.phone} onChange={e => setNewClientForm(p => ({ ...p, phone: e.target.value }))} placeholder="Phone" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
-                    <input value={newClientForm.email} onChange={e => setNewClientForm(p => ({ ...p, email: e.target.value }))} placeholder="Email (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.givenName} onChange={e => setNewClientForm(p => ({ ...p, givenName: e.target.value }))} placeholder="First name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.familyName} onChange={e => setNewClientForm(p => ({ ...p, familyName: e.target.value }))} placeholder="Last name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.phone} onChange={e => setNewClientForm(p => ({ ...p, phone: e.target.value }))} placeholder="Phone" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.email} onChange={e => setNewClientForm(p => ({ ...p, email: e.target.value }))} placeholder="Email (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
                     <div style={{ display: "flex", gap: "8px" }}>
-                      <button onClick={() => setNewClient(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                      <button onClick={() => setNewClient(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                       <button onClick={createNewClient} disabled={bookSaving || !newClientForm.givenName} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !newClientForm.givenName ? 0.5 : 1 }}>{bookSaving ? "Creating..." : "Create Client"}</button>
                     </div>
                   </div>
@@ -1336,7 +1336,7 @@ export default function AppointmentsPage() {
                   <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Stylist</div>
                   <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                     {getLocationStylists(location).map(s => (
-                      <button key={s.id} onClick={() => setBookStylist(s.id)} style={{ padding: "6px 12px", borderRadius: "6px", border: bookStylist === s.id ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)", backgroundColor: bookStylist === s.id ? "rgba(205,201,192,0.12)" : "transparent", color: bookStylist === s.id ? "#fff" : "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <button key={s.id} onClick={() => setBookStylist(s.id)} style={{ padding: "6px 12px", borderRadius: "6px", border: bookStylist === s.id ? "1px solid #CDC9C0" : "1px solid rgba(255,255,255,0.08)", backgroundColor: bookStylist === s.id ? "rgba(255,255,255,0.06)" : "transparent", color: bookStylist === s.id ? "#fff" : "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
                         <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: stylistColorMap[s.id] || "#666" }} />{s.name}
                       </button>
                     ))}
@@ -1345,17 +1345,17 @@ export default function AppointmentsPage() {
                 <div style={{ display: "flex", gap: "10px", marginBottom: "12px" }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Date</div>
-                    <input type="date" value={bookDate} onChange={e => setBookDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
+                    <input type="date" value={bookDate} onChange={e => setBookDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Time</div>
-                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                       {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ color: busy ? "#666" : "#fff" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
                     </select>
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => setBookStep(1)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(1)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={() => setBookStep(3)} disabled={!bookStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !bookStylist ? 0.5 : 1 }}>Next</button>
                 </div>
               </div>
@@ -1369,7 +1369,7 @@ export default function AppointmentsPage() {
                   {bookServices.length === 0 ? <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px", padding: "20px 0", textAlign: "center" }}>Loading services...</div> : bookServices.map((s: { id: string; name: string; price: number; durationMinutes: number; version?: number }) => {
                     const sel = bookSelectedSvcs.some(x => x.id === s.id)
                     return (
-                      <div key={s.id} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(205,201,192,0.08)" : "rgba(205,201,192,0.02)", border: sel ? "1px solid rgba(205,201,192,0.25)" : "1px solid rgba(205,201,192,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div key={s.id} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(255,255,255,0.06)" : "rgba(205,201,192,0.02)", border: sel ? "1px solid rgba(205,201,192,0.25)" : "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <div>
                           <div style={{ fontSize: "13px", fontWeight: sel ? 600 : 400, color: sel ? "#fff" : "rgba(205,201,192,0.7)" }}>{s.name}</div>
                           <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)" }}>{s.durationMinutes} min</div>
@@ -1381,7 +1381,7 @@ export default function AppointmentsPage() {
                 </div>
                 {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#CDC9C0", textAlign: "right", marginBottom: "12px", fontFamily: "monospace" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={() => setBookStep(4)} disabled={bookSelectedSvcs.length === 0} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSelectedSvcs.length === 0 ? 0.5 : 1 }}>Next</button>
                 </div>
               </div>
@@ -1411,10 +1411,10 @@ export default function AppointmentsPage() {
                     {TEAM_NAMES[bookStylist] || "Stylist"} already has an appointment at this time. Book anyway?
                   </div>
                 )}
-                <textarea value={bookNotes} onChange={e => setBookNotes(e.target.value)} placeholder="Notes (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", minHeight: "60px", resize: "vertical", marginBottom: "12px", boxSizing: "border-box" }} />
+                <textarea value={bookNotes} onChange={e => setBookNotes(e.target.value)} placeholder="Notes (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", minHeight: "60px", resize: "vertical", marginBottom: "12px", boxSizing: "border-box" }} />
                 {bookError && <div style={{ fontSize: "12px", color: "#EF4444", marginBottom: "10px" }}>{bookError}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={submitBooking} disabled={bookSaving} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSaving ? 0.5 : 1 }}>{bookSaving ? "Booking..." : bookOverlap ? "Book Anyway" : "Book Appointment"}</button>
                 </div>
               </div>
@@ -1445,11 +1445,11 @@ export default function AppointmentsPage() {
             <div style={{ display: "flex", gap: "10px", marginBottom: "16px", alignItems: "flex-end" }}>
               <div>
                 <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Start</div>
-                <input type="date" value={txCustomStart} onChange={e => setTxCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "13px", outline: "none", colorScheme: "dark" }} />
+                <input type="date" value={txCustomStart} onChange={e => setTxCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "13px", outline: "none", colorScheme: "dark" }} />
               </div>
               <div>
                 <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>End</div>
-                <input type="date" value={txCustomEnd} onChange={e => setTxCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#fff", fontSize: "13px", outline: "none", colorScheme: "dark" }} />
+                <input type="date" value={txCustomEnd} onChange={e => setTxCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "13px", outline: "none", colorScheme: "dark" }} />
               </div>
               <button onClick={fetchTransactions} style={{ padding: "8px 16px", backgroundColor: "#CDC9C0", color: "#0f1d24", border: "none", borderRadius: "8px", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Apply</button>
             </div>
@@ -1466,7 +1466,7 @@ export default function AppointmentsPage() {
                 { label: "# Transactions", value: String(txData.summary.count), icon: "receipt" },
                 { label: "Avg Ticket", value: fmtCurrency(txData.summary.avgTicket), icon: "analytics" },
               ].map(c => (
-                <div key={c.label} style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.08)", borderRadius: "12px", padding: "16px" }}>
+                <div key={c.label} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "16px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.35)" }}>{c.icon}</span>
                     <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)" }}>{c.label}</span>
@@ -1482,7 +1482,7 @@ export default function AppointmentsPage() {
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "12px" }}>
               <button onClick={exportTxCsv} style={{
                 padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-                borderRadius: "6px", border: "1px solid rgba(205,201,192,0.15)", backgroundColor: "transparent",
+                borderRadius: "6px", border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "transparent",
                 color: "rgba(205,201,192,0.6)", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>download</span>
@@ -1503,7 +1503,7 @@ export default function AppointmentsPage() {
 
           {/* Empty state */}
           {!txLoading && txData && txData.transactions.length === 0 && (
-            <div style={{ textAlign: "center", padding: "60px 20px", backgroundColor: "#1a2a32", borderRadius: "12px", border: "1px solid rgba(205,201,192,0.08)" }}>
+            <div style={{ textAlign: "center", padding: "60px 20px", backgroundColor: "#0d1117", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(205,201,192,0.2)" }}>receipt_long</span>
               <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "14px", fontWeight: 600 }}>No transactions found for this period.</div>
             </div>
@@ -1512,12 +1512,12 @@ export default function AppointmentsPage() {
           {/* Transaction table */}
           {!txLoading && txData && txData.transactions.length > 0 && (
             <>
-              <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(205,201,192,0.08)" }}>
+              <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "700px" }}>
                   <thead>
                     <tr style={{ backgroundColor: "rgba(205,201,192,0.04)" }}>
                       {["Time", "Client", "Stylist", "Services", "Payment", "Subtotal", "Tips", "Tax", "Total"].map(h => (
-                        <th key={h} style={{ padding: "10px 12px", textAlign: "left", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>{h}</th>
+                        <th key={h} style={{ padding: "10px 12px", textAlign: "left", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -1556,13 +1556,13 @@ export default function AppointmentsPage() {
                 <div style={{ display: "flex", gap: "6px" }}>
                   <button onClick={() => setTxPage(p => Math.max(0, p - 1))} disabled={txPage === 0} style={{
                     padding: "6px 12px", fontSize: "10px", fontWeight: 700, borderRadius: "6px",
-                    border: "1px solid rgba(205,201,192,0.15)", backgroundColor: "transparent",
+                    border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "transparent",
                     color: txPage === 0 ? "rgba(205,201,192,0.2)" : "rgba(205,201,192,0.6)",
                     cursor: txPage === 0 ? "default" : "pointer",
                   }}>Prev</button>
                   <button onClick={() => setTxPage(p => Math.min(txTotalPages - 1, p + 1))} disabled={txPage >= txTotalPages - 1} style={{
                     padding: "6px 12px", fontSize: "10px", fontWeight: 700, borderRadius: "6px",
-                    border: "1px solid rgba(205,201,192,0.15)", backgroundColor: "transparent",
+                    border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "transparent",
                     color: txPage >= txTotalPages - 1 ? "rgba(205,201,192,0.2)" : "rgba(205,201,192,0.6)",
                     cursor: txPage >= txTotalPages - 1 ? "default" : "pointer",
                   }}>Next</button>
@@ -1579,7 +1579,7 @@ export default function AppointmentsPage() {
           <div onClick={() => setHistoryClientId(null)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" }} />
           <div style={{
             position: "relative", width: isMobile ? "100%" : "420px", maxWidth: "100%",
-            background: "#0d1117", borderLeft: "1px solid rgba(205,201,192,0.12)",
+            background: "#0d1117", borderLeft: "1px solid rgba(255,255,255,0.06)",
             display: "flex", flexDirection: "column", overflow: "hidden",
           }}>
             {/* Close button */}
@@ -1598,7 +1598,7 @@ export default function AppointmentsPage() {
             ) : (
               <>
                 {/* Header */}
-                <div style={{ padding: "24px 20px 16px", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>
+                <div style={{ padding: "24px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                   <div style={{ fontSize: "20px", fontWeight: 800, color: "#fff", marginBottom: "6px" }}>{historyData.customer.name}</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "3px", marginBottom: "10px" }}>
                     {historyData.customer.phone && (
@@ -1627,7 +1627,7 @@ export default function AppointmentsPage() {
                     <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(16,185,129,0.12)", color: "#10B981", fontSize: "11px", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>
                       Total {fmtCurrency(historyData.stats.totalSpend)}
                     </span>
-                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(205,201,192,0.08)", color: "rgba(205,201,192,0.7)", fontSize: "11px", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>
+                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.7)", fontSize: "11px", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>
                       Avg {fmtCurrency(historyData.stats.avgTicket)}
                     </span>
                   </div>
@@ -1682,7 +1682,7 @@ export default function AppointmentsPage() {
                       {historyData.visits.length > historyLimit && (
                         <button onClick={() => setHistoryLimit(l => l + 20)} style={{
                           width: "100%", padding: "10px", marginTop: "8px",
-                          backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.12)",
+                          backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.06)",
                           borderRadius: "8px", color: "rgba(205,201,192,0.6)", fontSize: "12px", fontWeight: 600, cursor: "pointer",
                         }}>
                           Load more ({historyData.visits.length - historyLimit} remaining)

@@ -49,7 +49,7 @@ function getStatus(qty: number, threshold: number): { label: string; color: stri
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)",
+  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: "8px", color: "#FFFFFF", fontSize: "13px", outline: "none",
 }
 
@@ -264,8 +264,8 @@ export default function InventoryPage() {
   })
 
   const viewBtn = (active: boolean): React.CSSProperties => ({
-    padding: "6px 10px", borderRadius: "6px", border: "1px solid rgba(205,201,192,0.12)",
-    cursor: "pointer", backgroundColor: active ? "rgba(205,201,192,0.15)" : "transparent",
+    padding: "6px 10px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.06)",
+    cursor: "pointer", backgroundColor: active ? "rgba(255,255,255,0.08)" : "transparent",
     color: active ? "#CDC9C0" : "rgba(205,201,192,0.4)", fontSize: "11px", fontWeight: 600,
     display: "flex", alignItems: "center", gap: "4px",
   })
@@ -281,7 +281,7 @@ export default function InventoryPage() {
   // Stat card
   const statCard = (label: string, value: string | number, color: string) => (
     <div key={label} style={{
-      backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.08)", borderRadius: "10px",
+      backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px",
       padding: "14px 16px", flex: "1 1 0", minWidth: "100px",
     }}>
       <div style={{ fontSize: "10px", fontWeight: 600, color: "rgba(205,201,192,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "4px" }}>{label}</div>
@@ -298,8 +298,8 @@ export default function InventoryPage() {
     const sLeft = servicesLeft(item)
     return (
       <div key={item.id} style={{
-        backgroundColor: "#1a2a32",
-        border: `1px solid ${st.key === "out" ? "rgba(239,68,68,0.25)" : st.key === "low" ? "rgba(245,158,11,0.2)" : "rgba(205,201,192,0.12)"}`,
+        backgroundColor: "#0d1117",
+        border: `1px solid ${st.key === "out" ? "rgba(239,68,68,0.25)" : st.key === "low" ? "rgba(245,158,11,0.2)" : "rgba(255,255,255,0.06)"}`,
         borderRadius: "12px", padding: "16px 20px",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
@@ -320,7 +320,7 @@ export default function InventoryPage() {
 
         {/* Progress bar */}
         <div style={{ marginBottom: "10px" }}>
-          <div style={{ width: "100%", height: "4px", borderRadius: "2px", backgroundColor: "rgba(205,201,192,0.08)" }}>
+          <div style={{ width: "100%", height: "4px", borderRadius: "2px", backgroundColor: "rgba(255,255,255,0.06)" }}>
             <div style={{ width: `${pct}%`, height: "100%", borderRadius: "2px", backgroundColor: st.color, transition: "width 0.3s" }} />
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
@@ -364,10 +364,10 @@ export default function InventoryPage() {
 
   // ---- RENDER TABLE ----
   const renderTable = () => {
-    const thStyle: React.CSSProperties = { padding: "10px 12px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", textAlign: "left", borderBottom: "1px solid rgba(205,201,192,0.08)" }
+    const thStyle: React.CSSProperties = { padding: "10px 12px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }
     const tdStyle: React.CSSProperties = { padding: "10px 12px", fontSize: "13px", color: "#FFFFFF", borderBottom: "1px solid rgba(205,201,192,0.06)" }
     return (
-      <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(205,201,192,0.1)", backgroundColor: "#1a2a32" }}>
+      <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(205,201,192,0.1)", backgroundColor: "#0d1117" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
@@ -439,7 +439,7 @@ export default function InventoryPage() {
         {brandGroups.map(([brand, groupItems]) => {
           const collapsed = collapsedBrands.has(brand)
           return (
-            <div key={brand} style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "12px", overflow: "hidden" }}>
+            <div key={brand} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "12px", overflow: "hidden" }}>
               <button
                 onClick={() => {
                   setCollapsedBrands(prev => {
@@ -451,7 +451,7 @@ export default function InventoryPage() {
                 }}
                 style={{
                   width: "100%", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center",
-                  background: "none", border: "none", borderBottom: collapsed ? "none" : "1px solid rgba(205,201,192,0.08)",
+                  background: "none", border: "none", borderBottom: collapsed ? "none" : "1px solid rgba(255,255,255,0.06)",
                   cursor: "pointer", color: "#FFFFFF",
                 }}
               >
@@ -507,7 +507,7 @@ export default function InventoryPage() {
     if (!showModal) return null
     return (
       <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" }} onClick={() => setShowModal(false)}>
-        <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "540px", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+        <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "540px", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
           <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>{editingId ? "Edit Item" : "Add Item"}</h2>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
@@ -621,7 +621,7 @@ export default function InventoryPage() {
     if (!showReorder) return null
     return (
       <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" }} onClick={() => setShowReorder(false)}>
-        <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "540px", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+        <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "540px", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
             <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FFFFFF", margin: 0 }}>Reorder List ({reorderItems.length})</h2>
             <button onClick={copyReorderList} style={btnPrimary}>
@@ -637,7 +637,7 @@ export default function InventoryPage() {
               {reorderItems.map(item => {
                 const st = getStatus(item.quantityOnHand, item.reorderThreshold)
                 return (
-                  <div key={item.id} style={{ padding: "10px 14px", backgroundColor: "#1a2a32", borderRadius: "8px", border: `1px solid ${st.color}20` }}>
+                  <div key={item.id} style={{ padding: "10px 14px", backgroundColor: "#0d1117", borderRadius: "8px", border: `1px solid ${st.color}20` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
                         <span style={{ fontSize: "12px", fontWeight: 700, color: "#FFFFFF" }}>{item.brand} - {item.productName}</span>
@@ -708,7 +708,7 @@ export default function InventoryPage() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search brand, product, shade, SKU..."
-          style={{ width: "100%", padding: "10px 14px 10px 38px", boxSizing: "border-box", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", color: "#FFFFFF", fontSize: "13px", outline: "none" }}
+          style={{ width: "100%", padding: "10px 14px 10px 38px", boxSizing: "border-box", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", color: "#FFFFFF", fontSize: "13px", outline: "none" }}
         />
       </div>
 
@@ -756,7 +756,7 @@ export default function InventoryPage() {
       {loading ? (
         <p style={{ color: "#94A3B8", textAlign: "center", padding: "40px 0" }}>Loading inventory...</p>
       ) : filtered.length === 0 ? (
-        <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
+        <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "16px" }}>inventory_2</span>
           <p style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 8px" }}>No items found</p>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>Try adjusting your search or filters.</p>

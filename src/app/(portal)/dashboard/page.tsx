@@ -111,8 +111,8 @@ function generateAlerts(
 
   return alerts.map((alert, idx) => (
     <div key={idx} style={{
-      backgroundColor: "#1a2a32",
-      border: "1px solid rgba(205,201,192,0.08)",
+      backgroundColor: "#0d1117",
+      border: "1px solid rgba(255,255,255,0.06)",
       borderLeft: `3px solid ${alert.color}`,
       borderRadius: "0 8px 8px 0",
       padding: "14px 16px",
@@ -278,10 +278,10 @@ export default function DashboardPage() {
         <div style={{
           display: "inline-flex",
           gap: "2px",
-          backgroundColor: "#1a2a32",
+          backgroundColor: "#0d1117",
           padding: "3px",
           borderRadius: "8px",
-          border: "1px solid rgba(205,201,192,0.08)",
+          border: "1px solid rgba(255,255,255,0.06)",
         }}>
           {[
             { key: "today", label: "Today" },
@@ -316,10 +316,10 @@ export default function DashboardPage() {
         <div style={{
           display: "inline-flex",
           gap: "2px",
-          backgroundColor: "#1a2a32",
+          backgroundColor: "#0d1117",
           padding: "3px",
           borderRadius: "8px",
-          border: "1px solid rgba(205,201,192,0.08)",
+          border: "1px solid rgba(255,255,255,0.06)",
         }}>
         {(isOwner ? ["Both", "Corpus Christi", "San Antonio"] : [userLocation || "Both"]).map((loc) => (
           <button
@@ -362,7 +362,7 @@ export default function DashboardPage() {
       }}>
         {metrics.map((m) => (
           <div key={m.label} style={{
-            backgroundColor: "#1a2a32",
+            backgroundColor: "#0d1117",
             border: m.alert ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(205,201,192,0.1)",
             borderRadius: "10px",
             padding: "20px",
@@ -422,7 +422,7 @@ export default function DashboardPage() {
         {/* Cancellations */}
         <Link href="/cancellations" style={{ textDecoration: "none" }}>
           <div style={{
-            backgroundColor: "#1a2a32",
+            backgroundColor: "#0d1117",
             border: "1px solid rgba(205,201,192,0.1)",
             borderRadius: "10px",
             padding: "20px",
@@ -445,7 +445,7 @@ export default function DashboardPage() {
         {/* Top Stylist */}
         <Link href="/metrics" style={{ textDecoration: "none" }}>
           <div style={{
-            backgroundColor: "#1a2a32",
+            backgroundColor: "#0d1117",
             border: "1px solid rgba(205,201,192,0.1)",
             borderRadius: "10px",
             padding: "20px",
@@ -468,7 +468,7 @@ export default function DashboardPage() {
         {/* Retention */}
         <Link href="/retention" style={{ textDecoration: "none" }}>
           <div style={{
-            backgroundColor: "#1a2a32",
+            backgroundColor: "#0d1117",
             border: "1px solid rgba(205,201,192,0.1)",
             borderRadius: "10px",
             padding: "20px",
@@ -491,7 +491,7 @@ export default function DashboardPage() {
 
       {/* QUICK ACTIONS */}
       <div style={{
-        backgroundColor: "#1a2a32",
+        backgroundColor: "#0d1117",
         border: "1px solid rgba(205,201,192,0.1)",
         borderRadius: "10px",
         padding: "16px 20px",
@@ -562,7 +562,7 @@ export default function DashboardPage() {
       }}>
         {/* Recent Activity / Stylist Leaderboard */}
         <div style={{
-          backgroundColor: "#1a2a32",
+          backgroundColor: "#0d1117",
           border: "1px solid rgba(205,201,192,0.1)",
           borderRadius: "10px",
           padding: "24px",
@@ -587,8 +587,8 @@ export default function DashboardPage() {
                   gap: "12px",
                   padding: "10px 14px",
                   borderRadius: "8px",
-                  backgroundColor: i === 0 ? "rgba(205,201,192,0.06)" : "transparent",
-                  border: i === 0 ? "1px solid rgba(205,201,192,0.12)" : "1px solid transparent",
+                  backgroundColor: i === 0 ? "rgba(255,255,255,0.04)" : "transparent",
+                  border: i === 0 ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
                 }}>
                   <div style={{
                     width: "28px",
@@ -599,7 +599,7 @@ export default function DashboardPage() {
                     justifyContent: "center",
                     fontSize: "12px",
                     fontWeight: 800,
-                    backgroundColor: i === 0 ? "rgba(234,179,8,0.15)" : "rgba(205,201,192,0.06)",
+                    backgroundColor: i === 0 ? "rgba(234,179,8,0.15)" : "rgba(255,255,255,0.04)",
                     color: i === 0 ? "#EAB308" : "rgba(205,201,192,0.5)",
                     border: i === 0 ? "1px solid rgba(234,179,8,0.3)" : "1px solid rgba(205,201,192,0.1)",
                   }}>
@@ -659,7 +659,7 @@ export default function DashboardPage() {
           {generateAlerts(metricsData, cancellations, activePeriod)}
           <div style={{
             backgroundColor: "#0a151b",
-            border: "1px solid rgba(205,201,192,0.08)",
+            border: "1px solid rgba(255,255,255,0.06)",
             borderRadius: "8px",
             padding: "20px",
             textAlign: "center" as const,

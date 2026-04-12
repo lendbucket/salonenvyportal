@@ -31,7 +31,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
         height: "24px",
         borderRadius: "12px",
         border: "none",
-        backgroundColor: checked ? "#CDC9C0" : "rgba(205,201,192,0.15)",
+        backgroundColor: checked ? "#7a8f96" : "rgba(255,255,255,0.1)",
         position: "relative",
         cursor: "pointer",
         transition: "background-color 0.2s",
@@ -53,10 +53,11 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#1a2a32",
-  border: "1px solid rgba(205,201,192,0.1)",
+  backgroundColor: "#0d1117",
+  border: "1px solid rgba(255,255,255,0.06)",
   borderRadius: "10px",
   padding: "28px",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)",
 }
 
 export default function PreferencesPage() {
@@ -145,7 +146,7 @@ export default function PreferencesPage() {
               alignItems: "center",
               justifyContent: "space-between",
               padding: "14px 0",
-              borderBottom: "1px solid rgba(205,201,192,0.06)",
+              borderBottom: "1px solid rgba(255,255,255,0.04)",
             }}>
               <div>
                 <div style={{ fontSize: "14px", fontWeight: 600, color: "#FFFFFF", marginBottom: "3px" }}>

@@ -122,7 +122,7 @@ function BarChart({ data, color }: { data: Record<string, number>; color: string
           >
             {label}
           </div>
-          <div style={{ flex: 1, height: "18px", backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "4px", overflow: "hidden" }}>
+          <div style={{ flex: 1, height: "18px", backgroundColor: "rgba(255,255,255,0.04)", borderRadius: "4px", overflow: "hidden" }}>
             <div
               style={{
                 height: "100%",
@@ -168,9 +168,9 @@ function CustomerModal({
     >
       <div
         style={{
-          backgroundColor: "#1a2a32",
+          backgroundColor: "#0d1117",
           borderRadius: "12px",
-          border: "1px solid rgba(205,201,192,0.12)",
+          border: "1px solid rgba(255,255,255,0.06)",
           maxWidth: "480px",
           width: "100%",
           maxHeight: "80vh",
@@ -181,7 +181,7 @@ function CustomerModal({
         <div
           style={{
             padding: "20px",
-            borderBottom: "1px solid rgba(205,201,192,0.08)",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -300,7 +300,7 @@ function CustomerModal({
                 style={{
                   flex: 1,
                   padding: "10px",
-                  backgroundColor: "rgba(205,201,192,0.08)",
+                  backgroundColor: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "8px",
                   color: "#CDC9C0",
@@ -321,7 +321,7 @@ function CustomerModal({
                 style={{
                   flex: 1,
                   padding: "10px",
-                  backgroundColor: "rgba(205,201,192,0.08)",
+                  backgroundColor: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "8px",
                   color: "#CDC9C0",
@@ -391,9 +391,9 @@ export default function CancellationsPage() {
   }, [data, statusFilter, search])
 
   const cardStyle: React.CSSProperties = {
-    backgroundColor: "#1a2a32",
+    backgroundColor: "#0d1117",
     borderRadius: "10px",
-    border: "1px solid rgba(205,201,192,0.08)",
+    border: "1px solid rgba(255,255,255,0.06)",
     padding: "16px",
   }
 
@@ -404,7 +404,7 @@ export default function CancellationsPage() {
     fontWeight: 700,
     letterSpacing: "0.06em",
     cursor: "pointer",
-    border: "1px solid rgba(205,201,192,0.12)",
+    border: "1px solid rgba(255,255,255,0.06)",
     transition: "all 0.15s ease",
     textTransform: "uppercase",
   }
@@ -447,7 +447,7 @@ export default function CancellationsPage() {
               onClick={() => setPeriod(p.value)}
               style={{
                 ...pillBase,
-                backgroundColor: period === p.value ? "#CDC9C0" : "rgba(205,201,192,0.06)",
+                backgroundColor: period === p.value ? "#CDC9C0" : "rgba(255,255,255,0.04)",
                 color: period === p.value ? "#0f1d24" : "rgba(205,201,192,0.6)",
               }}
             >
@@ -455,7 +455,7 @@ export default function CancellationsPage() {
             </button>
           ))}
         </div>
-        <div style={{ width: "1px", height: "24px", backgroundColor: "rgba(205,201,192,0.12)" }} />
+        <div style={{ width: "1px", height: "24px", backgroundColor: "rgba(255,255,255,0.06)" }} />
         <div style={{ display: "flex", gap: "4px" }}>
           {LOCATIONS.map((l) => (
             <button
@@ -463,7 +463,7 @@ export default function CancellationsPage() {
               onClick={() => setLocation(l.value)}
               style={{
                 ...pillBase,
-                backgroundColor: location === l.value ? "#CDC9C0" : "rgba(205,201,192,0.06)",
+                backgroundColor: location === l.value ? "#CDC9C0" : "rgba(255,255,255,0.04)",
                 color: location === l.value ? "#0f1d24" : "rgba(205,201,192,0.6)",
               }}
             >
@@ -628,7 +628,7 @@ export default function CancellationsPage() {
                       fontWeight: 700,
                       padding: "1px 5px",
                       borderRadius: "8px",
-                      backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.2)" : "rgba(205,201,192,0.08)",
+                      backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.2)" : "rgba(255,255,255,0.06)",
                       color: statusFilter === sf.value ? "#fff" : "rgba(205,201,192,0.4)",
                     }}>
                       {count}
@@ -646,7 +646,7 @@ export default function CancellationsPage() {
                 marginLeft: "auto",
                 padding: "7px 12px",
                 borderRadius: "6px",
-                border: "1px solid rgba(205,201,192,0.12)",
+                border: "1px solid rgba(255,255,255,0.06)",
                 backgroundColor: "rgba(205,201,192,0.04)",
                 color: "#fff",
                 fontSize: "12px",
@@ -675,7 +675,7 @@ export default function CancellationsPage() {
                 <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginBottom: "6px" }}>
                   {c.customerName}
                   {(c.visitCount ?? c.totalPastVisits) > 1 && (
-                    <span style={{ marginLeft: "6px", padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(205,201,192,0.08)", color: "rgba(205,201,192,0.5)" }}>
+                    <span style={{ marginLeft: "6px", padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.5)" }}>
                       {c.visitCount ?? c.totalPastVisits} visits
                     </span>
                   )}
@@ -693,13 +693,13 @@ export default function CancellationsPage() {
                 <div style={{ display: "flex", gap: "6px" }} onClick={e => e.stopPropagation()}>
                   {c.customerPhone && (
                     <a href={`sms:${c.customerPhone}`} style={{
-                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(205,201,192,0.08)", border: "1px solid rgba(205,201,192,0.12)",
+                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)",
                       color: "#CDC9C0", textDecoration: "none", textAlign: "center", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
                     }}>SMS</a>
                   )}
                   {c.customerEmail && (
                     <a href={`mailto:${c.customerEmail}`} style={{
-                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(205,201,192,0.08)", border: "1px solid rgba(205,201,192,0.12)",
+                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)",
                       color: "#CDC9C0", textDecoration: "none", textAlign: "center", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
                     }}>Email</a>
                   )}
@@ -722,7 +722,7 @@ export default function CancellationsPage() {
               <thead>
                 <tr
                   style={{
-                    borderBottom: "1px solid rgba(205,201,192,0.08)",
+                    borderBottom: "1px solid rgba(255,255,255,0.06)",
                   }}
                 >
                   {["Status", "Client", "Phone", "Email", "Scheduled", "Stylist", "Location", "Visits", "Lost $", "Last Visit", "Actions"].map(
@@ -800,7 +800,7 @@ export default function CancellationsPage() {
                             borderRadius: "3px",
                             fontSize: "8px",
                             fontWeight: 700,
-                            backgroundColor: "rgba(205,201,192,0.08)",
+                            backgroundColor: "rgba(255,255,255,0.06)",
                             color: "rgba(205,201,192,0.5)",
                             letterSpacing: "0.06em",
                           }}
@@ -868,8 +868,8 @@ export default function CancellationsPage() {
                               width: "26px",
                               height: "26px",
                               borderRadius: "5px",
-                              backgroundColor: "rgba(205,201,192,0.08)",
-                              border: "1px solid rgba(205,201,192,0.12)",
+                              backgroundColor: "rgba(255,255,255,0.06)",
+                              border: "1px solid rgba(255,255,255,0.06)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -891,8 +891,8 @@ export default function CancellationsPage() {
                               width: "26px",
                               height: "26px",
                               borderRadius: "5px",
-                              backgroundColor: "rgba(205,201,192,0.08)",
-                              border: "1px solid rgba(205,201,192,0.12)",
+                              backgroundColor: "rgba(255,255,255,0.06)",
+                              border: "1px solid rgba(255,255,255,0.06)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
