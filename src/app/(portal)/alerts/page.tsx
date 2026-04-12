@@ -229,6 +229,7 @@ export default function AlertsPage() {
             return (
               <div key={a.id} style={{
                 backgroundColor: a.isRead ? "#0d1117" : "rgba(96,110,116,0.08)",
+                boxShadow: CARD_SHADOW,
                 border: `1px solid ${a.isRead ? "rgba(26,35,50,0.8)" : BORDER2}`,
                 borderLeft: `3px solid ${sevColor}`,
                 borderRadius: "0 12px 12px 0",

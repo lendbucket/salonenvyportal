@@ -265,10 +265,11 @@ export default function StaffPage() {
     return (
       <li
         key={m.id}
-        className="rounded-2xl border border-[#2a2a2a] bg-[#161616] p-5 transition hover:border-[#C9A84C]/25"
+        className="rounded-2xl border border-[#1a2332] bg-[#0d1117] p-5 transition hover:border-[#7a8f96]/25"
+        style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)" }}
       >
         <div className="flex items-start gap-3">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#2a2618] text-sm font-semibold text-[#C9A84C] ring-1 ring-[#C9A84C]/30">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#0d1117] text-sm font-semibold text-[#7a8f96] ring-1 ring-[#7a8f96]/30">
             {initials(m.fullName)}
           </div>
           <div className="min-w-0 flex-1">
@@ -276,7 +277,7 @@ export default function StaffPage() {
               <p
                 className="truncate font-medium"
                 style={{
-                  color: m.squareTeamMemberId ? "#CDC9C0" : undefined,
+                  color: m.squareTeamMemberId ? "#7a8f96" : undefined,
                   textDecoration: m.squareTeamMemberId ? "underline" : undefined,
                   cursor: m.squareTeamMemberId ? "pointer" : undefined,
                 }}
@@ -296,7 +297,7 @@ export default function StaffPage() {
               )}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-1.5">
-              <span className="rounded-full bg-[#C9A84C]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C9A84C] ring-1 ring-[#C9A84C]/20">
+              <span className="rounded-full bg-[#7a8f96]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#7a8f96] ring-1 ring-[#7a8f96]/20">
                 {m.position}
               </span>
               <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${tb.cls}`}>
@@ -314,7 +315,7 @@ export default function StaffPage() {
             {m.email && (
               <Link
                 href={`mailto:${m.email}`}
-                className="mt-1.5 block truncate text-xs text-[#C9A84C]/80 hover:underline"
+                className="mt-1.5 block truncate text-xs text-[#7a8f96]/80 hover:underline"
               >
                 {m.email}
               </Link>
@@ -347,7 +348,7 @@ export default function StaffPage() {
                   type="button"
                   onClick={() => verifyTdlr(m)}
                   disabled={verifyingTdlr === m.id}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#C9A84C]/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#C9A84C] transition hover:bg-[#C9A84C]/30 disabled:opacity-50"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/30 disabled:opacity-50"
                 >
                   <ShieldCheck className="size-3" />
                   {verifyingTdlr === m.id ? "Verifying..." : "Verify License"}
@@ -357,7 +358,7 @@ export default function StaffPage() {
                 <button
                   type="button"
                   onClick={() => setEnrollTarget(m)}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#CDC9C0]/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#CDC9C0] transition hover:bg-[#CDC9C0]/25"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/25"
                 >
                   <Send className="size-3" />
                   Send Enrollment
@@ -378,7 +379,7 @@ export default function StaffPage() {
         <button
           type="button"
           onClick={() => setShowInviteModal(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#C9A84C] px-4 py-2.5 text-sm font-semibold text-[#0d0d0d] hover:bg-[#b89642]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#7a8f96] px-4 py-2.5 text-sm font-semibold text-[#06080d] hover:bg-[#606E74]"
         >
           <Plus className="size-4" />
           Invite Staff
@@ -405,8 +406,8 @@ export default function StaffPage() {
               onClick={() => setLocationTab("all")}
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
                 locationTab === "all"
-                  ? "bg-[#C9A84C] text-[#0d0d0d]"
-                  : "bg-[#1f1f1f] text-neutral-400 hover:bg-[#2a2a2a]"
+                  ? "bg-[#7a8f96] text-[#06080d]"
+                  : "bg-[#0d1117] text-neutral-400 hover:bg-[#1a2332]"
               }`}
             >
               All
@@ -418,8 +419,8 @@ export default function StaffPage() {
                 onClick={() => setLocationTab(loc.id)}
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
                   locationTab === loc.id
-                    ? "bg-[#C9A84C] text-[#0d0d0d]"
-                    : "bg-[#1f1f1f] text-neutral-400 hover:bg-[#2a2a2a]"
+                    ? "bg-[#7a8f96] text-[#06080d]"
+                    : "bg-[#0d1117] text-neutral-400 hover:bg-[#1a2332]"
                 }`}
               >
                 {loc.name}
@@ -437,8 +438,8 @@ export default function StaffPage() {
               onClick={() => setRoleFilter(r)}
               className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition ${
                 roleFilter === r
-                  ? "bg-[#CDC9C0] text-[#0d0d0d]"
-                  : "bg-[#1f1f1f] text-neutral-400 hover:bg-[#2a2a2a]"
+                  ? "bg-[#7a8f96] text-[#06080d]"
+                  : "bg-[#0d1117] text-neutral-400 hover:bg-[#1a2332]"
               }`}
             >
               {r === "all" ? "All Roles" : r}
@@ -453,7 +454,7 @@ export default function StaffPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name or email..."
-            className="w-full rounded-xl border border-[#2a2a2a] bg-[#161616] py-2 pl-9 pr-3 text-sm text-neutral-200 placeholder-neutral-600 outline-none focus:border-[#C9A84C]/40"
+            className="w-full rounded-xl border border-[#1a2332] bg-[#0d1117] py-2 pl-9 pr-3 text-sm text-neutral-200 placeholder-neutral-600 outline-none focus:border-[#7a8f96]/40"
           />
         </div>
       </div>
@@ -463,7 +464,7 @@ export default function StaffPage() {
       {loading ? (
         <p className="mt-8 text-sm text-neutral-500">Loading team...</p>
       ) : filtered.length === 0 ? (
-        <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-[#2a2a2a] bg-[#161616] px-6 py-16 text-center">
+        <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-[#1a2332] bg-[#0d1117] px-6 py-16 text-center">
           <Users className="size-12 text-neutral-600" />
           <p className="mt-4 text-neutral-400">No staff found for this filter.</p>
         </div>
@@ -490,7 +491,7 @@ export default function StaffPage() {
       {/* ---- Invite Staff Modal ---- */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-[#2a2a2a] bg-[#161616] p-6">
+          <div className="w-full max-w-md rounded-2xl border border-[#1a2332] bg-[#0d1117] p-6" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)" }}>
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-bold text-neutral-100">Invite Staff Member</h2>
               <button type="button" onClick={() => setShowInviteModal(false)}>
@@ -506,7 +507,7 @@ export default function StaffPage() {
                   value={inviteForm.fullName}
                   onChange={(e) => setInviteForm({ ...inviteForm, fullName: e.target.value })}
                   placeholder="Jane Doe"
-                  className="w-full rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#C9A84C]/40"
+                  className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#7a8f96]/40"
                 />
               </div>
               <div>
@@ -518,7 +519,7 @@ export default function StaffPage() {
                   value={inviteForm.email}
                   onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
                   placeholder="jane@example.com"
-                  className="w-full rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#C9A84C]/40"
+                  className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#7a8f96]/40"
                 />
               </div>
               <div>
@@ -530,7 +531,7 @@ export default function StaffPage() {
                   value={inviteForm.phone}
                   onChange={(e) => setInviteForm({ ...inviteForm, phone: e.target.value })}
                   placeholder="(xxx) xxx-xxxx"
-                  className="w-full rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#C9A84C]/40"
+                  className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#7a8f96]/40"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -541,7 +542,7 @@ export default function StaffPage() {
                   <select
                     value={inviteForm.role}
                     onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
-                    className="w-full rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-2.5 text-sm text-neutral-100 outline-none"
+                    className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none"
                   >
                     <option value="stylist">Stylist</option>
                     <option value="manager">Manager</option>
@@ -554,7 +555,7 @@ export default function StaffPage() {
                   <select
                     value={inviteForm.locationId}
                     onChange={(e) => setInviteForm({ ...inviteForm, locationId: e.target.value })}
-                    className="w-full rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-2.5 text-sm text-neutral-100 outline-none"
+                    className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none"
                   >
                     {locations.map((loc) => (
                       <option key={loc.id} value={loc.id}>
@@ -569,7 +570,7 @@ export default function StaffPage() {
                   type="checkbox"
                   checked={inviteForm.sendOnboarding}
                   onChange={(e) => setInviteForm({ ...inviteForm, sendOnboarding: e.target.checked })}
-                  className="size-4 accent-[#C9A84C]"
+                  className="size-4 accent-[#7a8f96]"
                 />
                 <span className="text-sm text-neutral-300">Send onboarding enrollment link</span>
               </label>
@@ -578,7 +579,7 @@ export default function StaffPage() {
               <button
                 type="button"
                 onClick={() => setShowInviteModal(false)}
-                className="flex-1 rounded-xl border border-[#2a2a2a] py-2.5 text-sm font-medium text-neutral-400 hover:bg-[#1f1f1f]"
+                className="flex-1 rounded-xl border border-[#1a2332] py-2.5 text-sm font-medium text-neutral-400 hover:bg-[#0d1117]"
               >
                 Cancel
               </button>
@@ -586,7 +587,7 @@ export default function StaffPage() {
                 type="button"
                 onClick={handleInvite}
                 disabled={inviteSending || !inviteForm.fullName || !inviteForm.email || !inviteForm.locationId}
-                className="flex-[2] rounded-xl bg-[#C9A84C] py-2.5 text-sm font-bold text-[#0d0d0d] hover:bg-[#b89642] disabled:opacity-50"
+                className="flex-[2] rounded-xl bg-[#7a8f96] py-2.5 text-sm font-bold text-[#06080d] hover:bg-[#606E74] disabled:opacity-50"
               >
                 {inviteSending ? "Sending..." : "Send Invitation"}
               </button>
@@ -598,7 +599,7 @@ export default function StaffPage() {
       {/* ---- Send Enrollment Modal ---- */}
       {enrollTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-sm rounded-2xl border border-[#2a2a2a] bg-[#161616] p-6">
+          <div className="w-full max-w-sm rounded-2xl border border-[#1a2332] bg-[#0d1117] p-6" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)" }}>
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-bold text-neutral-100">Send Enrollment</h2>
               <button type="button" onClick={() => setEnrollTarget(null)}>
@@ -617,7 +618,7 @@ export default function StaffPage() {
               <button
                 type="button"
                 onClick={() => setEnrollTarget(null)}
-                className="flex-1 rounded-xl border border-[#2a2a2a] py-2.5 text-sm font-medium text-neutral-400 hover:bg-[#1f1f1f]"
+                className="flex-1 rounded-xl border border-[#1a2332] py-2.5 text-sm font-medium text-neutral-400 hover:bg-[#0d1117]"
               >
                 Cancel
               </button>
@@ -625,7 +626,7 @@ export default function StaffPage() {
                 type="button"
                 onClick={handleSendEnrollment}
                 disabled={enrollSending}
-                className="flex-[2] rounded-xl bg-[#C9A84C] py-2.5 text-sm font-bold text-[#0d0d0d] hover:bg-[#b89642] disabled:opacity-50"
+                className="flex-[2] rounded-xl bg-[#7a8f96] py-2.5 text-sm font-bold text-[#06080d] hover:bg-[#606E74] disabled:opacity-50"
               >
                 {enrollSending ? "Sending..." : "Send Enrollment Link"}
               </button>

@@ -165,7 +165,7 @@ export default function AuditLogPage() {
 
       {/* Filters */}
       {showFilters && (
-        <div style={{ backgroundColor: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>
+        <div style={{ backgroundColor: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "16px", marginBottom: "16px", boxShadow: CARD_SHADOW }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px", marginBottom: "12px" }}>
             <div>
               <label style={{ ...mono, display: "block", fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "6px" }}>Action</label>
@@ -234,7 +234,7 @@ export default function AuditLogPage() {
 
       {/* Log entries */}
       {!loading && !error && logs.length > 0 && (
-        <div style={{ backgroundColor: "#0d1117", border: `1px solid rgba(26,35,50,0.8)`, borderRadius: "12px", overflow: "hidden" }}>
+        <div style={{ backgroundColor: "#0d1117", border: `1px solid rgba(26,35,50,0.8)`, borderRadius: "12px", overflow: "hidden", boxShadow: CARD_SHADOW }}>
           {logs.map((log, i) => {
             const ac = getActionColor(log.action)
             const hasMeta = log.metadata && Object.keys(log.metadata).length > 0

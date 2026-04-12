@@ -117,7 +117,7 @@ export default function PayrollPage() {
         </div>
 
         {/* Period nav */}
-        <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "20px 24px", marginBottom: "20px" }}>
+        <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "20px 24px", marginBottom: "20px", boxShadow: CARD_SHADOW }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
             <button onClick={() => setOffset(o => o + 1)} style={{ width: "36px", height: "36px", borderRadius: "8px", background: S2, border: `1px solid ${BORDER2}`, color: MID, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px" }}>&#8592;</button>
             <div style={{ textAlign: "center", flex: 1 }}>
@@ -146,7 +146,7 @@ export default function PayrollPage() {
             { label: "TOTAL PAYOUT", val: data ? `$${totalPayout.toFixed(2)}` : "\u2014", accent: ACC_B },
             { label: "SERVICES", val: data ? String(data.totalServices) : "\u2014", accent: BLUE },
           ].map(k => (
-            <div key={k.label} style={{ background: S1, border: `1px solid ${BORDER2}`, borderLeft: `3px solid ${k.accent}`, borderRadius: "0 10px 10px 0", padding: "18px 20px" }}>
+            <div key={k.label} style={{ background: S1, border: `1px solid ${BORDER2}`, borderLeft: `3px solid ${k.accent}`, borderRadius: "0 10px 10px 0", padding: "18px 20px", boxShadow: CARD_SHADOW }}>
               {loading ? <div style={{ height: "28px", background: S2, borderRadius: "4px", marginBottom: "8px", animation: "pulse 1.5s infinite" }} /> : <div style={{ ...mono, fontSize: "26px", fontWeight: 500, marginBottom: "6px" }}>{k.val}</div>}
               <div style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.12em", color: MUTED }}>{k.label}</div>
             </div>
@@ -155,7 +155,7 @@ export default function PayrollPage() {
 
         {/* Main content */}
         {loading ? (
-          <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "24px" }}>
+          <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "24px", boxShadow: CARD_SHADOW }}>
             {[1,2,3,4,5].map(i => <div key={i} style={{ height: "44px", background: S2, borderRadius: "6px", marginBottom: "8px", animation: "pulse 1.5s infinite", opacity: 1 - i * 0.15 }} />)}
           </div>
         ) : !data ? (
@@ -168,7 +168,7 @@ export default function PayrollPage() {
             </button>
           </div>
         ) : (
-          <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", overflow: "hidden" }}>
+          <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", overflow: "hidden", boxShadow: CARD_SHADOW }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: `1px solid ${BORDER}` }}>
               <span style={{ fontSize: "14px", fontWeight: 500 }}>Stylist Breakdown</span>
               <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>

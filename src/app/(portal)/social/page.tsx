@@ -17,7 +17,7 @@ const MUTED = "rgba(255,255,255,0.3)", MID = "rgba(255,255,255,0.6)", GREEN = "#
 const FB = "#1877F2", IG = "#bc1888", CANVA = "#00C4CC"
 const mono: React.CSSProperties = { fontFamily: "'Fira Code', 'Courier New', monospace" }
 const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif" }
-const cs: React.CSSProperties = { backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "14px", padding: "20px" }
+const cs: React.CSSProperties = { backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "14px", padding: "20px", boxShadow: CARD_SHADOW }
 const inp: React.CSSProperties = { width: "100%", padding: "10px 14px", borderRadius: "8px", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER2}`, color: "#fff", fontSize: "16px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
 const lblS: React.CSSProperties = { ...mono, display: "block", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: MUTED, marginBottom: "8px" }
 
