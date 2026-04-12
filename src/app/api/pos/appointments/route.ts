@@ -134,74 +134,79 @@ export async function GET(request: NextRequest) {
     // Load shared catalog cache for service names
     const sharedCatalog = getFullCache();
 
-    // Fetch customer details and service info
-    // Range queries (week/month views) need higher limit than single-day
-    const isRangeQuery = !!(startDateParam && endDateParam)
-    const maxResults = isRangeQuery ? 200 : 30
-    const appointments = await Promise.all(
-      filtered.slice(0, maxResults).map(async (booking) => {
-        let customerName = "Walk-in";
-        let customerPhone = "";
-        let customerEmail = "";
+    const isRangeQuery = !!(startDateParam && endDateParam);
+    const isBrief = request.nextUrl.searchParams.get("brief") === "true";
+    const maxResults = isRangeQuery ? 200 : 30;
+    const bookingsToEnrich = filtered.slice(0, maxResults);
 
-        if (booking.customerId) {
-          try {
-            const custRes = await square.customers.get({ customerId: booking.customerId });
-            if (custRes.customer) {
-              const c = custRes.customer;
-              customerName = [c.givenName, c.familyName].filter(Boolean).join(" ") || "Client";
-              customerPhone = c.phoneNumber || "";
-              customerEmail = c.emailAddress || "";
-            }
-          } catch {
-            // Customer lookup failed
+    console.log("[appointments route]", { isRangeQuery, isBrief, totalFiltered: filtered.length, enriching: bookingsToEnrich.length });
+
+    // Batch-fetch customer names (much faster than per-booking lookups)
+    const customerCache: Record<string, { name: string; phone: string; email: string }> = {};
+    const uniqueCustomerIds = [...new Set(bookingsToEnrich.map(b => b.customerId).filter(Boolean))] as string[];
+    const BATCH_SIZE = 10;
+    for (let i = 0; i < uniqueCustomerIds.length; i += BATCH_SIZE) {
+      const batch = uniqueCustomerIds.slice(i, i + BATCH_SIZE);
+      await Promise.all(batch.map(async (cid) => {
+        try {
+          const custRes = await square.customers.get({ customerId: cid });
+          if (custRes.customer) {
+            const c = custRes.customer;
+            customerCache[cid] = {
+              name: [c.givenName, c.familyName].filter(Boolean).join(" ") || "Client",
+              phone: c.phoneNumber || "",
+              email: c.emailAddress || "",
+            };
           }
+        } catch { /* skip */ }
+      }));
+    }
+
+    // Build appointments from bookings + cached customer data + catalog
+    const appointments = bookingsToEnrich.map((booking) => {
+      const cust = booking.customerId ? customerCache[booking.customerId] : null;
+      const segments = booking.appointmentSegments || [];
+      const services: { serviceName: string; price: number; durationMinutes: number; serviceVariationId?: string }[] = [];
+
+      for (const seg of segments) {
+        const varId = seg.serviceVariationId;
+        const dur = seg.durationMinutes ?? 0;
+        if (varId && sharedCatalog[varId]) {
+          const cached = sharedCatalog[varId];
+          services.push({ serviceName: cached.name, price: cached.price, durationMinutes: dur || cached.durationMinutes, serviceVariationId: varId });
+        } else {
+          services.push({ serviceName: "Service", price: 0, durationMinutes: dur, serviceVariationId: varId || "" });
         }
+      }
 
-        // Build services array from appointment segments
-        const segments = booking.appointmentSegments || [];
-        const services: { serviceName: string; price: number; durationMinutes: number; serviceVariationId?: string }[] = [];
+      const totalDurationMin = services.reduce((sum, s) => sum + s.durationMinutes, 0);
+      let endTime: string | null = null;
+      if (booking.startAt && totalDurationMin > 0) {
+        endTime = new Date(new Date(booking.startAt).getTime() + totalDurationMin * 60000).toISOString();
+      }
 
-        for (const seg of segments) {
-          const varId = seg.serviceVariationId;
-          const dur = seg.durationMinutes ?? 0;
+      return {
+        id: booking.id,
+        customerId: booking.customerId || null,
+        customerName: cust?.name || (booking.customerId ? "Client" : "Walk-in"),
+        customerPhone: cust?.phone || "",
+        customerEmail: cust?.email || "",
+        startTime: booking.startAt,
+        endTime,
+        teamMemberId: segments[0]?.teamMemberId || null,
+        status: booking.status,
+        services,
+        totalPrice: services.reduce((sum, s) => sum + s.price, 0),
+        totalDurationMinutes: totalDurationMin,
+        note: booking.customerNote || null,
+      };
+    });
 
-          if (varId && sharedCatalog[varId]) {
-            const cached = sharedCatalog[varId];
-            services.push({ serviceName: cached.name, price: cached.price, durationMinutes: dur || cached.durationMinutes, serviceVariationId: varId });
-          } else {
-            services.push({ serviceName: "Service", price: 0, durationMinutes: dur, serviceVariationId: varId || "" });
-          }
-        }
-
-        // Calculate endTime from startTime + total segment durations
-        const totalDurationMin = services.reduce((sum, s) => sum + s.durationMinutes, 0);
-        let endTime: string | null = null;
-        if (booking.startAt && totalDurationMin > 0) {
-          const start = new Date(booking.startAt);
-          endTime = new Date(start.getTime() + totalDurationMin * 60000).toISOString();
-        }
-
-        // Calculate totalPrice from service prices
-        const totalPrice = services.reduce((sum, s) => sum + s.price, 0);
-
-        return {
-          id: booking.id,
-          customerId: booking.customerId || null,
-          customerName,
-          customerPhone,
-          customerEmail,
-          startTime: booking.startAt,
-          endTime,
-          teamMemberId: segments[0]?.teamMemberId || null,
-          status: booking.status,
-          services,
-          totalPrice,
-          totalDurationMinutes: totalDurationMin,
-          note: booking.customerNote || null,
-        };
-      })
-    );
+    // For brief/range queries (month view), skip checkout detection — return immediately
+    if (isBrief) {
+      console.log("[appointments route] brief mode — returning", appointments.length, "appointments without checkout detection");
+      return NextResponse.json({ appointments });
+    }
 
     // Check for completed orders — fetch from BOTH locations always
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

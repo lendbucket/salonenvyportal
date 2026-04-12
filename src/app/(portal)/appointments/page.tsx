@@ -169,6 +169,8 @@ export default function AppointmentsPage() {
   }, [viewMode, loading])
 
   const fetchAppointments = useCallback(async () => {
+    // Month view has its own dedicated fetch — skip here to prevent double-fetch
+    if (viewMode === "month") { setLoading(false); return }
     setLoading(true)
     setFetchError(null)
     try {
@@ -184,16 +186,6 @@ export default function AppointmentsPage() {
         weekEnd.setDate(weekStart.getDate() + 6)
         params.set("startDate", formatDateStr(weekStart))
         params.set("endDate", formatDateStr(weekEnd))
-      } else if (viewMode === "month") {
-        const d = new Date(date + "T12:00:00")
-        const monthStart = new Date(d.getFullYear(), d.getMonth(), 1)
-        const calStart = new Date(monthStart)
-        calStart.setDate(1 - monthStart.getDay())
-        const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0)
-        const calEnd = new Date(monthEnd)
-        calEnd.setDate(monthEnd.getDate() + (6 - monthEnd.getDay()))
-        params.set("startDate", formatDateStr(calStart))
-        params.set("endDate", formatDateStr(calEnd))
       } else {
         params.set("date", date)
       }
@@ -217,24 +209,32 @@ export default function AppointmentsPage() {
     const d = new Date(date + "T12:00:00")
     const monthStart = new Date(d.getFullYear(), d.getMonth(), 1)
     const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0)
-    // Extend to cover calendar grid overflow days
     const calStart = new Date(monthStart)
     calStart.setDate(1 - monthStart.getDay())
     const calEnd = new Date(monthEnd)
     calEnd.setDate(monthEnd.getDate() + (6 - monthEnd.getDay()))
+
+    const startDateStr = formatDateStr(calStart)
+    const endDateStr = formatDateStr(calEnd)
 
     const fetchMonth = async () => {
       setLoadingMonth(true)
       try {
         const params = new URLSearchParams()
         params.set("all", "true")
+        params.set("startDate", startDateStr)
+        params.set("endDate", endDateStr)
+        params.set("brief", "true") // skip checkout detection for speed
         if (isOwner && location) params.set("location", location)
-        params.set("startDate", formatDateStr(calStart))
-        params.set("endDate", formatDateStr(calEnd))
-        const res = await fetch(`/api/pos/appointments?${params}`)
+        const url = `/api/pos/appointments?${params}`
+        console.log("[Month fetch]", url)
+        const res = await fetch(url)
         const data = await res.json()
-        setMonthAppointments(data.appointments || [])
-      } catch {
+        const appts = Array.isArray(data) ? data : (data.appointments || data.bookings || [])
+        console.log("[Month fetch] received:", appts.length, "appointments")
+        setMonthAppointments(appts)
+      } catch (err) {
+        console.error("[Month fetch] error:", err)
         setMonthAppointments([])
       } finally {
         setLoadingMonth(false)
