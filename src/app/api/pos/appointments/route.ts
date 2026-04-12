@@ -135,8 +135,11 @@ export async function GET(request: NextRequest) {
     const sharedCatalog = getFullCache();
 
     // Fetch customer details and service info
+    // Range queries (week/month views) need higher limit than single-day
+    const isRangeQuery = !!(startDateParam && endDateParam)
+    const maxResults = isRangeQuery ? 200 : 30
     const appointments = await Promise.all(
-      filtered.slice(0, 30).map(async (booking) => {
+      filtered.slice(0, maxResults).map(async (booking) => {
         let customerName = "Walk-in";
         let customerPhone = "";
         let customerEmail = "";

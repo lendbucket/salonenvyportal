@@ -109,6 +109,10 @@ export default function AppointmentsPage() {
   const [wlSaving, setWlSaving] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
+  // ── Month view dedicated data ──
+  const [monthAppointments, setMonthAppointments] = useState<Appointment[]>([])
+  const [loadingMonth, setLoadingMonth] = useState(false)
+
   // ── Transactions tab ──
   const [activeTab, setActiveTab] = useState<"appointments" | "transactions">("appointments")
   const [txPeriod, setTxPeriod] = useState("today")
@@ -206,6 +210,38 @@ export default function AppointmentsPage() {
   }, [date, isOwner, location, viewMode])
 
   useEffect(() => { fetchAppointments() }, [fetchAppointments])
+
+  // Dedicated month data fetch — triggers when in month view and month/location changes
+  useEffect(() => {
+    if (viewMode !== "month") return
+    const d = new Date(date + "T12:00:00")
+    const monthStart = new Date(d.getFullYear(), d.getMonth(), 1)
+    const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0)
+    // Extend to cover calendar grid overflow days
+    const calStart = new Date(monthStart)
+    calStart.setDate(1 - monthStart.getDay())
+    const calEnd = new Date(monthEnd)
+    calEnd.setDate(monthEnd.getDate() + (6 - monthEnd.getDay()))
+
+    const fetchMonth = async () => {
+      setLoadingMonth(true)
+      try {
+        const params = new URLSearchParams()
+        params.set("all", "true")
+        if (isOwner && location) params.set("location", location)
+        params.set("startDate", formatDateStr(calStart))
+        params.set("endDate", formatDateStr(calEnd))
+        const res = await fetch(`/api/pos/appointments?${params}`)
+        const data = await res.json()
+        setMonthAppointments(data.appointments || [])
+      } catch {
+        setMonthAppointments([])
+      } finally {
+        setLoadingMonth(false)
+      }
+    }
+    fetchMonth()
+  }, [viewMode, date, location, isOwner])
 
   const locCode = location === "San Antonio" ? "SA" : "CC"
   const fetchWaitlist = useCallback(async () => {
@@ -1006,7 +1042,9 @@ export default function AppointmentsPage() {
             cells.push(day)
           }
           const todayStr = (() => { const n = new Date(); return formatDateStr(n) })()
-          const totalMonthAppts = appointments.filter(a => {
+          // Use dedicated monthAppointments data (not single-day appointments)
+          const monthData = monthAppointments.length > 0 ? monthAppointments : appointments
+          const totalMonthAppts = monthData.filter(a => {
             if (!a.startTime || isBlockedTime(a)) return false
             const ad = new Date(a.startTime)
             return ad.getMonth() === month && ad.getFullYear() === year
@@ -1015,7 +1053,10 @@ export default function AppointmentsPage() {
           return (
             <div style={{ marginTop: "8px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                <span style={{ fontSize: "13px", color: "#7a8f96", fontWeight: 500 }}>{totalMonthAppts} appointment{totalMonthAppts !== 1 ? "s" : ""} this month</span>
+                <span style={{ fontSize: "13px", color: "#7a8f96", fontWeight: 500, display: "flex", alignItems: "center", gap: "8px" }}>
+                  {totalMonthAppts} appointment{totalMonthAppts !== 1 ? "s" : ""} this month
+                  {loadingMonth && <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#7a8f96", animation: "spin 1s linear infinite" }}>sync</span>}
+                </span>
               </div>
               {/* Day of week headers */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "1px", marginBottom: "1px" }}>
@@ -1024,13 +1065,15 @@ export default function AppointmentsPage() {
                 ))}
               </div>
               {/* Calendar grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "1px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "1px", opacity: loadingMonth ? 0.4 : 1, transition: "opacity 0.2s" }}>
                 {cells.map((day, i) => {
                   const dayStr = formatDateStr(day)
                   const isCurrentMonth = day.getMonth() === month
                   const isDayToday = dayStr === todayStr
-                  const dayAppts = sorted.filter(a => {
+                  // Filter from monthData (dedicated month fetch) with optional stylist filter
+                  const dayAppts = monthData.filter(a => {
                     if (!a.startTime || isBlockedTime(a)) return false
+                    if (stylistFilter !== "all" && a.teamMemberId !== stylistFilter) return false
                     return formatDateStr(new Date(a.startTime)) === dayStr
                   })
                   const MAX_PILLS = 4
@@ -1291,7 +1334,7 @@ export default function AppointmentsPage() {
                   })}
                 </div>
               </div>
-              <style>{`@keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }`}</style>
+              <style>{`@keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } } @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }`}</style>
             </div>
           )
         })()
