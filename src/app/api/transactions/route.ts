@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { SA_LOCATION_ID, TEAM_NAMES } from "@/lib/staff"
+import { SA_LOCATION_ID, CC_LOCATION_ID, TEAM_NAMES, CC_STYLISTS_MAP, SA_STYLISTS_MAP } from "@/lib/staff"
 
 const SQ = "https://connect.squareup.com/v2"
 
@@ -26,8 +26,12 @@ export async function GET(req: NextRequest) {
   const endDate = req.nextUrl.searchParams.get("endDate")
   if (!startDate || !endDate) return NextResponse.json({ error: "startDate and endDate required" }, { status: 400 })
 
+  const locationFilter = req.nextUrl.searchParams.get("locationId") // "CC" | "SA" | null
+  const ccStylistIds = new Set(Object.keys(CC_STYLISTS_MAP))
+  const saStylistIds = new Set(Object.keys(SA_STYLISTS_MAP))
+
   try {
-    // Fetch all completed orders from SA (all payments go through SA)
+    // Fetch completed orders from BOTH locations (payments may go through either terminal)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const allOrders: any[] = []
     let cursor: string | undefined
@@ -35,7 +39,7 @@ export async function GET(req: NextRequest) {
     do {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const body: any = {
-        location_ids: [SA_LOCATION_ID],
+        location_ids: [CC_LOCATION_ID, SA_LOCATION_ID],
         query: {
           filter: {
             date_time_filter: {
@@ -54,16 +58,25 @@ export async function GET(req: NextRequest) {
       cursor = data.cursor
     } while (cursor)
 
-    // Fetch bookings to map customer_id → team_member_id
+    // Deduplicate orders by ID
+    const seenOrderIds = new Set<string>()
+    const dedupedOrders = allOrders.filter(o => {
+      if (!o.id || seenOrderIds.has(o.id)) return false
+      seenOrderIds.add(o.id)
+      return true
+    })
+
+    // Fetch bookings from BOTH locations to map customer_id → team_member_id
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const customerToStylist: Record<string, string> = {}
-    {
+    for (const locId of [CC_LOCATION_ID, SA_LOCATION_ID]) {
       let bookCursor: string | undefined
       do {
         const params = new URLSearchParams()
         params.set("limit", "100")
         params.set("start_at_min", startDate)
         params.set("start_at_max", endDate)
+        params.set("location_id", locId)
         if (bookCursor) params.set("cursor", bookCursor)
         const bData = await sq(`/bookings?${params}`)
         for (const b of bData.bookings || []) {
@@ -98,14 +111,14 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    // Build transactions
+    // Build transactions — attribute each to stylist's HOME location
     let totalRevenue = 0
     let totalTips = 0
     let totalTax = 0
     let totalCollected = 0
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const transactions = allOrders.map((o: any) => {
+    const allTransactions = dedupedOrders.map((o: any) => {
       const subtotal = Number(o.total_money?.amount || 0) / 100 - Number(o.total_tax_money?.amount || 0) / 100 - Number(o.total_tip_money?.amount || 0) / 100
       const tips = Number(o.total_tip_money?.amount || 0) / 100
       const tax = Number(o.total_tax_money?.amount || 0) / 100
@@ -146,11 +159,19 @@ export async function GET(req: NextRequest) {
       const teamMemberId = o.customer_id ? customerToStylist[o.customer_id] : undefined
       const stylistName = teamMemberId ? (TEAM_NAMES[teamMemberId] || "Unknown") : "Walk-in"
 
+      // Determine stylist's HOME location (not processing location)
+      const stylistLoc = teamMemberId
+        ? (ccStylistIds.has(teamMemberId) ? "CC" : saStylistIds.has(teamMemberId) ? "SA" : null)
+        : null
+      const orderLocFallback = o.location_id === CC_LOCATION_ID ? "CC" : "SA"
+      const stylistLocation = stylistLoc || orderLocFallback
+
       return {
         id: o.id,
         closedAt: o.closed_at,
         customerName: o.customer_id ? (customerNames[o.customer_id] || "Client") : "Walk-in",
         stylistName,
+        stylistLocation,
         services,
         paymentMethod,
         subtotal: Math.round(subtotal * 100) / 100,
@@ -159,6 +180,17 @@ export async function GET(req: NextRequest) {
         total: Math.round(total * 100) / 100,
       }
     })
+
+    // Filter by stylist home location
+    const transactions = locationFilter
+      ? allTransactions.filter(t => t.stylistLocation === locationFilter)
+      : allTransactions
+
+    // Recalculate summaries for filtered transactions
+    totalRevenue = 0; totalTips = 0; totalTax = 0; totalCollected = 0
+    for (const t of transactions) {
+      totalRevenue += t.subtotal; totalTips += t.tips; totalTax += t.tax; totalCollected += t.total
+    }
 
     const count = transactions.length
     return NextResponse.json({

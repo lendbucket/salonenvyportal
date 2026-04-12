@@ -199,11 +199,11 @@ export async function getMetricsByPeriodWithDates(
 
       const orderTime = new Date(o.closedAt || o.createdAt || "")
 
-      // Find best matching booking (closest time, same location, not already used)
+      // Find best matching booking (closest time, not already used)
+      // Do NOT require same locationId — payments may be processed at either location
       let bestMatch: { index: number; diff: number } | null = null
       for (let i = 0; i < bookings.length; i++) {
         if (usedBookings.has(i)) continue
-        if (bookings[i].locationId !== (o.locationId || "")) continue
         const diffMs = orderTime.getTime() - bookings[i].startAt.getTime()
         const diffHours = diffMs / (1000 * 60 * 60)
         if (diffHours >= -0.5 && diffHours <= 5) {

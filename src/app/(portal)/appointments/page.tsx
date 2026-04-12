@@ -1846,7 +1846,12 @@ export default function AppointmentsPage() {
                           {new Date(tx.closedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" })}
                         </td>
                         <td style={{ padding: "14px", fontSize: "14px", color: "#ffffff", fontWeight: 600, borderBottom: "1px solid rgba(205,201,192,0.04)" }}>{tx.customerName}</td>
-                        <td style={{ padding: "14px", fontSize: "13px", color: "#7a8f96", borderBottom: "1px solid rgba(205,201,192,0.04)" }}>{tx.stylistName}</td>
+                        <td style={{ padding: "14px", fontSize: "13px", color: "#7a8f96", borderBottom: "1px solid rgba(205,201,192,0.04)" }}>
+                          {tx.stylistName}
+                          {tx.stylistLocation && (
+                            <span style={{ marginLeft: "6px", fontSize: "10px", fontWeight: 700, fontFamily: "'Fira Code', monospace", padding: "1px 6px", borderRadius: "4px", backgroundColor: tx.stylistLocation === "CC" ? "rgba(59,130,246,0.1)" : "rgba(168,85,247,0.1)", color: tx.stylistLocation === "CC" ? "#60a5fa" : "#a78bfa" }}>{tx.stylistLocation}</span>
+                          )}
+                        </td>
                         <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", borderBottom: "1px solid rgba(205,201,192,0.04)", maxWidth: "200px" }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: "2px", overflow: "hidden", maxHeight: "36px" }}>
                             {tx.services.slice(0, 2).map((s: string, i: number) => <span key={i} style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{s}</span>)}
