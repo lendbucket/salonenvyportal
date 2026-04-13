@@ -22,7 +22,8 @@ type VerifyResult =
   | { status: 200; data: Record<string, unknown> }
   | { status: number; data: Record<string, unknown> };
 
-async function verifyInviteToken(token: string | null): Promise<VerifyResult> {
+/** Validates StaffMember.licenseVerificationToken (SMS/email license flow). */
+async function verifyLicenseToken(token: string | null): Promise<VerifyResult> {
   if (!token?.trim()) {
     return {
       status: 400,
@@ -30,26 +31,25 @@ async function verifyInviteToken(token: string | null): Promise<VerifyResult> {
     };
   }
 
-  const enrollment = await prisma.onboardingEnrollment.findUnique({
-    where: { inviteToken: token.trim() },
+  const staff = await prisma.staffMember.findUnique({
+    where: { licenseVerificationToken: token.trim() },
     include: { location: { select: { name: true } } },
   });
 
-  if (!enrollment) {
+  if (!staff) {
     return {
       status: 404,
-      data: { valid: false, error: "Enrollment not found" },
+      data: { valid: false, error: "Invalid or unknown token" },
     };
   }
 
-  if (enrollment.expiresAt && new Date() > enrollment.expiresAt) {
-    await prisma.onboardingEnrollment.update({
-      where: { id: enrollment.id },
-      data: { status: "expired" },
-    });
+  if (
+    staff.licenseVerificationTokenExpiry &&
+    new Date() > staff.licenseVerificationTokenExpiry
+  ) {
     return {
       status: 410,
-      data: { valid: false, error: "This enrollment link has expired" },
+      data: { valid: false, error: "This verification link has expired" },
     };
   }
 
@@ -57,12 +57,10 @@ async function verifyInviteToken(token: string | null): Promise<VerifyResult> {
     status: 200,
     data: {
       valid: true,
-      enrollment: {
-        id: enrollment.id,
-        status: enrollment.status,
-        firstName: enrollment.firstName,
-        lastName: enrollment.lastName,
-        locationName: enrollment.location.name,
+      staff: {
+        id: staff.id,
+        fullName: staff.fullName,
+        locationName: staff.location.name,
       },
     },
   };
@@ -71,7 +69,7 @@ async function verifyInviteToken(token: string | null): Promise<VerifyResult> {
 // GET: ?token= — public, for marketing site cross-origin checks
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
-  const result = await verifyInviteToken(token);
+  const result = await verifyLicenseToken(token);
   return NextResponse.json(result.data, {
     status: result.status,
     headers: corsHeaders,
@@ -91,7 +89,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const result = await verifyInviteToken(token);
+  const result = await verifyLicenseToken(token);
   return NextResponse.json(result.data, {
     status: result.status,
     headers: corsHeaders,
