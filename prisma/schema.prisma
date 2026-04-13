@@ -782,3 +782,34 @@ model WaitlistEntry {
   updatedAt        DateTime @default(now()) @updatedAt
   @@map("waitlist_entries")
 }
+
+model TdlrLicenseCache {
+  id                String   @id @default(cuid())
+  licenseNumber     String   @unique
+  holderName        String?
+  licenseType       String?
+  expirationDate    String?
+  originalIssueDate String?
+  status            String?
+  county            String?
+  city              String?
+  state             String?
+  isValid           Boolean  @default(true)
+  lastVerified      DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([licenseNumber])
+  @@map("tdlr_license_cache")
+}
+
+model TdlrCacheMetadata {
+  id           String    @id @default("singleton")
+  lastSync     DateTime?
+  totalRecords Int       @default(0)
+  status       String    @default("idle")
+  errorMsg     String?
+  updatedAt    DateTime  @updatedAt
+
+  @@map("tdlr_cache_metadata")
+}
