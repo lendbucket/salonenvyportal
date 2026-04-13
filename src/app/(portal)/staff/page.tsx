@@ -105,7 +105,7 @@ export default function StaffPage() {
   const [licenseModal, setLicenseModal] = useState<{ staffId: string; staffName: string; phone: string | null; email: string | null; currentLicense: string | null; currentStatus: string | null } | null>(null)
   const [licenseInput, setLicenseInput] = useState("")
   const [licenseVerifying, setLicenseVerifying] = useState(false)
-  const [licenseResult, setLicenseResult] = useState<{ verified: boolean; holderName?: string; licenseNumber?: string; licenseType?: string; expirationDate?: string | null; status?: string; county?: string; city?: string; originalIssueDate?: string; source?: string; error?: string } | null>(null)
+  const [licenseResult, setLicenseResult] = useState<{ valid?: boolean; verified?: boolean; holderName?: string; licenseNumber?: string; licenseType?: string; expirationDate?: string | null; status?: string; county?: string; city?: string; originalIssueDate?: string; source?: string; error?: string } | null>(null)
   const [licenseSendStatus, setLicenseSendStatus] = useState<string | null>(null)
   const [showOverride, setShowOverride] = useState(false)
   const [overrideForm, setOverrideForm] = useState({ holderName: "", licenseType: "Cosmetologist - Operator", expirationDate: "", status: "ACTIVE" })
@@ -267,11 +267,16 @@ export default function StaffPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ method: "manual", licenseNumber: licenseInput.trim() }),
       })
+      console.log("[staff] verify status:", res.status)
       const data = await res.json()
-      setLicenseResult(data.result || data)
-      void load()
-    } catch {
-      setLicenseResult({ verified: false, error: "Failed to verify. Please try again." })
+      console.log("[staff] verify data:", JSON.stringify(data))
+      const result = data.result || data
+      console.log("[staff] setting licenseResult:", JSON.stringify(result))
+      setLicenseResult(result)
+      if (result.valid) void load()
+    } catch (err: unknown) {
+      console.error("[staff] verify error:", err)
+      setLicenseResult({ verified: false, valid: false, error: err instanceof Error ? err.message : "Failed to verify" })
     } finally {
       setLicenseVerifying(false)
     }
@@ -781,7 +786,7 @@ export default function StaffPage() {
             </button>
 
             {/* Result: success */}
-            {licenseResult && licenseResult.verified && (
+            {licenseResult && (licenseResult.valid === true || licenseResult.verified === true) && (
               <div style={{ marginTop: 16, borderRadius: 12, border: "1px solid rgba(34,197,94,0.2)", background: "rgba(34,197,94,0.06)", padding: 20 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                   <ShieldCheck style={{ width: 20, height: 20, color: "#34d399" }} />
@@ -817,7 +822,7 @@ export default function StaffPage() {
             )}
 
             {/* Result: failed */}
-            {licenseResult && !licenseResult.verified && (
+            {licenseResult && licenseResult.valid !== true && licenseResult.verified !== true && (
               <div style={{ marginTop: 16, borderRadius: 12, border: "1px solid rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.06)", padding: 16 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <X style={{ width: 16, height: 16, color: "#f87171" }} />
