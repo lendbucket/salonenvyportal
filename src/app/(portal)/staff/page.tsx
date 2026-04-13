@@ -101,6 +101,14 @@ export default function StaffPage() {
   const [enrollTarget, setEnrollTarget] = useState<StaffRow | null>(null);
   const [enrollSending, setEnrollSending] = useState(false);
 
+  // License verification modal
+  const [licenseModal, setLicenseModal] = useState<{ staffId: string; staffName: string; phone: string | null; email: string | null; currentLicense: string | null; currentStatus: string | null } | null>(null)
+  const [licenseInput, setLicenseInput] = useState("")
+  const [licenseVerifying, setLicenseVerifying] = useState(false)
+  const [licenseResult, setLicenseResult] = useState<{ verified: boolean; holderName?: string; licenseType?: string; expirationDate?: string; status?: string; error?: string } | null>(null)
+  const [licenseSendStatus, setLicenseSendStatus] = useState<string | null>(null)
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+
   const load = useCallback(async () => {
     setLoading(true);
     setErr(null);
@@ -149,6 +157,12 @@ export default function StaffPage() {
     const t = setTimeout(() => setSuccessMsg(null), 5000);
     return () => clearTimeout(t);
   }, [successMsg]);
+
+  // Auto-refresh staff data every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => { void load(); setLastRefresh(new Date()) }, 30000)
+    return () => clearInterval(interval)
+  }, [load])
 
   const verifyTdlr = async (member: StaffRow) => {
     if (!member.tdlrLicenseNumber) return;
@@ -240,6 +254,70 @@ export default function StaffPage() {
     setEnrollSending(false);
   };
 
+  const handleVerifyLicense = async () => {
+    if (!licenseInput.trim() || !licenseModal) return
+    setLicenseVerifying(true)
+    setLicenseResult(null)
+    try {
+      const res = await fetch(`/api/staff/${licenseModal.staffId}/verify-license`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ method: "manual", licenseNumber: licenseInput.trim() }),
+      })
+      const data = await res.json()
+      setLicenseResult(data.result || data)
+      void load()
+    } catch {
+      setLicenseResult({ verified: false, error: "Failed to verify. Please try again." })
+    } finally {
+      setLicenseVerifying(false)
+    }
+  }
+
+  const handleSendVerification = async (method: "sms" | "email") => {
+    if (!licenseModal) return
+    setLicenseSendStatus(null)
+    try {
+      const res = await fetch(`/api/staff/${licenseModal.staffId}/verify-license`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ method }),
+      })
+      const data = await res.json()
+      if (data.sent) {
+        setLicenseSendStatus(`${method === "sms" ? "SMS" : "Email"} Sent!`)
+        setTimeout(() => setLicenseSendStatus(null), 3000)
+      } else {
+        setLicenseSendStatus(data.error || "Failed to send")
+        setTimeout(() => setLicenseSendStatus(null), 3000)
+      }
+    } catch {
+      setLicenseSendStatus("Failed to send")
+      setTimeout(() => setLicenseSendStatus(null), 3000)
+    }
+  }
+
+  const openLicenseModal = (m: StaffRow) => {
+    setLicenseModal({
+      staffId: m.id,
+      staffName: m.fullName,
+      phone: m.phone,
+      email: m.email,
+      currentLicense: m.tdlrLicenseNumber,
+      currentStatus: m.tdlrStatus,
+    })
+    setLicenseInput(m.tdlrLicenseNumber || "")
+    setLicenseResult(null)
+    setLicenseSendStatus(null)
+  }
+
+  const closeLicenseModal = () => {
+    setLicenseModal(null)
+    setLicenseResult(null)
+    setLicenseInput("")
+    setLicenseSendStatus(null)
+  }
+
   // Filtering
   const filtered = useMemo(() => {
     return staff.filter((m) => {
@@ -309,7 +387,10 @@ export default function StaffPage() {
               <span className="rounded-full bg-[#7a8f96]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#7a8f96] ring-1 ring-[#7a8f96]/20">
                 {m.position}
               </span>
-              <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${tb.cls}`}>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 cursor-pointer transition hover:brightness-125 ${tb.cls}`}
+                onClick={(e) => { e.stopPropagation(); openLicenseModal(m) }}
+              >
                 {tb.label}
               </span>
               {m.squareTeamMemberId && (
@@ -497,6 +578,11 @@ export default function StaffPage() {
         </ul>
       )}
 
+      {/* Last refresh indicator */}
+      <p className="mt-4 text-[10px] text-neutral-600" style={{ fontFamily: "'Fira Code', monospace" }}>
+        Last refreshed {lastRefresh.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" })}
+      </p>
+
       {/* ---- Invite Staff Modal ---- */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
@@ -600,6 +686,124 @@ export default function StaffPage() {
               >
                 {inviteSending ? "Sending..." : "Send Invitation"}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- License Verification Modal ---- */}
+      {licenseModal && (
+        <div className="fixed inset-0 z-[300]">
+          <div className="absolute inset-0 bg-black/70" onClick={closeLicenseModal} />
+          <div
+            className="absolute left-1/2 top-1/2 w-full max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#0d1117] p-7"
+            style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.8)", maxWidth: "min(520px, calc(100vw - 32px))" }}
+          >
+            {/* Header */}
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-white">{licenseModal.staffName}</h2>
+                {licenseModal.currentStatus && (
+                  <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${tdlrBadge({ tdlrStatus: licenseModal.currentStatus, tdlrExpirationDate: null } as StaffRow).cls}`}>
+                    {tdlrBadge({ tdlrStatus: licenseModal.currentStatus, tdlrExpirationDate: null } as StaffRow).label}
+                  </span>
+                )}
+              </div>
+              <button type="button" onClick={closeLicenseModal} className="text-neutral-500 hover:text-white transition">
+                <X className="size-5" />
+              </button>
+            </div>
+
+            {/* License input */}
+            <div>
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-neutral-500">TDLR License Number</label>
+              <input
+                value={licenseInput}
+                onChange={(e) => setLicenseInput(e.target.value)}
+                placeholder="e.g. 123456 or COST123456"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 font-mono text-base text-white outline-none focus:border-[#7a8f96] focus:ring-2 focus:ring-[#7a8f96]/15"
+              />
+            </div>
+
+            {/* Verify button */}
+            <button
+              type="button"
+              onClick={handleVerifyLicense}
+              disabled={licenseVerifying || !licenseInput.trim()}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[#7a8f96] py-3 text-[15px] font-semibold text-white transition hover:bg-[#7a8f96]/10 disabled:opacity-40"
+              style={{ background: licenseVerifying ? "rgba(96,110,116,0.2)" : "rgba(122,143,150,0.15)" }}
+            >
+              {licenseVerifying && <span className="inline-block size-4 animate-spin rounded-full border-2 border-[#7a8f96] border-t-transparent" />}
+              {licenseVerifying ? "Verifying with TDLR..." : "Verify License"}
+            </button>
+
+            {/* Result: success */}
+            {licenseResult && licenseResult.verified && (
+              <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] p-5">
+                <div className="mb-3 flex items-center gap-2">
+                  <ShieldCheck className="size-5 text-emerald-400" />
+                  <span className="text-[15px] font-bold text-emerald-400">License Verified</span>
+                </div>
+                <div className="divide-y divide-white/5">
+                  {[
+                    { label: "LICENSE NUMBER", value: licenseInput },
+                    { label: "LICENSE HOLDER", value: licenseResult.holderName },
+                    { label: "LICENSE TYPE", value: licenseResult.licenseType },
+                    { label: "EXPIRATION DATE", value: licenseResult.expirationDate ? new Date(licenseResult.expirationDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : null },
+                    { label: "STATUS", value: licenseResult.status },
+                    { label: "ISSUED STATE", value: "TEXAS" },
+                  ].filter(r => r.value).map(r => (
+                    <div key={r.label} className="flex items-center justify-between py-2.5">
+                      <span className="text-xs font-medium text-neutral-500">{r.label}</span>
+                      {r.label === "STATUS" ? (
+                        <span className={`rounded-full px-2.5 py-0.5 font-mono text-[11px] font-semibold ${r.value === "ACTIVE" ? "bg-emerald-500/10 text-emerald-400" : r.value === "EXPIRED" ? "bg-red-500/10 text-red-400" : "bg-amber-500/10 text-amber-300"}`}>
+                          {r.value}
+                        </span>
+                      ) : (
+                        <span className="font-mono text-[13px] font-medium text-white">{r.value}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Result: failed */}
+            {licenseResult && !licenseResult.verified && (
+              <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/[0.06] p-4">
+                <div className="flex items-center gap-2">
+                  <X className="size-4 text-red-400" />
+                  <span className="text-sm font-bold text-red-400">License Not Found</span>
+                </div>
+                <p className="mt-2 text-[13px] text-[#7a8f96]">{licenseResult.error || "This license number was not found in the TDLR database. Please check the number and try again."}</p>
+                <p className="mt-1 text-xs text-neutral-600">You can look up licenses at tdlr.texas.gov</p>
+              </div>
+            )}
+
+            {/* Send verification link */}
+            <div className="mt-5 border-t border-white/[0.06] pt-4">
+              <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-widest text-neutral-500">Send Verification Link</p>
+              {licenseSendStatus && (
+                <p className="mb-2 text-xs font-semibold text-[#7a8f96]">{licenseSendStatus}</p>
+              )}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSendVerification("sms")}
+                  disabled={!licenseModal.phone}
+                  className="flex-1 rounded-lg border border-white/10 px-3 py-2.5 text-[13px] font-medium text-[#7a8f96] transition hover:bg-white/[0.05] disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  Send via SMS
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSendVerification("email")}
+                  disabled={!licenseModal.email}
+                  className="flex-1 rounded-lg border border-white/10 px-3 py-2.5 text-[13px] font-medium text-[#7a8f96] transition hover:bg-white/[0.05] disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  Send via Email
+                </button>
+              </div>
             </div>
           </div>
         </div>
