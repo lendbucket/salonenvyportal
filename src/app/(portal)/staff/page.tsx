@@ -107,6 +107,9 @@ export default function StaffPage() {
   const [licenseVerifying, setLicenseVerifying] = useState(false)
   const [licenseResult, setLicenseResult] = useState<{ verified: boolean; holderName?: string; licenseNumber?: string; licenseType?: string; expirationDate?: string | null; status?: string; county?: string; originalIssueDate?: string; source?: string; error?: string } | null>(null)
   const [licenseSendStatus, setLicenseSendStatus] = useState<string | null>(null)
+  const [showOverride, setShowOverride] = useState(false)
+  const [overrideForm, setOverrideForm] = useState({ holderName: "", licenseType: "Cosmetologist - Operator", expirationDate: "", status: "ACTIVE" })
+  const [overrideSaving, setOverrideSaving] = useState(false)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
 
   const load = useCallback(async () => {
@@ -311,11 +314,32 @@ export default function StaffPage() {
     setLicenseSendStatus(null)
   }
 
+  const handleOverrideSave = async () => {
+    if (!licenseModal || !licenseInput.trim()) return
+    setOverrideSaving(true)
+    try {
+      const res = await fetch(`/api/staff/${licenseModal.staffId}/verify-license`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ method: "override", licenseNumber: licenseInput.trim(), ...overrideForm }),
+      })
+      const data = await res.json()
+      if (data.verified) {
+        setLicenseResult(data.result || { verified: true, ...overrideForm, licenseNumber: licenseInput.trim() })
+        setShowOverride(false)
+        void load()
+      }
+    } catch { /* skip */ }
+    setOverrideSaving(false)
+  }
+
   const closeLicenseModal = () => {
     setLicenseModal(null)
     setLicenseResult(null)
     setLicenseInput("")
     setLicenseSendStatus(null)
+    setShowOverride(false)
+    setOverrideForm({ holderName: "", licenseType: "Cosmetologist - Operator", expirationDate: "", status: "ACTIVE" })
   }
 
   // Filtering
@@ -796,10 +820,40 @@ export default function StaffPage() {
               <div style={{ marginTop: 16, borderRadius: 12, border: "1px solid rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.06)", padding: 16 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <X style={{ width: 16, height: 16, color: "#f87171" }} />
-                  <span style={{ fontSize: 14, fontWeight: 700, color: "#f87171" }}>License Not Found</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#f87171" }}>License Not Found via API</span>
                 </div>
-                <p style={{ marginTop: 8, fontSize: 13, color: "#7a8f96" }}>{licenseResult.error || "This license number was not found in the TDLR database. Please check the number and try again."}</p>
-                <p style={{ marginTop: 4, fontSize: 12, color: "#606E74" }}>You can look up licenses at tdlr.texas.gov</p>
+                <p style={{ marginTop: 8, fontSize: 13, color: "#7a8f96" }}>{licenseResult.error || "This license number was not found in the TDLR database."}</p>
+                <p style={{ marginTop: 4, fontSize: 12, color: "#606E74" }}>Look up at tdlr.texas.gov, then enter the data manually below.</p>
+
+                {/* Manual override toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowOverride(!showOverride)}
+                  style={{ marginTop: 12, background: "none", border: "none", color: "#f59e0b", fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0 }}
+                >
+                  {showOverride ? "Hide Manual Entry" : "Enter TDLR Data Manually"}
+                </button>
+
+                {showOverride && (
+                  <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 10 }}>
+                    <input value={overrideForm.holderName} onChange={e => setOverrideForm(f => ({ ...f, holderName: e.target.value }))} placeholder="Holder Name (e.g. ESPINOSA, CLARISSA)" style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", boxSizing: "border-box" as const }} />
+                    <input value={overrideForm.licenseType} onChange={e => setOverrideForm(f => ({ ...f, licenseType: e.target.value }))} placeholder="License Type" style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", boxSizing: "border-box" as const }} />
+                    <input type="date" value={overrideForm.expirationDate} onChange={e => setOverrideForm(f => ({ ...f, expirationDate: e.target.value }))} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", colorScheme: "dark", boxSizing: "border-box" as const }} />
+                    <select value={overrideForm.status} onChange={e => setOverrideForm(f => ({ ...f, status: e.target.value }))} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", boxSizing: "border-box" as const }}>
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="EXPIRED">EXPIRED</option>
+                      <option value="INACTIVE">INACTIVE</option>
+                    </select>
+                    <button
+                      type="button"
+                      onClick={handleOverrideSave}
+                      disabled={overrideSaving || !licenseInput.trim()}
+                      style={{ width: "100%", padding: "12px 0", borderRadius: 10, border: "1px solid #f59e0b", background: "rgba(245,158,11,0.1)", color: "#f59e0b", fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: overrideSaving ? 0.5 : 1 }}
+                    >
+                      {overrideSaving ? "Saving..." : "Save Override"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 

@@ -15,7 +15,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (role !== "OWNER" && role !== "MANAGER") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const { id: staffId } = await params
-  const { method, licenseNumber } = await req.json() as { method: string; licenseNumber?: string }
+  const body = await req.json() as { method: string; licenseNumber?: string; holderName?: string; licenseType?: string; expirationDate?: string; status?: string }
+  const { method, licenseNumber } = body
 
   const staff = await prisma.staffMember.findUnique({ where: { id: staffId } })
   if (!staff) return NextResponse.json({ error: "Staff member not found" }, { status: 404 })
@@ -23,8 +24,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (method === "manual") {
     if (!licenseNumber) return NextResponse.json({ error: "License number required" }, { status: 400 })
     const result = await verifyTDLRLicense(licenseNumber)
+    console.log("[verify-license] TDLR result:", JSON.stringify(result))
+    console.log("[verify-license] valid:", result.valid, "error:", result.error)
 
-    // Parse expiration date safely
     let expDateParsed: Date | null = null
     if (result.expirationDate) {
       try { expDateParsed = new Date(result.expirationDate) } catch { /* skip */ }
@@ -45,6 +47,29 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     })
     logAction({ action: AUDIT_ACTIONS.LICENSE_VERIFIED, entity: "StaffMember", entityId: staffId, userId: user.id as string, userEmail: user.email as string, userRole: role, metadata: { licenseNumber, valid: result.valid, method: "manual" } })
     return NextResponse.json({ verified: result.valid, result })
+  }
+
+  if (method === "override") {
+    if (!licenseNumber) return NextResponse.json({ error: "License number required" }, { status: 400 })
+    let expDateParsed: Date | null = null
+    if (body.expirationDate) {
+      try { expDateParsed = new Date(body.expirationDate) } catch { /* skip */ }
+      if (expDateParsed && isNaN(expDateParsed.getTime())) expDateParsed = null
+    }
+    await prisma.staffMember.update({
+      where: { id: staffId },
+      data: {
+        tdlrLicenseNumber: licenseNumber,
+        tdlrStatus: body.status || "ACTIVE",
+        tdlrExpirationDate: expDateParsed,
+        tdlrVerifiedAt: new Date(),
+        tdlrHolderName: body.holderName || null,
+        licenseVerificationMethod: "override",
+        licenseVerifiedBy: user.id as string,
+      },
+    })
+    logAction({ action: AUDIT_ACTIONS.LICENSE_VERIFIED, entity: "StaffMember", entityId: staffId, userId: user.id as string, userEmail: user.email as string, userRole: role, metadata: { licenseNumber, method: "override", holderName: body.holderName } })
+    return NextResponse.json({ verified: true, override: true, result: { valid: true, licenseNumber, holderName: body.holderName, licenseType: body.licenseType, expirationDate: body.expirationDate, status: body.status || "ACTIVE" } })
   }
 
   if (method === "sms" || method === "email") {
