@@ -11,13 +11,16 @@ import { logAction, AUDIT_ACTIONS } from "@/lib/auditLogger"
 import crypto from "crypto"
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: rawId } = await params
+  try { const debugBody = await req.clone().json(); console.log("[verify-license] Route hit - id:", rawId, "body:", JSON.stringify(debugBody)) } catch { console.log("[verify-license] Route hit - id:", rawId, "body: unparseable") }
+
   const session = await getServerSession(authOptions)
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   const user = session.user as Record<string, unknown>
   const role = user.role as string
   if (role !== "OWNER" && role !== "MANAGER") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
-  const { id: staffId } = await params
+  const staffId = rawId
   const body = await req.json() as { method: string; licenseNumber?: string; holderName?: string; licenseType?: string; expirationDate?: string; status?: string }
   const { method, licenseNumber } = body
 
