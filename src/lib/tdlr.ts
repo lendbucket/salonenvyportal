@@ -7,132 +7,179 @@ export interface TDLRResult {
   originalIssueDate?: string
   status?: string
   county?: string
+  city?: string
+  state?: string
   source?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   rawRecord?: any
   error?: string
 }
 
+// Helper to parse a CSV line respecting quoted fields
+function parseCSVLine(line: string): string[] {
+  const result: string[] = []
+  let current = ""
+  let inQuotes = false
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i]
+    if (char === '"') {
+      inQuotes = !inQuotes
+    } else if (char === "," && !inQuotes) {
+      result.push(current)
+      current = ""
+    } else {
+      current += char
+    }
+  }
+  result.push(current)
+  return result
+}
+
 export async function verifyTDLRLicense(licenseNumber: string): Promise<TDLRResult> {
   const cleaned = licenseNumber.trim().replace(/\D/g, "")
-  console.log("[TDLR] Verifying license:", cleaned)
+  console.log("[TDLR] Verifying license via CSV:", cleaned)
 
-  // ALL dataset + field combinations to try
-  const attempts = [
-    // Dataset er6t-8gkz — primary TDLR active licenses
-    `https://data.texas.gov/resource/er6t-8gkz.json?license_no=${cleaned}`,
-    `https://data.texas.gov/resource/er6t-8gkz.json?$where=license_no=%27${cleaned}%27`,
-    `https://data.texas.gov/resource/er6t-8gkz.json?lic_no=${cleaned}`,
-    `https://data.texas.gov/resource/er6t-8gkz.json?license_number=${cleaned}`,
-    `https://data.texas.gov/resource/er6t-8gkz.json?lic_nbr=${cleaned}`,
-    // Dataset 7358-krk7 — TDLR all licenses
-    `https://data.texas.gov/resource/7358-krk7.json?license_no=${cleaned}`,
-    `https://data.texas.gov/resource/7358-krk7.json?$where=license_no=%27${cleaned}%27`,
-    `https://data.texas.gov/resource/7358-krk7.json?lic_no=${cleaned}`,
-    `https://data.texas.gov/resource/7358-krk7.json?license_number=${cleaned}`,
-    `https://data.texas.gov/resource/7358-krk7.json?lic_nbr=${cleaned}`,
-    `https://data.texas.gov/resource/7358-krk7.json?$where=lic_nbr=%27${cleaned}%27`,
-    // Dataset whvf-shnm — cosmetology specific
-    `https://data.texas.gov/resource/whvf-shnm.json?license_no=${cleaned}`,
-    `https://data.texas.gov/resource/whvf-shnm.json?lic_no=${cleaned}`,
-    `https://data.texas.gov/resource/whvf-shnm.json?license_number=${cleaned}`,
-    `https://data.texas.gov/resource/whvf-shnm.json?lic_nbr=${cleaned}`,
-    // Broader search with LIKE
-    `https://data.texas.gov/resource/er6t-8gkz.json?$limit=5&$where=license_no+like+%27${cleaned}%25%27`,
-    `https://data.texas.gov/resource/7358-krk7.json?$limit=5&$where=license_no+like+%27${cleaned}%25%27`,
+  // TDLR publishes daily CSV downloads — these are the most reliable source
+  const csvUrls = [
+    "https://www.tdlr.texas.gov/dbproduction2/ltcos_op.csv", // Cosmetology operators (~35MB)
+    "https://www.tdlr.texas.gov/dbproduction2/ltcosmos.csv", // All cosmetology
   ]
 
-  for (const url of attempts) {
+  for (const csvUrl of csvUrls) {
     try {
-      console.log("[TDLR] Trying:", url)
-      const res = await fetch(url, {
+      console.log("[TDLR] Fetching CSV:", csvUrl)
+
+      const res = await fetch(csvUrl, {
         headers: {
-          Accept: "application/json",
-          "X-App-Token": process.env.SOCRATA_APP_TOKEN || "",
+          "User-Agent": "Mozilla/5.0 (compatible; SalonEnvyPortal/1.0)",
+          Accept: "text/csv,text/plain,*/*",
         },
-        signal: AbortSignal.timeout(8000),
+        signal: AbortSignal.timeout(25000),
       })
 
-      console.log("[TDLR] Status:", res.status, "URL:", url)
-
       if (!res.ok) {
-        const errText = await res.text()
-        console.log("[TDLR] Error response:", errText.substring(0, 200))
+        console.log("[TDLR] CSV fetch failed:", res.status)
         continue
       }
 
-      const data = await res.json()
-      console.log("[TDLR] Response isArray:", Array.isArray(data), "length:", Array.isArray(data) ? data.length : "N/A")
+      // Stream the response and search line by line — do NOT load entire file into memory
+      const reader = res.body?.getReader()
+      if (!reader) continue
 
-      if (Array.isArray(data) && data.length > 0) {
-        const r = data[0]
-        console.log("[TDLR] SUCCESS - Keys:", Object.keys(r).join(", "))
-        console.log("[TDLR] Record:", JSON.stringify(r))
+      const decoder = new TextDecoder()
+      let buffer = ""
+      let headerLine = ""
+      let headers: string[] = []
+      let found = false
+      let result: TDLRResult | null = null
 
-        // Map ALL possible field name variations
-        const holderName = (
-          r.name || r.licensee_name || r.holder_name || r.lic_holder ||
-          r.full_name || r.person_name || r.applicant_name ||
-          [r.last_name, r.first_name].filter(Boolean).join(", ") ||
-          [r.lname, r.fname].filter(Boolean).join(", ") || ""
-        )
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
 
-        const licType = (
-          r.license_type || r.lic_type || r.type || r.profession ||
-          r.license_type_desc || r.lic_type_desc || r.activity ||
-          r.license_subtype || ""
-        )
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split("\n")
 
-        const expDate = (
-          r.expiration_date || r.exp_date || r.expiry_date ||
-          r.expiration || r.expire_date || r.lic_exp_date || ""
-        )
+        // Keep last incomplete line in buffer
+        buffer = lines.pop() || ""
 
-        const rawStatus = (
-          r.status || r.license_status || r.lic_status ||
-          r.active_status || r.current_status || "ACTIVE"
-        )
+        for (const line of lines) {
+          if (!line.trim()) continue
 
-        const county = (r.county || r.county_name || r.county_desc || "")
-        const issueDate = (r.original_issue_date || r.issue_date || r.issued || r.lic_issue_date || r.first_issued || "")
-        const licNum = (r.license_no || r.lic_no || r.license_number || r.lic_nbr || r.license_nbr || cleaned)
+          // First line is headers
+          if (!headerLine) {
+            headerLine = line
+            headers = line.split(",").map(h => h.trim().replace(/^"|"$/g, "").toLowerCase())
+            console.log("[TDLR] CSV headers:", headers.join(", "))
+            continue
+          }
 
-        let isExpired = false
-        if (expDate) {
-          try { isExpired = new Date(expDate) < new Date() } catch { /* skip */ }
+          // Search for license number in this line (fast pre-check before parsing)
+          if (!line.includes(cleaned)) continue
+
+          const values = parseCSVLine(line)
+
+          if (values.length >= headers.length) {
+            const record: Record<string, string> = {}
+            headers.forEach((h, i) => { record[h] = (values[i] || "").replace(/^"|"$/g, "").trim() })
+
+            // Check if this is actually our license number
+            const licField = record["license_no"] || record["lic_no"] || record["license_number"] ||
+                             record["lic_nbr"] || record["licno"] || ""
+
+            if (licField.replace(/\D/g, "") !== cleaned) continue
+
+            console.log("[TDLR] Found record:", JSON.stringify(record))
+
+            // Map fields with all possible column name variations
+            const lastName = record["name_last"] || record["last_name"] || record["lname"] || ""
+            const firstName = record["name_first"] || record["first_name"] || record["fname"] || ""
+            const fullName = record["name"] || record["full_name"] || record["licensee_name"] ||
+                             (lastName && firstName ? `${lastName}, ${firstName}` : lastName || firstName)
+
+            const expDate = record["expiration_date"] || record["exp_date"] || record["expiry"] ||
+                            record["lic_exp_date"] || record["expire_date"] || ""
+
+            const rawStatus = record["status"] || record["lic_status"] || record["license_status"] || "ACTIVE"
+            const licType = record["license_type"] || record["lic_type"] || record["type"] ||
+                            record["profession"] || "Cosmetologist - Operator"
+            const county = record["county"] || record["county_name"] || ""
+            const issueDate = record["original_issue_date"] || record["issue_date"] ||
+                              record["orig_iss_date"] || record["first_issued"] || ""
+            const city = record["city"] || record["bus_city"] || ""
+            const stateVal = record["state"] || "TX"
+
+            let isExpired = false
+            if (expDate) {
+              try { isExpired = new Date(expDate) < new Date() } catch { /* skip */ }
+            }
+
+            const normalizedStatus = isExpired ? "EXPIRED" :
+              rawStatus.toUpperCase().includes("ACTIVE") ? "ACTIVE" :
+              rawStatus.toUpperCase().includes("EXPIRE") ? "EXPIRED" :
+              rawStatus.toUpperCase() || "ACTIVE"
+
+            result = {
+              valid: !isExpired && normalizedStatus === "ACTIVE",
+              holderName: fullName.toUpperCase(),
+              licenseNumber: licField || cleaned,
+              licenseType: licType,
+              expirationDate: expDate || null,
+              originalIssueDate: issueDate,
+              status: normalizedStatus,
+              county: county.toUpperCase(),
+              city: city.toUpperCase(),
+              state: stateVal.toUpperCase(),
+              source: csvUrl,
+            }
+
+            found = true
+            break
+          }
         }
 
-        const normalizedStatus = isExpired ? "EXPIRED" :
-          String(rawStatus).toUpperCase().includes("ACTIVE") ? "ACTIVE" :
-          String(rawStatus).toUpperCase().includes("EXPIRE") ? "EXPIRED" :
-          String(rawStatus).toUpperCase() || "ACTIVE"
-
-        return {
-          valid: !isExpired && normalizedStatus === "ACTIVE",
-          holderName: String(holderName).trim(),
-          licenseNumber: String(licNum).trim(),
-          licenseType: String(licType).trim() || "Cosmetologist",
-          expirationDate: String(expDate).trim() || null,
-          originalIssueDate: String(issueDate).trim(),
-          status: normalizedStatus,
-          county: String(county).trim(),
-          source: url,
-          rawRecord: r,
+        if (found) {
+          reader.cancel()
+          break
         }
       }
 
-      if (Array.isArray(data) && data.length === 0) {
-        console.log("[TDLR] Empty array from:", url)
+      if (result) {
+        console.log("[TDLR] Returning result:", JSON.stringify(result))
+        return result
       }
+
+      console.log("[TDLR] License not found in:", csvUrl)
     } catch (e: unknown) {
-      console.log("[TDLR] Fetch failed for", url, ":", e instanceof Error ? e.message : e)
+      console.log("[TDLR] CSV error:", e instanceof Error ? e.message : e)
       continue
     }
   }
 
-  console.log("[TDLR] All strategies exhausted for license:", cleaned)
+  console.log("[TDLR] License not found in any CSV:", cleaned)
   return {
     valid: false,
-    error: `License ${cleaned} could not be verified via TDLR API. Please verify manually at tdlr.texas.gov and use the manual override option.`,
+    error: `License ${cleaned} was not found in TDLR records. Please verify at tdlr.texas.gov`,
   }
 }

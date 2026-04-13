@@ -105,7 +105,7 @@ export default function StaffPage() {
   const [licenseModal, setLicenseModal] = useState<{ staffId: string; staffName: string; phone: string | null; email: string | null; currentLicense: string | null; currentStatus: string | null } | null>(null)
   const [licenseInput, setLicenseInput] = useState("")
   const [licenseVerifying, setLicenseVerifying] = useState(false)
-  const [licenseResult, setLicenseResult] = useState<{ verified: boolean; holderName?: string; licenseNumber?: string; licenseType?: string; expirationDate?: string | null; status?: string; county?: string; originalIssueDate?: string; source?: string; error?: string } | null>(null)
+  const [licenseResult, setLicenseResult] = useState<{ verified: boolean; holderName?: string; licenseNumber?: string; licenseType?: string; expirationDate?: string | null; status?: string; county?: string; city?: string; originalIssueDate?: string; source?: string; error?: string } | null>(null)
   const [licenseSendStatus, setLicenseSendStatus] = useState<string | null>(null)
   const [showOverride, setShowOverride] = useState(false)
   const [overrideForm, setOverrideForm] = useState({ holderName: "", licenseType: "Cosmetologist - Operator", expirationDate: "", status: "ACTIVE" })
@@ -796,6 +796,7 @@ export default function StaffPage() {
                     { label: "LICENSE STATUS", value: licenseResult.status || "" },
                     { label: "ORIGINAL ISSUE DATE", value: licenseResult.originalIssueDate || "" },
                     { label: "COUNTY", value: licenseResult.county || "" },
+                    { label: "CITY", value: licenseResult.city || "" },
                     { label: "ISSUED STATE", value: "TEXAS" },
                   ].filter(r => !!r.value).map((r, idx, arr) => (
                     <div key={r.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: idx < arr.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
