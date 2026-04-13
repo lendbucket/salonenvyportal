@@ -3,6 +3,8 @@ import { requireSession } from "@/lib/api-auth";
 import { prisma } from "@/lib/prisma";
 import { verifyTDLRLicense } from "@/lib/tdlr";
 
+export const maxDuration = 60;
+
 // Public TDLR license lookup (GET) — no auth needed
 export async function GET(req: NextRequest) {
   const license = req.nextUrl.searchParams.get("license");
