@@ -388,7 +388,13 @@ export default function StaffPage() {
                 {m.position}
               </span>
               <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 cursor-pointer transition hover:brightness-125 ${tb.cls}`}
+                style={{
+                  borderRadius: 9999, padding: "2px 8px", fontSize: 10, fontWeight: 600,
+                  textTransform: "uppercase", letterSpacing: "0.06em", cursor: "pointer", transition: "all 0.15s",
+                  background: tb.label === "TDLR Active" ? "rgba(16,185,129,0.15)" : tb.label === "TDLR Expired" ? "rgba(239,68,68,0.15)" : "rgba(245,158,11,0.15)",
+                  color: tb.label === "TDLR Active" ? "#34d399" : tb.label === "TDLR Expired" ? "#f87171" : "#fbbf24",
+                  border: `1px solid ${tb.label === "TDLR Active" ? "rgba(16,185,129,0.3)" : tb.label === "TDLR Expired" ? "rgba(239,68,68,0.3)" : "rgba(245,158,11,0.3)"}`,
+                }}
                 onClick={(e) => { e.stopPropagation(); openLicenseModal(m) }}
               >
                 {tb.label}
@@ -693,35 +699,44 @@ export default function StaffPage() {
 
       {/* ---- License Verification Modal ---- */}
       {licenseModal && (
-        <div className="fixed inset-0 z-[300]">
-          <div className="absolute inset-0 bg-black/70" onClick={closeLicenseModal} />
-          <div
-            className="absolute left-1/2 top-1/2 w-full max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#0d1117] p-7"
-            style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.8)", maxWidth: "min(520px, calc(100vw - 32px))" }}
-          >
+        <div style={{ position: "fixed", inset: 0, zIndex: 300 }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} onClick={closeLicenseModal} />
+          <div style={{
+            position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+            width: "min(520px, calc(100vw - 32px))", background: "#0d1117",
+            border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28,
+            boxShadow: "0 20px 60px rgba(0,0,0,0.8)", maxHeight: "90vh", overflowY: "auto" as const, zIndex: 301,
+          }}>
             {/* Header */}
-            <div className="mb-5 flex items-center justify-between">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
               <div>
-                <h2 className="text-lg font-bold text-white">{licenseModal.staffName}</h2>
-                {licenseModal.currentStatus && (
-                  <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${tdlrBadge({ tdlrStatus: licenseModal.currentStatus, tdlrExpirationDate: null } as StaffRow).cls}`}>
-                    {tdlrBadge({ tdlrStatus: licenseModal.currentStatus, tdlrExpirationDate: null } as StaffRow).label}
-                  </span>
-                )}
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: "#ffffff", margin: 0 }}>{licenseModal.staffName}</h2>
+                {licenseModal.currentStatus && (() => {
+                  const tb2 = tdlrBadge({ tdlrStatus: licenseModal.currentStatus, tdlrExpirationDate: null } as StaffRow)
+                  return (
+                    <span style={{
+                      display: "inline-block", marginTop: 6, borderRadius: 9999, padding: "2px 8px",
+                      fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em",
+                      background: tb2.label === "TDLR Active" ? "rgba(16,185,129,0.15)" : tb2.label === "TDLR Expired" ? "rgba(239,68,68,0.15)" : "rgba(245,158,11,0.15)",
+                      color: tb2.label === "TDLR Active" ? "#34d399" : tb2.label === "TDLR Expired" ? "#f87171" : "#fbbf24",
+                      border: `1px solid ${tb2.label === "TDLR Active" ? "rgba(16,185,129,0.3)" : tb2.label === "TDLR Expired" ? "rgba(239,68,68,0.3)" : "rgba(245,158,11,0.3)"}`,
+                    }}>{tb2.label}</span>
+                  )
+                })()}
               </div>
-              <button type="button" onClick={closeLicenseModal} className="text-neutral-500 hover:text-white transition">
-                <X className="size-5" />
+              <button type="button" onClick={closeLicenseModal} style={{ background: "none", border: "none", color: "#606E74", cursor: "pointer", padding: 4 }}>
+                <X style={{ width: 20, height: 20 }} />
               </button>
             </div>
 
             {/* License input */}
             <div>
-              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-widest text-neutral-500">TDLR License Number</label>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", color: "#606E74", marginBottom: 6 }}>TDLR License Number</label>
               <input
                 value={licenseInput}
                 onChange={(e) => setLicenseInput(e.target.value)}
                 placeholder="e.g. 123456 or COST123456"
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 font-mono text-base text-white outline-none focus:border-[#7a8f96] focus:ring-2 focus:ring-[#7a8f96]/15"
+                style={{ width: "100%", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", padding: "14px 16px", fontFamily: "'Fira Code', monospace", fontSize: 16, color: "#ffffff", outline: "none", boxSizing: "border-box" as const }}
               />
             </div>
 
@@ -730,21 +745,25 @@ export default function StaffPage() {
               type="button"
               onClick={handleVerifyLicense}
               disabled={licenseVerifying || !licenseInput.trim()}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[#7a8f96] py-3 text-[15px] font-semibold text-white transition hover:bg-[#7a8f96]/10 disabled:opacity-40"
-              style={{ background: licenseVerifying ? "rgba(96,110,116,0.2)" : "rgba(122,143,150,0.15)" }}
+              style={{
+                display: "flex", width: "100%", alignItems: "center", justifyContent: "center", gap: 8,
+                marginTop: 12, borderRadius: 12, border: "1px solid #7a8f96", padding: "12px 0",
+                fontSize: 15, fontWeight: 600, color: "#ffffff", cursor: "pointer", transition: "all 0.15s",
+                background: licenseVerifying ? "rgba(96,110,116,0.2)" : "rgba(122,143,150,0.15)",
+                opacity: (licenseVerifying || !licenseInput.trim()) ? 0.4 : 1,
+              }}
             >
-              {licenseVerifying && <span className="inline-block size-4 animate-spin rounded-full border-2 border-[#7a8f96] border-t-transparent" />}
               {licenseVerifying ? "Verifying with TDLR..." : "Verify License"}
             </button>
 
             {/* Result: success */}
             {licenseResult && licenseResult.verified && (
-              <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] p-5">
-                <div className="mb-3 flex items-center gap-2">
-                  <ShieldCheck className="size-5 text-emerald-400" />
-                  <span className="text-[15px] font-bold text-emerald-400">License Verified</span>
+              <div style={{ marginTop: 16, borderRadius: 12, border: "1px solid rgba(34,197,94,0.2)", background: "rgba(34,197,94,0.06)", padding: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                  <ShieldCheck style={{ width: 20, height: 20, color: "#34d399" }} />
+                  <span style={{ fontSize: 15, fontWeight: 700, color: "#34d399" }}>License Verified</span>
                 </div>
-                <div className="divide-y divide-white/5">
+                <div>
                   {[
                     { label: "LICENSE NUMBER", value: licenseInput },
                     { label: "LICENSE HOLDER", value: licenseResult.holderName },
@@ -752,15 +771,17 @@ export default function StaffPage() {
                     { label: "EXPIRATION DATE", value: licenseResult.expirationDate ? new Date(licenseResult.expirationDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : null },
                     { label: "STATUS", value: licenseResult.status },
                     { label: "ISSUED STATE", value: "TEXAS" },
-                  ].filter(r => r.value).map(r => (
-                    <div key={r.label} className="flex items-center justify-between py-2.5">
-                      <span className="text-xs font-medium text-neutral-500">{r.label}</span>
+                  ].filter(r => r.value).map((r, idx, arr) => (
+                    <div key={r.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: idx < arr.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: "#606E74" }}>{r.label}</span>
                       {r.label === "STATUS" ? (
-                        <span className={`rounded-full px-2.5 py-0.5 font-mono text-[11px] font-semibold ${r.value === "ACTIVE" ? "bg-emerald-500/10 text-emerald-400" : r.value === "EXPIRED" ? "bg-red-500/10 text-red-400" : "bg-amber-500/10 text-amber-300"}`}>
-                          {r.value}
-                        </span>
+                        <span style={{
+                          borderRadius: 9999, padding: "2px 10px", fontFamily: "'Fira Code', monospace", fontSize: 11, fontWeight: 600,
+                          background: r.value === "ACTIVE" ? "rgba(16,185,129,0.1)" : r.value === "EXPIRED" ? "rgba(239,68,68,0.1)" : "rgba(245,158,11,0.1)",
+                          color: r.value === "ACTIVE" ? "#34d399" : r.value === "EXPIRED" ? "#f87171" : "#fbbf24",
+                        }}>{r.value}</span>
                       ) : (
-                        <span className="font-mono text-[13px] font-medium text-white">{r.value}</span>
+                        <span style={{ fontFamily: "'Fira Code', monospace", fontSize: 13, fontWeight: 500, color: "#ffffff" }}>{r.value}</span>
                       )}
                     </div>
                   ))}
@@ -770,28 +791,28 @@ export default function StaffPage() {
 
             {/* Result: failed */}
             {licenseResult && !licenseResult.verified && (
-              <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/[0.06] p-4">
-                <div className="flex items-center gap-2">
-                  <X className="size-4 text-red-400" />
-                  <span className="text-sm font-bold text-red-400">License Not Found</span>
+              <div style={{ marginTop: 16, borderRadius: 12, border: "1px solid rgba(239,68,68,0.2)", background: "rgba(239,68,68,0.06)", padding: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <X style={{ width: 16, height: 16, color: "#f87171" }} />
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#f87171" }}>License Not Found</span>
                 </div>
-                <p className="mt-2 text-[13px] text-[#7a8f96]">{licenseResult.error || "This license number was not found in the TDLR database. Please check the number and try again."}</p>
-                <p className="mt-1 text-xs text-neutral-600">You can look up licenses at tdlr.texas.gov</p>
+                <p style={{ marginTop: 8, fontSize: 13, color: "#7a8f96" }}>{licenseResult.error || "This license number was not found in the TDLR database. Please check the number and try again."}</p>
+                <p style={{ marginTop: 4, fontSize: 12, color: "#606E74" }}>You can look up licenses at tdlr.texas.gov</p>
               </div>
             )}
 
             {/* Send verification link */}
-            <div className="mt-5 border-t border-white/[0.06] pt-4">
-              <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-widest text-neutral-500">Send Verification Link</p>
+            <div style={{ marginTop: 20, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
+              <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", color: "#606E74", marginBottom: 10 }}>Send Verification Link</p>
               {licenseSendStatus && (
-                <p className="mb-2 text-xs font-semibold text-[#7a8f96]">{licenseSendStatus}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: "#7a8f96", marginBottom: 8 }}>{licenseSendStatus}</p>
               )}
-              <div className="flex gap-2">
+              <div style={{ display: "flex", gap: 8 }}>
                 <button
                   type="button"
                   onClick={() => handleSendVerification("sms")}
                   disabled={!licenseModal.phone}
-                  className="flex-1 rounded-lg border border-white/10 px-3 py-2.5 text-[13px] font-medium text-[#7a8f96] transition hover:bg-white/[0.05] disabled:opacity-30 disabled:cursor-not-allowed"
+                  style={{ flex: 1, borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "transparent", padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#7a8f96", cursor: licenseModal.phone ? "pointer" : "not-allowed", opacity: licenseModal.phone ? 1 : 0.3 }}
                 >
                   Send via SMS
                 </button>
@@ -799,7 +820,7 @@ export default function StaffPage() {
                   type="button"
                   onClick={() => handleSendVerification("email")}
                   disabled={!licenseModal.email}
-                  className="flex-1 rounded-lg border border-white/10 px-3 py-2.5 text-[13px] font-medium text-[#7a8f96] transition hover:bg-white/[0.05] disabled:opacity-30 disabled:cursor-not-allowed"
+                  style={{ flex: 1, borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "transparent", padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#7a8f96", cursor: licenseModal.email ? "pointer" : "not-allowed", opacity: licenseModal.email ? 1 : 0.3 }}
                 >
                   Send via Email
                 </button>
