@@ -1,5 +1,3 @@
-import { prisma } from "@/lib/prisma"
-
 export interface TDLRResult {
   valid: boolean
   holderName?: string
@@ -17,240 +15,159 @@ export interface TDLRResult {
   error?: string
 }
 
-function parseCSVLine(line: string): string[] {
-  const result: string[] = []
-  let current = ""
-  let inQuotes = false
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i]
-    if (char === '"') { inQuotes = !inQuotes }
-    else if (char === "," && !inQuotes) { result.push(current); current = "" }
-    else { current += char }
-  }
-  result.push(current)
-  return result
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapRecord(r: Record<string, any>, cleaned: string, source: string): TDLRResult {
-  const lastName = r.name_last || r.last_name || r.lname || ""
-  const firstName = r.name_first || r.first_name || r.fname || ""
-  const fullName = r.owner_name || r.business_name || r.name || r.full_name || r.licensee_name ||
-    (lastName && firstName ? `${lastName}, ${firstName}` : lastName || firstName)
-  const expDate = r.license_expiration_date_mmddccyy || r.expiration_date || r.exp_date || r.expiry_date || r.lic_exp_date || r.expire_date || ""
-  const rawStatus = r.status || r.lic_status || r.license_status || "ACTIVE"
-  const licType = r.license_type || r.lic_type || r.type || r.profession || "Cosmetologist - Operator"
-  const licSubtype = r.license_subtype || ""
-  const county = r.business_county || r.mailing_address_county || r.county || r.county_name || ""
-  const issueDate = r.original_issue_date || r.issue_date || r.orig_iss_date || r.first_issued || ""
-  const city = r.city || r.bus_city || ""
-  const licNum = r.license_number || r.license_no || r.lic_no || r.lic_nbr || cleaned
-  const ceFlag = r.continuing_education_flag || ""
-
-  // Parse expiration — handle MM/DD/YYYY format from TDLR
-  let isExpired = false
-  let expDateStr = String(expDate).trim()
-  if (expDateStr) {
-    try {
-      // Handle MM/DD/YYYY format
-      const parts = expDateStr.match(/(\d{2})\/(\d{2})\/(\d{4})/)
-      const expObj = parts ? new Date(parseInt(parts[3]), parseInt(parts[1]) - 1, parseInt(parts[2])) : new Date(expDateStr)
-      isExpired = expObj < new Date()
-    } catch { /* skip */ }
-  }
-
-  const statusStr = String(rawStatus).toUpperCase()
-  // If no explicit status field, determine from expiration
-  const normalizedStatus = isExpired ? "EXPIRED" :
-    statusStr.includes("ACTIVE") ? "ACTIVE" :
-    statusStr.includes("EXPIRE") ? "EXPIRED" :
-    (statusStr && statusStr !== "ACTIVE") ? statusStr : "ACTIVE"
-
-  const fullLicType = licSubtype ? `${String(licType).trim()} (${licSubtype})` : String(licType).trim()
-
-  return {
-    valid: !isExpired && normalizedStatus === "ACTIVE",
-    holderName: String(fullName).toUpperCase().trim(),
-    licenseNumber: String(licNum).trim(),
-    licenseType: fullLicType,
-    expirationDate: expDateStr || null,
-    originalIssueDate: String(issueDate).trim(),
-    status: normalizedStatus,
-    county: String(county).toUpperCase().trim(),
-    city: String(city).toUpperCase().trim(),
-    state: "TX",
-    source,
-  }
-}
-
-async function saveToCache(cleaned: string, result: TDLRResult) {
-  try {
-    await prisma.tdlrLicenseCache.upsert({
-      where: { licenseNumber: cleaned },
-      create: {
-        licenseNumber: cleaned,
-        holderName: result.holderName,
-        licenseType: result.licenseType,
-        expirationDate: typeof result.expirationDate === "string" ? result.expirationDate : undefined,
-        originalIssueDate: result.originalIssueDate,
-        status: result.status,
-        county: result.county,
-        city: result.city,
-        state: result.state || "TX",
-        isValid: result.valid,
-        lastVerified: new Date(),
-      },
-      update: {
-        holderName: result.holderName,
-        licenseType: result.licenseType,
-        expirationDate: typeof result.expirationDate === "string" ? result.expirationDate : undefined,
-        originalIssueDate: result.originalIssueDate,
-        status: result.status,
-        county: result.county,
-        city: result.city,
-        state: result.state || "TX",
-        isValid: result.valid,
-        lastVerified: new Date(),
-      },
-    })
-    console.log("[TDLR] Saved to cache:", cleaned)
-  } catch (e) {
-    console.log("[TDLR] Cache save failed:", e instanceof Error ? e.message : e)
-  }
-}
-
 export async function verifyTDLRLicense(licenseNumber: string): Promise<TDLRResult> {
   const cleaned = licenseNumber.trim().replace(/\D/g, "")
-  console.log("[TDLR] Verifying:", cleaned)
+  console.log("[TDLR] Starting verification for:", cleaned)
 
-  // STEP 1: Check Supabase cache first (instant)
+  const token = process.env.SOCRATA_APP_TOKEN || ""
+  console.log("[TDLR] Token present:", !!token, "length:", token.length)
+
+  // STEP 1: Direct Socrata call — confirmed working query
+  const url = `https://data.texas.gov/resource/7358-krk7.json?license_number=${cleaned}`
+  console.log("[TDLR] Fetching:", url)
+
   try {
-    const cached = await prisma.tdlrLicenseCache.findUnique({ where: { licenseNumber: cleaned } })
-    if (cached) {
-      console.log("[TDLR] Cache hit:", cleaned, "verified:", cached.lastVerified)
-      let isExpired = false
-      if (cached.expirationDate) { try { isExpired = new Date(cached.expirationDate) < new Date() } catch { /* skip */ } }
-      return {
-        valid: !isExpired && (cached.status || "").toUpperCase() === "ACTIVE",
-        holderName: cached.holderName || "", licenseNumber: cached.licenseNumber,
-        licenseType: cached.licenseType || "", expirationDate: cached.expirationDate || null,
-        originalIssueDate: cached.originalIssueDate || "", status: isExpired ? "EXPIRED" : (cached.status || "ACTIVE"),
-        county: cached.county || "", city: cached.city || "", state: "TX", source: "cache",
+    const res = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "X-App-Token": token,
+      },
+      signal: AbortSignal.timeout(15000),
+    })
+
+    console.log("[TDLR] Response status:", res.status)
+
+    const data = await res.json()
+    console.log("[TDLR] Response data:", JSON.stringify(data).substring(0, 500))
+
+    if (!Array.isArray(data) || data.length === 0) {
+      console.log("[TDLR] Empty result for license:", cleaned)
+      return { valid: false, error: `License ${cleaned} not found in TDLR database` }
+    }
+
+    const r = data[0]
+    console.log("[TDLR] Record found:", JSON.stringify(r))
+
+    const holderName = (r.owner_name || r.business_name || "").toUpperCase().trim()
+    const expDate = r.license_expiration_date_mmddccyy || ""
+    const licType = `${r.license_type || "Cosmetologist"} (${r.license_subtype || "OP"})`
+    const county = (r.business_county || r.mailing_address_county || "").toUpperCase()
+
+    let isExpired = false
+    if (expDate) {
+      try {
+        const parts = expDate.match(/(\d{2})\/(\d{2})\/(\d{4})/)
+        if (parts) {
+          isExpired = new Date(parseInt(parts[3]), parseInt(parts[1]) - 1, parseInt(parts[2])) < new Date()
+        }
+      } catch (e) {
+        console.log("[TDLR] Date parse error:", e)
       }
     }
-  } catch (e) {
-    console.log("[TDLR] Cache error:", e instanceof Error ? e.message : e)
-  }
 
-  // STEP 2: Try Socrata API (fast, small response, <1s per request)
-  // CONFIRMED: dataset 7358-krk7, field name "license_number" (NOT license_no)
-  const socrataToken = process.env.SOCRATA_APP_TOKEN || ""
+    const result: TDLRResult = {
+      valid: !isExpired,
+      holderName,
+      licenseNumber: r.license_number || cleaned,
+      licenseType: licType,
+      expirationDate: expDate || null,
+      originalIssueDate: "",
+      status: isExpired ? "EXPIRED" : "ACTIVE",
+      county,
+      city: "",
+      state: "TX",
+      source: "socrata",
+    }
 
-  const socrataUrls = [
-    // Primary — confirmed working query
-    `https://data.texas.gov/resource/7358-krk7.json?license_number=${cleaned}`,
-    // Fallback variants
-    `https://data.texas.gov/resource/7358-krk7.json?$where=license_number=%27${cleaned}%27`,
-    `https://data.texas.gov/resource/7358-krk7.json?$where=license_number+like+%27%25${cleaned}%25%27&$limit=5`,
-  ]
+    console.log("[TDLR] Returning result:", JSON.stringify(result))
 
-  for (const url of socrataUrls) {
+    // Save to cache async — non-blocking, dynamic import to avoid module-level prisma crash
     try {
-      console.log("[TDLR] Socrata:", url)
-      const headers: Record<string, string> = { Accept: "application/json" }
-      if (socrataToken) headers["X-App-Token"] = socrataToken
-      const res = await fetch(url, { headers, signal: AbortSignal.timeout(10000) })
-      if (!res.ok) { console.log("[TDLR] Socrata", res.status); continue }
-      const data = await res.json()
-      if (Array.isArray(data) && data.length > 0) {
-        console.log("[TDLR] Socrata found! Keys:", Object.keys(data[0]).join(", "))
-        const result = mapRecord(data[0], cleaned, url)
-        saveToCache(cleaned, result).catch(() => {})
-        return result
-      }
-      console.log("[TDLR] Socrata empty:", url)
-    } catch (e: unknown) {
-      console.log("[TDLR] Socrata fail:", e instanceof Error ? e.message : e)
+      const { prisma } = await import("@/lib/prisma")
+      await prisma.tdlrLicenseCache.upsert({
+        where: { licenseNumber: cleaned },
+        create: {
+          licenseNumber: cleaned, holderName, licenseType: licType,
+          expirationDate: expDate || undefined, status: result.status,
+          county, isValid: result.valid, lastVerified: new Date(),
+        },
+        update: {
+          holderName, licenseType: licType,
+          expirationDate: expDate || undefined, status: result.status,
+          county, isValid: result.valid, lastVerified: new Date(),
+        },
+      })
+      console.log("[TDLR] Cached successfully")
+    } catch (cacheErr) {
+      console.error("[TDLR] Cache save failed (non-fatal):", cacheErr instanceof Error ? cacheErr.message : cacheErr)
     }
-  }
 
-  // STEP 3: Stream CSV (slow fallback, 25-55s)
-  console.log("[TDLR] Socrata exhausted, trying CSV...")
-  const result = await searchTDLRCSV(cleaned)
-  if (result.valid || result.holderName) {
-    saveToCache(cleaned, result).catch(() => {})
+    return result
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error("[TDLR] Fatal error:", msg)
+    return { valid: false, error: `Verification failed: ${msg}` }
   }
-  return result
 }
 
 /** Stream-search TDLR daily CSV files. Exported for cron use. */
 export async function searchTDLRCSV(cleaned: string): Promise<TDLRResult> {
-  const searchVariants = [cleaned, cleaned.padStart(7, "0"), cleaned.padStart(8, "0")]
-
   const csvUrls = [
     "https://www.tdlr.texas.gov/dbproduction2/ltcos_op.csv",
     "https://www.tdlr.texas.gov/dbproduction2/ltcosmos.csv",
   ]
+  const searchVariants = [cleaned, cleaned.padStart(7, "0"), cleaned.padStart(8, "0")]
 
   for (const csvUrl of csvUrls) {
     try {
-      console.log("[TDLR] CSV:", csvUrl)
       const res = await fetch(csvUrl, {
         headers: { "User-Agent": "Mozilla/5.0", Accept: "text/csv,*/*" },
         signal: AbortSignal.timeout(55000),
       })
-      if (!res.ok) { console.log("[TDLR] CSV status:", res.status); continue }
-
+      if (!res.ok) continue
       const reader = res.body?.getReader()
       if (!reader) continue
 
       const decoder = new TextDecoder()
       let buffer = ""
       let headers: string[] = []
-      let linesProcessed = 0
 
       while (true) {
         const { done, value } = await reader.read()
-        if (done) { console.log("[TDLR] CSV done after", linesProcessed, "lines"); break }
-
+        if (done) break
         buffer += decoder.decode(value, { stream: true })
         const lines = buffer.split("\n")
         buffer = lines.pop() || ""
 
         for (const line of lines) {
           if (!line.trim()) continue
-          linesProcessed++
-
           if (headers.length === 0) {
-            headers = parseCSVLine(line).map(h => h.toLowerCase().trim())
-            console.log("[TDLR] CSV headers:", headers.join(", "))
+            headers = line.split(",").map(h => h.trim().replace(/^"|"$/g, "").toLowerCase())
             continue
           }
-
-          // Fast pre-check: does line contain any variant of the license number?
           if (!searchVariants.some(v => line.includes(v))) continue
-
-          const values = parseCSVLine(line)
+          const values = line.split(",").map(v => v.trim().replace(/^"|"$/g, ""))
           if (values.length < headers.length - 2) continue
-
           const record: Record<string, string> = {}
-          headers.forEach((h, i) => { record[h] = (values[i] || "").replace(/^"|"$/g, "").trim() })
-
-          const licField = record["license_no"] || record["lic_no"] || record["license_number"] || record["lic_nbr"] || record["licno"] || ""
-          const licCleaned = licField.replace(/\D/g, "")
-
-          if (licCleaned !== cleaned && licCleaned !== cleaned.padStart(7, "0") && licCleaned !== cleaned.padStart(8, "0")) continue
-
-          console.log("[TDLR] CSV match at line", linesProcessed)
+          headers.forEach((h, i) => { record[h] = values[i] || "" })
+          const licField = record["license_number"] || record["license_no"] || record["lic_no"] || record["lic_nbr"] || ""
+          if (licField.replace(/\D/g, "") !== cleaned) continue
           reader.cancel()
-          return mapRecord(record, cleaned, csvUrl)
+
+          const holderName = (record["owner_name"] || record["business_name"] || record["name"] || "").toUpperCase()
+          const expDate = record["license_expiration_date_mmddccyy"] || record["expiration_date"] || ""
+          let isExpired = false
+          if (expDate) { try { const p = expDate.match(/(\d{2})\/(\d{2})\/(\d{4})/); if (p) isExpired = new Date(parseInt(p[3]), parseInt(p[1]) - 1, parseInt(p[2])) < new Date() } catch { /* skip */ } }
+          return {
+            valid: !isExpired, holderName, licenseNumber: licField || cleaned,
+            licenseType: `${record["license_type"] || "Cosmetologist"} (${record["license_subtype"] || "OP"})`,
+            expirationDate: expDate || null, status: isExpired ? "EXPIRED" : "ACTIVE",
+            county: (record["business_county"] || "").toUpperCase(), state: "TX", source: csvUrl,
+          }
         }
       }
-      console.log("[TDLR] Not found in:", csvUrl)
-    } catch (e: unknown) {
-      console.log("[TDLR] CSV error:", e instanceof Error ? e.message : e)
-    }
+    } catch { continue }
   }
 
-  return { valid: false, error: `License ${cleaned} not found in TDLR records. Verify at tdlr.texas.gov` }
+  return { valid: false, error: `License ${cleaned} not found in TDLR records` }
 }
