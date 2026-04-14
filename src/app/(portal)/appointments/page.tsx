@@ -330,16 +330,25 @@ export default function AppointmentsPage() {
     if (!bookClient || !bookStylist || bookSelectedSvcs.length === 0) return
     if (!bookOverlap && checkOverlap()) { setBookOverlap(true); return }
     setBookSaving(true); setBookError("")
-    // Convert local time to UTC ISO
     const localDate = new Date(`${bookDate}T${bookTime}:00`)
     const utcISO = localDate.toISOString()
     try {
-      const r = await fetch("/api/bookings/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ locationId: location === "San Antonio" ? "SA" : "CC", customerId: bookClient.id, stylistId: bookStylist, startAt: utcISO, services: bookSelectedSvcs, notes: bookNotes }) })
+      const payload = { locationId: location === "San Antonio" ? "SA" : "CC", customerId: bookClient.id, stylistId: bookStylist, startAt: utcISO, services: bookSelectedSvcs, notes: bookNotes }
+      console.log("[booking] Submitting:", JSON.stringify(payload))
+      const r = await fetch("/api/bookings/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
       const d = await r.json()
-      if (!r.ok || d.error) throw new Error(d.error || "Booking failed")
+      console.log("[booking] Response:", r.status, JSON.stringify(d).substring(0, 500))
+      if (!r.ok || d.error) {
+        setBookError(d.error || d.message || JSON.stringify(d.errors || d) || "Booking failed — unknown error")
+        setBookSaving(false)
+        return
+      }
       setShowBooking(false); resetBooking(); fetchAppointments()
       setToast("Appointment booked successfully"); setTimeout(() => setToast(null), 3000)
-    } catch (e: unknown) { setBookError(e instanceof Error ? e.message : "Failed") }
+    } catch (e: unknown) {
+      console.error("[booking] Catch error:", e)
+      setBookError(e instanceof Error ? e.message : "Network error — please try again")
+    }
     setBookSaving(false)
   }
 
@@ -1932,7 +1941,7 @@ export default function AppointmentsPage() {
                   </div>
                 )}
                 <textarea value={bookNotes} onChange={e => setBookNotes(e.target.value)} placeholder="Notes (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", minHeight: "60px", resize: "vertical", marginBottom: "12px", boxSizing: "border-box" }} />
-                {bookError && <div style={{ fontSize: "12px", color: "#EF4444", marginBottom: "10px" }}>{bookError}</div>}
+                {bookError && <div style={{ fontSize: "13px", color: "#EF4444", marginBottom: "10px", padding: "10px 14px", backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "8px", lineHeight: 1.5, wordBreak: "break-word" as const }}>{bookError}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
                   <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={submitBooking} disabled={bookSaving} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSaving ? 0.5 : 1 }}>{bookSaving ? "Booking..." : bookOverlap ? "Book Anyway" : "Book Appointment"}</button>

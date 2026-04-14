@@ -23,18 +23,21 @@ export async function POST(req: NextRequest) {
     // Fetch service variation versions from Square catalog if not provided
     const segments = []
     for (const s of (services || [])) {
-      let version = s.version
+      let version = s.version ? Number(s.version) : 0
       if (!version && s.id) {
         try {
           const catData = await sq(`/catalog/object/${s.id}`)
-          version = catData.object?.version
+          version = Number(catData.object?.version) || 0
           console.log("[booking] Got version for", s.id, ":", version)
-        } catch { /* skip — version is optional for some Square accounts */ }
+        } catch (catErr) {
+          console.log("[booking] Catalog version fetch failed for", s.id, ":", catErr instanceof Error ? catErr.message : catErr)
+        }
       }
       segments.push({
         service_variation_id: s.id,
         team_member_id: stylistId,
         duration_minutes: s.durationMinutes || 60,
+        any_team_member: false,
         ...(version ? { service_variation_version: version } : {}),
       })
     }
@@ -54,9 +57,9 @@ export async function POST(req: NextRequest) {
     console.log("[booking] Square response:", JSON.stringify(data).substring(0, 500))
 
     if (data.errors) {
-      const errMsg = data.errors.map((e: { detail?: string; code?: string }) => e.detail || e.code || "Unknown").join("; ")
+      const errMsg = data.errors.map((e: { detail?: string; code?: string; field?: string }) => `${e.detail || e.code || "Unknown"}${e.field ? ` (field: ${e.field})` : ""}`).join("; ")
       console.error("[booking] Square errors:", JSON.stringify(data.errors))
-      return NextResponse.json({ error: errMsg, errors: data.errors }, { status: 400 })
+      return NextResponse.json({ error: errMsg, errors: data.errors, sentPayload: booking }, { status: 400 })
     }
 
     // Send confirmation SMS if client has a phone number
