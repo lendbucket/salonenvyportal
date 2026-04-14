@@ -62,12 +62,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: errMsg, errors: data.errors, sentPayload: booking }, { status: 400 })
     }
 
-    // Send confirmation SMS if client has a phone number
+    // Send confirmation SMS via Twilio
+    console.log("[booking] Twilio SID present:", !!process.env.TWILIO_ACCOUNT_SID)
     if (customerId) {
       try {
         const custData = await sq(`/customers/${customerId}`)
-        const phone = custData.customer?.phone_number
-        if (phone) {
+        let rawPhone = custData.customer?.phone_number || ""
+        console.log("[booking] Customer phone raw:", rawPhone)
+
+        // Normalize to E.164 format
+        let normalized = rawPhone.replace(/\D/g, "")
+        if (normalized.length === 10) normalized = "+1" + normalized
+        else if (normalized.length === 11 && normalized.startsWith("1")) normalized = "+" + normalized
+        else if (!normalized.startsWith("+")) normalized = "+1" + normalized
+
+        if (normalized.length >= 11) {
           const { sendSMS } = await import("@/lib/twilio")
           const startDate = new Date(startAt)
           const dateStr = startDate.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric", timeZone: "America/Chicago" })
@@ -75,10 +84,13 @@ export async function POST(req: NextRequest) {
           const { TEAM_NAMES } = await import("@/lib/staff")
           const stylistName = TEAM_NAMES[stylistId] || "your stylist"
           const locName = sqLocationId === CC_LOCATION_ID ? "Corpus Christi" : "San Antonio"
-          await sendSMS(phone, `Hi ${custData.customer?.given_name || "there"}! Your appointment at Salon Envy ${locName} is confirmed for ${dateStr} at ${timeStr} with ${stylistName}. Reply STOP to unsubscribe.`)
+          const smsResult = await sendSMS(normalized, `Hi ${custData.customer?.given_name || "there"}! Your appointment at Salon Envy ${locName} is confirmed for ${dateStr} at ${timeStr} with ${stylistName}. Reply STOP to unsubscribe.`)
+          console.log("[booking] Twilio SMS result:", JSON.stringify(smsResult))
+        } else {
+          console.log("[booking] Phone too short after normalization:", normalized)
         }
       } catch (smsErr) {
-        console.log("[booking] SMS failed (non-fatal):", smsErr)
+        console.log("[booking] SMS failed (non-fatal):", smsErr instanceof Error ? smsErr.message : smsErr)
       }
     }
 

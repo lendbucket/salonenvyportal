@@ -326,6 +326,8 @@ export default function AppointmentsPage() {
     })
   }
 
+  const [bookSuccess, setBookSuccess] = useState(false)
+
   async function submitBooking() {
     if (!bookClient || !bookStylist || bookSelectedSvcs.length === 0) return
     if (!bookOverlap && checkOverlap()) { setBookOverlap(true); return }
@@ -338,13 +340,18 @@ export default function AppointmentsPage() {
       const r = await fetch("/api/bookings/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
       const d = await r.json()
       console.log("[booking] Response:", r.status, JSON.stringify(d).substring(0, 500))
-      if (!r.ok || d.error) {
-        setBookError(d.error || d.message || JSON.stringify(d.errors || d) || "Booking failed — unknown error")
+
+      const isSuccess = r.ok || d.booking || d.success || d.id
+      if (!isSuccess) {
+        setBookError(d.error || d.message || JSON.stringify(d.errors || d) || `Booking failed (status ${r.status})`)
         setBookSaving(false)
         return
       }
-      setShowBooking(false); resetBooking(); fetchAppointments()
-      setToast("Appointment booked successfully"); setTimeout(() => setToast(null), 3000)
+
+      // Success — show success step
+      setBookSuccess(true)
+      setBookStep(5)
+      fetchAppointments()
     } catch (e: unknown) {
       console.error("[booking] Catch error:", e)
       setBookError(e instanceof Error ? e.message : "Network error — please try again")
@@ -352,7 +359,7 @@ export default function AppointmentsPage() {
     setBookSaving(false)
   }
 
-  function resetBooking() { setBookStep(1); setBookClient(null); setBookStylist(""); setBookDate(date); setBookTime("10:00"); setBookSelectedSvcs([]); setBookNotes(""); setBookError(""); setBookOverlap(false); setClientSearch(""); setClientResults([]); setNewClient(false); setNewClientForm({ givenName: "", familyName: "", phone: "", email: "" }) }
+  function resetBooking() { setBookStep(1); setBookClient(null); setBookStylist(""); setBookDate(date); setBookTime("10:00"); setBookSelectedSvcs([]); setBookNotes(""); setBookError(""); setBookOverlap(false); setBookSuccess(false); setClientSearch(""); setClientResults([]); setNewClient(false); setNewClientForm({ givenName: "", familyName: "", phone: "", email: "" }) }
 
   function openBookingModal() { resetBooking(); setShowBooking(true) }
 
@@ -1807,7 +1814,7 @@ export default function AppointmentsPage() {
             </div>
             {/* Step indicator */}
             <div style={{ display: "flex", gap: "4px", marginBottom: "20px" }}>
-              {[1,2,3,4].map(s => <div key={s} style={{ flex: 1, height: "3px", borderRadius: "2px", backgroundColor: bookStep >= s ? "#CDC9C0" : "rgba(255,255,255,0.08)" }} />)}
+              {[1,2,3,4,5].map(s => <div key={s} style={{ flex: 1, height: "3px", borderRadius: "2px", backgroundColor: bookStep >= s ? (s === 5 ? "#22c55e" : "#CDC9C0") : "rgba(255,255,255,0.08)" }} />)}
             </div>
 
             {/* Step 1 — Client */}
@@ -1946,6 +1953,23 @@ export default function AppointmentsPage() {
                   <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={submitBooking} disabled={bookSaving} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSaving ? 0.5 : 1 }}>{bookSaving ? "Booking..." : bookOverlap ? "Book Anyway" : "Book Appointment"}</button>
                 </div>
+              </div>
+            )}
+
+            {/* Step 5 — Success */}
+            {bookStep === 5 && bookSuccess && (
+              <div style={{ textAlign: "center", padding: "32px 20px" }}>
+                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(34,197,94,0.1)", border: "2px solid #22c55e", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontSize: 28, color: "#22c55e" }}>&#10003;</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>Appointment Booked!</div>
+                <div style={{ fontSize: 14, color: "#7a8f96", marginBottom: 24 }}>
+                  {bookClient?.name} is confirmed for {new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} with {TEAM_NAMES[bookStylist] || "stylist"}
+                </div>
+                <button
+                  onClick={() => { setShowBooking(false); resetBooking(); setBookSuccess(false) }}
+                  style={{ width: "100%", height: 48, background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: 10, color: "#ffffff", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
+                >
+                  Done
+                </button>
               </div>
             )}
           </div>
