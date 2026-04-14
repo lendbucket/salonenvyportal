@@ -1851,8 +1851,8 @@ export default function AppointmentsPage() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Time</div>
-                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
-                      {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ color: busy ? "#666" : "#fff" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
+                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", outline: "none", boxSizing: "border-box" as const }}>
+                      {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ backgroundColor: "#0d1117", color: busy ? "#606E74" : "#ffffff" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
                     </select>
                   </div>
                 </div>
@@ -1867,21 +1867,39 @@ export default function AppointmentsPage() {
             {bookStep === 3 && (
               <div>
                 <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 3 — Select Services</div>
+                {/* Service search */}
+                <input
+                  placeholder="Search services..."
+                  onChange={e => { const q = e.target.value.toLowerCase(); e.currentTarget.dataset.q = q }}
+                  onInput={e => { const el = e.currentTarget; el.parentElement?.querySelectorAll("[data-svc]").forEach(d => { const n = d.getAttribute("data-svc") || ""; (d as HTMLElement).style.display = n.toLowerCase().includes(el.value.toLowerCase()) || !el.value ? "" : "none" }) }}
+                  style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", marginBottom: "12px", boxSizing: "border-box" as const }}
+                />
                 <div style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "12px" }}>
-                  {bookServices.length === 0 ? <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px", padding: "20px 0", textAlign: "center" }}>Loading services...</div> : bookServices.map((s: { id: string; name: string; price: number; durationMinutes: number; version?: number }) => {
-                    const sel = bookSelectedSvcs.some(x => x.id === s.id)
-                    return (
-                      <div key={s.id} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(255,255,255,0.06)" : "rgba(205,201,192,0.02)", border: sel ? "1px solid rgba(205,201,192,0.25)" : "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <div>
-                          <div style={{ fontSize: "13px", fontWeight: sel ? 600 : 400, color: sel ? "#fff" : "rgba(205,201,192,0.7)" }}>{s.name}</div>
-                          <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)" }}>{s.durationMinutes} min</div>
+                  {bookServices.length === 0 ? <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px", padding: "20px 0", textAlign: "center" }}>Loading services...</div> : (() => {
+                    const POPULAR = ["Envy Cut", "Full Highlight", "Partial Highlight", "Envy Color", "Color Touch Up", "Full Highlight & Base Color", "Partial Highlight & Base Color", "Envy Dry Cut", "Toner", "Brazilian Blowout", "Blonde Touch Up", "Envy Blonde"]
+                    const sorted = [...bookServices].sort((a, b) => {
+                      const ai = POPULAR.findIndex(p => a.name.includes(p))
+                      const bi = POPULAR.findIndex(p => b.name.includes(p))
+                      if (ai >= 0 && bi >= 0) return ai - bi
+                      if (ai >= 0) return -1
+                      if (bi >= 0) return 1
+                      return a.name.localeCompare(b.name)
+                    })
+                    return sorted.map((s: { id: string; name: string; price: number; durationMinutes: number; version?: number }) => {
+                      const sel = bookSelectedSvcs.some(x => x.id === s.id)
+                      return (
+                        <div key={s.id} data-svc={s.name} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "14px", borderRadius: "10px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(122,143,150,0.08)" : "#0d1117", border: sel ? "1px solid #7a8f96" : "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <div style={{ fontSize: "13px", fontWeight: sel ? 600 : 400, color: sel ? "#fff" : "rgba(205,201,192,0.7)" }}>{s.name}</div>
+                            <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Fira Code', monospace" }}>{s.durationMinutes} min</div>
+                          </div>
+                          <div style={{ fontSize: "14px", fontWeight: 600, color: sel ? "#22c55e" : "rgba(205,201,192,0.5)", fontFamily: "'Fira Code', monospace" }}>${s.price.toFixed(2)}</div>
                         </div>
-                        <div style={{ fontSize: "13px", fontWeight: 600, color: sel ? "#CDC9C0" : "rgba(205,201,192,0.5)", fontFamily: "monospace" }}>${s.price.toFixed(2)}</div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })
+                  })()}
                 </div>
-                {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#CDC9C0", textAlign: "right", marginBottom: "12px", fontFamily: "monospace" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
+                {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#22c55e", textAlign: "right", marginBottom: "12px", fontFamily: "'Fira Code', monospace" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
                   <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={() => setBookStep(4)} disabled={bookSelectedSvcs.length === 0} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSelectedSvcs.length === 0 ? 0.5 : 1 }}>Next</button>

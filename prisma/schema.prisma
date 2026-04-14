@@ -881,3 +881,20 @@ model CardOnFileRequest {
 
   @@map("card_on_file_requests")
 }
+
+model AppointmentNote {
+  id               String   @id @default(cuid())
+  squareBookingId  String
+  clientId         String?
+  squareCustomerId String?
+  note             String
+  createdBy        String
+  createdById      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  notifyStylist    Boolean  @default(false)
+
+  @@index([squareBookingId])
+  @@index([squareCustomerId])
+  @@map("appointment_notes")
+}
