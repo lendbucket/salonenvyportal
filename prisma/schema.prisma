@@ -898,3 +898,198 @@ model AppointmentNote {
   @@index([squareCustomerId])
   @@map("appointment_notes")
 }
+
+model FinancialAccount {
+  id                String            @id @default(cuid())
+  locationId        String
+  accountName       String
+  accountType       String
+  bankName          String?
+  lastFour          String?
+  stripeFinancialId String?
+  stripeAccessToken String?
+  balance           Float?
+  balanceUpdatedAt  DateTime?
+  isActive          Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  transactions      BankTransaction[]
+  @@map("financial_accounts")
+}
+
+model BankTransaction {
+  id                   String           @id @default(cuid())
+  financialAccountId   String
+  financialAccount     FinancialAccount @relation(fields: [financialAccountId], references: [id])
+  stripeTransactionId  String?          @unique
+  date                 DateTime
+  description          String
+  amount               Float
+  category             String?
+  subcategory          String?
+  isReconciled         Boolean          @default(false)
+  notes                String?
+  receiptUrl           String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  @@index([financialAccountId])
+  @@index([date])
+  @@map("bank_transactions")
+}
+
+model Expense {
+  id                 String   @id @default(cuid())
+  locationId         String
+  date               DateTime
+  vendor             String
+  description        String
+  amount             Float
+  category           String
+  subcategory        String?
+  paymentMethod      String?
+  receiptUrl         String?
+  isRecurring        Boolean  @default(false)
+  recurringFrequency String?
+  taxDeductible      Boolean  @default(true)
+  notes              String?
+  createdBy          String
+  approvedBy         String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  @@index([locationId])
+  @@index([date])
+  @@index([category])
+  @@map("expenses")
+}
+
+model Invoice {
+  id               String    @id @default(cuid())
+  invoiceNumber    String    @unique
+  locationId       String
+  clientName       String
+  clientEmail      String?
+  clientPhone      String?
+  squareCustomerId String?
+  squareOrderId    String?
+  lineItems        Json
+  subtotal         Float
+  taxAmount        Float     @default(0)
+  tipAmount        Float     @default(0)
+  discountAmount   Float     @default(0)
+  total            Float
+  status           String    @default("draft")
+  dueDate          DateTime?
+  paidAt           DateTime?
+  sentAt           DateTime?
+  paymentMethod    String?
+  notes            String?
+  createdBy        String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  @@index([locationId])
+  @@index([status])
+  @@index([squareCustomerId])
+  @@map("invoices")
+}
+
+model BoothRental {
+  id            String               @id @default(cuid())
+  locationId    String
+  renterName    String
+  renterEmail   String?
+  renterPhone   String?
+  boothNumber   String?
+  rentalType    String
+  weeklyRate    Float?
+  monthlyRate   Float?
+  startDate     DateTime
+  endDate       DateTime?
+  isActive      Boolean              @default(true)
+  depositAmount Float?
+  depositPaid   Boolean              @default(false)
+  notes         String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  payments      BoothRentalPayment[]
+  @@index([locationId])
+  @@map("booth_rentals")
+}
+
+model BoothRentalPayment {
+  id            String      @id @default(cuid())
+  boothRentalId String
+  boothRental   BoothRental @relation(fields: [boothRentalId], references: [id])
+  amount        Float
+  dueDate       DateTime
+  paidDate      DateTime?
+  status        String      @default("pending")
+  paymentMethod String?
+  notes         String?
+  createdAt     DateTime    @default(now())
+  @@index([boothRentalId])
+  @@index([status])
+  @@map("booth_rental_payments")
+}
+
+model TaxRecord {
+  id                    String   @id @default(cuid())
+  locationId            String
+  year                  Int
+  quarter               Int?
+  periodStart           DateTime
+  periodEnd             DateTime
+  grossRevenue          Float    @default(0)
+  totalExpenses         Float    @default(0)
+  netIncome             Float    @default(0)
+  salesTaxCollected     Float    @default(0)
+  salesTaxRate          Float    @default(0.0825)
+  estimatedFederalTax   Float    @default(0)
+  estimatedSelfEmployTax Float   @default(0)
+  totalTaxLiability     Float    @default(0)
+  status                String   @default("draft")
+  notes                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  @@index([locationId])
+  @@index([year, quarter])
+  @@map("tax_records")
+}
+
+model ContractorPayment {
+  id               String    @id @default(cuid())
+  locationId       String
+  staffMemberId    String?
+  contractorName   String
+  contractorEmail  String?
+  ein              String?
+  ssn              String?
+  year             Int
+  totalPaid        Float     @default(0)
+  serviceCommission Float    @default(0)
+  tips             Float     @default(0)
+  requires1099     Boolean   @default(false)
+  form1099Sent     Boolean   @default(false)
+  form1099SentAt   DateTime?
+  notes            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  @@index([locationId])
+  @@index([year])
+  @@map("contractor_payments")
+}
+
+model BusinessModel {
+  id               String   @id @default(cuid())
+  locationId       String   @unique
+  modelType        String
+  commissionRate   Float    @default(0.40)
+  salesTaxRate     Float    @default(0.0825)
+  boothRentalRate  Float?
+  suiteRentalRate  Float?
+  w2PayrollEnabled Boolean  @default(false)
+  fiscalYearStart  Int      @default(1)
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  @@map("business_models")
+}
