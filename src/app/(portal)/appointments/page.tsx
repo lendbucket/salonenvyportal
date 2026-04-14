@@ -120,7 +120,18 @@ export default function AppointmentsPage() {
   const [selectedAppt, setSelectedAppt] = useState<Appointment | null>(null)
 
   // ── Transactions tab ──
-  const [activeTab, setActiveTab] = useState<"appointments" | "transactions">("appointments")
+  const [activeTab, setActiveTab] = useState<"appointments" | "transactions" | "clients">("appointments")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [clientsList, setClientsList] = useState<any[]>([])
+  const [clientsLoading, setClientsLoading] = useState(false)
+  const [clientsSearch, setClientsSearch] = useState("")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedClient, setSelectedClient] = useState<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [formulaList, setFormulaList] = useState<any[]>([])
+  const [showFormulaForm, setShowFormulaForm] = useState(false)
+  const [formulaForm, setFormulaForm] = useState({ baseColor: "", colorBrand: "", developer: "", developerVolume: "", toner: "", tonerBrand: "", processingTime: "", technique: "", notes: "" })
+  const [formulaSaving, setFormulaSaving] = useState(false)
   const [txPeriod, setTxPeriod] = useState("today")
   const [txCustomStart, setTxCustomStart] = useState("")
   const [txCustomEnd, setTxCustomEnd] = useState("")
@@ -483,6 +494,45 @@ export default function AppointmentsPage() {
 
   useEffect(() => { if (activeTab === "transactions") fetchTransactions() }, [activeTab, fetchTransactions])
 
+  // Clients tab fetch
+  const fetchClients = useCallback(async () => {
+    setClientsLoading(true)
+    try {
+      const q = clientsSearch ? `&q=${encodeURIComponent(clientsSearch)}` : ""
+      const res = await fetch(`/api/clients?page=0${q}`)
+      const data = await res.json()
+      setClientsList(data.clients || [])
+    } catch { setClientsList([]) }
+    setClientsLoading(false)
+  }, [clientsSearch])
+  useEffect(() => { if (activeTab === "clients") fetchClients() }, [activeTab, fetchClients])
+
+  const openClientDetail = async (client: typeof clientsList[0]) => {
+    setSelectedClient(client)
+    try {
+      const res = await fetch(`/api/clients/${client.id}/formula`)
+      const data = await res.json()
+      setFormulaList(data.formulas || [])
+    } catch { setFormulaList([]) }
+  }
+
+  const saveFormula = async () => {
+    if (!selectedClient) return
+    setFormulaSaving(true)
+    try {
+      await fetch(`/api/clients/${selectedClient.id}/formula`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formulaForm),
+      })
+      const res = await fetch(`/api/clients/${selectedClient.id}/formula`)
+      const data = await res.json()
+      setFormulaList(data.formulas || [])
+      setShowFormulaForm(false)
+      setFormulaForm({ baseColor: "", colorBrand: "", developer: "", developerVolume: "", toner: "", tonerBrand: "", processingTime: "", technique: "", notes: "" })
+    } catch { /* skip */ }
+    setFormulaSaving(false)
+  }
+
   const txPageData = useMemo(() => {
     if (!txData?.transactions) return []
     return txData.transactions.slice(txPage * TX_PER_PAGE, (txPage + 1) * TX_PER_PAGE)
@@ -662,17 +712,17 @@ export default function AppointmentsPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "10px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <h1 style={{ fontSize: isMobile ? "22px" : "24px", fontWeight: 800, color: "#FFFFFF", margin: 0 }}>
-              {activeTab === "appointments" ? "Appointments" : "Transactions"}
+              {activeTab === "appointments" ? "Appointments" : activeTab === "transactions" ? "Transactions" : "Clients"}
             </h1>
             <div style={{ display: "flex", gap: "2px", backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "8px", padding: "3px" }}>
-              {(["appointments", "transactions"] as const).map(tab => (
+              {(["appointments", "transactions", "clients"] as const).map(tab => (
                 <button key={tab} onClick={() => setActiveTab(tab)} style={{
                   padding: "6px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
                   borderRadius: "6px", border: "none", cursor: "pointer",
                   backgroundColor: activeTab === tab ? "#CDC9C0" : "transparent",
                   color: activeTab === tab ? "#0f1d24" : "rgba(205,201,192,0.45)",
                   transition: "all 0.15s",
-                }}>{tab === "appointments" ? "Appointments" : "Transactions"}</button>
+                }}>{tab === "appointments" ? "Appts" : tab === "transactions" ? "Transactions" : "Clients"}</button>
               ))}
             </div>
           </div>
@@ -2037,6 +2087,181 @@ export default function AppointmentsPage() {
             </>
           )}
         </div>
+      )}
+
+      {/* ══════════ CLIENTS TAB ══════════ */}
+      {activeTab === "clients" && (
+        <div>
+          {/* Search */}
+          <div style={{ marginBottom: "16px" }}>
+            <input
+              value={clientsSearch}
+              onChange={e => setClientsSearch(e.target.value)}
+              placeholder="Search clients by name, phone, or email..."
+              style={{ width: "100%", padding: "12px 16px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#ffffff", fontSize: "14px", outline: "none", boxSizing: "border-box" as const }}
+            />
+          </div>
+
+          {/* Stats */}
+          <div style={{ display: "flex", gap: "16px", marginBottom: "16px", flexWrap: "wrap" as const }}>
+            {[
+              { label: "Total Clients", value: String(clientsList.length), color: "#ffffff" },
+              { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#22c55e" },
+              { label: "Card on File", value: String(clientsList.filter(c => c.cardOnFile).length), color: "#60a5fa" },
+            ].map(s => (
+              <div key={s.label}>
+                <div style={{ fontSize: "18px", fontWeight: 700, color: s.color, fontFamily: "'Fira Code', monospace" }}>{s.value}</div>
+                <div style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Client list */}
+          {clientsLoading ? (
+            <div style={{ padding: "40px 0", textAlign: "center", color: "#606E74" }}>Loading clients...</div>
+          ) : clientsList.length === 0 ? (
+            <div style={{ padding: "40px 0", textAlign: "center" }}>
+              <div style={{ color: "#606E74", fontSize: "14px" }}>No clients found</div>
+              {isOwner && <button onClick={() => { fetch("/api/clients/sync", { method: "POST" }).then(() => fetchClients()) }} style={{ marginTop: "12px", padding: "8px 16px", border: "1px solid #606E74", borderRadius: "8px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", cursor: "pointer" }}>Sync from Square</button>}
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              {clientsList.map(c => (
+                <div key={c.id} onClick={() => openClientDetail(c)} style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px",
+                  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", cursor: "pointer",
+                  transition: "background 0.15s",
+                }}>
+                  <div>
+                    <div style={{ fontSize: "14px", fontWeight: 600, color: "#ffffff" }}>{c.firstName} {c.lastName}</div>
+                    <div style={{ fontSize: "12px", color: "#7a8f96", marginTop: "2px" }}>
+                      {c.phone || c.email || "No contact"}{c.lastVisitAt ? ` · Last visit ${new Date(c.lastVisitAt).toLocaleDateString()}` : ""}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    {c.hasFormula && <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(34,197,94,0.1)", color: "#22c55e" }}>Formula</span>}
+                    <span style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff", fontFamily: "'Fira Code', monospace" }}>{c.totalVisits || 0}</span>
+                    <span style={{ fontSize: "10px", color: "#606E74" }}>visits</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ══════════ CLIENT DETAIL PANEL ══════════ */}
+      {selectedClient && (
+        <>
+          <div onClick={() => { setSelectedClient(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 199 }} />
+          <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200, background: "#0d1117", borderTop: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px 20px 0 0", maxHeight: "85vh", overflowY: "auto" as const, paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+            <div style={{ width: "40px", height: "4px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "2px", margin: "12px auto" }} />
+            <div style={{ padding: "0 20px 20px" }}>
+              {/* Header */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <div style={{ fontSize: "20px", fontWeight: 700, color: "#ffffff" }}>{selectedClient.firstName} {selectedClient.lastName}</div>
+                  <div style={{ fontSize: "13px", color: "#7a8f96", marginTop: "4px" }}>
+                    {selectedClient.totalVisits || 0} visits · {fmtCurrency(selectedClient.totalSpend || 0)} total spend
+                  </div>
+                </div>
+                <button onClick={() => { setSelectedClient(null); setShowFormulaForm(false) }} style={{ background: "none", border: "none", color: "#606E74", cursor: "pointer", fontSize: "20px" }}>&times;</button>
+              </div>
+
+              {/* Contact */}
+              <div style={{ marginBottom: "20px" }}>
+                <div style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "6px" }}>Contact</div>
+                {selectedClient.phone && <div style={{ fontSize: "13px", color: "#7a8f96" }}>{selectedClient.phone}</div>}
+                {selectedClient.email && <div style={{ fontSize: "13px", color: "#7a8f96" }}>{selectedClient.email}</div>}
+              </div>
+
+              {/* Formula Book */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.1em" }}>Formula Book</div>
+                  <button onClick={() => setShowFormulaForm(!showFormulaForm)} style={{ fontSize: "12px", color: "#7a8f96", background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
+                    {showFormulaForm ? "Cancel" : "+ Add Formula"}
+                  </button>
+                </div>
+
+                {/* Formula Form */}
+                {showFormulaForm && (
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "16px", marginBottom: "12px" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                      <div>
+                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Base Color</label>
+                        <input value={formulaForm.baseColor} onChange={e => setFormulaForm(f => ({ ...f, baseColor: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Color Brand</label>
+                        <select value={formulaForm.colorBrand} onChange={e => setFormulaForm(f => ({ ...f, colorBrand: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}>
+                          <option value="">Select...</option>
+                          {["Redken", "Wella", "Kenra", "Pravana", "Olaplex", "Matrix", "Other"].map(b => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Developer %</label>
+                        <select value={formulaForm.developer} onChange={e => setFormulaForm(f => ({ ...f, developer: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}>
+                          <option value="">Select...</option>
+                          {["10", "20", "30", "40"].map(v => <option key={v} value={v}>{v}%</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Toner</label>
+                        <input value={formulaForm.toner} onChange={e => setFormulaForm(f => ({ ...f, toner: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Technique</label>
+                        <select value={formulaForm.technique} onChange={e => setFormulaForm(f => ({ ...f, technique: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}>
+                          <option value="">Select...</option>
+                          {["Full Highlight", "Partial Highlight", "Balayage", "Ombre", "Single Process", "Toner Only", "Other"].map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Processing Time</label>
+                        <input value={formulaForm.processingTime} onChange={e => setFormulaForm(f => ({ ...f, processingTime: e.target.value }))} placeholder="e.g. 35 min" style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                      <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Notes</label>
+                      <textarea value={formulaForm.notes} onChange={e => setFormulaForm(f => ({ ...f, notes: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", minHeight: "60px", resize: "vertical" as const, boxSizing: "border-box" as const }} />
+                    </div>
+                    <button onClick={saveFormula} disabled={formulaSaving} style={{ width: "100%", marginTop: "12px", padding: "12px", background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: "10px", color: "#ffffff", fontSize: "14px", fontWeight: 600, cursor: "pointer", opacity: formulaSaving ? 0.5 : 1 }}>
+                      {formulaSaving ? "Saving..." : "Save Formula"}
+                    </button>
+                  </div>
+                )}
+
+                {/* Formula list */}
+                {formulaList.length === 0 ? (
+                  <div style={{ padding: "20px 0", textAlign: "center", color: "#606E74", fontSize: "13px" }}>No formulas saved yet</div>
+                ) : formulaList.map(f => (
+                  <div key={f.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "16px", marginBottom: "8px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                      <span style={{ fontSize: "12px", color: "#7a8f96" }}>{new Date(f.createdAt).toLocaleDateString()} · {f.appliedBy}</span>
+                      {f.technique && <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(122,143,150,0.1)", color: "#7a8f96" }}>{f.technique}</span>}
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
+                      {[
+                        { label: "Base Color", value: f.baseColor },
+                        { label: "Brand", value: f.colorBrand },
+                        { label: "Developer", value: f.developer ? `${f.developer}%` : null },
+                        { label: "Toner", value: f.toner },
+                        { label: "Time", value: f.processingTime },
+                      ].filter(r => r.value).map(r => (
+                        <div key={r.label}>
+                          <div style={{ fontSize: "10px", color: "#606E74", textTransform: "uppercase" as const }}>{r.label}</div>
+                          <div style={{ fontSize: "13px", color: "#ffffff", fontFamily: "'Fira Code', monospace" }}>{r.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {f.notes && <div style={{ marginTop: "8px", fontSize: "12px", color: "#7a8f96", fontStyle: "italic" }}>{f.notes}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {/* ══════════ CLIENT HISTORY SLIDE-OVER ══════════ */}

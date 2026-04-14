@@ -813,3 +813,71 @@ model TdlrCacheMetadata {
 
   @@map("tdlr_cache_metadata")
 }
+
+model Client {
+  id               String          @id @default(cuid())
+  squareCustomerId String          @unique
+  firstName        String?
+  lastName         String?
+  email            String?
+  phone            String?
+  totalVisits      Int             @default(0)
+  totalSpend       Float           @default(0)
+  lastVisitAt      DateTime?
+  firstVisitAt     DateTime?
+  locationId       String?
+  notes            String?
+  cardOnFile       Boolean         @default(false)
+  stripeCustomerId String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  formulas         ClientFormula[]
+
+  @@map("clients")
+}
+
+model ClientFormula {
+  id              String   @id @default(cuid())
+  clientId        String
+  client          Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  appliedBy       String
+  appliedById     String
+  appliedAt       DateTime @default(now())
+  baseColor       String?
+  colorBrand      String?
+  developer       String?
+  developerVolume String?
+  toner           String?
+  tonerBrand      String?
+  processingTime  String?
+  technique       String?
+  notes           String?
+  appointmentId   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([clientId])
+  @@map("client_formulas")
+}
+
+model CardOnFileRequest {
+  id                    String    @id @default(cuid())
+  token                 String    @unique @default(cuid())
+  tokenExpiry           DateTime
+  clientName            String
+  clientPhone           String?
+  clientEmail           String?
+  appointmentId         String?
+  squareBookingId       String?
+  locationId            String
+  amount                Float?
+  status                String    @default("pending")
+  stripeSetupIntentId   String?
+  stripeCustomerId      String?
+  stripePaymentMethodId String?
+  completedAt           DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("card_on_file_requests")
+}
