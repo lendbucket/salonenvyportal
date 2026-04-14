@@ -119,6 +119,10 @@ export default function AppointmentsPage() {
   const [loadingMonth, setLoadingMonth] = useState(false)
   const [selectedAppt, setSelectedAppt] = useState<Appointment | null>(null)
 
+  // ── Cancel appointment ──
+  const [cancellingId, setCancellingId] = useState<string | null>(null)
+  const [cancelConfirm, setCancelConfirm] = useState<{ id: string; clientName: string; time: string } | null>(null)
+
   // ── Transactions tab ──
   const [activeTab, setActiveTab] = useState<"appointments" | "transactions" | "clients">("appointments")
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -360,6 +364,20 @@ export default function AppointmentsPage() {
   }
 
   function resetBooking() { setBookStep(1); setBookClient(null); setBookStylist(""); setBookDate(date); setBookTime("10:00"); setBookSelectedSvcs([]); setBookNotes(""); setBookError(""); setBookOverlap(false); setBookSuccess(false); setClientSearch(""); setClientResults([]); setNewClient(false); setNewClientForm({ givenName: "", familyName: "", phone: "", email: "" }) }
+
+  async function handleCancelAppointment(bookingId: string) {
+    setCancellingId(bookingId)
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/cancel`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reason: "Cancelled by salon" }) })
+      const data = await res.json()
+      if (!res.ok) { setToast(data.error || "Failed to cancel"); setTimeout(() => setToast(null), 4000); return }
+      fetchAppointments()
+      setCancelConfirm(null)
+      setToast("Appointment cancelled"); setTimeout(() => setToast(null), 3000)
+    } catch (e: unknown) {
+      setToast(e instanceof Error ? e.message : "Failed to cancel"); setTimeout(() => setToast(null), 4000)
+    } finally { setCancellingId(null) }
+  }
 
   function openBookingModal() { resetBooking(); setShowBooking(true) }
 
@@ -1570,21 +1588,29 @@ export default function AppointmentsPage() {
                     )}
                   </div>
 
-                  {/* Checkout link for confirmed */}
-                  {(appt.status === "ACCEPTED" || appt.status === "PENDING") && (
-                    <Link
-                      href={`/pos?appointmentId=${appt.id}&location=${encodeURIComponent(location)}`}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: "4px",
-                        fontSize: "10px", fontWeight: 700, color: "#CDC9C0",
-                        textDecoration: "none", letterSpacing: "0.06em", textTransform: "uppercase",
-                        marginTop: "2px", width: "100%", padding: "10px 0",
-                      }}
-                    >
-                      <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>point_of_sale</span>
-                      Checkout in POS
-                    </Link>
+                  {/* Checkout + Cancel for confirmed */}
+                  {(appt.status === "ACCEPTED" || appt.status === "PENDING") && !appt.isCheckedOut && (
+                    <div style={{ display: "flex", gap: "8px", marginTop: "2px" }}>
+                      <Link
+                        href={`/pos?appointmentId=${appt.id}&location=${encodeURIComponent(location)}`}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", flex: 1,
+                          fontSize: "10px", fontWeight: 700, color: "#CDC9C0",
+                          textDecoration: "none", letterSpacing: "0.06em", textTransform: "uppercase",
+                          padding: "10px 0",
+                        }}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>point_of_sale</span>
+                        Checkout
+                      </Link>
+                      {(isOwner || isManager) && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setCancelConfirm({ id: appt.id, clientName: appt.customerName, time: fmtTime(appt.startTime) }) }}
+                          style={{ background: "transparent", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444", borderRadius: 6, padding: "4px 10px", fontSize: 11, fontWeight: 600, cursor: "pointer", letterSpacing: "0.04em" }}
+                        >Cancel</button>
+                      )}
+                    </div>
                   )}
                 </button>
 
@@ -2517,6 +2543,29 @@ export default function AppointmentsPage() {
             </div>
           </div>
         </>
+      )}
+
+      {/* Cancel confirmation modal */}
+      {cancelConfirm && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 400 }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} onClick={() => setCancelConfirm(null)} />
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#0d1117", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.8)", zIndex: 401 }}>
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 18, color: "#ffffff", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>
+              <div style={{ fontSize: 14, color: "#7a8f96" }}>Are you sure you want to cancel {cancelConfirm.clientName}&apos;s appointment?</div>
+              <div style={{ fontSize: 12, color: "#606E74", fontFamily: "'Fira Code', monospace", marginTop: 6 }}>{cancelConfirm.time}</div>
+            </div>
+            <div style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "12px 14px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
+              This will cancel the appointment in Square and notify the client via SMS.
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button onClick={() => setCancelConfirm(null)} style={{ flex: 1, height: 44, background: "transparent", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, color: "#7a8f96", fontSize: 14, cursor: "pointer" }}>Keep</button>
+              <button onClick={() => handleCancelAppointment(cancelConfirm.id)} disabled={cancellingId === cancelConfirm.id} style={{ flex: 1, height: 44, background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.4)", borderRadius: 10, color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: cancellingId === cancelConfirm.id ? 0.5 : 1 }}>
+                {cancellingId === cancelConfirm.id ? "Cancelling..." : "Yes, Cancel"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Toast */}
