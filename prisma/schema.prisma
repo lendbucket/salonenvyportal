@@ -1086,10 +1086,11 @@ model BusinessModel {
   salesTaxRate     Float    @default(0.0825)
   boothRentalRate  Float?
   suiteRentalRate  Float?
-  w2PayrollEnabled Boolean  @default(false)
-  fiscalYearStart  Int      @default(1)
-  notes            String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  w2PayrollEnabled    Boolean  @default(false)
+  fiscalYearStart     Int      @default(1)
+  onboardingComplete  Boolean  @default(false)
+  notes               String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
   @@map("business_models")
 }
