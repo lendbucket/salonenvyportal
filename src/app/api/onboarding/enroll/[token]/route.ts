@@ -93,6 +93,7 @@ export async function PATCH(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
+  console.log("[onboarding-api] PATCH /api/onboarding/enroll/" + token + " — request received at", new Date().toISOString());
   const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "Unknown";
   const userAgent = req.headers.get("user-agent") || "Unknown";
 
@@ -115,6 +116,7 @@ export async function PATCH(
   try {
     const body = await req.json();
     const { step, data } = body as { step: string; data: Record<string, unknown> };
+    console.log("[onboarding-api] Step:", step, "| Token:", token, "| Data keys:", Object.keys(data || {}));
 
     // Build update object based on step
     const updateData: Record<string, unknown> = { status: "in_progress" };
