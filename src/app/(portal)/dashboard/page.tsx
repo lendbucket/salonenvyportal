@@ -150,31 +150,67 @@ export default function DashboardPage() {
 
   // Drill-down panel state
   const [drillDown, setDrillDown] = useState<{
-    type: "net_sales" | "checkouts" | "cancellations" | "avg_ticket" | null
+    type: "net_sales" | "checkouts" | "cancellations" | null
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    summary: any
     loading: boolean
     title: string
-  }>({ type: null, data: [], loading: false, title: "" })
+    error: string | null
+  }>({ type: null, data: [], summary: null, loading: false, title: "", error: null })
+  const [expandedTxn, setExpandedTxn] = useState<string | null>(null)
 
-  const openDrillDown = async (type: "net_sales" | "checkouts" | "cancellations" | "avg_ticket") => {
-    setDrillDown({ type, data: [], loading: true, title: type === "net_sales" ? "Net Sales" : type === "checkouts" ? "Checkouts" : type === "cancellations" ? "Cancellations" : "Avg Ticket" })
+  const closeDrill = () => setDrillDown({ type: null, data: [], summary: null, loading: false, title: "", error: null })
+
+  const openDrillDown = async (type: "net_sales" | "checkouts" | "cancellations") => {
+    setDrillDown({ type, data: [], summary: null, loading: true, error: null,
+      title: type === "net_sales" ? "Net Sales" : type === "checkouts" ? "Checkouts" : "Cancellations",
+    })
+    setExpandedTxn(null)
     try {
-      const params = new URLSearchParams({ period: activePeriod })
+      const params = new URLSearchParams({ type, period: activePeriod })
       if (activeLocation !== "Both") params.set("location", activeLocation)
-      const endpoint = type === "cancellations" ? `/api/cancellations?${params}` : `/api/metrics/live?${params}`
-      const res = await fetch(endpoint)
+      const res = await fetch(`/api/metrics/drill-down?${params}`)
       const json = await res.json()
-      if (type === "cancellations") {
-        setDrillDown(prev => ({ ...prev, data: json.cancellations || [], loading: false }))
-      } else {
-        const allBreakdown = (json.metrics || []).flatMap((m: LocationMetrics) => m.stylistBreakdown || [])
-        setDrillDown(prev => ({ ...prev, data: allBreakdown, loading: false }))
-      }
-    } catch {
-      setDrillDown(prev => ({ ...prev, loading: false }))
+      if (!res.ok) throw new Error(json.error || "Failed to load")
+      setDrillDown(prev => ({ ...prev, loading: false, data: json.transactions || json.cancellations || [], summary: json.summary || null }))
+    } catch (err: unknown) {
+      setDrillDown(prev => ({ ...prev, loading: false, error: err instanceof Error ? err.message : "Failed" }))
     }
   }
+
+  const exportCSV = () => {
+    if (!drillDown.data.length) return
+    let csv = ""
+    if (drillDown.type === "cancellations") {
+      csv = "Client,Appointment Time,Stylist,Location,Service,Cancelled By\n"
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      csv += drillDown.data.map((c: any) => `"${c.clientName}","${c.appointmentTime}","${c.stylist?.name}","${c.stylist?.location}","${c.service}","${c.cancelledBy}"`).join("\n")
+    } else {
+      csv = "Time,Client,Stylist,Location,Services,Payment,Last4,Subtotal,Tips,Tax,Fee,Total\n"
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      csv += drillDown.data.map((t: any) => `"${t.time}","${t.client?.name}","${t.stylist?.name}","${t.stylist?.location}","${t.services?.map((s: { name: string }) => s.name).join("; ")}","${t.payment?.method}","${t.payment?.last4 || ""}",${t.amounts?.subtotal},${t.amounts?.tip},${t.amounts?.tax},${t.amounts?.processingFee},${t.amounts?.total}`).join("\n")
+    }
+    const blob = new Blob([csv], { type: "text/csv" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `${drillDown.type}_${activePeriod}_${activeLocation}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const PAYMENT_COLORS: Record<string, { bg: string; color: string; border: string }> = {
+    VISA: { bg: "rgba(26,115,232,0.15)", color: "#60a5fa", border: "rgba(26,115,232,0.3)" },
+    MASTERCARD: { bg: "rgba(235,95,52,0.15)", color: "#fb923c", border: "rgba(235,95,52,0.3)" },
+    AMEX: { bg: "rgba(0,114,206,0.15)", color: "#7dd3fc", border: "rgba(0,114,206,0.3)" },
+    DISCOVER: { bg: "rgba(255,127,0,0.15)", color: "#fb923c", border: "rgba(255,127,0,0.3)" },
+    CASH: { bg: "rgba(34,197,94,0.15)", color: "#22c55e", border: "rgba(34,197,94,0.3)" },
+    CARD: { bg: "rgba(148,163,184,0.15)", color: "#94A3B8", border: "rgba(148,163,184,0.3)" },
+    OTHER: { bg: "rgba(148,163,184,0.15)", color: "#94A3B8", border: "rgba(148,163,184,0.3)" },
+  }
+  const payStyle = (method: string) => PAYMENT_COLORS[method] || PAYMENT_COLORS.OTHER
 
   const userName = session?.user?.name?.split(" ")[0] || "User"
   const hour = new Date().getHours()
@@ -277,7 +313,7 @@ export default function DashboardPage() {
   const metrics = [
     { label: `Net Sales · ${pLabel}`, value: loading ? null : fmt(totalRevenue), icon: "payments", sub: activeLocation === "Both" ? "Both locations" : activeLocation, drillType: "net_sales" as const },
     { label: `Checkouts · ${pLabel}`, value: loading ? null : String(totalCheckouts), icon: "content_cut", sub: "Unique customers checked out", drillType: "checkouts" as const },
-    { label: "Avg Ticket", value: loading ? null : fmt(totalAvg), icon: "receipt_long", sub: "Per checkout", drillType: "avg_ticket" as const },
+    { label: "Avg Ticket", value: loading ? null : fmt(totalAvg), icon: "receipt_long", sub: "Per checkout", drillType: "net_sales" as const },
     { label: "Pending Approvals", value: loading ? null : String(pendingCount), icon: "rule", sub: "Needs attention", alert: pendingCount > 0, drillType: null },
   ]
 
@@ -541,7 +577,7 @@ export default function DashboardPage() {
         marginBottom: "20px",
       }}>
         {/* Cancellations */}
-        <Link href="/cancellations" style={{ textDecoration: "none" }}>
+        <div onClick={() => openDrillDown("cancellations")} style={{ cursor: "pointer" }}>
           <div style={{
             backgroundColor: "#0d1117",
             border: "1px solid rgba(205,201,192,0.1)",
@@ -561,7 +597,7 @@ export default function DashboardPage() {
               {cancellations ? `${cancellations.noShows} no-shows \u00b7 ${cancellations.cancelledByCustomer} client cancelled` : "Loading..."}
             </div>
           </div>
-        </Link>
+        </div>
 
         {/* Top Stylist */}
         <Link href="/metrics" style={{ textDecoration: "none" }}>
@@ -801,81 +837,143 @@ export default function DashboardPage() {
       {/* DRILL-DOWN PANEL */}
       {drillDown.type && (
         <>
-          <div onClick={() => setDrillDown({ type: null, data: [], loading: false, title: "" })} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }} />
+          <div onClick={closeDrill} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 200 }} />
           <div style={{
-            position: "fixed", top: 0, right: 0, bottom: 0, width: "min(440px, 95vw)",
+            position: "fixed", top: 0, right: 0, bottom: 0, width: "min(520px, 95vw)",
             backgroundColor: "#0d1117", borderLeft: "1px solid rgba(255,255,255,0.08)",
-            zIndex: 101, display: "flex", flexDirection: "column", overflow: "hidden",
+            zIndex: 201, display: "flex", flexDirection: "column", overflow: "hidden",
           }}>
             {/* Header */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
               <div>
                 <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 2px" }}>{drillDown.title}</h3>
                 <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>{pLabel} {activeLocation === "Both" ? "· Both locations" : `· ${activeLocation}`}</p>
               </div>
-              <button onClick={() => setDrillDown({ type: null, data: [], loading: false, title: "" })} style={{ background: "none", border: "none", color: "#94A3B8", cursor: "pointer", fontSize: "24px", padding: "4px" }}>&times;</button>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                {drillDown.data.length > 0 && (
+                  <button onClick={exportCSV} style={{ padding: "5px 12px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "6px", color: "#7a8f96", fontSize: "10px", fontWeight: 700, cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase" }}>CSV</button>
+                )}
+                <button onClick={closeDrill} style={{ background: "none", border: "none", color: "#94A3B8", cursor: "pointer", fontSize: "24px", padding: "4px", lineHeight: 1 }}>&times;</button>
+              </div>
             </div>
+
             {/* Content */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: "0" }}>
               {drillDown.loading ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {[1,2,3,4,5].map(i => <div key={i} style={{ height: "56px", backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "8px", animation: "pulse 1.5s ease-in-out infinite" }} />)}
+                <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {[1,2,3,4,5,6].map(i => <div key={i} style={{ height: "72px", backgroundColor: "rgba(205,201,192,0.04)", borderRadius: "8px", animation: "pulse 1.5s ease-in-out infinite" }} />)}
                 </div>
+              ) : drillDown.error ? (
+                <div style={{ padding: "40px 24px", textAlign: "center", color: "#ef4444", fontSize: "13px" }}>{drillDown.error}</div>
               ) : drillDown.type === "cancellations" ? (
                 drillDown.data.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "40px 0", color: "#94A3B8" }}>No cancellations in this period</div>
+                  <div style={{ padding: "60px 24px", textAlign: "center", color: "#606E74" }}>No cancellations in this period</div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <div>
                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {drillDown.data.map((c: any, i: number) => (
-                      <div key={i} style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", padding: "14px" }}>
+                      <div key={i} style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                          <span style={{ fontSize: "13px", fontWeight: 600, color: "#FFFFFF" }}>{c.customerName || "Walk-in"}</span>
-                          <span style={{ fontSize: "10px", padding: "3px 8px", borderRadius: "4px", backgroundColor: "rgba(239,68,68,0.1)", color: "#ef4444", fontWeight: 700, textTransform: "uppercase" }}>{c.cancelReason || "Cancelled"}</span>
+                          <span style={{ fontSize: "14px", fontWeight: 600, color: "#FFFFFF" }}>{c.clientName || "Client"}</span>
+                          <span style={{ fontSize: "9px", padding: "3px 10px", borderRadius: "4px", backgroundColor: c.cancelledBy === "client" ? "rgba(239,68,68,0.1)" : "rgba(245,158,11,0.1)", color: c.cancelledBy === "client" ? "#ef4444" : "#f59e0b", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>{c.cancelledBy === "client" ? "BY CLIENT" : "BY SALON"}</span>
                         </div>
-                        <div style={{ fontSize: "11px", color: "#94A3B8" }}>
-                          {c.serviceName || "Service"} {c.stylistName ? `· ${c.stylistName}` : ""}
+                        <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                          <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#7a8f96" }}>{c.appointmentTime}</span>
+                          <span style={{ fontSize: "11px", color: "#606E74" }}>{c.stylist?.name}</span>
+                          <span style={{ fontSize: "9px", padding: "2px 6px", borderRadius: "4px", backgroundColor: c.stylist?.location === "CC" ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)", color: c.stylist?.location === "CC" ? "#818CF8" : "#10B981", fontWeight: 700 }}>{c.stylist?.location}</span>
                         </div>
-                        {c.startAt && <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)", marginTop: "4px" }}>{new Date(c.startAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</div>}
                       </div>
                     ))}
                   </div>
                 )
               ) : (
-                /* Net Sales / Checkouts / Avg Ticket — show stylist breakdown */
+                /* Net Sales / Checkouts — full transaction detail */
                 drillDown.data.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "40px 0", color: "#94A3B8" }}>No data for this period</div>
+                  <div style={{ padding: "60px 24px", textAlign: "center", color: "#606E74" }}>No transactions in this period</div>
                 ) : (
                   <>
-                    {/* Summary row */}
-                    <div style={{ display: "flex", gap: "12px", marginBottom: "20px" }}>
-                      <div style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", padding: "14px", textAlign: "center" }}>
-                        <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "4px" }}>Total</div>
-                        <div style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF" }}>{fmt(drillDown.data.reduce((s: number, d: StylistMetrics) => s + d.revenue, 0))}</div>
+                    {/* Summary strip */}
+                    {drillDown.summary && (
+                      <div style={{ display: "flex", overflowX: "auto", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
+                        {[
+                          { label: "Total", value: fmt(drillDown.summary.totalRevenue), color: "#FFFFFF" },
+                          { label: "Tips", value: fmt(drillDown.summary.totalTips), color: "#22c55e" },
+                          { label: "Tax", value: fmt(drillDown.summary.totalTax), color: "#606E74" },
+                          { label: "Fees", value: `~${fmt(drillDown.summary.totalProcessingFees)}`, color: "#fb923c" },
+                          { label: "Net", value: fmt(drillDown.summary.netAfterFees), color: "#FFFFFF" },
+                          { label: "Count", value: String(drillDown.summary.transactionCount), color: "#7a8f96" },
+                        ].map(s => (
+                          <div key={s.label} style={{ flex: "1 0 auto", padding: "14px 16px", textAlign: "center", minWidth: "70px" }}>
+                            <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "14px", fontWeight: 700, color: s.color, marginBottom: "2px" }}>{s.value}</div>
+                            <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.35)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{s.label}</div>
+                          </div>
+                        ))}
                       </div>
-                      <div style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", padding: "14px", textAlign: "center" }}>
-                        <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "4px" }}>Checkouts</div>
-                        <div style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF" }}>{drillDown.data.reduce((s: number, d: StylistMetrics) => s + d.checkoutCount, 0)}</div>
-                      </div>
-                    </div>
-                    {/* Stylist table */}
-                    <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "10px" }}>By Stylist</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                      {[...drillDown.data].sort((a: StylistMetrics, b: StylistMetrics) => b.revenue - a.revenue).map((s: StylistMetrics) => (
-                        <div key={s.teamMemberId} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 12px", borderRadius: "8px", backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                          <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
-                            {s.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                    )}
+
+                    {/* Transaction list */}
+                    <div>
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {drillDown.data.map((t: any) => {
+                        const ps = payStyle(t.payment?.method || "OTHER")
+                        const isExpanded = expandedTxn === t.id
+                        return (
+                          <div key={t.id} onClick={() => setExpandedTxn(isExpanded ? null : t.id)} style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer", backgroundColor: isExpanded ? "rgba(255,255,255,0.02)" : "transparent", transition: "background-color 0.1s" }}>
+                            <div style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
+                              {/* Left: time + client + services */}
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "3px" }}>
+                                  <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "12px", color: "#7a8f96", flexShrink: 0 }}>{t.time}</span>
+                                  <span style={{ fontSize: "14px", fontWeight: 600, color: "#FFFFFF", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.client?.name}</span>
+                                </div>
+                                <div style={{ fontSize: "12px", color: "#606E74", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                  {t.services?.map((s: { name: string }) => s.name).join(", ").slice(0, 45) || "Services"}
+                                </div>
+                              </div>
+
+                              {/* Right: payment + stylist + total */}
+                              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end", marginBottom: "4px" }}>
+                                  <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "10px", padding: "2px 8px", borderRadius: "4px", backgroundColor: ps.bg, color: ps.color, border: `1px solid ${ps.border}`, fontWeight: 600 }}>{t.payment?.method}</span>
+                                  {t.payment?.last4 && <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "10px", color: "#606E74" }}>{t.payment.last4}</span>}
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end" }}>
+                                  <span style={{ fontSize: "11px", color: "#7a8f96" }}>{t.stylist?.name?.split(" ")[0]}</span>
+                                  <span style={{ fontSize: "8px", padding: "1px 5px", borderRadius: "3px", backgroundColor: t.stylist?.location === "CC" ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)", color: t.stylist?.location === "CC" ? "#818CF8" : "#10B981", fontWeight: 700 }}>{t.stylist?.location}</span>
+                                  <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginLeft: "4px" }}>{fmt(t.amounts?.total)}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Expanded breakdown */}
+                            {isExpanded && (
+                              <div style={{ marginTop: "12px", padding: "12px 16px", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.04)" }}>
+                                {[
+                                  { label: "Subtotal", value: fmt(t.amounts?.subtotal), color: "#FFFFFF" },
+                                  { label: "Tip", value: fmt(t.amounts?.tip), color: "#22c55e" },
+                                  { label: "Tax", value: fmt(t.amounts?.tax), color: "#606E74" },
+                                  { label: "Proc. Fee", value: `~${fmt(t.amounts?.processingFee)}`, color: "#fb923c", note: "estimated" },
+                                  null,
+                                  { label: "Total", value: fmt(t.amounts?.total), color: "#FFFFFF", bold: true },
+                                ].map((row, ri) => row === null ? (
+                                  <div key={ri} style={{ borderTop: "1px solid rgba(255,255,255,0.06)", margin: "6px 0" }} />
+                                ) : (
+                                  <div key={ri} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "3px 0" }}>
+                                    <span style={{ fontSize: "12px", color: "#7a8f96" }}>{row.label}{row.note ? <span style={{ fontSize: "10px", color: "#606E74", fontStyle: "italic", marginLeft: "4px" }}>{row.note}</span> : ""}</span>
+                                    <span style={{ fontFamily: "'Fira Code', monospace", fontSize: row.bold ? "14px" : "12px", fontWeight: row.bold ? 700 : 400, color: row.color }}>{row.value}</span>
+                                  </div>
+                                ))}
+                                {/* Services list */}
+                                <div style={{ marginTop: "10px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                                  {t.services?.map((s: { name: string; price: number }, si: number) => (
+                                    <span key={si} style={{ fontSize: "11px", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#7a8f96" }}>{s.name} <span style={{ fontFamily: "'Fira Code', monospace", color: "#FFFFFF" }}>{fmt(s.price)}</span></span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: "13px", fontWeight: 600, color: "#FFFFFF" }}>{s.name}</div>
-                            <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)" }}>{s.homeLocation === "Corpus Christi" ? "CC" : "SA"} · {s.checkoutCount} checkouts</div>
-                          </div>
-                          <div style={{ textAlign: "right" }}>
-                            <div style={{ fontSize: "14px", fontWeight: 800, color: "#FFFFFF" }}>{fmt(s.revenue)}</div>
-                            {s.avgTicket > 0 && <div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)" }}>avg {fmt(s.avgTicket)}</div>}
-                          </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </>
                 )
