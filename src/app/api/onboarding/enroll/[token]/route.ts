@@ -175,16 +175,21 @@ export async function PATCH(
         break;
 
       case "agreement":
-        updateData.signatureData = data.signatureData;
-        updateData.signedLegalName = data.signedLegalName;
-        updateData.signedSsnLast4 = data.signedSsnLast4;
-        updateData.signedDate = data.signedDate;
-        updateData.ackPolicies = data.ackPolicies;
-        updateData.ackConfidentiality = data.ackConfidentiality;
-        updateData.ackAtWill = data.ackAtWill;
-        updateData.ackSafetyProtocol = data.ackSafetyProtocol;
-        updateData.ackTechPolicy = data.ackTechPolicy;
+        console.log("[onboarding-api] Agreement step — received fields:", Object.keys(data));
+        console.log("[onboarding-api] Agreement step — signedLegalName:", data.signedLegalName || "(empty)");
+        console.log("[onboarding-api] Agreement step — signatureData length:", typeof data.signatureData === "string" ? data.signatureData.length : 0);
+        console.log("[onboarding-api] Agreement step — acks:", { ackPolicies: data.ackPolicies, ackConfidentiality: data.ackConfidentiality, ackAtWill: data.ackAtWill, ackSafetyProtocol: data.ackSafetyProtocol, ackTechPolicy: data.ackTechPolicy });
+        updateData.signatureData = data.signatureData || null;
+        updateData.signedLegalName = data.signedLegalName || null;
+        updateData.signedSsnLast4 = data.signedSsnLast4 || null;
+        updateData.signedDate = data.signedDate || null;
+        updateData.ackPolicies = data.ackPolicies ?? false;
+        updateData.ackConfidentiality = data.ackConfidentiality ?? false;
+        updateData.ackAtWill = data.ackAtWill ?? false;
+        updateData.ackSafetyProtocol = data.ackSafetyProtocol ?? false;
+        updateData.ackTechPolicy = data.ackTechPolicy ?? false;
         updateData.agreementSignedAt = new Date();
+        console.log("[onboarding-api] Agreement step — updateData keys:", Object.keys(updateData));
         break;
 
       case "complete": {
@@ -494,10 +499,12 @@ Generated: ${signedAt}
         return NextResponse.json({ error: "Invalid step" }, { status: 400 });
     }
 
+    console.log("[onboarding-api] Saving to DB — step:", step, "| updateData keys:", Object.keys(updateData));
     const updated = await prisma.onboardingEnrollment.update({
       where: { id: enrollment.id },
       data: updateData,
     });
+    console.log("[onboarding-api] DB update success — step:", step, "| status:", updated.status);
 
     return NextResponse.json({
       success: true,
@@ -505,7 +512,9 @@ Generated: ${signedAt}
       verificationCode: updated.verificationCode,
     });
   } catch (error: unknown) {
-    console.error("Enrollment update error:", error);
-    return NextResponse.json({ error: "Failed to update enrollment" }, { status: 500 });
+    const errMsg = error instanceof Error ? error.message : "Unknown error";
+    console.error("[onboarding-api] Enrollment update error:", errMsg);
+    console.error("[onboarding-api] Full error:", error);
+    return NextResponse.json({ error: `Failed to update enrollment: ${errMsg}` }, { status: 500 });
   }
 }

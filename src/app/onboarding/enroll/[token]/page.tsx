@@ -153,14 +153,30 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
 
   const saveStep = useCallback(async (stepName: string, data: Record<string, unknown>) => {
     setSaving(true);
+    setError("");
     try {
-      const res = await fetch(`/api/onboarding/enroll/${token}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ step: stepName, data }) });
+      const bodyStr = JSON.stringify({ step: stepName, data });
+      console.log(`[saveStep] ${stepName} — sending ${(bodyStr.length / 1024).toFixed(1)}KB, keys:`, Object.keys(data || {}));
+      const res = await fetch(`/api/onboarding/enroll/${token}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: bodyStr });
       const result = await res.json();
-      if (!res.ok) { setError(result.error || "Failed to save"); setSaving(false); return false; }
+      console.log(`[saveStep] ${stepName} — response:`, res.status, JSON.stringify(result).slice(0, 500));
+      if (!res.ok) {
+        const errMsg = result.error || `Step "${stepName}" failed (HTTP ${res.status}). Please try again.`;
+        console.error(`[saveStep] ${stepName} FAILED:`, errMsg);
+        setError(errMsg);
+        setSaving(false);
+        return false;
+      }
       if (result.verificationCode) setVerificationCode(result.verificationCode);
       setSaving(false);
       return true;
-    } catch { setError("Network error"); setSaving(false); return false; }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "Network error";
+      console.error(`[saveStep] ${stepName} EXCEPTION:`, errMsg);
+      setError(`Network error during "${stepName}": ${errMsg}`);
+      setSaving(false);
+      return false;
+    }
   }, [token]);
 
   // Canvas drawing
