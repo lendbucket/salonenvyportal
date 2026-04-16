@@ -192,6 +192,10 @@ export async function PATCH(
         updateData.completedAt = new Date();
         updateData.verificationCode = code;
 
+        console.log("[onboarding-complete] ========== ONBOARDING COMPLETION STARTED ==========");
+        console.log("[onboarding-complete] Token:", token);
+        console.log("[onboarding-complete] Enrollment ID:", enrollment.id);
+
         // Create user + staff member in prisma
         const fullEnrollment = await prisma.onboardingEnrollment.findUnique({
           where: { inviteToken: token },
@@ -203,6 +207,12 @@ export async function PATCH(
           const position = fullEnrollment.role === "MANAGER" ? "manager" : "stylist";
           const locationName = fullEnrollment.location.name;
           const squareLocationId = fullEnrollment.location.squareLocationId;
+
+          console.log("[onboarding-complete] Enrollee:", fullName);
+          console.log("[onboarding-complete] Email:", fullEnrollment.email);
+          console.log("[onboarding-complete] Phone:", fullEnrollment.phone);
+          console.log("[onboarding-complete] Role:", fullEnrollment.role);
+          console.log("[onboarding-complete] Location:", locationName, "| Square ID:", squareLocationId);
 
           // Upsert user
           const user = await prisma.user.upsert({
@@ -221,10 +231,22 @@ export async function PATCH(
               inviteStatus: "ACCEPTED",
             },
           });
+          console.log("[onboarding-complete] User upserted:", user.id);
 
           // 1. Create Square Team Member
           let squareTeamMemberId: string | null = null;
+          let squareCreationError: string | null = null;
           try {
+            console.log("[onboarding-complete] Starting Square team member creation...");
+            console.log("[onboarding-complete] Square data:", JSON.stringify({
+              firstName: fullEnrollment.firstName,
+              lastName: fullEnrollment.lastName,
+              email: fullEnrollment.email,
+              phone: fullEnrollment.phone || undefined,
+              locationId: squareLocationId,
+              role: fullEnrollment.role === "MANAGER" ? "MANAGER" : "STYLIST",
+            }));
+
             const squareResult = await createSquareTeamMember({
               firstName: fullEnrollment.firstName,
               lastName: fullEnrollment.lastName,
@@ -233,17 +255,25 @@ export async function PATCH(
               locationId: squareLocationId,
               role: fullEnrollment.role === "MANAGER" ? "MANAGER" : "STYLIST",
             });
-            if (squareResult.success) {
-              squareTeamMemberId = squareResult.teamMemberId;
-              console.log("[onboarding] Square team member created:", squareTeamMemberId);
 
-              // 2. Assign to all services
-              await assignTeamMemberToAllServices(squareTeamMemberId, squareLocationId);
+            console.log("[onboarding-complete] Square result:", JSON.stringify(squareResult));
+
+            if (squareResult.success && squareResult.teamMemberId) {
+              squareTeamMemberId = squareResult.teamMemberId;
+              console.log("[onboarding-complete] Square team member ID:", squareTeamMemberId);
+
+              // 2. Assign to all services / confirm booking profile
+              console.log("[onboarding-complete] Assigning to services...");
+              const assignResult = await assignTeamMemberToAllServices(squareTeamMemberId, squareLocationId);
+              console.log("[onboarding-complete] Service assignment result:", JSON.stringify(assignResult));
             } else {
-              console.error("[onboarding] Square team creation failed:", squareResult.error);
+              squareCreationError = squareResult.error || "Unknown failure";
+              console.error("[onboarding-complete] Square creation FAILED:", squareCreationError);
             }
-          } catch (sqErr) {
-            console.error("[onboarding] Square error:", sqErr);
+          } catch (sqErr: unknown) {
+            squareCreationError = (sqErr as Error).message || "Exception during Square creation";
+            console.error("[onboarding-complete] Square creation EXCEPTION:", squareCreationError);
+            console.error("[onboarding-complete] Stack:", (sqErr as Error).stack);
           }
 
           // Upsert staff member with Square ID
@@ -270,18 +300,24 @@ export async function PATCH(
               where: { id: existingStaff.id },
               data: staffData,
             });
+            console.log("[onboarding-complete] Staff member updated:", existingStaff.id, "| Square ID:", squareTeamMemberId);
           } else {
-            await prisma.staffMember.create({
+            const newStaff = await prisma.staffMember.create({
               data: {
                 userId: user.id,
                 ...staffData,
               },
             });
+            console.log("[onboarding-complete] Staff member created:", newStaff.id, "| Square ID:", squareTeamMemberId);
           }
 
           // Save Square team member ID on enrollment too
           if (squareTeamMemberId) {
             updateData.squareTeamMemberId = squareTeamMemberId;
+          }
+          // Save error on enrollment if creation failed
+          if (squareCreationError) {
+            updateData.squareCreationError = squareCreationError;
           }
 
           // Generate role-based agreement text

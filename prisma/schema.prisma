@@ -376,6 +376,7 @@ model OnboardingEnrollment {
   // Verification
   verificationCode      String?
   squareTeamMemberId    String?
+  squareCreationError   String?
 
   // Reminders & Cancellation
   lastReminderSentAt    DateTime?
