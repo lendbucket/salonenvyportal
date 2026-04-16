@@ -211,13 +211,23 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
     if (data.verified) { setEmailVerified(true); } else { setVerifyError(data.error || "Invalid code"); }
   };
   // --- Send phone OTP ---
+  const [phoneSkipReason, setPhoneSkipReason] = useState("");
   const sendPhoneOtp = async () => {
     if (!enrollment || !personal.phone) return;
     setPhoneSending(true); setVerifyError("");
     const res = await fetch("/api/onboarding/verify-phone", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ phone: personal.phone, enrollmentId: enrollment.id }) });
     const data = await res.json();
     setPhoneSending(false);
-    if (data.sent) { setPhoneOtpSent(true); setPhoneResendTimer(60); } else { setVerifyError(data.error || "Failed to send SMS"); }
+    if (data.skipped) {
+      // SMS not available — auto-verify
+      setPhoneVerified(true);
+      setPhoneSkipReason(data.reason || "Phone verification skipped.");
+      console.log("[verify-phone] Skipped:", data.reason);
+    } else if (data.sent) {
+      setPhoneOtpSent(true); setPhoneResendTimer(60);
+    } else {
+      setVerifyError(data.error || "Failed to send SMS");
+    }
   };
   const confirmPhoneOtp = async () => {
     if (!enrollment) return;
@@ -495,6 +505,9 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
                     {phoneVerified && <span style={{ fontSize: "10px", fontWeight: 700, color: "#22c55e", letterSpacing: "0.08em", textTransform: "uppercase" }}>Verified</span>}
                   </div>
                   <p style={{ fontSize: "14px", color: "#FFFFFF", margin: "0 0 12px" }}>{personal.phone}</p>
+                  {phoneVerified && phoneSkipReason && (
+                    <p style={{ fontSize: "11px", color: "#94A3B8", margin: "0", fontStyle: "italic" }}>{phoneSkipReason}</p>
+                  )}
                   {!phoneVerified && (
                     <>
                       {!phoneOtpSent ? (
