@@ -83,6 +83,8 @@ model StaffMember {
   position           String   @default("stylist")
   isActive           Boolean  @default(true)
   inviteStatus       String   @default("not_invited")
+  onboardingCompleted   Boolean  @default(false)
+  onboardingCompletedAt DateTime?
   tdlrLicenseNumber  String?
   tdlrStatus         String?
   tdlrExpirationDate DateTime?
@@ -330,6 +332,8 @@ model OnboardingEnrollment {
   licenseState          String?
   licenseExpiration     String?
   licenseType           String?
+  yearsOfExperience     Int?
+  specialties           String?
 
   // Emergency Contact
   emergencyName         String?

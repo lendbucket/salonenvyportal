@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { getStylistAgreement, getManagerAgreement } from "@/lib/agreements";
 
 type EnrollmentData = {
   id: string;
@@ -137,6 +138,8 @@ export default function EnrollmentPage({
     licenseState: "",
     licenseExpiration: "",
     licenseType: "cosmetology",
+    yearsOfExperience: "",
+    specialties: [] as string[],
   });
   const [w9, setW9] = useState({
     w9LegalName: "",
@@ -236,7 +239,7 @@ export default function EnrollmentPage({
 
         // Pre-fill form state from existing data
         if (e.phone) setPersonal((p) => ({ ...p, phone: e.phone || "", dateOfBirth: e.dateOfBirth || "", address: e.address || "", city: e.city || "", state: e.state || "", zip: e.zip || "" }));
-        if (e.licenseNumber) setLicense({ licenseNumber: e.licenseNumber || "", licenseState: e.licenseState || "", licenseExpiration: e.licenseExpiration || "", licenseType: e.licenseType || "cosmetology" });
+        if (e.licenseNumber) setLicense((p) => ({ ...p, licenseNumber: e.licenseNumber || "", licenseState: e.licenseState || "", licenseExpiration: e.licenseExpiration || "", licenseType: e.licenseType || "cosmetology" }));
         if (e.w9LegalName) setW9((p) => ({ ...p, w9LegalName: e.w9LegalName || "", w9BusinessName: e.w9BusinessName || "", w9TaxClassification: e.w9TaxClassification || "individual", w9Address: e.w9Address || "" }));
         if (e.ddBankName) setDd((p) => ({ ...p, ddBankName: e.ddBankName || "", ddAccountType: e.ddAccountType || "checking", ddNameOnAccount: e.ddNameOnAccount || "" }));
         if (e.emergencyName) setEmergency({ emergencyName: e.emergencyName || "", emergencyRelationship: e.emergencyRelationship || "", emergencyPhone: e.emergencyPhone || "" });
@@ -346,7 +349,11 @@ export default function EnrollmentPage({
         break;
       }
       case 2: { // License
-        const ok = await saveStep("license", license);
+        const ok = await saveStep("license", {
+          ...license,
+          yearsOfExperience: license.yearsOfExperience ? parseInt(license.yearsOfExperience, 10) : null,
+          specialties: license.specialties.join(", "),
+        });
         if (ok) setStep(3);
         break;
       }
@@ -560,6 +567,41 @@ export default function EnrollmentPage({
                   </div>
                 </div>
 
+                <div>
+                  <label style={labelStyle}>Years of Experience</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="50"
+                    value={license.yearsOfExperience}
+                    onChange={(e) => setLicense({ ...license, yearsOfExperience: e.target.value })}
+                    placeholder="0"
+                    style={inputStyle}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Specialties</label>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                    {["Color", "Cuts", "Extensions", "Highlights", "Balayage", "Brazilian Blowout", "Keratin", "Updos", "Men's Cuts"].map((s) => (
+                      <label key={s} style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", backgroundColor: license.specialties.includes(s) ? "rgba(205,201,192,0.12)" : "#1a2a32", border: `1px solid ${license.specialties.includes(s) ? "rgba(205,201,192,0.3)" : "rgba(205,201,192,0.1)"}`, borderRadius: "6px", padding: "6px 10px" }}>
+                        <input
+                          type="checkbox"
+                          checked={license.specialties.includes(s)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setLicense({ ...license, specialties: [...license.specialties, s] });
+                            } else {
+                              setLicense({ ...license, specialties: license.specialties.filter((x) => x !== s) });
+                            }
+                          }}
+                          style={{ accentColor: "#CDC9C0", width: "14px", height: "14px" }}
+                        />
+                        <span style={{ fontSize: "12px", color: "#CDC9C0" }}>{s}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
                 {/* TDLR Verification Result */}
                 {tdlrChecking && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#1a2a32", borderRadius: "8px", padding: "12px 16px", border: "1px solid rgba(205,201,192,0.08)" }}>
@@ -746,7 +788,9 @@ export default function EnrollmentPage({
           {/* Step 6: Agreement */}
           {step === 6 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Employment Agreement</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>
+                {enrollment?.role === "MANAGER" ? "Manager Contractor Agreement" : "Independent Contractor Agreement"}
+              </h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 20px" }}>Please fill in your details and review the agreement below.</p>
 
               {/* Agreement date and contractor name ABOVE the scrollable text */}
@@ -771,18 +815,26 @@ export default function EnrollmentPage({
                 </div>
               </div>
 
-              {/* Scrollable contract text */}
-              <div style={{ maxHeight: "200px", overflowY: "auto", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px", marginBottom: "20px", fontSize: "12px", color: "#94A3B8", lineHeight: 1.7 }}>
-                <p style={{ margin: "0 0 12px", fontWeight: 700, color: "#CDC9C0" }}>SALON ENVY INDEPENDENT CONTRACTOR / EMPLOYMENT AGREEMENT</p>
-                <p style={{ margin: "0 0 8px" }}>This Agreement is entered into on <strong style={{ color: "#CDC9C0" }}>{agreement.agreementTopDate ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "___________"}</strong> between Salon Envy USA LLC (&ldquo;Company&rdquo;) and <strong style={{ color: "#CDC9C0" }}>{agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "") || "___________"}</strong> (&ldquo;Contractor/Employee&rdquo;).</p>
-                <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>1. Employment At-Will.</strong> Employment with Salon Envy is at-will, meaning either party may terminate the relationship at any time, with or without cause or notice, subject to applicable law.</p>
-                <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>2. Confidentiality.</strong> You agree to maintain the confidentiality of all proprietary information, client lists, pricing, formulas, and business practices of Salon Envy. This obligation survives termination.</p>
-                <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>3. Workplace Policies.</strong> You agree to comply with all Salon Envy workplace policies, including but not limited to: dress code, attendance, client interaction standards, health and safety protocols, and anti-harassment policies.</p>
-                <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>4. Safety &amp; Health.</strong> You acknowledge responsibility for maintaining a safe working environment, proper sanitization of tools and workstations, and compliance with OSHA and state cosmetology board regulations.</p>
-                <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>5. Technology &amp; Social Media.</strong> Company devices, systems, and accounts are for business use. You agree to Salon Envy&apos;s social media policy and will not post proprietary information or disparaging content about the company.</p>
-                <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>6. Compensation.</strong> Your compensation structure will be detailed in a separate compensation agreement. Direct deposit authorization provided herein authorizes Salon Envy to deposit compensation into the designated bank account.</p>
-                <p style={{ margin: "0 0 8px" }}><strong style={{ color: "#CDC9C0" }}>7. Licensing.</strong> You warrant that you hold a valid cosmetology license in the state of operation and agree to maintain its active status throughout employment.</p>
-                <p style={{ margin: "0" }}><strong style={{ color: "#CDC9C0" }}>8. Governing Law.</strong> This Agreement shall be governed by the laws of the State of Texas.</p>
+              {/* Scrollable contract text — role-based */}
+              <div style={{ maxHeight: "260px", overflowY: "auto", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px", marginBottom: "20px", fontSize: "12px", color: "#94A3B8", lineHeight: 1.7, whiteSpace: "pre-wrap", fontFamily: "monospace" }}>
+                {enrollment?.role === "MANAGER"
+                  ? getManagerAgreement({
+                      name: agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : ""),
+                      location: enrollment?.locationName || "",
+                      startDate: agreement.agreementTopDate
+                        ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+                        : "___________",
+                      commissionRate: 40,
+                      managementFee: 200,
+                    })
+                  : getStylistAgreement({
+                      name: agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : ""),
+                      location: enrollment?.locationName || "",
+                      startDate: agreement.agreementTopDate
+                        ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+                        : "___________",
+                      commissionRate: 40,
+                    })}
               </div>
 
               {/* 5 Acknowledgment checkboxes */}

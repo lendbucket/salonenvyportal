@@ -20,6 +20,11 @@ type Enrollment = {
 
 type Location = { id: string; name: string };
 
+const LOCATIONS: Location[] = [
+  { id: "LTJSA6QR1HGW6", name: "Corpus Christi" },
+  { id: "LXJYXDXWR0XZF", name: "San Antonio" },
+];
+
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   pending: { bg: "rgba(234,179,8,0.12)", color: "#eab308", label: "Pending" },
   in_progress: { bg: "rgba(59,130,246,0.12)", color: "#3b82f6", label: "In Progress" },
@@ -30,7 +35,7 @@ const statusColors: Record<string, { bg: string; color: string; label: string }>
 export default function OnboardingManagementPage() {
   const { isOwner, isManager } = useUserRole();
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [locations, setLocations] = useState<Location[]>(LOCATIONS);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [sending, setSending] = useState(false);
@@ -44,14 +49,14 @@ export default function OnboardingManagementPage() {
       const data = await res.json();
       if (data.enrollments) {
         setEnrollments(data.enrollments);
-        // Extract unique locations
+        // Merge any additional locations from enrollments with hardcoded list
         const locs = data.enrollments.reduce((acc: Location[], e: Enrollment) => {
           if (e.location && !acc.find((l: Location) => l.id === e.location.id)) {
             acc.push(e.location);
           }
           return acc;
-        }, [] as Location[]);
-        if (locs.length > 0) setLocations(locs);
+        }, [...LOCATIONS] as Location[]);
+        setLocations(locs);
       }
     } catch {
       // ignore
@@ -67,9 +72,16 @@ export default function OnboardingManagementPage() {
     try {
       const res = await fetch("/api/locations");
       const data = await res.json();
-      if (data.locations) setLocations(data.locations);
+      if (data.locations && data.locations.length > 0) {
+        // Merge API locations with hardcoded, keeping hardcoded as baseline
+        const merged = [...LOCATIONS];
+        for (const loc of data.locations as Location[]) {
+          if (!merged.find((l) => l.id === loc.id)) merged.push(loc);
+        }
+        setLocations(merged);
+      }
     } catch {
-      // ignore
+      // Keep hardcoded LOCATIONS as fallback
     }
   }, []);
 
