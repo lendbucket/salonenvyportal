@@ -1155,3 +1155,84 @@ model OffboardingRecord {
   @@index([staffMemberId])
   @@map("offboarding_records")
 }
+
+model SocialConnection {
+  id                    String    @id @default(cuid())
+  locationId            String
+  platform              String
+  platformUserId        String
+  platformUserName      String
+  platformUserAvatar    String?
+  pageId                String?
+  pageName              String?
+  pageAvatar            String?
+  instagramAccountId    String?
+  instagramUsername      String?
+  instagramAvatar       String?
+  accessToken           String    @db.Text
+  accessTokenExpiry     DateTime?
+  refreshToken          String?   @db.Text
+  scope                 String?
+  isActive              Boolean   @default(true)
+  lastSyncAt            DateTime?
+  followerCount         Int?
+  followingCount        Int?
+  postCount             Int?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([locationId, platform, pageId])
+  @@index([locationId])
+  @@index([platform])
+  @@map("social_connections")
+}
+
+model SocialOAuthState {
+  id          String   @id @default(cuid())
+  state       String   @unique
+  locationId  String
+  userId      String
+  platform    String
+  redirectUri String
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  @@map("social_oauth_states")
+}
+
+model ApiKey {
+  id            String    @id @default(cuid())
+  name          String
+  keyId         String    @unique
+  keySecretHash String
+  locationId    String?
+  permissions   String[]
+  isActive      Boolean   @default(true)
+  lastUsedAt    DateTime?
+  requestCount  Int       @default(0)
+  createdBy     String
+  expiresAt     DateTime?
+  ipWhitelist   String[]
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([keyId])
+  @@index([locationId])
+  @@map("api_keys")
+}
+
+model ApiKeyLog {
+  id         String   @id @default(cuid())
+  apiKeyId   String
+  endpoint   String
+  method     String
+  statusCode Int
+  ipAddress  String?
+  userAgent  String?
+  duration   Int?
+  createdAt  DateTime @default(now())
+
+  @@index([apiKeyId])
+  @@index([createdAt])
+  @@map("api_key_logs")
+}

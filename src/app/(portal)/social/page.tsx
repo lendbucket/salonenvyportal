@@ -67,12 +67,38 @@ export default function SocialPage() {
 
   const showT = (m: string, t: "success" | "error" = "success") => { setToast({ message: m, type: t }); setTimeout(() => setToast(null), 3500) }
 
+  // Social connections state
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [connections, setConnections] = useState<any[]>([])
+  const loadConnections = useCallback(async () => {
+    try {
+      const r = await fetch("/api/social/connections")
+      const d = await r.json()
+      setConnections(d.connections || [])
+    } catch { /**/ }
+  }, [])
+  useEffect(() => { loadConnections() }, [loadConnections])
+  const fbConn = connections.find(c => c.platform === "facebook" && c.isActive)
+  const igConn = connections.find(c => c.platform === "instagram" && c.isActive)
+  const hasConnections = connections.some(c => c.isActive)
+
+  const disconnectAccount = async (id: string) => {
+    await fetch(`/api/social/connections?id=${id}`, { method: "DELETE" })
+    loadConnections()
+    showT("Account disconnected")
+  }
+
   // URL params on mount
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
     if (p.get("tab")) setTab(p.get("tab") as Tab)
     if (p.get("canva") === "connected") showT("Connected to Canva")
-  }, [])
+    if (p.get("connected") === "true") { showT(`Connected ${p.get("pages") || ""} page(s) successfully`); loadConnections() }
+    if (p.get("error")) {
+      const err = p.get("error")
+      showT(err === "denied" ? "Connection cancelled" : `Connection error: ${err}`, "error")
+    }
+  }, [loadConnections])
 
   // Data
   const loadPosts = useCallback(async () => {
@@ -140,6 +166,40 @@ export default function SocialPage() {
             <button onClick={() => openComp()} style={{ padding: "7px 16px", background: `linear-gradient(135deg, ${ACC_B}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Create Post</button>
           </div>
         </div>
+        {/* Connected Accounts */}
+        {hasConnections ? (
+          <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ ...mono, fontSize: "9px", color: MUTED, letterSpacing: "0.1em", textTransform: "uppercase", marginRight: "4px" }}>Connected:</span>
+            {connections.filter(c => c.isActive).map(c => (
+              <div key={c.id} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "5px 12px", backgroundColor: ACC_DIM, border: `1px solid ${ACC_BDR}`, borderRadius: "8px" }}>
+                <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: GREEN }} />
+                <span style={{ fontSize: "11px", fontWeight: 600, color: ACC_B, ...jakarta }}>{c.platform === "facebook" ? "FB" : "IG"}: {c.pageName || c.platformUserName}</span>
+                {c.followerCount != null && <span style={{ ...mono, fontSize: "10px", color: MUTED }}>{c.followerCount.toLocaleString()}</span>}
+                {isOwner && <button onClick={() => disconnectAccount(c.id)} style={{ background: "none", border: "none", color: MUTED, cursor: "pointer", fontSize: "12px", padding: "0 0 0 4px", lineHeight: 1 }}>&times;</button>}
+              </div>
+            ))}
+            {isOwner && <button onClick={() => window.location.href = "/api/social/oauth/facebook"} style={{ ...mono, fontSize: "10px", padding: "5px 10px", border: `1px dashed ${BORDER2}`, borderRadius: "8px", background: "none", color: MUTED, cursor: "pointer" }}>+ Add</button>}
+          </div>
+        ) : (
+          <div style={{ background: `linear-gradient(135deg, rgba(24,119,242,0.08) 0%, rgba(131,58,180,0.08) 100%)`, border: `1px solid rgba(255,255,255,0.08)`, borderRadius: "16px", padding: "40px 24px", textAlign: "center", marginBottom: "20px" }}>
+            <div style={{ fontSize: "20px", fontWeight: 700, color: "#ffffff", marginBottom: "8px", ...jakarta }}>Connect Your Social Accounts</div>
+            <div style={{ fontSize: "13px", color: ACC_B, marginBottom: "24px", maxWidth: "420px", margin: "0 auto 24px", lineHeight: 1.6, ...jakarta }}>
+              Connect your Facebook and Instagram accounts to manage posts, view analytics, and engage with clients from one place.
+            </div>
+            {isOwner ? (
+              <>
+                <button onClick={() => window.location.href = "/api/social/oauth/facebook"} style={{ background: FB, color: "#ffffff", border: "none", borderRadius: "10px", padding: "14px 28px", fontSize: "14px", fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "10px", ...jakarta }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
+                  Connect Facebook + Instagram
+                </button>
+                <div style={{ fontSize: "11px", color: MUTED, marginTop: "12px", ...jakarta }}>Log in with Facebook to connect. No tokens or developer access required.</div>
+              </>
+            ) : (
+              <div style={{ fontSize: "13px", color: MID, ...jakarta }}>Ask the salon owner to connect social accounts.</div>
+            )}
+          </div>
+        )}
+
         {/* Tabs */}
         <div style={{ display: "flex", gap: "2px", marginBottom: "20px", overflowX: "auto", borderBottom: `1px solid ${BORDER}` }}>
           {TABS.map(t => <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "10px 16px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: tab === t.id ? ACC_B : MUTED, backgroundColor: tab === t.id ? ACC_DIM : "transparent", border: "none", borderBottom: tab === t.id ? `2px solid ${ACC}` : "2px solid transparent", borderRadius: tab === t.id ? "6px 6px 0 0" : "0", cursor: "pointer", whiteSpace: "nowrap", ...mono }}>{t.label}</button>)}

@@ -17,6 +17,7 @@ function SettingsInner() {
     { key: "license", label: "License" },
     { key: "notifications", label: "Notifications" },
     ...(isOwner || isManager ? [{ key: "location", label: "Location" }] : []),
+    ...(isOwner ? [{ key: "api", label: "API & Integrations" }] : []),
   ]
 
   const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "profile")
@@ -30,6 +31,52 @@ function SettingsInner() {
   const [licenseStatus, setLicenseStatus] = useState<any>(null)
   const [licenseLoading, setLicenseLoading] = useState(false)
   const [verifying, setVerifying] = useState(false)
+
+  // API Keys state
+  const [apiKeys, setApiKeys] = useState<any[]>([])
+  const [apiKeysLoading, setApiKeysLoading] = useState(false)
+  const [showKeyModal, setShowKeyModal] = useState(false)
+  const [newKey, setNewKey] = useState({ name: "", locationId: "", permissions: ["appointments:read", "staff:read", "services:read"], expiresIn: "never", notes: "" })
+  const [generatedKey, setGeneratedKey] = useState("")
+  const [generatingKey, setGeneratingKey] = useState(false)
+
+  const loadApiKeys = useCallback(async () => {
+    setApiKeysLoading(true)
+    try {
+      const res = await fetch("/api/v1/api-keys")
+      const data = await res.json()
+      setApiKeys(data.keys || [])
+    } catch { /* ignore */ }
+    setApiKeysLoading(false)
+  }, [])
+
+  useEffect(() => { if (activeTab === "api" && isOwner) loadApiKeys() }, [activeTab, isOwner, loadApiKeys])
+
+  const generateApiKey = async () => {
+    setGeneratingKey(true)
+    try {
+      const res = await fetch("/api/v1/api-keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newKey),
+      })
+      const data = await res.json()
+      if (data.apiKey?.fullKey) {
+        setGeneratedKey(data.apiKey.fullKey)
+        loadApiKeys()
+      } else {
+        setMsg(data.error || "Failed to generate key")
+      }
+    } catch { setMsg("Failed to generate key") }
+    setGeneratingKey(false)
+  }
+
+  const revokeApiKey = async (id: string) => {
+    await fetch(`/api/v1/api-keys?id=${id}`, { method: "DELETE" })
+    loadApiKeys()
+    setMsg("API key revoked")
+    setTimeout(() => setMsg(""), 3000)
+  }
 
   useEffect(() => {
     fetch("/api/staff/me/license-status").then(r => r.json()).then(d => {
@@ -150,6 +197,123 @@ function SettingsInner() {
         <div style={cardStyle}>
           <div style={{ fontSize: "14px", color: "#7a8f96" }}>Location settings are configured in the portal admin. Contact the portal owner for changes.</div>
         </div>
+      )}
+
+      {/* API & Integrations tab */}
+      {activeTab === "api" && isOwner && (
+        <div>
+          <div style={cardStyle}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <div>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#ffffff", marginBottom: "4px" }}>API Keys</div>
+                <div style={{ fontSize: "12px", color: "#606E74" }}>Generate keys for Kasse and RunMySalon integrations</div>
+              </div>
+              <button onClick={() => { setShowKeyModal(true); setGeneratedKey("") }} style={{ padding: "8px 16px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Generate New Key</button>
+            </div>
+
+            {apiKeysLoading ? (
+              <div style={{ padding: "20px", textAlign: "center", color: "#606E74" }}>Loading...</div>
+            ) : apiKeys.length === 0 ? (
+              <div style={{ padding: "40px", textAlign: "center", color: "#606E74", fontSize: "13px" }}>No API keys yet. Generate one to get started.</div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                {apiKeys.map((k: any) => (
+                  <div key={k.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#ffffff" }}>{k.name}</div>
+                      <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Fira Code', monospace", marginTop: "2px" }}>{k.keyId}</div>
+                    </div>
+                    <div style={{ fontSize: "10px", color: "#606E74" }}>
+                      {k.lastUsedAt ? `Used ${new Date(k.lastUsedAt).toLocaleDateString()}` : "Never used"}
+                    </div>
+                    <div style={{ fontSize: "10px", padding: "3px 8px", borderRadius: "4px", backgroundColor: k.isActive ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)", color: k.isActive ? "#10B981" : "#ef4444", fontWeight: 700 }}>
+                      {k.isActive ? "ACTIVE" : "REVOKED"}
+                    </div>
+                    {k.isActive && (
+                      <button onClick={() => revokeApiKey(k.id)} style={{ padding: "4px 10px", backgroundColor: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "6px", color: "#ef4444", fontSize: "10px", fontWeight: 700, cursor: "pointer" }}>Revoke</button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Quick start docs */}
+          <div style={{ ...cardStyle, marginTop: "16px" }}>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff", marginBottom: "12px" }}>Quick Start</div>
+            <div style={{ fontSize: "12px", color: "#606E74", marginBottom: "8px" }}>Base URL: <span style={{ color: "#7a8f96", fontFamily: "'Fira Code', monospace" }}>https://portal.salonenvyusa.com/api/v1</span></div>
+            <div style={{ backgroundColor: "rgba(0,0,0,0.3)", borderRadius: "8px", padding: "16px", fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#7a8f96", lineHeight: 1.8, overflow: "auto" }}>
+              <div style={{ color: "#606E74" }}>{"// Fetch today's appointments"}</div>
+              <div><span style={{ color: "#c792ea" }}>const</span> res = <span style={{ color: "#c792ea" }}>await</span> <span style={{ color: "#82aaff" }}>fetch</span>(</div>
+              <div style={{ paddingLeft: "16px" }}><span style={{ color: "#c3e88d" }}>{`'https://portal.salonenvyusa.com/api/v1/appointments?date=2026-04-16'`}</span>,</div>
+              <div style={{ paddingLeft: "16px" }}>{"{ headers: { 'X-API-Key': 'your_key_here' } }"}</div>
+              <div>)</div>
+            </div>
+            <div style={{ fontSize: "11px", color: "#606E74", marginTop: "12px" }}>
+              Endpoints: /appointments, /staff, /services, /clients, /metrics, /health
+              <br />Rate limit: 1,000 requests/hour per key
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Generate Key Modal */}
+      {showKeyModal && (
+        <>
+          <div onClick={() => { setShowKeyModal(false); setGeneratedKey("") }} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "480px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
+            {generatedKey ? (
+              <div>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#10B981", marginBottom: "12px" }}>API Key Generated</div>
+                <div style={{ fontSize: "12px", color: "#f59e0b", marginBottom: "16px" }}>This key will only be shown once. Copy it now.</div>
+                <div style={{ backgroundColor: "rgba(0,0,0,0.4)", borderRadius: "8px", padding: "14px", fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#ffffff", wordBreak: "break-all", marginBottom: "16px", border: "1px solid rgba(16,185,129,0.3)" }}>
+                  {generatedKey}
+                </div>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button onClick={() => { navigator.clipboard.writeText(generatedKey); setMsg("Copied!"); setTimeout(() => setMsg(""), 2000) }} style={{ flex: 1, padding: "10px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Copy Key</button>
+                  <button onClick={() => { setShowKeyModal(false); setGeneratedKey("") }} style={{ flex: 1, padding: "10px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#7a8f96", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Done</button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#ffffff", marginBottom: "20px" }}>Generate API Key</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                  <div><label style={labelStyle}>Key Name</label><input value={newKey.name} onChange={e => setNewKey({ ...newKey, name: e.target.value })} placeholder="e.g. Kasse Production" style={inputStyle} /></div>
+                  <div><label style={labelStyle}>Location</label>
+                    <select value={newKey.locationId} onChange={e => setNewKey({ ...newKey, locationId: e.target.value })} style={{ ...inputStyle, appearance: "none" }}>
+                      <option value="">All Locations</option>
+                      <option value="LTJSA6QR1HGW6">Corpus Christi</option>
+                      <option value="LXJYXDXWR0XZF">San Antonio</option>
+                    </select>
+                  </div>
+                  <div><label style={labelStyle}>Permissions</label>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                      {["appointments:read", "appointments:write", "staff:read", "services:read", "clients:read", "metrics:read", "checkout:write"].map(p => (
+                        <label key={p} style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+                          <input type="checkbox" checked={newKey.permissions.includes(p)} onChange={e => {
+                            setNewKey({ ...newKey, permissions: e.target.checked ? [...newKey.permissions, p] : newKey.permissions.filter(x => x !== p) })
+                          }} style={{ accentColor: "#7a8f96" }} />
+                          <span style={{ fontSize: "12px", color: "#7a8f96", fontFamily: "'Fira Code', monospace" }}>{p}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div><label style={labelStyle}>Expiration</label>
+                    <select value={newKey.expiresIn} onChange={e => setNewKey({ ...newKey, expiresIn: e.target.value })} style={{ ...inputStyle, appearance: "none" }}>
+                      <option value="never">Never</option>
+                      <option value="90days">90 Days</option>
+                      <option value="1year">1 Year</option>
+                    </select>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
+                  <button onClick={() => setShowKeyModal(false)} style={{ flex: 1, padding: "10px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#7a8f96", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Cancel</button>
+                  <button onClick={generateApiKey} disabled={generatingKey || !newKey.name} style={{ flex: 1, padding: "10px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer", opacity: generatingKey || !newKey.name ? 0.5 : 1 }}>{generatingKey ? "Generating..." : "Generate Key"}</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   )
