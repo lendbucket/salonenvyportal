@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { SquareClient, SquareEnvironment } from "square"
 import { CC_LOCATION_ID, SA_LOCATION_ID } from "@/lib/staff"
 
-export const maxDuration = 30
+export const maxDuration = 60
 
 function getSquare() {
   return new SquareClient({ token: process.env.SQUARE_ACCESS_TOKEN!, environment: SquareEnvironment.Production })
@@ -70,7 +70,8 @@ export async function GET(req: NextRequest) {
       cardOnFile: c.cardOnFile,
     }))
 
-    return NextResponse.json({ clients: result, total, page, limit })
+    const totalPages = Math.ceil(total / limit)
+    return NextResponse.json({ clients: result, total, page, limit, totalPages, hasMore: (page + 1) * limit < total })
   } catch (err: unknown) {
     return NextResponse.json({ error: err instanceof Error ? err.message : "Failed", clients: [] }, { status: 500 })
   }

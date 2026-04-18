@@ -136,9 +136,16 @@ export default function AppointmentsPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [clientsList, setClientsList] = useState<any[]>([])
   const [clientsLoading, setClientsLoading] = useState(false)
+  const [clientsLoadingMore, setClientsLoadingMore] = useState(false)
   const [clientsSearch, setClientsSearch] = useState("")
+  const [clientsTotal, setClientsTotal] = useState(0)
+  const [clientsPage, setClientsPage] = useState(0)
+  const [clientsHasMore, setClientsHasMore] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedClient, setSelectedClient] = useState<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [clientDetail, setClientDetail] = useState<any>(null)
+  const [clientDetailLoading, setClientDetailLoading] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [formulaList, setFormulaList] = useState<any[]>([])
   const [showFormulaForm, setShowFormulaForm] = useState(false)
@@ -545,26 +552,48 @@ export default function AppointmentsPage() {
 
   useEffect(() => { if (activeTab === "transactions") fetchTransactions() }, [activeTab, fetchTransactions])
 
-  // Clients tab fetch
-  const fetchClients = useCallback(async () => {
-    setClientsLoading(true)
+  // Clients tab fetch with pagination
+  const fetchClientsPage = useCallback(async (page: number, append = false) => {
+    if (page === 0 && !append) setClientsLoading(true)
+    else setClientsLoadingMore(true)
     try {
       const q = clientsSearch ? `&q=${encodeURIComponent(clientsSearch)}` : ""
-      const res = await fetch(`/api/clients?page=0${q}`)
+      const res = await fetch(`/api/clients?page=${page}${q}`)
       const data = await res.json()
-      setClientsList(data.clients || [])
-    } catch { setClientsList([]) }
+      if (append) {
+        setClientsList(prev => [...prev, ...(data.clients || [])])
+      } else {
+        setClientsList(data.clients || [])
+      }
+      setClientsTotal(data.total || 0)
+      setClientsPage(page)
+      setClientsHasMore(data.hasMore || false)
+    } catch { if (!append) setClientsList([]) }
     setClientsLoading(false)
+    setClientsLoadingMore(false)
   }, [clientsSearch])
-  useEffect(() => { if (activeTab === "clients") fetchClients() }, [activeTab, fetchClients])
+
+  // Debounced search
+  useEffect(() => {
+    if (activeTab !== "clients") return
+    const timer = setTimeout(() => { fetchClientsPage(0) }, 300)
+    return () => clearTimeout(timer)
+  }, [activeTab, clientsSearch, fetchClientsPage])
 
   const openClientDetail = async (client: typeof clientsList[0]) => {
     setSelectedClient(client)
+    setClientDetail(null)
+    setClientDetailLoading(true)
     try {
-      const res = await fetch(`/api/clients/${client.id}/formula`)
+      const res = await fetch(`/api/clients/${client.id}`)
       const data = await res.json()
+      setClientDetail(data)
       setFormulaList(data.formulas || [])
-    } catch { setFormulaList([]) }
+    } catch {
+      setClientDetail(null)
+      setFormulaList([])
+    }
+    setClientDetailLoading(false)
   }
 
   const saveFormula = async () => {
@@ -575,9 +604,11 @@ export default function AppointmentsPage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formulaForm),
       })
-      const res = await fetch(`/api/clients/${selectedClient.id}/formula`)
+      // Refresh detail data which includes formulas
+      const res = await fetch(`/api/clients/${selectedClient.id}`)
       const data = await res.json()
-      setFormulaList(data.formulas || [])
+      if (data.formulas) setFormulaList(data.formulas)
+      if (data.client) setClientDetail(data)
       setShowFormulaForm(false)
       setFormulaForm({ baseColor: "", colorBrand: "", developer: "", developerVolume: "", toner: "", tonerBrand: "", processingTime: "", technique: "", notes: "" })
     } catch { /* skip */ }
@@ -2272,173 +2303,294 @@ export default function AppointmentsPage() {
       {/* ══════════ CLIENTS TAB ══════════ */}
       {activeTab === "clients" && (
         <div>
-          {/* Search */}
-          <div style={{ marginBottom: "16px" }}>
-            <input
-              value={clientsSearch}
-              onChange={e => setClientsSearch(e.target.value)}
-              placeholder="Search clients by name, phone, or email..."
-              style={{ width: "100%", padding: "12px 16px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#ffffff", fontSize: "14px", outline: "none", boxSizing: "border-box" as const }}
-            />
+          {/* Search + Stats */}
+          <div style={{ display: "flex", gap: "12px", marginBottom: "16px", alignItems: "center" }}>
+            <div style={{ position: "relative", flex: 1 }}>
+              <span className="material-symbols-outlined" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", fontSize: "16px", color: "#606E74" }}>search</span>
+              <input
+                value={clientsSearch}
+                onChange={e => setClientsSearch(e.target.value)}
+                placeholder="Search by name, phone, or email..."
+                style={{ width: "100%", padding: "10px 12px 10px 36px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#ffffff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}
+              />
+              {clientsSearch && (
+                <button onClick={() => setClientsSearch("")} style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#606E74", fontSize: "16px", lineHeight: 1 }}>&times;</button>
+              )}
+            </div>
+            {isOwner && (
+              <button onClick={() => { fetch("/api/clients/sync", { method: "POST" }).then(() => fetchClientsPage(0)) }} style={{ padding: "9px 14px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "11px", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" as const, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
+                Sync
+              </button>
+            )}
           </div>
 
-          {/* Stats */}
-          <div style={{ display: "flex", gap: "16px", marginBottom: "16px", flexWrap: "wrap" as const }}>
+          {/* Stats row */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "16px" }}>
             {[
-              { label: "Total Clients", value: String(clientsList.length), color: "#ffffff" },
-              { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#22c55e" },
-              { label: "Card on File", value: String(clientsList.filter(c => c.cardOnFile).length), color: "#60a5fa" },
+              { label: "Total Clients", value: clientsTotal.toLocaleString(), color: "#ffffff" },
+              { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#C9A84C" },
+              { label: "Showing", value: String(clientsList.length), color: "#7a8f96" },
             ].map(s => (
-              <div key={s.label}>
-                <div style={{ fontSize: "18px", fontWeight: 700, color: s.color, fontFamily: "'Fira Code', monospace" }}>{s.value}</div>
-                <div style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>{s.label}</div>
+              <div key={s.label} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "12px 14px" }}>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: s.color, fontFamily: "'Fira Code', monospace" }}>{s.value}</div>
+                <div style={{ fontSize: "9px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginTop: "2px" }}>{s.label}</div>
               </div>
             ))}
           </div>
 
           {/* Client list */}
           {clientsLoading ? (
-            <div style={{ padding: "40px 0", textAlign: "center", color: "#606E74" }}>Loading clients...</div>
-          ) : clientsList.length === 0 ? (
-            <div style={{ padding: "40px 0", textAlign: "center" }}>
-              <div style={{ color: "#606E74", fontSize: "14px" }}>No clients found</div>
-              {isOwner && <button onClick={() => { fetch("/api/clients/sync", { method: "POST" }).then(() => fetchClients()) }} style={{ marginTop: "12px", padding: "8px 16px", border: "1px solid #606E74", borderRadius: "8px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", cursor: "pointer" }}>Sync from Square</button>}
-            </div>
-          ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-              {clientsList.map(c => (
-                <div key={c.id} onClick={() => openClientDetail(c)} style={{
-                  display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px",
-                  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", cursor: "pointer",
-                  transition: "background 0.15s",
-                }}>
-                  <div>
-                    <div style={{ fontSize: "14px", fontWeight: 600, color: "#ffffff" }}>{c.firstName} {c.lastName}</div>
-                    <div style={{ fontSize: "12px", color: "#7a8f96", marginTop: "2px" }}>
-                      {c.phone || c.email || "No contact"}{c.lastVisitAt ? ` · Last visit ${new Date(c.lastVisitAt).toLocaleDateString()}` : ""}
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    {c.hasFormula && <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(34,197,94,0.1)", color: "#22c55e" }}>Formula</span>}
-                    <span style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff", fontFamily: "'Fira Code', monospace" }}>{c.totalVisits || 0}</span>
-                    <span style={{ fontSize: "10px", color: "#606E74" }}>visits</span>
+              {[1,2,3,4,5,6,7,8].map(i => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px" }}>
+                  <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.04)", animation: "pulse 1.5s infinite" }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ width: "140px", height: "14px", backgroundColor: "rgba(255,255,255,0.04)", borderRadius: "4px", marginBottom: "6px", animation: "pulse 1.5s infinite" }} />
+                    <div style={{ width: "100px", height: "11px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "4px", animation: "pulse 1.5s infinite" }} />
                   </div>
                 </div>
               ))}
+            </div>
+          ) : clientsList.length === 0 ? (
+            <div style={{ padding: "60px 20px", textAlign: "center" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "10px" }}>group</span>
+              <div style={{ color: "#606E74", fontSize: "14px" }}>{clientsSearch ? `No clients found for "${clientsSearch}"` : "No clients yet"}</div>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {clientsList.map(c => {
+                const avatarColors = ["#7c3aed", "#2563eb", "#059669", "#d97706", "#dc2626", "#0891b2", "#7c2d12"]
+                const colorIdx = (`${c.firstName || ""}${c.lastName || ""}`).charCodeAt(0) % avatarColors.length
+                const initials = `${(c.firstName || "?")[0]}${(c.lastName || "")[0] || ""}`.toUpperCase()
+                return (
+                  <div key={c.id} onClick={() => openClientDetail(c)} style={{
+                    display: "flex", alignItems: "center", gap: "14px", padding: "12px 16px",
+                    backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", cursor: "pointer",
+                    transition: "all 0.15s",
+                  }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#141b22"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)" }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#0d1117"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.06)" }}
+                  >
+                    <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: avatarColors[colorIdx], display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{initials}</span>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: "14px", fontWeight: 600, color: "#ffffff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{c.firstName} {c.lastName}</div>
+                      <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Fira Code', monospace", marginTop: "2px" }}>
+                        {c.phone || c.email || "No contact"}{c.lastVisitAt ? ` · ${new Date(c.lastVisitAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Chicago" })}` : ""}
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+                      {(c.totalVisits || 0) > 0 && (
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "15px", fontWeight: 700, color: "#fff" }}>{c.totalVisits}</div>
+                          <div style={{ fontSize: "9px", color: "#606E74", textTransform: "uppercase" as const }}>visits</div>
+                        </div>
+                      )}
+                      {c.hasFormula && (
+                        <span style={{ fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "12px", backgroundColor: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", color: "#C9A84C", letterSpacing: "0.04em" }}>FORMULA</span>
+                      )}
+                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#606E74" }}>chevron_right</span>
+                    </div>
+                  </div>
+                )
+              })}
+              {/* Load more */}
+              {clientsHasMore && (
+                <button onClick={() => fetchClientsPage(clientsPage + 1, true)} disabled={clientsLoadingMore} style={{
+                  width: "100%", padding: "14px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#7a8f96", fontSize: "13px", cursor: "pointer", marginTop: "6px",
+                  opacity: clientsLoadingMore ? 0.5 : 1,
+                }}>
+                  {clientsLoadingMore ? "Loading..." : `Load More (${clientsTotal - clientsList.length} remaining)`}
+                </button>
+              )}
             </div>
           )}
         </div>
       )}
 
-      {/* ══════════ CLIENT DETAIL PANEL ══════════ */}
+      {/* ══════════ CLIENT DETAIL SLIDE-IN PANEL ══════════ */}
       {selectedClient && (
         <>
-          <div onClick={() => { setSelectedClient(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 199 }} />
-          <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200, background: "#0d1117", borderTop: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px 20px 0 0", maxHeight: "85vh", overflowY: "auto" as const, paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
-            <div style={{ width: "40px", height: "4px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "2px", margin: "12px auto" }} />
-            <div style={{ padding: "0 20px 20px" }}>
-              {/* Header */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <div onClick={() => { setSelectedClient(null); setClientDetail(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 299 }} />
+          <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(480px, 95vw)", backgroundColor: "#0d1117", borderLeft: "1px solid rgba(255,255,255,0.08)", zIndex: 300, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            {/* Header */}
+            <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                {(() => { const avatarColors = ["#7c3aed", "#2563eb", "#059669", "#d97706", "#dc2626", "#0891b2", "#7c2d12"]; const ci = (`${selectedClient.firstName || ""}${selectedClient.lastName || ""}`).charCodeAt(0) % avatarColors.length; const initials = `${(selectedClient.firstName || "?")[0]}${(selectedClient.lastName || "")[0] || ""}`.toUpperCase(); return (
+                  <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: avatarColors[ci], display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <span style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{initials}</span>
+                  </div>
+                ) })()}
                 <div>
-                  <div style={{ fontSize: "20px", fontWeight: 700, color: "#ffffff" }}>{selectedClient.firstName} {selectedClient.lastName}</div>
-                  <div style={{ fontSize: "13px", color: "#7a8f96", marginTop: "4px" }}>
-                    {selectedClient.totalVisits || 0} visits · {fmtCurrency(selectedClient.totalSpend || 0)} total spend
-                  </div>
+                  <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{selectedClient.firstName} {selectedClient.lastName}</div>
+                  <div style={{ fontSize: "12px", color: "#7a8f96", marginTop: "1px" }}>Client Profile</div>
                 </div>
-                <button onClick={() => { setSelectedClient(null); setShowFormulaForm(false) }} style={{ background: "none", border: "none", color: "#606E74", cursor: "pointer", fontSize: "20px" }}>&times;</button>
               </div>
+              <button onClick={() => { setSelectedClient(null); setClientDetail(null); setShowFormulaForm(false) }} style={{ background: "none", border: "none", color: "#7a8f96", cursor: "pointer", fontSize: "22px", lineHeight: 1 }}>&times;</button>
+            </div>
 
-              {/* Contact */}
-              <div style={{ marginBottom: "20px" }}>
-                <div style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "6px" }}>Contact</div>
-                {selectedClient.phone && <div style={{ fontSize: "13px", color: "#7a8f96" }}>{selectedClient.phone}</div>}
-                {selectedClient.email && <div style={{ fontSize: "13px", color: "#7a8f96" }}>{selectedClient.email}</div>}
-              </div>
-
-              {/* Formula Book */}
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.1em" }}>Formula Book</div>
-                  <button onClick={() => setShowFormulaForm(!showFormulaForm)} style={{ fontSize: "12px", color: "#7a8f96", background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
-                    {showFormulaForm ? "Cancel" : "+ Add Formula"}
-                  </button>
+            {/* Content */}
+            <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
+              {clientDetailLoading ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {[1,2,3,4].map(i => <div key={i} style={{ height: "60px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", animation: "pulse 1.5s infinite" }} />)}
                 </div>
-
-                {/* Formula Form */}
-                {showFormulaForm && (
-                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "16px", marginBottom: "12px" }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                      <div>
-                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Base Color</label>
-                        <input value={formulaForm.baseColor} onChange={e => setFormulaForm(f => ({ ...f, baseColor: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+              ) : clientDetail ? (
+                <>
+                  {/* Stats */}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", marginBottom: "20px" }}>
+                    {[
+                      { label: "Visits", value: String(clientDetail.stats.totalVisits || 0), color: "#fff" },
+                      { label: "Total Spend", value: `$${(clientDetail.stats.totalSpend || 0).toFixed(0)}`, color: "#22c55e" },
+                      { label: "Avg Ticket", value: `$${(clientDetail.stats.avgTicket || 0).toFixed(0)}`, color: "#C9A84C" },
+                    ].map(s => (
+                      <div key={s.label} style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
+                        <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "18px", fontWeight: 700, color: s.color }}>{s.value}</div>
+                        <div style={{ fontSize: "9px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginTop: "3px" }}>{s.label}</div>
                       </div>
-                      <div>
-                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Color Brand</label>
-                        <select value={formulaForm.colorBrand} onChange={e => setFormulaForm(f => ({ ...f, colorBrand: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}>
-                          <option value="">Select...</option>
-                          {["Redken", "Wella", "Kenra", "Pravana", "Olaplex", "Matrix", "Other"].map(b => <option key={b} value={b}>{b}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Developer %</label>
-                        <select value={formulaForm.developer} onChange={e => setFormulaForm(f => ({ ...f, developer: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}>
-                          <option value="">Select...</option>
-                          {["10", "20", "30", "40"].map(v => <option key={v} value={v}>{v}%</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Toner</label>
-                        <input value={formulaForm.toner} onChange={e => setFormulaForm(f => ({ ...f, toner: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
-                      </div>
-                      <div>
-                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Technique</label>
-                        <select value={formulaForm.technique} onChange={e => setFormulaForm(f => ({ ...f, technique: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}>
-                          <option value="">Select...</option>
-                          {["Full Highlight", "Partial Highlight", "Balayage", "Ombre", "Single Process", "Toner Only", "Other"].map(t => <option key={t} value={t}>{t}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Processing Time</label>
-                        <input value={formulaForm.processingTime} onChange={e => setFormulaForm(f => ({ ...f, processingTime: e.target.value }))} placeholder="e.g. 35 min" style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "10px" }}>
-                      <label style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "4px" }}>Notes</label>
-                      <textarea value={formulaForm.notes} onChange={e => setFormulaForm(f => ({ ...f, notes: e.target.value }))} style={{ width: "100%", padding: "8px 10px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none", minHeight: "60px", resize: "vertical" as const, boxSizing: "border-box" as const }} />
-                    </div>
-                    <button onClick={saveFormula} disabled={formulaSaving} style={{ width: "100%", marginTop: "12px", padding: "12px", background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: "10px", color: "#ffffff", fontSize: "14px", fontWeight: 600, cursor: "pointer", opacity: formulaSaving ? 0.5 : 1 }}>
-                      {formulaSaving ? "Saving..." : "Save Formula"}
-                    </button>
+                    ))}
                   </div>
-                )}
 
-                {/* Formula list */}
-                {formulaList.length === 0 ? (
-                  <div style={{ padding: "20px 0", textAlign: "center", color: "#606E74", fontSize: "13px" }}>No formulas saved yet</div>
-                ) : formulaList.map(f => (
-                  <div key={f.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "16px", marginBottom: "8px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-                      <span style={{ fontSize: "12px", color: "#7a8f96" }}>{new Date(f.createdAt).toLocaleDateString()} · {f.appliedBy}</span>
-                      {f.technique && <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(122,143,150,0.1)", color: "#7a8f96" }}>{f.technique}</span>}
+                  {/* Contact */}
+                  <div style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "14px", marginBottom: "20px" }}>
+                    <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: "10px" }}>Contact</div>
+                    {clientDetail.client.phone && (
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#7a8f96" }}>phone</span>
+                        <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "13px", color: "#fff" }}>{clientDetail.client.phone}</span>
+                      </div>
+                    )}
+                    {clientDetail.client.email && (
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#7a8f96" }}>mail</span>
+                        <span style={{ fontSize: "13px", color: "#fff" }}>{clientDetail.client.email}</span>
+                      </div>
+                    )}
+                    {!clientDetail.client.phone && !clientDetail.client.email && (
+                      <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.3)" }}>No contact info</div>
+                    )}
+                  </div>
+
+                  {/* Last visit */}
+                  {clientDetail.stats.lastVisit && (
+                    <div style={{ marginBottom: "20px" }}>
+                      <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: "6px" }}>Last Visit</div>
+                      <div style={{ fontSize: "13px", color: "#fff" }}>{new Date(clientDetail.stats.lastVisit).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}</div>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
-                      {[
-                        { label: "Base Color", value: f.baseColor },
-                        { label: "Brand", value: f.colorBrand },
-                        { label: "Developer", value: f.developer ? `${f.developer}%` : null },
-                        { label: "Toner", value: f.toner },
-                        { label: "Time", value: f.processingTime },
-                      ].filter(r => r.value).map(r => (
-                        <div key={r.label}>
-                          <div style={{ fontSize: "10px", color: "#606E74", textTransform: "uppercase" as const }}>{r.label}</div>
-                          <div style={{ fontSize: "13px", color: "#ffffff", fontFamily: "'Fira Code', monospace" }}>{r.value}</div>
+                  )}
+
+                  {/* Formula Book */}
+                  <div style={{ marginBottom: "20px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                      <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Formula Book ({formulaList.length})</div>
+                      <button onClick={() => setShowFormulaForm(!showFormulaForm)} style={{ fontSize: "11px", color: "#7a8f96", background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
+                        {showFormulaForm ? "Cancel" : "+ Add"}
+                      </button>
+                    </div>
+
+                    {showFormulaForm && (
+                      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "14px", marginBottom: "10px" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                          {[
+                            { key: "baseColor", label: "Base Color", type: "input" },
+                            { key: "colorBrand", label: "Brand", type: "select", options: ["Redken", "Wella", "Kenra", "Pravana", "Olaplex", "Matrix", "Other"] },
+                            { key: "developer", label: "Developer", type: "select", options: ["10", "20", "30", "40"] },
+                            { key: "toner", label: "Toner", type: "input" },
+                            { key: "technique", label: "Technique", type: "select", options: ["Full Highlight", "Partial Highlight", "Balayage", "Ombre", "Single Process", "Toner Only", "Other"] },
+                            { key: "processingTime", label: "Process Time", type: "input" },
+                          ].map(field => (
+                            <div key={field.key}>
+                              <label style={{ fontSize: "9px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "3px" }}>{field.label}</label>
+                              {field.type === "select" ? (
+                                <select value={formulaForm[field.key as keyof typeof formulaForm]} onChange={e => setFormulaForm(f => ({ ...f, [field.key]: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "12px", outline: "none", boxSizing: "border-box" as const }}>
+                                  <option value="">...</option>
+                                  {field.options?.map(o => <option key={o} value={o}>{o}{field.key === "developer" ? "%" : ""}</option>)}
+                                </select>
+                              ) : (
+                                <input value={formulaForm[field.key as keyof typeof formulaForm]} onChange={e => setFormulaForm(f => ({ ...f, [field.key]: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "12px", outline: "none", boxSizing: "border-box" as const }} />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ marginTop: "8px" }}>
+                          <label style={{ fontSize: "9px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "3px" }}>Notes</label>
+                          <textarea value={formulaForm.notes} onChange={e => setFormulaForm(f => ({ ...f, notes: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "12px", outline: "none", minHeight: "50px", resize: "vertical" as const, boxSizing: "border-box" as const }} />
+                        </div>
+                        <button onClick={saveFormula} disabled={formulaSaving} style={{ width: "100%", marginTop: "10px", padding: "10px", background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 600, cursor: "pointer", opacity: formulaSaving ? 0.5 : 1 }}>
+                          {formulaSaving ? "Saving..." : "Save Formula"}
+                        </button>
+                      </div>
+                    )}
+
+                    {formulaList.length === 0 && !showFormulaForm ? (
+                      <div style={{ padding: "16px 0", textAlign: "center", color: "#606E74", fontSize: "12px" }}>No formulas saved yet</div>
+                    ) : formulaList.map((f, fi) => (
+                      <div key={f.id} style={{ background: fi === 0 ? "rgba(201,168,76,0.04)" : "rgba(255,255,255,0.02)", border: `1px solid ${fi === 0 ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.06)"}`, borderRadius: "8px", padding: "12px", marginBottom: "6px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                          <span style={{ fontSize: "11px", color: fi === 0 ? "#C9A84C" : "#7a8f96", fontWeight: 600 }}>{fi === 0 ? "Latest" : new Date(f.createdAt).toLocaleDateString()}</span>
+                          {f.technique && <span style={{ fontSize: "9px", fontWeight: 600, padding: "2px 7px", borderRadius: "4px", backgroundColor: "rgba(122,143,150,0.1)", color: "#7a8f96" }}>{f.technique}</span>}
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px" }}>
+                          {[
+                            { label: "Base", value: f.baseColor },
+                            { label: "Brand", value: f.colorBrand },
+                            { label: "Dev", value: f.developer ? `${f.developer}%` : null },
+                            { label: "Toner", value: f.toner },
+                          ].filter(r => r.value).map(r => (
+                            <div key={r.label}>
+                              <div style={{ fontSize: "9px", color: "#606E74", textTransform: "uppercase" as const }}>{r.label}</div>
+                              <div style={{ fontSize: "12px", color: "#fff", fontFamily: "'Fira Code', monospace" }}>{r.value}</div>
+                            </div>
+                          ))}
+                        </div>
+                        {f.notes && <div style={{ marginTop: "6px", fontSize: "11px", color: "#7a8f96", fontStyle: "italic" }}>{f.notes}</div>}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Visit History */}
+                  {clientDetail.visits && clientDetail.visits.length > 0 && (
+                    <div>
+                      <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: "10px" }}>Visit History ({clientDetail.visits.length})</div>
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {clientDetail.visits.map((v: any) => (
+                        <div key={v.orderId} style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#fff" }}>
+                              {new Date(v.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}
+                            </span>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <span style={{ fontSize: "9px", fontWeight: 700, padding: "2px 7px", borderRadius: "10px", backgroundColor: v.location === "CC" ? "rgba(99,102,241,0.1)" : "rgba(16,185,129,0.1)", color: v.location === "CC" ? "#818CF8" : "#10B981" }}>{v.location}</span>
+                              <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "13px", fontWeight: 700, color: "#22c55e" }}>${v.total.toFixed(2)}</span>
+                            </div>
+                          </div>
+                          <div style={{ fontSize: "11px", color: "#606E74" }}>
+                            {v.services.map((s: { name: string }) => s.name).join(", ")}
+                          </div>
+                          {v.tips > 0 && <div style={{ fontSize: "10px", color: "#7a8f96", marginTop: "2px", fontFamily: "'Fira Code', monospace" }}>Tip: ${v.tips.toFixed(2)}</div>}
+                          {v.tenders?.[0] && (
+                            <div style={{ marginTop: "3px" }}>
+                              <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "10px", color: v.tenders[0].type === "CASH" ? "#22c55e" : "#60a5fa" }}>
+                                {v.tenders[0].type === "CASH" ? "CASH" : `${(v.tenders[0].brand || "CARD").replace(/_/g, " ")} ····${v.tenders[0].last4 || "****"}`}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
-                    {f.notes && <div style={{ marginTop: "8px", fontSize: "12px", color: "#7a8f96", fontStyle: "italic" }}>{f.notes}</div>}
+                  )}
+                </>
+              ) : (
+                <div style={{ padding: "40px 0", textAlign: "center", color: "#606E74", fontSize: "13px" }}>
+                  {/* Contact-only fallback when detail fails to load */}
+                  <div style={{ marginBottom: "12px" }}>
+                    {selectedClient.phone && <div style={{ fontSize: "13px", color: "#7a8f96" }}>{selectedClient.phone}</div>}
+                    {selectedClient.email && <div style={{ fontSize: "13px", color: "#7a8f96" }}>{selectedClient.email}</div>}
                   </div>
-                ))}
-              </div>
+                  <div>Unable to load full profile</div>
+                </div>
+              )}
             </div>
           </div>
         </>
