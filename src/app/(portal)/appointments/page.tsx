@@ -94,6 +94,7 @@ export default function AppointmentsPage() {
   const [loading, setLoading] = useState(true)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [stylistFilter, setStylistFilter] = useState<string>("all")
+  const [statusFilter, setStatusFilter] = useState<string>("all")
   const [viewMode, setViewMode] = useState<"list" | "day" | "week" | "month">("list")
   const [showBooking, setShowBooking] = useState(false)
   const [bookStep, setBookStep] = useState(1)
@@ -683,16 +684,36 @@ export default function AppointmentsPage() {
     return <span style={{ ...badgeBase, backgroundColor: "rgba(96,110,116,0.1)", color: "#7a8f96" }}>{method}</span>
   }
 
-  // Filter by stylist and sort by startTime
+  // Filter by stylist + status and sort by startTime
   const sorted = useMemo(() => {
-    const filtered = stylistFilter === "all"
+    let filtered = stylistFilter === "all"
       ? appointments
       : appointments.filter(a => a.teamMemberId === stylistFilter)
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(a => (a.resolvedStatus || a.status) === statusFilter)
+    }
     return [...filtered].sort((a, b) => {
       if (!a.startTime || !b.startTime) return 0
       return new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
     })
-  }, [appointments, stylistFilter])
+  }, [appointments, stylistFilter, statusFilter])
+
+  // Status counts for filter pills
+  const statusCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const a of appointments) {
+      const s = a.resolvedStatus || a.status
+      counts[s] = (counts[s] || 0) + 1
+    }
+    return counts
+  }, [appointments])
+
+  const STATUS_LABELS: Record<string, string> = {
+    CHECKED_OUT: "Checked Out", IN_PROGRESS: "In Progress", UPCOMING: "Upcoming",
+    ACCEPTED: "Confirmed", PENDING: "Pending", CANCELLED: "Cancelled",
+    CANCELLED_BY_CUSTOMER: "Client Cancelled", CANCELLED_BY_SELLER: "Salon Cancelled",
+    NO_SHOW: "No Show",
+  }
 
   const navigateDate = (delta: number) => {
     const d = new Date(date + "T12:00:00")
@@ -998,6 +1019,41 @@ export default function AppointmentsPage() {
                 <div style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>{stat.label}</div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Status filter pills */}
+        {!loading && appointments.length > 0 && Object.keys(statusCounts).length > 0 && (
+          <div style={{ display: "flex", gap: "6px", marginTop: "12px", flexWrap: "wrap" }}>
+            <button onClick={() => setStatusFilter("all")} style={{
+              padding: "4px 12px", borderRadius: "20px", border: "none", cursor: "pointer",
+              background: statusFilter === "all" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+              borderWidth: "1px", borderStyle: "solid",
+              borderColor: statusFilter === "all" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)",
+            }}>
+              <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: statusFilter === "all" ? "#fff" : "#7a8f96" }}>
+                {appointments.filter(a => !isBlockedTime(a)).length}
+              </span>
+              <span style={{ fontSize: "11px", color: "#606E74", marginLeft: "4px" }}>all</span>
+            </button>
+            {Object.entries(statusCounts).map(([status, count]) => {
+              const sc = STATUS_COLORS[status] || DEFAULT_STATUS
+              return (
+                <button key={status} onClick={() => setStatusFilter(statusFilter === status ? "all" : status)} style={{
+                  padding: "4px 12px", borderRadius: "20px", border: "none", cursor: "pointer",
+                  background: statusFilter === status ? sc.bg : "rgba(255,255,255,0.02)",
+                  borderWidth: "1px", borderStyle: "solid",
+                  borderColor: statusFilter === status ? sc.border : "rgba(255,255,255,0.06)",
+                }}>
+                  <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: statusFilter === status ? sc.text : "#fff" }}>
+                    {count}
+                  </span>
+                  <span style={{ fontSize: "11px", color: statusFilter === status ? sc.text : "#7a8f96", marginLeft: "4px" }}>
+                    {STATUS_LABELS[status] || status.toLowerCase().replace(/_/g, " ")}
+                  </span>
+                </button>
+              )
+            })}
           </div>
         )}
         </>}
