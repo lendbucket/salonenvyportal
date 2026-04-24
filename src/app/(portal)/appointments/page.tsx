@@ -2068,7 +2068,7 @@ export default function AppointmentsPage() {
             {bookStep === 4 && (
               <div>
                 <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "10px" }}>Step 4 — Confirm</div>
-                <div style={{ backgroundColor: "rgba(26,19,19,0.03)", border: "1px solid rgba(26,19,19,0.1)", borderRadius: "10px", padding: "14px", marginBottom: "14px" }}>
+                <div style={{ backgroundColor: "rgba(26,19,19,0.03)", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", padding: "14px", marginBottom: "14px" }}>
                   <div style={{ fontSize: "14px", fontWeight: 600, color: "#1A1313", marginBottom: "6px" }}>{bookClient?.name}</div>
                   <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)", marginBottom: "4px" }}>{TEAM_NAMES[bookStylist] || "Stylist"} · {location === "Corpus Christi" ? "CC" : "SA"}</div>
                   <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)", marginBottom: "8px", fontFamily: "monospace" }}>{new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</div>
@@ -2078,7 +2078,7 @@ export default function AppointmentsPage() {
                       <span style={{ color: "#CDC9C0", fontFamily: "monospace" }}>${s.price.toFixed(2)}</span>
                     </div>
                   ))}
-                  <div style={{ borderTop: "1px solid rgba(26,19,19,0.1)", marginTop: "8px", paddingTop: "8px", display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: "13px" }}>
+                  <div style={{ borderTop: "1px solid rgba(26,19,19,0.07)", marginTop: "8px", paddingTop: "8px", display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: "13px" }}>
                     <span style={{ color: "#1A1313" }}>Total</span>
                     <span style={{ color: "#CDC9C0", fontFamily: "monospace" }}>${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</span>
                   </div>
@@ -2099,7 +2099,7 @@ export default function AppointmentsPage() {
                   </div>
                   {sendCardSMS && (
                     <div>
-                      <input type="tel" placeholder="Client phone number" value={cardPhone} onChange={e => setCardPhone(e.target.value)} style={{ width: "100%", background: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 8, padding: "10px 14px", color: "#1A1313", fontSize: 14, boxSizing: "border-box" as const, outline: "none" }} />
+                      <input type="tel" placeholder="Client phone number" value={cardPhone} onChange={e => setCardPhone(e.target.value)} style={{ width: "100%", background: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 8, padding: "10px 14px", color: "#1A1313", fontSize: 14, boxSizing: "border-box" as const, outline: "none" }} />
                       <div style={{ fontSize: 11, color: "#606E74", marginTop: 6 }}>Client receives: &quot;Add a card to secure your appointment&quot; with a secure link.</div>
                     </div>
                   )}
@@ -2122,13 +2122,13 @@ export default function AppointmentsPage() {
                   {bookClient?.name} is confirmed for {new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} with {TEAM_NAMES[bookStylist] || "stylist"}
                 </div>
                 {sendCardSMS && cardPhone && (
-                  <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: "#22c55e" }}>
+                  <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 12, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: "#22c55e" }}>
                     Card request sent to {cardPhone}
                   </div>
                 )}
                 <button
                   onClick={() => { setShowBooking(false); resetBooking(); setBookSuccess(false); setSendCardSMS(true); setCardPhone("") }}
-                  style={{ width: "100%", height: 48, background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: 10, color: "#1A1313", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
+                  style={{ width: "100%", height: 48, background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: 12, color: "#1A1313", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
                 >
                   Done
                 </button>
@@ -2370,7 +2370,7 @@ export default function AppointmentsPage() {
                     backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, cursor: "pointer",
                     transition: "all 0.15s",
                   }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#F4F5F7"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(26,19,19,0.1)" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#F4F5F7"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(26,19,19,0.12)" }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#FBFBFB"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(26,19,19,0.06)" }}
                   >
                     <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: avatarColors[colorIdx], display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -2486,7 +2486,7 @@ export default function AppointmentsPage() {
                   <div style={{ marginBottom: "20px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
                       <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Formula Book ({formulaList.length})</div>
-                      <button onClick={() => setShowFormulaForm(!showFormulaForm)} style={{ fontSize: "11px", color: "#7a8f96", background: "none", border: "1px solid rgba(26,19,19,0.1)", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
+                      <button onClick={() => setShowFormulaForm(!showFormulaForm)} style={{ fontSize: "11px", color: "#7a8f96", background: "none", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
                         {showFormulaForm ? "Cancel" : "+ Add"}
                       </button>
                     </div>
@@ -2728,7 +2728,7 @@ export default function AppointmentsPage() {
           <div onClick={() => setSelectedAppt(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 199 }} />
           <div style={{
             position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
-            background: "#FBFBFB", borderTop: "1px solid rgba(26,19,19,0.1)",
+            background: "#FBFBFB", borderTop: "1px solid rgba(26,19,19,0.07)",
             borderRadius: "20px 20px 0 0", maxHeight: "85vh", overflowY: "auto",
             paddingBottom: "env(safe-area-inset-bottom, 0px)",
           }}>
@@ -2794,7 +2794,7 @@ export default function AppointmentsPage() {
                 </div>
               )}
               <button onClick={() => setSelectedAppt(null)} style={{
-                width: "100%", height: "44px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.1)",
+                width: "100%", height: "44px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.07)",
                 color: "#7a8f96", borderRadius: "12px", marginTop: "8px", cursor: "pointer", fontSize: "14px",
               }}>Close</button>
             </div>
@@ -2806,18 +2806,18 @@ export default function AppointmentsPage() {
       {cancelConfirm && (
         <div style={{ position: "fixed", inset: 0, zIndex: 400 }}>
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} onClick={() => setCancelConfirm(null)} />
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 16, padding: 28, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)", zIndex: 401 }}>
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 16, padding: 28, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", zIndex: 401 }}>
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 18, color: "#1A1313", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>
               <div style={{ fontSize: 14, color: "#7a8f96" }}>Are you sure you want to cancel {cancelConfirm.clientName}&apos;s appointment?</div>
               <div style={{ fontSize: 12, color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: 6 }}>{cancelConfirm.time}</div>
             </div>
-            <div style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "12px 14px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
+            <div style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "12px 14px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
               This will cancel the appointment in Square and notify the client via SMS.
             </div>
             <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={() => setCancelConfirm(null)} style={{ flex: 1, height: 44, background: "transparent", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 10, color: "#7a8f96", fontSize: 14, cursor: "pointer" }}>Keep</button>
-              <button onClick={() => handleCancelAppointment(cancelConfirm.id)} disabled={cancellingId === cancelConfirm.id} style={{ flex: 1, height: 44, background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.4)", borderRadius: 10, color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: cancellingId === cancelConfirm.id ? 0.5 : 1 }}>
+              <button onClick={() => setCancelConfirm(null)} style={{ flex: 1, height: 44, background: "transparent", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, color: "#7a8f96", fontSize: 14, cursor: "pointer" }}>Keep</button>
+              <button onClick={() => handleCancelAppointment(cancelConfirm.id)} disabled={cancellingId === cancelConfirm.id} style={{ flex: 1, height: 44, background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.4)", borderRadius: 12, color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: cancellingId === cancelConfirm.id ? 0.5 : 1 }}>
                 {cancellingId === cancelConfirm.id ? "Cancelling..." : "Yes, Cancel"}
               </button>
             </div>

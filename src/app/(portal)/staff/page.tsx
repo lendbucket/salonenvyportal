@@ -399,7 +399,7 @@ export default function StaffPage() {
         <div style={{ height: 4, background: accentColor, borderRadius: "14px 14px 0 0" }} />
 
         {/* Card body */}
-        <div style={{ padding: "16px 16px 0" }}>
+        <div style={{ padding: "18px 18px 0" }}>
           {/* Top row: avatar + name + status */}
           <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
             <div style={{
@@ -498,12 +498,12 @@ export default function StaffPage() {
         <div style={{ height: 1, background: "rgba(26,19,19,0.06)", margin: "0 0 12px" }} />
 
         {/* Actions */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 16px 14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 18px 14px" }}>
           {m.inviteStatus.toLowerCase() !== "accepted" && m.email && (
             <button type="button" onClick={() => setEnrollTarget(m)} style={{
               flex: 1, height: 32, borderRadius: 7, background: "rgba(122,143,150,0.08)",
-              border: "1px solid rgba(122,143,150,0.2)", color: "#7a8f96",
-              fontFamily: "Inter", fontSize: 12, fontWeight: 600, letterSpacing: "-0.31px",
+              border: "1px solid rgba(122,143,150,0.18)", color: "#5a7a82",
+              fontFamily: "Inter", fontSize: 11, fontWeight: 600, letterSpacing: "-0.31px",
               display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5,
               cursor: "pointer", transition: "all 0.15s ease", whiteSpace: "nowrap" as const,
             }}>
@@ -512,9 +512,9 @@ export default function StaffPage() {
           )}
           {!m.tdlrStatus && m.tdlrLicenseNumber && (
             <button type="button" onClick={() => verifyTdlr(m)} disabled={verifyingTdlr === m.id} style={{
-              flex: 1, height: 32, borderRadius: 7, background: "rgba(122,143,150,0.08)",
-              border: "1px solid rgba(122,143,150,0.2)", color: "#7a8f96",
-              fontFamily: "Inter", fontSize: 12, fontWeight: 600, letterSpacing: "-0.31px",
+              flex: 1, height: 32, borderRadius: 7, background: "rgba(234,179,8,0.06)",
+              border: "1px solid rgba(234,179,8,0.2)", color: "#92600a",
+              fontFamily: "Inter", fontSize: 11, fontWeight: 600, letterSpacing: "-0.31px",
               display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5,
               cursor: "pointer", transition: "all 0.15s ease", whiteSpace: "nowrap" as const,
               opacity: verifyingTdlr === m.id ? 0.5 : 1,
@@ -524,10 +524,10 @@ export default function StaffPage() {
           )}
           {isOwner && m.isActive && (
             <button type="button" onClick={() => { setOffboardTarget(m); setOffboardForm({ terminationType: "voluntary", terminationDate: new Date().toISOString().split("T")[0], lastWorkingDay: new Date().toISOString().split("T")[0], reason: "", cancelAppointments: true, sendNotice: true, confirmed: false }); setOffboardResult(null); }} style={{
-              height: 32, padding: "0 12px", borderRadius: 7, background: "transparent",
-              border: "1px solid rgba(239,68,68,0.15)", color: "rgba(239,68,68,0.7)",
-              fontFamily: "Inter", fontSize: 12, fontWeight: 500, letterSpacing: "-0.31px",
-              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5,
+              height: 32, padding: "0 10px", borderRadius: 7, background: "transparent",
+              border: "1px solid rgba(239,68,68,0.12)", color: "rgba(185,28,28,0.6)",
+              fontFamily: "Inter", fontSize: 11, fontWeight: 500, letterSpacing: "-0.31px",
+              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 4,
               cursor: "pointer", transition: "all 0.15s ease", whiteSpace: "nowrap" as const,
             }}>
               Terminate
