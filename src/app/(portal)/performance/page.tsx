@@ -148,11 +148,11 @@ function btnStyle(variant: "primary" | "ghost" = "ghost"): React.CSSProperties {
 }
 
 /* ── Progress bar component ── */
-function ProgressBar({ pct, color = "#7a8f96", height = 6 }: { pct: number; color?: string; height?: number }) {
+function ProgressBar({ pct, color, height = 4 }: { pct: number; color?: string; height?: number }) {
   const clamped = Math.min(Math.max(pct, 0), 100)
   return (
-    <div style={{ height: `${height}px`, backgroundColor: "rgba(205,201,192,0.1)", borderRadius: `${height / 2}px`, overflow: "hidden" }}>
-      <div style={{ height: "100%", width: `${clamped}%`, backgroundColor: color, borderRadius: `${height / 2}px`, transition: "width 0.8s ease" }} />
+    <div style={{ height: `${height}px`, backgroundColor: "rgba(26,19,19,0.08)", borderRadius: 2, overflow: "hidden" }}>
+      <div style={{ height: "100%", width: `${clamped}%`, background: color || "linear-gradient(90deg, #7a8f96, #9aafb7)", borderRadius: 2, transition: "width 0.8s ease" }} />
     </div>
   )
 }
@@ -360,8 +360,8 @@ export default function PerformancePage() {
         <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
           Performance
         </h1>
-        <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>
-          {isStylist ? "Your performance metrics and goals" : "Staff performance tracking, goals, and bonuses"}
+        <p style={{ fontSize: "13px", color: "rgba(26,19,19,0.45)", margin: 0 }}>
+          Track goals, commissions, and team performance
         </p>
       </div>
 
@@ -401,21 +401,21 @@ export default function PerformancePage() {
       </div>
 
       {/* ── Tabs ── */}
-      <div style={{ display: "flex", gap: "0", borderBottom: "1px solid rgba(26,19,19,0.06)", marginBottom: "24px" }}>
+      <div style={{ display: "inline-flex", gap: "2px", background: "rgba(26,19,19,0.04)", borderRadius: 10, padding: 4, marginBottom: "24px" }}>
         {TABS.map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
             style={{
-              padding: "10px 20px",
+              padding: "8px 18px",
               fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
+              fontWeight: tab === t ? 600 : 500,
+              letterSpacing: "0.04em",
               border: "none",
-              borderBottom: tab === t ? "2px solid #7a8f96" : "2px solid transparent",
-              backgroundColor: "transparent",
-              color: tab === t ? "#1A1313" : "rgba(26,19,19,0.45)",
+              borderRadius: 8,
+              backgroundColor: tab === t ? "#FBFBFB" : "transparent",
+              color: tab === t ? "#1A1313" : "rgba(26,19,19,0.5)",
+              boxShadow: tab === t ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
               cursor: "pointer",
               transition: "all 0.15s",
             }}
@@ -439,7 +439,7 @@ export default function PerformancePage() {
           ) : kpi ? (
             <>
               {/* KPI cards */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "24px" }}>
                 {[
                   { label: "Revenue", value: fmt(kpi.revenue), target: `Target: ${fmt(kpi.targets.revenue)}`, pct: kpi.targets.revenue > 0 ? (kpi.revenue / kpi.targets.revenue) * 100 : 0, delta: kpi.deltas.revenue, icon: "payments" },
                   { label: "Checkouts", value: String(kpi.checkouts), target: `Target: ${kpi.targets.checkouts}`, pct: kpi.targets.checkouts > 0 ? (kpi.checkouts / kpi.targets.checkouts) * 100 : 0, delta: kpi.deltas.checkouts, icon: "content_cut" },
@@ -448,14 +448,14 @@ export default function PerformancePage() {
                 ].map(card => (
                   <div key={card.label} style={cardStyle}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
-                      <span style={{ fontSize: "11px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.06em", textTransform: "uppercase" }}>{card.label}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase" }}>{card.label}</span>
                       <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(26,19,19,0.3)" }}>{card.icon}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "8px", marginBottom: "4px" }}>
-                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#1A1313", letterSpacing: "-0.02em", fontFamily: "Inter, sans-serif" }}>{card.value}</span>
+                      <span style={{ fontSize: "28px", fontWeight: 700, color: "#1A1313", letterSpacing: "-0.02em", fontFamily: "Inter, sans-serif" }}>{card.value}</span>
                       <DeltaBadge delta={card.delta} />
                     </div>
-                    <div style={{ fontSize: "11px", color: "#94A3B8", marginBottom: "10px" }}>{card.target}</div>
+                    <div style={{ fontSize: "13px", color: "rgba(26,19,19,0.45)", marginBottom: "10px" }}>{card.target}</div>
                     <ProgressBar pct={card.pct} color={card.pct >= 100 ? "#10B981" : card.pct >= 75 ? "#7a8f96" : "#f59e0b"} />
                   </div>
                 ))}

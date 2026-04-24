@@ -54,11 +54,11 @@ export default function FinancialsPage() {
   ]
 
   return (
-    <div style={{ padding: isMobile ? "16px" : "24px 32px", maxWidth: "1200px", margin: "0 auto", ...jakarta }}>
+    <div style={{ padding: isMobile ? "16px" : "32px", maxWidth: "1200px", margin: "0 auto", ...jakarta }}>
       {/* Header */}
       <div style={{ marginBottom: "24px" }}>
         <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: 0, letterSpacing: "-0.01em" }}>Financials</h1>
-        <p style={{ color: MUTED, fontSize: "12px", marginTop: "4px" }}>Expense tracking, invoicing, and tax estimates</p>
+        <p style={{ color: "rgba(26,19,19,0.45)", fontSize: "13px", marginTop: "4px", margin: 0 }}>P&L, expenses, invoices, and tax center</p>
       </div>
 
       {/* Location selector */}
@@ -66,11 +66,11 @@ export default function FinancialsPage() {
         <div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
           {locations.map(loc => (
             <button key={loc.id} onClick={() => setLocationId(loc.id)} style={{
-              padding: "6px 16px", borderRadius: "6px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em",
-              textTransform: "uppercase", cursor: "pointer", border: "1px solid",
-              backgroundColor: locationId === loc.id ? ACC_DIM : "transparent",
-              borderColor: locationId === loc.id ? ACC_BDR : BORDER,
-              color: locationId === loc.id ? ACC_B : MUTED,
+              padding: "6px 16px", borderRadius: "20px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em",
+              textTransform: "uppercase", cursor: "pointer",
+              border: locationId === loc.id ? "none" : "1px solid rgba(26,19,19,0.1)",
+              backgroundColor: locationId === loc.id ? "#1A1313" : "transparent",
+              color: locationId === loc.id ? "#FBFBFB" : "rgba(26,19,19,0.55)",
               transition: "all 0.15s ease",
             }}>{loc.name}</button>
           ))}
@@ -78,14 +78,15 @@ export default function FinancialsPage() {
       )}
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: "4px", marginBottom: "24px", overflowX: "auto", paddingBottom: "2px" }}>
+      <div style={{ display: "inline-flex", gap: "2px", background: "rgba(26,19,19,0.04)", borderRadius: 10, padding: 4, marginBottom: "24px", overflowX: "auto" }}>
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)} style={{
             display: "flex", alignItems: "center", gap: "6px", padding: isMobile ? "8px 12px" : "8px 16px",
-            borderRadius: "8px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+            borderRadius: 8, fontSize: "11px", fontWeight: tab === t.key ? 600 : 500, letterSpacing: "0.04em",
             cursor: "pointer", border: "none", whiteSpace: "nowrap",
-            backgroundColor: tab === t.key ? "#7a8f96" : "transparent",
-            color: tab === t.key ? "#FBFBFB" : "rgba(26,19,19,0.5)",
+            backgroundColor: tab === t.key ? "#FBFBFB" : "transparent",
+            color: tab === t.key ? "#1A1313" : "rgba(26,19,19,0.5)",
+            boxShadow: tab === t.key ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
             transition: "all 0.15s ease",
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>{t.icon}</span>
@@ -147,13 +148,15 @@ function OverviewTab({ locationId, isMobile }: { locationId: string; isMobile: b
   return (
     <div>
       {/* Period pills */}
-      <div style={{ display: "flex", gap: "6px", marginBottom: "24px" }}>
+      <div style={{ display: "inline-flex", gap: "2px", background: "rgba(26,19,19,0.04)", borderRadius: 10, padding: 4, marginBottom: "24px" }}>
         {(["month", "quarter", "year"] as const).map(p => (
           <button key={p} onClick={() => setPeriod(p)} style={{
-            padding: "5px 14px", borderRadius: "20px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em",
-            textTransform: "uppercase", cursor: "pointer", border: "none",
-            backgroundColor: period === p ? "#7a8f96" : "transparent",
-            color: period === p ? "#FBFBFB" : "rgba(26,19,19,0.5)",
+            padding: "6px 14px", borderRadius: 8, fontSize: "11px", fontWeight: period === p ? 600 : 500, letterSpacing: "0.04em",
+            cursor: "pointer", border: "none",
+            backgroundColor: period === p ? "#FBFBFB" : "transparent",
+            color: period === p ? "#1A1313" : "rgba(26,19,19,0.5)",
+            boxShadow: period === p ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+            transition: "all 0.15s ease",
           }}>
             {p === "month" ? "This Month" : p === "quarter" ? "This Quarter" : "This Year"}
           </button>
@@ -167,14 +170,14 @@ function OverviewTab({ locationId, isMobile }: { locationId: string; isMobile: b
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: "16px", marginBottom: "24px" }}>
           {kpis.map(k => (
             <div key={k.label} style={{
-              backgroundColor: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px",
-              boxShadow: CARD_SHADOW,
+              backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "16px", color: k.color }}>{k.icon}</span>
-                <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: MUTED }}>{k.label}</span>
+                <span style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)" }}>{k.label}</span>
               </div>
-              <div style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", ...mono }}>{k.value}</div>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "#1A1313", ...mono }}>{k.value}</div>
             </div>
           ))}
         </div>
@@ -182,7 +185,7 @@ function OverviewTab({ locationId, isMobile }: { locationId: string; isMobile: b
 
       {/* Expense breakdown */}
       {summary?.expensesByCategory && Object.keys(summary.expensesByCategory).length > 0 && (
-        <div style={{ backgroundColor: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: CARD_SHADOW }}>
+        <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
           <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 16px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Expenses by Category</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {Object.entries(summary.expensesByCategory as Record<string, number>)
@@ -448,7 +451,7 @@ function InvoicesTab({ locationId, isMobile }: { locationId: string; isMobile: b
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           {invoices.map((inv: AnyObj) => (
-            <div key={inv.id} style={{ backgroundColor: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "14px 16px", boxShadow: CARD_SHADOW, display: "flex", alignItems: isMobile ? "flex-start" : "center", gap: "12px", flexDirection: isMobile ? "column" : "row" }}>
+            <div key={inv.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "14px 16px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", display: "flex", alignItems: isMobile ? "flex-start" : "center", gap: "12px", flexDirection: isMobile ? "column" : "row" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
                   <span style={{ fontSize: "13px", fontWeight: 700, color: "#1A1313" }}>{inv.invoiceNumber}</span>
@@ -535,17 +538,19 @@ function TaxCenterTab({ locationId, isMobile }: { locationId: string; isMobile: 
   return (
     <div>
       {/* Quarter pills */}
-      <div style={{ display: "flex", gap: "6px", marginBottom: "24px", flexWrap: "wrap" }}>
+      <div style={{ display: "inline-flex", gap: "2px", background: "rgba(26,19,19,0.04)", borderRadius: 10, padding: 4, marginBottom: "24px" }}>
         <button onClick={() => setQuarter(null)} style={{
-          padding: "5px 14px", borderRadius: "20px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em",
-          textTransform: "uppercase", cursor: "pointer", border: "none",
-          backgroundColor: !quarter ? "#7a8f96" : "transparent", color: !quarter ? "#FBFBFB" : "rgba(26,19,19,0.5)",
+          padding: "6px 14px", borderRadius: 8, fontSize: "11px", fontWeight: !quarter ? 600 : 500, letterSpacing: "0.04em",
+          cursor: "pointer", border: "none",
+          backgroundColor: !quarter ? "#FBFBFB" : "transparent", color: !quarter ? "#1A1313" : "rgba(26,19,19,0.5)",
+          boxShadow: !quarter ? "0 1px 3px rgba(0,0,0,0.08)" : "none", transition: "all 0.15s ease",
         }}>Full Year</button>
         {[1, 2, 3, 4].map(q => (
           <button key={q} onClick={() => setQuarter(q)} style={{
-            padding: "5px 14px", borderRadius: "20px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em",
-            textTransform: "uppercase", cursor: "pointer", border: "none",
-            backgroundColor: quarter === q ? "#7a8f96" : "transparent", color: quarter === q ? "#FBFBFB" : "rgba(26,19,19,0.5)",
+            padding: "6px 14px", borderRadius: 8, fontSize: "11px", fontWeight: quarter === q ? 600 : 500, letterSpacing: "0.04em",
+            cursor: "pointer", border: "none",
+            backgroundColor: quarter === q ? "#FBFBFB" : "transparent", color: quarter === q ? "#1A1313" : "rgba(26,19,19,0.5)",
+            boxShadow: quarter === q ? "0 1px 3px rgba(0,0,0,0.08)" : "none", transition: "all 0.15s ease",
           }}>Q{q}</button>
         ))}
       </div>
@@ -562,7 +567,7 @@ function TaxCenterTab({ locationId, isMobile }: { locationId: string; isMobile: 
               { label: "Total Estimated Tax", value: fmtCurrency(taxData.taxEstimates?.totalEstimated || 0), color: RED },
               { label: "Quarterly Payment", value: fmtCurrency(taxData.taxEstimates?.quarterlyPayment || 0), color: GREEN },
             ].map(k => (
-              <div key={k.label} style={{ backgroundColor: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: CARD_SHADOW }}>
+              <div key={k.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
                 <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: MUTED, marginBottom: "6px" }}>{k.label}</div>
                 <div style={{ fontSize: "24px", fontWeight: 700, color: k.color, ...mono }}>{k.value}</div>
               </div>
@@ -570,7 +575,7 @@ function TaxCenterTab({ locationId, isMobile }: { locationId: string; isMobile: 
           </div>
 
           {/* Income summary */}
-          <div style={{ backgroundColor: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: CARD_SHADOW }}>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
             <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 12px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Income Summary</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {[
@@ -588,7 +593,7 @@ function TaxCenterTab({ locationId, isMobile }: { locationId: string; isMobile: 
           </div>
 
           {/* IRS Due Dates */}
-          <div style={{ backgroundColor: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: CARD_SHADOW }}>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
             <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 12px", letterSpacing: "0.04em", textTransform: "uppercase" }}>IRS Quarterly Due Dates</h3>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: "8px" }}>
               {(taxData.irsDueDates || []).map((dd: AnyObj) => {
@@ -658,7 +663,7 @@ function SettingsTab({ locationId }: { locationId: string }) {
 
   return (
     <div style={{ maxWidth: "500px" }}>
-      <div style={{ backgroundColor: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: CARD_SHADOW }}>
+      <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
         <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 16px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Business Model</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div>

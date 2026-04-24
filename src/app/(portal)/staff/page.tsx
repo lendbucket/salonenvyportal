@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Users, Search, X, Send, ShieldCheck, Plus } from "lucide-react";
+import { Users, Search, X, Send, ShieldCheck, Plus, MapPin, Calendar, ShieldAlert } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUserRole } from "@/hooks/useUserRole";
 
@@ -386,147 +386,180 @@ export default function StaffPage() {
 
   const renderCard = (m: StaffRow) => {
     const tb = tdlrBadge(m);
+    const isManager = m.position.toLowerCase() === "manager";
+    const accentColor = !m.isActive ? "rgba(26,19,19,0.08)" : isManager ? "linear-gradient(90deg, #C9A84C 0%, #d9b86c 100%)" : "linear-gradient(90deg, #7a8f96 0%, #9aafb7 100%)";
+
     return (
-      <li
-        key={m.id}
-        className="rounded-xl border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] p-5 transition hover:border-[#7a8f96]/25"
-        style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}
-      >
-        <div className="flex items-start gap-3">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#F4F5F7] text-sm font-semibold text-[#7a8f96] ring-1 ring-[#7a8f96]/30">
-            {initials(m.fullName)}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <p
-                className="truncate font-medium"
-                style={{
-                  color: m.squareTeamMemberId ? "#7a8f96" : undefined,
-                  textDecoration: m.squareTeamMemberId ? "underline" : undefined,
-                  cursor: m.squareTeamMemberId ? "pointer" : undefined,
-                }}
-                onClick={(e) => {
-                  if (m.squareTeamMemberId) {
-                    e.stopPropagation();
-                    router.push(`/stylist/${m.squareTeamMemberId}`);
-                  }
-                }}
+      <li key={m.id} style={{
+        background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 14,
+        overflow: "hidden", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)",
+        transition: "all 0.2s ease", cursor: "pointer", display: "flex", flexDirection: "column" as const, listStyle: "none",
+      }}>
+        {/* Accent bar */}
+        <div style={{ height: 4, background: accentColor, borderRadius: "14px 14px 0 0" }} />
+
+        {/* Card body */}
+        <div style={{ padding: "16px 16px 0" }}>
+          {/* Top row: avatar + name + status */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 12,
+              background: isManager ? "linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.2))" : "linear-gradient(135deg, rgba(122,143,150,0.15), rgba(122,143,150,0.25))",
+              border: isManager ? "1.5px solid rgba(201,168,76,0.3)" : "1.5px solid rgba(122,143,150,0.2)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "Inter", fontSize: 15, fontWeight: 700,
+              color: isManager ? "#C9A84C" : "#7a8f96", flexShrink: 0, letterSpacing: "0",
+            }}>
+              {initials(m.fullName)}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontFamily: "Inter", fontSize: 15, fontWeight: 600, color: "#1A1313",
+                letterSpacing: "-0.31px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const,
+                cursor: m.squareTeamMemberId ? "pointer" : undefined,
+              }}
+                onClick={(e) => { if (m.squareTeamMemberId) { e.stopPropagation(); router.push(`/stylist/${m.squareTeamMemberId}`); } }}
               >
                 {m.fullName}
-              </p>
-              {!m.isActive && (
-                <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-400 ring-1 ring-red-500/30">
-                  Inactive
-                </span>
+              </div>
+              {m.email && (
+                <div style={{ fontFamily: "Inter", fontSize: 12, fontWeight: 400, color: "rgba(26,19,19,0.4)", letterSpacing: "-0.31px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const, marginTop: 1 }}>
+                  {m.email}
+                </div>
               )}
             </div>
-            <div className="mt-1 flex flex-wrap items-center gap-1.5">
-              <span className="rounded-full bg-[#7a8f96]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#7a8f96] ring-1 ring-[#7a8f96]/20">
-                {m.position}
+            {/* Status dot */}
+            <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
+              <div style={{ width: 7, height: 7, borderRadius: "50%", background: m.isActive ? "#22c55e" : "rgba(26,19,19,0.2)", boxShadow: m.isActive ? "0 0 0 2px rgba(34,197,94,0.15)" : "none" }} />
+              <span style={{ fontFamily: "Inter", fontSize: 11, fontWeight: 500, color: m.isActive ? "#15803d" : "rgba(26,19,19,0.4)" }}>
+                {m.isActive ? "Active" : "Inactive"}
               </span>
-              <span
-                style={{
-                  borderRadius: 9999, padding: "2px 8px", fontSize: 10, fontWeight: 600,
-                  textTransform: "uppercase", letterSpacing: "0.06em", cursor: "pointer", transition: "all 0.15s",
-                  background: tb.label === "TDLR Active" ? "rgba(16,185,129,0.15)" : tb.label === "TDLR Expired" ? "rgba(239,68,68,0.15)" : "rgba(245,158,11,0.15)",
-                  color: tb.label === "TDLR Active" ? "#34d399" : tb.label === "TDLR Expired" ? "#f87171" : "#fbbf24",
-                  border: `1px solid ${tb.label === "TDLR Active" ? "rgba(16,185,129,0.3)" : tb.label === "TDLR Expired" ? "rgba(239,68,68,0.3)" : "rgba(245,158,11,0.3)"}`,
-                }}
-                onClick={(e) => { e.stopPropagation(); openLicenseModal(m) }}
-              >
-                {tb.label}
-              </span>
-              {m.squareTeamMemberId && (
-                <span className="rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-400 ring-1 ring-blue-500/30">
-                  SalonTransact
-                </span>
-              )}
-              <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${badgeFor(m.inviteStatus)}`}>
-                {labelFor(m.inviteStatus)}
-              </span>
-            </div>
-            {m.email && (
-              <Link
-                href={`mailto:${m.email}`}
-                className="mt-1.5 block truncate text-xs text-[#7a8f96]/80 hover:underline"
-              >
-                {m.email}
-              </Link>
-            )}
-            {m.phone && (
-              <p className="text-xs text-[rgba(26,19,19,0.45)]">{m.phone}</p>
-            )}
-            <p className="mt-1 text-xs text-[rgba(26,19,19,0.35)]">{m.location.name}</p>
-
-            {/* TDLR details */}
-            {m.tdlrLicenseNumber && (
-              <p className="mt-1 text-[11px] text-[rgba(26,19,19,0.45)]">
-                License: {m.tdlrLicenseNumber}
-                {m.tdlrExpirationDate && (
-                  <> &middot; Exp: {new Date(m.tdlrExpirationDate).toLocaleDateString()}</>
-                )}
-              </p>
-            )}
-
-            {m.createdAt && (
-              <p className="text-[10px] text-[rgba(26,19,19,0.35)]">
-                Joined {new Date(m.createdAt).toLocaleDateString()}
-              </p>
-            )}
-
-            {/* Action buttons */}
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {!m.tdlrStatus && m.tdlrLicenseNumber && (
-                <button
-                  type="button"
-                  onClick={() => verifyTdlr(m)}
-                  disabled={verifyingTdlr === m.id}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/20 px-2.5 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/30 disabled:opacity-50"
-                  style={{ height: 32 }}
-                >
-                  <ShieldCheck className="size-3" />
-                  {verifyingTdlr === m.id ? "Verifying..." : "Verify License"}
-                </button>
-              )}
-              {m.inviteStatus.toLowerCase() !== "accepted" && m.email && (
-                <button
-                  type="button"
-                  onClick={() => setEnrollTarget(m)}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/15 px-2.5 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/25"
-                  style={{ height: 32 }}
-                >
-                  <Send className="size-3" />
-                  Send Enrollment
-                </button>
-              )}
-              {isOwner && m.isActive && (
-                <button
-                  type="button"
-                  onClick={() => { setOffboardTarget(m); setOffboardForm({ terminationType: "voluntary", terminationDate: new Date().toISOString().split("T")[0], lastWorkingDay: new Date().toISOString().split("T")[0], reason: "", cancelAppointments: true, sendNotice: true, confirmed: false }); setOffboardResult(null); }}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 4, height: 32, borderRadius: 6, border: "1px solid rgba(239,68,68,0.2)", background: "transparent", padding: "0 10px", fontSize: 10, fontWeight: 700, color: "#ef4444", cursor: "pointer", letterSpacing: "0.05em", textTransform: "uppercase" as const }}
-                >
-                  Terminate
-                </button>
-              )}
             </div>
           </div>
+
+          {/* Role + license badges */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" as const, marginBottom: 10 }}>
+            {/* Role badge */}
+            <span style={{
+              padding: "2px 8px", borderRadius: 20, fontSize: 10, fontWeight: 700, fontFamily: "Inter",
+              letterSpacing: "0.06em", textTransform: "uppercase" as const,
+              background: isManager ? "rgba(201,168,76,0.1)" : "rgba(59,130,246,0.1)",
+              border: isManager ? "1px solid rgba(201,168,76,0.25)" : "1px solid rgba(59,130,246,0.2)",
+              color: isManager ? "#92700a" : "#1d4ed8",
+            }}>
+              {m.position}
+            </span>
+            {/* License badge */}
+            <span
+              style={{
+                padding: "2px 8px", borderRadius: 20, fontSize: 10, fontWeight: 600, fontFamily: "Inter",
+                letterSpacing: "0.05em", textTransform: "uppercase" as const, display: "inline-flex",
+                alignItems: "center", gap: 4, cursor: "pointer", transition: "all 0.15s",
+                background: tb.label === "TDLR Active" ? "rgba(34,197,94,0.08)" : tb.label === "TDLR Expired" ? "rgba(239,68,68,0.08)" : "rgba(234,179,8,0.08)",
+                border: `1px solid ${tb.label === "TDLR Active" ? "rgba(34,197,94,0.2)" : tb.label === "TDLR Expired" ? "rgba(239,68,68,0.2)" : "rgba(234,179,8,0.2)"}`,
+                color: tb.label === "TDLR Active" ? "#15803d" : tb.label === "TDLR Expired" ? "#b91c1c" : "#a16207",
+              }}
+              onClick={(e) => { e.stopPropagation(); openLicenseModal(m) }}
+            >
+              {tb.label === "TDLR Active" ? <ShieldCheck style={{ width: 10, height: 10 }} /> : <ShieldAlert style={{ width: 10, height: 10 }} />}
+              {tb.label}
+            </span>
+            {/* Invite status badge */}
+            <span style={{
+              padding: "2px 8px", borderRadius: 20, fontSize: 10, fontWeight: 600, fontFamily: "Inter",
+              letterSpacing: "0.05em", textTransform: "uppercase" as const,
+              background: m.inviteStatus.toLowerCase() === "accepted" ? "rgba(34,197,94,0.08)" : m.inviteStatus.toLowerCase() === "invited" ? "rgba(59,130,246,0.08)" : "rgba(26,19,19,0.05)",
+              border: `1px solid ${m.inviteStatus.toLowerCase() === "accepted" ? "rgba(34,197,94,0.2)" : m.inviteStatus.toLowerCase() === "invited" ? "rgba(59,130,246,0.2)" : "rgba(26,19,19,0.1)"}`,
+              color: m.inviteStatus.toLowerCase() === "accepted" ? "#15803d" : m.inviteStatus.toLowerCase() === "invited" ? "#1d4ed8" : "rgba(26,19,19,0.45)",
+            }}>
+              {labelFor(m.inviteStatus)}
+            </span>
+          </div>
+
+          {/* Location + date + license info */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, flexWrap: "wrap" as const }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "Inter", fontSize: 12, fontWeight: 400, color: "rgba(26,19,19,0.45)" }}>
+              <MapPin size={11} color="rgba(26,19,19,0.3)" />{m.location.name}
+            </span>
+            {m.createdAt && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "Inter", fontSize: 12, fontWeight: 400, color: "rgba(26,19,19,0.4)" }}>
+                <Calendar size={11} color="rgba(26,19,19,0.3)" />Joined {new Date(m.createdAt).toLocaleDateString()}
+              </span>
+            )}
+            {m.tdlrLicenseNumber && (
+              <span style={{ fontFamily: "Inter", fontSize: 12, fontWeight: 400, color: "rgba(26,19,19,0.35)" }}>
+                Lic: {m.tdlrLicenseNumber}{m.tdlrExpirationDate ? ` · Exp: ${new Date(m.tdlrExpirationDate).toLocaleDateString()}` : ""}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: 1, background: "rgba(26,19,19,0.06)", margin: "0 0 12px" }} />
+
+        {/* Actions */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 16px 14px" }}>
+          {m.inviteStatus.toLowerCase() !== "accepted" && m.email && (
+            <button type="button" onClick={() => setEnrollTarget(m)} style={{
+              flex: 1, height: 32, borderRadius: 7, background: "rgba(122,143,150,0.08)",
+              border: "1px solid rgba(122,143,150,0.2)", color: "#7a8f96",
+              fontFamily: "Inter", fontSize: 12, fontWeight: 600, letterSpacing: "-0.31px",
+              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5,
+              cursor: "pointer", transition: "all 0.15s ease", whiteSpace: "nowrap" as const,
+            }}>
+              <Send style={{ width: 12, height: 12 }} />Send Enrollment
+            </button>
+          )}
+          {!m.tdlrStatus && m.tdlrLicenseNumber && (
+            <button type="button" onClick={() => verifyTdlr(m)} disabled={verifyingTdlr === m.id} style={{
+              flex: 1, height: 32, borderRadius: 7, background: "rgba(122,143,150,0.08)",
+              border: "1px solid rgba(122,143,150,0.2)", color: "#7a8f96",
+              fontFamily: "Inter", fontSize: 12, fontWeight: 600, letterSpacing: "-0.31px",
+              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5,
+              cursor: "pointer", transition: "all 0.15s ease", whiteSpace: "nowrap" as const,
+              opacity: verifyingTdlr === m.id ? 0.5 : 1,
+            }}>
+              <ShieldCheck style={{ width: 12, height: 12 }} />{verifyingTdlr === m.id ? "Verifying..." : "Verify License"}
+            </button>
+          )}
+          {isOwner && m.isActive && (
+            <button type="button" onClick={() => { setOffboardTarget(m); setOffboardForm({ terminationType: "voluntary", terminationDate: new Date().toISOString().split("T")[0], lastWorkingDay: new Date().toISOString().split("T")[0], reason: "", cancelAppointments: true, sendNotice: true, confirmed: false }); setOffboardResult(null); }} style={{
+              height: 32, padding: "0 12px", borderRadius: 7, background: "transparent",
+              border: "1px solid rgba(239,68,68,0.15)", color: "rgba(239,68,68,0.7)",
+              fontFamily: "Inter", fontSize: 12, fontWeight: 500, letterSpacing: "-0.31px",
+              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5,
+              cursor: "pointer", transition: "all 0.15s ease", whiteSpace: "nowrap" as const,
+            }}>
+              Terminate
+            </button>
+          )}
         </div>
       </li>
     );
   };
 
   return (
-    <div className="p-4 md:p-8">
+    <div style={{ padding: 32 }}>
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="font-bold text-[#1A1313]" style={{ fontSize: 24, fontWeight: 700 }}>Staff</h1>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 24 }}>
+        <div>
+          <h1 style={{ fontFamily: "Inter", fontSize: 24, fontWeight: 700, color: "#1A1313", letterSpacing: "-0.31px", margin: 0 }}>Staff</h1>
+          <p style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 400, color: "rgba(26,19,19,0.45)", marginTop: 3 }}>
+            {filtered.length} staff member{filtered.length !== 1 ? "s" : ""}
+          </p>
+        </div>
         <button
           type="button"
           onClick={() => setShowInviteModal(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#7a8f96] px-4 text-sm font-semibold text-[#06080d] hover:bg-[#606E74]"
-          style={{ height: 40 }}
+          style={{
+            height: 40, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+            borderRadius: 12, background: "#7a8f96", padding: "0 16px", border: "none",
+            fontFamily: "Inter", fontSize: 14, fontWeight: 600, color: "#06080d", cursor: "pointer",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)",
+            transition: "all 0.15s ease",
+          }}
         >
-          <Plus className="size-4" />
+          <Plus style={{ width: 16, height: 16 }} />
           Invite Staff
         </button>
       </div>
@@ -621,7 +654,28 @@ export default function StaffPage() {
       {err && <p className="mt-4 text-sm text-red-400">{err}</p>}
 
       {loading ? (
-        <p className="mt-8 text-sm text-[rgba(26,19,19,0.45)]">Loading team...</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 32 }}>
+          {[1,2,3,4,5,6].map(i => (
+            <div key={i} className="skeleton-card" style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+              <div style={{ display: "flex", gap: 12 }}>
+                <div className="skeleton skeleton-avatar" style={{ width: 44, height: 44 }} />
+                <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 8 }}>
+                  <div className="skeleton skeleton-title" style={{ width: "60%" }} />
+                  <div className="skeleton skeleton-text-sm" style={{ width: "80%" }} />
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 6 }}>
+                <div className="skeleton skeleton-text-sm" style={{ width: 60 }} />
+                <div className="skeleton skeleton-text-sm" style={{ width: 100 }} />
+              </div>
+              <div style={{ height: 1, background: "rgba(26,19,19,0.06)" }} />
+              <div style={{ display: "flex", gap: 8 }}>
+                <div className="skeleton" style={{ flex: 1, height: 32, borderRadius: 7 }} />
+                <div className="skeleton" style={{ width: 80, height: 32, borderRadius: 7 }} />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <div className="mt-10 flex flex-col items-center rounded-xl border border-dashed border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-6 py-16 text-center">
           <Users className="size-12 text-[rgba(26,19,19,0.35)]" />
@@ -632,23 +686,24 @@ export default function StaffPage() {
         <div className="mt-8 space-y-8">
           {grouped.map((g) => (
             <div key={g.name}>
-              <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-[rgba(26,19,19,0.45)]">
-                {g.name} ({g.members.length})
+              <h2 style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16, marginTop: 8 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(26,19,19,0.5)", textTransform: "uppercase" as const, letterSpacing: "0.08em", whiteSpace: "nowrap" as const }}>{g.name} ({g.members.length})</span>
+                <div style={{ height: 1, flex: 1, background: "rgba(26,19,19,0.08)" }} />
               </h2>
-              <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ul style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, listStyle: "none", padding: 0, margin: 0 }}>
                 {g.members.map(renderCard)}
               </ul>
             </div>
           ))}
         </div>
       ) : (
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <ul style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, listStyle: "none", padding: 0, margin: 0, marginTop: 32 }}>
           {filtered.map(renderCard)}
         </ul>
       )}
 
       {/* Last refresh indicator */}
-      <p className="mt-4 text-[10px] text-[rgba(26,19,19,0.35)]" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(26,19,19,0.3)", marginTop: 16 }}>
         Last refreshed {lastRefresh.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" })}
       </p>
 

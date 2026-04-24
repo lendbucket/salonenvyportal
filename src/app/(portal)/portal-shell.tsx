@@ -209,9 +209,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           height: 38,
           borderRadius: 6,
           textDecoration: "none",
-          borderLeft: isActive ? "3px solid #C9A84C" : "3px solid transparent",
-          backgroundColor: isActive ? "rgba(201,168,76,0.08)" : "transparent",
-          color: isActive ? "#C9A84C" : item.highlight ? "#C9A84C" : "rgba(255,255,255,0.5)",
+          borderLeft: isActive ? "3px solid #7a8f96" : "3px solid transparent",
+          backgroundColor: isActive ? "rgba(122,143,150,0.08)" : "transparent",
+          color: isActive ? "#7a8f96" : "rgba(26,19,19,0.5)",
           transition: "all 0.15s ease",
           overflow: "hidden",
           whiteSpace: "nowrap" as const,
@@ -225,7 +225,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             style={{
               fontSize: 16, width: 16, height: 16, flexShrink: 0,
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: isActive ? "#C9A84C" : "rgba(255,255,255,0.4)",
+              color: isActive ? "#7a8f96" : "rgba(26,19,19,0.4)",
             }}
           >
             {item.icon}
@@ -340,7 +340,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
      ═══════════════════════════════════════════ */
   if (isMobile) {
     return (
-      <div style={{ position: "fixed", inset: 0, display: "flex", flexDirection: "column", backgroundColor: "#1e2d35", overflow: "hidden" }}>
+      <div style={{ position: "fixed", inset: 0, display: "flex", flexDirection: "column", backgroundColor: "#F4F5F7", overflow: "hidden" }}>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
@@ -348,8 +348,8 @@ export default function PortalShell({ children }: { children: React.ReactNode })
 
         {/* TOP BAR — fixed at top */}
         <header className="portal-header" style={{
-          backgroundColor: "#080c10",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          backgroundColor: "#FBFBFB",
+          borderBottom: "1px solid rgba(26,19,19,0.08)",
           flexShrink: 0,
           zIndex: 50,
         }}>
@@ -369,7 +369,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 width: "auto",
                 objectFit: "contain" as const,
                 display: "block",
-                filter: "brightness(0) saturate(100%) invert(78%) sepia(35%) saturate(800%) hue-rotate(5deg) brightness(95%)",
+                filter: "brightness(0) saturate(100%) invert(60%) sepia(15%) saturate(600%) hue-rotate(155deg) brightness(90%)",
               }}
             />
             {isOwner && pendingCount > 0 && (
@@ -397,9 +397,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               width: "36px",
               height: "36px",
               borderRadius: "8px",
-              backgroundColor: "rgba(205,201,192,0.06)",
-              border: "1px solid rgba(205,201,192,0.12)",
-              color: "rgba(205,201,192,0.7)",
+              backgroundColor: "rgba(26,19,19,0.04)",
+              border: "1px solid rgba(26,19,19,0.08)",
+              color: "rgba(26,19,19,0.5)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -418,7 +418,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             style={{
               position: "fixed",
               inset: 0,
-              backgroundColor: "rgba(0,0,0,0.55)",
+              backgroundColor: "rgba(0,0,0,0.3)",
               zIndex: 90,
             }}
           />
@@ -432,7 +432,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           bottom: 0,
           width: "280px",
           maxWidth: "85vw",
-          backgroundColor: "#080c10",
+          backgroundColor: "#FBFBFB",
           zIndex: 100,
           transform: drawerOpen ? "translateX(0)" : "translateX(100%)",
           transition: "transform 0.25s ease",
@@ -443,7 +443,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           {/* Drawer header — user info */}
           <div style={{
             padding: "20px",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
+            borderBottom: "1px solid rgba(26,19,19,0.06)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -453,20 +453,20 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 width: "36px",
                 height: "36px",
                 borderRadius: "50%",
-                backgroundColor: "rgba(255,255,255,0.06)",
-                border: "1.5px solid rgba(205,201,192,0.25)",
+                backgroundColor: "rgba(122,143,150,0.12)",
+                border: "1.5px solid rgba(122,143,150,0.25)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "#CDC9C0",
+                color: "#7a8f96",
                 fontSize: "13px",
                 fontWeight: 800,
               }}>
                 {initials}
               </div>
               <div>
-                <div style={{ color: "#FBFBFB", fontSize: "13px", fontWeight: 700 }}>{userName}</div>
-                <div style={{ color: "rgba(205,201,192,0.5)", fontSize: "9px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>{userRole}</div>
+                <div style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700 }}>{userName}</div>
+                <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "9px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>{userRole}</div>
               </div>
             </div>
             <button
@@ -475,9 +475,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 width: "32px",
                 height: "32px",
                 borderRadius: "8px",
-                backgroundColor: "rgba(205,201,192,0.06)",
-                border: "1px solid rgba(205,201,192,0.12)",
-                color: "rgba(205,201,192,0.6)",
+                backgroundColor: "rgba(26,19,19,0.04)",
+                border: "1px solid rgba(26,19,19,0.08)",
+                color: "rgba(26,19,19,0.5)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -496,17 +496,17 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           {/* Profile / Sign out at bottom */}
           <div style={{
             padding: "16px 20px",
-            borderTop: "1px solid rgba(255,255,255,0.06)",
+            borderTop: "1px solid rgba(26,19,19,0.06)",
             display: "flex",
             gap: "8px",
           }}>
             <Link href="/profile" onClick={() => setDrawerOpen(false)} style={{
               flex: 1,
               padding: "10px",
-              backgroundColor: "rgba(205,201,192,0.06)",
-              border: "1px solid rgba(205,201,192,0.12)",
+              backgroundColor: "rgba(26,19,19,0.04)",
+              border: "1px solid rgba(26,19,19,0.08)",
               borderRadius: "8px",
-              color: "rgba(205,201,192,0.6)",
+              color: "rgba(26,19,19,0.5)",
               textDecoration: "none",
               display: "inline-flex",
               flexDirection: "row" as const,
@@ -527,10 +527,10 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               style={{
                 flex: 1,
                 padding: "10px",
-                backgroundColor: "rgba(205,201,192,0.06)",
-                border: "1px solid rgba(205,201,192,0.12)",
+                backgroundColor: "rgba(26,19,19,0.04)",
+                border: "1px solid rgba(26,19,19,0.08)",
                 borderRadius: "8px",
-                color: "rgba(205,201,192,0.6)",
+                color: "rgba(26,19,19,0.5)",
                 cursor: "pointer",
                 display: "inline-flex",
                 flexDirection: "row" as const,
@@ -553,7 +553,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         {/* CONTENT — scrollable area */}
         <main className="portal-content" style={{
           flex: 1,
-          backgroundColor: "#1e2d35",
+          backgroundColor: "#F4F5F7",
           overflowY: "auto",
           overflowX: "hidden",
           WebkitOverflowScrolling: "touch",
@@ -570,8 +570,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           left: 0,
           right: 0,
           minHeight: "60px",
-          backgroundColor: "#080c10",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
+          backgroundColor: "#FBFBFB",
+          borderTop: "1px solid rgba(26,19,19,0.08)",
+          boxShadow: "0 -4px 12px rgba(0,0,0,0.04)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-around",
@@ -586,7 +587,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 flexDirection: "column",
                 alignItems: "center",
                 gap: "2px",
-                color: isActive ? "#C9A84C" : "rgba(255,255,255,0.35)",
+                color: isActive ? "#7a8f96" : "rgba(26,19,19,0.35)",
                 textDecoration: "none",
                 fontSize: "9px",
                 fontWeight: 700,
