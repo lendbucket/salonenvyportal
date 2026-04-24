@@ -361,8 +361,8 @@ export async function PATCH(
 <h1 style="color:#000;font-size:28px;margin:16px 0 0;letter-spacing:2px;">SALON ENVY</h1>
 </div>
 
-<h1 style="color:#000;font-size:24px;border-bottom:2px solid #C9A84C;padding-bottom:10px;">New Contractor Onboarding Complete</h1>
-<p><span style="display:inline-block;background:#C9A84C;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:bold;">${fullEnrollment.role}</span> &nbsp; ${locationName} &nbsp; ${new Date().toLocaleDateString()}</p>
+<h1 style="color:#000;font-size:24px;border-bottom:2px solid #7a8f96;padding-bottom:10px;">New Contractor Onboarding Complete</h1>
+<p><span style="display:inline-block;background:#7a8f96;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:bold;">${fullEnrollment.role}</span> &nbsp; ${locationName} &nbsp; ${new Date().toLocaleDateString()}</p>
 
 <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px;padding:20px;margin-bottom:20px;">
 <h2 style="color:#333;font-size:16px;margin:0 0 12px;">PERSONAL INFORMATION</h2>
@@ -421,7 +421,7 @@ ${field("Device/Browser", uaTruncated)}
 <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px;padding:20px;margin-bottom:20px;">
 <h2 style="color:#333;font-size:16px;margin:0 0 12px;">SIGNED AGREEMENT</h2>
 <div style="background:#fff;border:1px solid #ccc;padding:20px;font-size:11px;line-height:1.6;white-space:pre-wrap;font-family:'Courier New',monospace;">${agreementText}</div>
-<div style="background:#f0f0f0;border:2px solid #C9A84C;padding:16px;margin-top:20px;border-radius:8px;">
+<div style="background:#f0f0f0;border:2px solid #7a8f96;padding:16px;margin-top:20px;border-radius:8px;">
 <strong>DIGITAL SIGNATURE</strong><br/>
 Signed by: ${fullEnrollment.signedLegalName || fullName}<br/>
 Date/Time: ${signedAt}<br/>

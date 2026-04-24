@@ -87,7 +87,7 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
           required
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
-          className="mt-1 w-full rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+          className="mt-1 w-full rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
           required
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
-          className="mt-1 w-full rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+          className="mt-1 w-full rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
         />
       </div>
 
@@ -111,7 +111,7 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+            className="mt-1 w-full rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -128,7 +128,7 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
             required
             value={locationId}
             onChange={(e) => setLocationId(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+            className="mt-1 w-full rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
           >
             {locations.map((l) => (
               <option key={l.id} value={l.id}>
@@ -149,7 +149,7 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             placeholder="0"
-            className="mt-1 w-full rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+            className="mt-1 w-full rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
           />
         </div>
         <div>
@@ -160,7 +160,7 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
             inputMode="decimal"
             value={reorderThreshold}
             onChange={(e) => setReorderThreshold(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+            className="mt-1 w-full rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
           />
         </div>
       </div>
@@ -172,7 +172,7 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
         <input
           value={supplier}
           onChange={(e) => setSupplier(e.target.value)}
-          className="mt-1 w-full rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+          className="mt-1 w-full rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
         />
       </div>
 
@@ -184,14 +184,14 @@ export function AddInventoryForm({ locations }: { locations: Loc[] }) {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          className="mt-1 w-full resize-none rounded-xl border border-[#2a2a2a] bg-[#0d0d0d] px-4 py-2.5 text-sm text-neutral-100 outline-none ring-[#C9A84C]/25 focus:ring-2"
+          className="mt-1 w-full resize-none rounded-xl border border-[rgba(26,19,19,0.12)] bg-[#FBFBFB] px-4 py-2.5 text-sm text-[#1A1313] outline-none ring-[#7a8f96]/25 focus:ring-2"
         />
       </div>
 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full rounded-xl bg-[#C9A84C] py-3 text-sm font-semibold text-[#0d0d0d] transition hover:bg-[#b89642] disabled:opacity-50"
+        className="w-full rounded-xl bg-[#7a8f96] py-3 text-sm font-semibold text-[#FBFBFB] transition hover:bg-[#6b8088] disabled:opacity-50"
       >
         {submitting ? "Saving…" : "Save item"}
       </button>

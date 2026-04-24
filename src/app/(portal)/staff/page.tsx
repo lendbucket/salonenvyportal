@@ -387,7 +387,7 @@ export default function StaffPage() {
   const renderCard = (m: StaffRow) => {
     const tb = tdlrBadge(m);
     const isManager = m.position.toLowerCase() === "manager";
-    const accentColor = !m.isActive ? "rgba(26,19,19,0.08)" : isManager ? "linear-gradient(90deg, #C9A84C 0%, #d9b86c 100%)" : "linear-gradient(90deg, #7a8f96 0%, #9aafb7 100%)";
+    const accentColor = !m.isActive ? "rgba(26,19,19,0.08)" : isManager ? "linear-gradient(90deg, #7a8f96 0%, #9aafb7 100%)" : "linear-gradient(90deg, #7a8f96 0%, #9aafb7 100%)";
 
     return (
       <li key={m.id} style={{
@@ -404,11 +404,11 @@ export default function StaffPage() {
           <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
             <div style={{
               width: 44, height: 44, borderRadius: 12,
-              background: isManager ? "linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.2))" : "linear-gradient(135deg, rgba(122,143,150,0.15), rgba(122,143,150,0.25))",
-              border: isManager ? "1.5px solid rgba(201,168,76,0.3)" : "1.5px solid rgba(122,143,150,0.2)",
+              background: isManager ? "linear-gradient(135deg, rgba(122,143,150,0.1), rgba(122,143,150,0.2))" : "linear-gradient(135deg, rgba(122,143,150,0.15), rgba(122,143,150,0.25))",
+              border: isManager ? "1.5px solid rgba(122,143,150,0.25)" : "1.5px solid rgba(122,143,150,0.2)",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontFamily: "Inter", fontSize: 15, fontWeight: 700,
-              color: isManager ? "#C9A84C" : "#7a8f96", flexShrink: 0, letterSpacing: "0",
+              color: isManager ? "#7a8f96" : "#7a8f96", flexShrink: 0, letterSpacing: "0",
             }}>
               {initials(m.fullName)}
             </div>
@@ -443,9 +443,9 @@ export default function StaffPage() {
             <span style={{
               padding: "2px 8px", borderRadius: 20, fontSize: 10, fontWeight: 700, fontFamily: "Inter",
               letterSpacing: "0.06em", textTransform: "uppercase" as const,
-              background: isManager ? "rgba(201,168,76,0.1)" : "rgba(59,130,246,0.1)",
-              border: isManager ? "1px solid rgba(201,168,76,0.25)" : "1px solid rgba(59,130,246,0.2)",
-              color: isManager ? "#92700a" : "#1d4ed8",
+              background: isManager ? "rgba(122,143,150,0.1)" : "rgba(59,130,246,0.1)",
+              border: isManager ? "1px solid rgba(122,143,150,0.2)" : "1px solid rgba(59,130,246,0.2)",
+              color: isManager ? "#4a6670" : "#1d4ed8",
             }}>
               {m.position}
             </span>

@@ -2330,7 +2330,7 @@ export default function AppointmentsPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
             {[
               { label: "Total Clients", value: clientsTotal.toLocaleString(), color: "#1A1313" },
-              { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#C9A84C" },
+              { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#7a8f96" },
               { label: "Showing", value: String(clientsList.length), color: "#7a8f96" },
             ].map(s => (
               <div key={s.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "12px 14px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
@@ -2390,7 +2390,7 @@ export default function AppointmentsPage() {
                         </div>
                       )}
                       {c.hasFormula && (
-                        <span style={{ fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "12px", backgroundColor: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", color: "#C9A84C", letterSpacing: "0.04em" }}>FORMULA</span>
+                        <span style={{ fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "12px", backgroundColor: "rgba(122,143,150,0.1)", border: "1px solid rgba(122,143,150,0.2)", color: "#7a8f96", letterSpacing: "0.04em" }}>FORMULA</span>
                       )}
                       <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#606E74" }}>chevron_right</span>
                     </div>
@@ -2445,7 +2445,7 @@ export default function AppointmentsPage() {
                     {[
                       { label: "Visits", value: String(clientDetail.stats.totalVisits || 0), color: "#1A1313" },
                       { label: "Total Spend", value: `$${(clientDetail.stats.totalSpend || 0).toFixed(0)}`, color: "#22c55e" },
-                      { label: "Avg Ticket", value: `$${(clientDetail.stats.avgTicket || 0).toFixed(0)}`, color: "#C9A84C" },
+                      { label: "Avg Ticket", value: `$${(clientDetail.stats.avgTicket || 0).toFixed(0)}`, color: "#7a8f96" },
                     ].map(s => (
                       <div key={s.label} style={{ backgroundColor: "rgba(26,19,19,0.03)", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
                         <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", fontWeight: 700, color: s.color }}>{s.value}</div>
@@ -2528,9 +2528,9 @@ export default function AppointmentsPage() {
                     {formulaList.length === 0 && !showFormulaForm ? (
                       <div style={{ padding: "16px 0", textAlign: "center", color: "#606E74", fontSize: "12px" }}>No formulas saved yet</div>
                     ) : formulaList.map((f, fi) => (
-                      <div key={f.id} style={{ background: fi === 0 ? "rgba(201,168,76,0.04)" : "rgba(26,19,19,0.02)", border: `1px solid ${fi === 0 ? "rgba(201,168,76,0.12)" : "rgba(26,19,19,0.06)"}`, borderRadius: "8px", padding: "12px", marginBottom: "6px" }}>
+                      <div key={f.id} style={{ background: fi === 0 ? "rgba(122,143,150,0.04)" : "rgba(26,19,19,0.02)", border: `1px solid ${fi === 0 ? "rgba(122,143,150,0.12)" : "rgba(26,19,19,0.06)"}`, borderRadius: "8px", padding: "12px", marginBottom: "6px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                          <span style={{ fontSize: "11px", color: fi === 0 ? "#C9A84C" : "#7a8f96", fontWeight: 600 }}>{fi === 0 ? "Latest" : new Date(f.createdAt).toLocaleDateString()}</span>
+                          <span style={{ fontSize: "11px", color: fi === 0 ? "#7a8f96" : "#7a8f96", fontWeight: 600 }}>{fi === 0 ? "Latest" : new Date(f.createdAt).toLocaleDateString()}</span>
                           {f.technique && <span style={{ fontSize: "9px", fontWeight: 600, padding: "2px 7px", borderRadius: "4px", backgroundColor: "rgba(122,143,150,0.1)", color: "#7a8f96" }}>{f.technique}</span>}
                         </div>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px" }}>

@@ -11,7 +11,7 @@ const ACC_B = "#7a8f96"
 const MUTED = "rgba(26,19,19,0.3)"
 const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#22c55e"
-const GOLD = "#C9A84C"
+const GOLD = "#7a8f96"
 const jakarta: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 
@@ -224,9 +224,9 @@ export default function PermissionsPage() {
                   <button key={r.role} onClick={() => { setActiveRole(r.role); setSelectedStaff(null) }} style={{
                     display: "flex", alignItems: "center", gap: "12px", width: "100%", padding: "12px 14px",
                     marginBottom: "4px", borderRadius: "10px", border: "none", cursor: "pointer", textAlign: "left",
-                    backgroundColor: isActive ? (r.role === "OWNER" ? "rgba(201,168,76,0.05)" : "rgba(26,19,19,0.04)") : "transparent",
+                    backgroundColor: isActive ? (r.role === "OWNER" ? "rgba(122,143,150,0.05)" : "rgba(26,19,19,0.04)") : "transparent",
                     borderLeft: "none",
-                    outline: isActive ? `1px solid ${r.role === "OWNER" ? "rgba(201,168,76,0.25)" : "rgba(26,19,19,0.08)"}` : "1px solid transparent",
+                    outline: isActive ? `1px solid ${r.role === "OWNER" ? "rgba(122,143,150,0.25)" : "rgba(26,19,19,0.08)"}` : "1px solid transparent",
                     transition: "all 0.15s",
                   }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "20px", color: isActive ? (r.role === "OWNER" ? GOLD : "#fff") : ACC }}>{r.icon}</span>
@@ -313,7 +313,7 @@ export default function PermissionsPage() {
 
           {/* Owner banner */}
           {isOwnerRole && (
-            <div style={{ padding: "12px 28px", backgroundColor: "rgba(201,168,76,0.04)", borderBottom: `1px solid rgba(201,168,76,0.1)`, display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+            <div style={{ padding: "12px 28px", backgroundColor: "rgba(122,143,150,0.04)", borderBottom: `1px solid rgba(122,143,150,0.1)`, display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
               <span className="material-symbols-outlined" style={{ fontSize: "16px", color: GOLD }}>shield</span>
               <span style={{ fontSize: "12px", color: GOLD }}>Owner always has full access to everything. These cannot be changed.</span>
             </div>

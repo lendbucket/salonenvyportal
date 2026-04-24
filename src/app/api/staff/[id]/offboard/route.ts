@@ -219,7 +219,7 @@ export async function POST(
       subject: `Staff Offboarding Complete — ${staffMember.fullName} — ${staffMember.location.name} — ${new Date().toLocaleDateString()}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
-          <h2 style="color: #000; border-bottom: 2px solid #C9A84C; padding-bottom: 10px;">Staff Offboarding Complete</h2>
+          <h2 style="color: #000; border-bottom: 2px solid #7a8f96; padding-bottom: 10px;">Staff Offboarding Complete</h2>
           <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
             <tr><td style="color: #666; font-size: 13px; padding: 6px 0; border-bottom: 1px solid #eee;">Name</td><td style="color: #000; font-size: 13px; padding: 6px 0; text-align: right; border-bottom: 1px solid #eee;">${staffMember.fullName}</td></tr>
             <tr><td style="color: #666; font-size: 13px; padding: 6px 0; border-bottom: 1px solid #eee;">Location</td><td style="color: #000; font-size: 13px; padding: 6px 0; text-align: right; border-bottom: 1px solid #eee;">${staffMember.location.name}</td></tr>
