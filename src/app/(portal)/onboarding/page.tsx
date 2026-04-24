@@ -180,8 +180,8 @@ export default function OnboardingManagementPage() {
     width: "100%",
     padding: "10px 12px",
     backgroundColor: "#FBFBFB",
-    border: "1px solid rgba(205,201,192,0.15)",
-    borderRadius: "7px",
+    border: "1px solid rgba(26,19,19,0.07)",
+    borderRadius: 8,
     color: "#1A1313",
     fontSize: "14px",
     boxSizing: "border-box",
@@ -203,7 +203,7 @@ export default function OnboardingManagementPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px" }}>Onboarding</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#1A1313", margin: "0 0 4px" }}>Onboarding</h1>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>Manage stylist enrollment invitations</p>
         </div>
         <button
@@ -235,7 +235,7 @@ export default function OnboardingManagementPage() {
           const info = statusColors[s];
           const count = enrollments.filter((e) => e.status === s).length;
           return (
-            <div key={s} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "16px" }}>
+            <div key={s} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "16px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
               <div style={{ fontSize: "28px", fontWeight: 900, color: info.color }}>{count}</div>
               <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.5)", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: "4px" }}>{info.label}</div>
             </div>
@@ -247,13 +247,13 @@ export default function OnboardingManagementPage() {
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#F4F5F7", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : enrollments.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "60px 20px", backgroundColor: "#FBFBFB", borderRadius: "12px", border: "1px solid rgba(26,19,19,0.06)" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "60px 20px", backgroundColor: "#FBFBFB", borderRadius: 12, border: "1px solid rgba(26,19,19,0.07)", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(26,19,19,0.2)", marginBottom: "12px", display: "block" }}>person_add</span>
-          <p style={{ color: "#94A3B8", fontSize: "14px", margin: "0 0 4px" }}>No enrollments yet</p>
+          <p style={{ color: "rgba(26,19,19,0.55)", fontSize: "14px", fontWeight: 600, margin: "0 0 4px" }}>No enrollments yet</p>
           <p style={{ color: "rgba(26,19,19,0.4)", fontSize: "12px", margin: 0 }}>Send your first enrollment invitation to get started</p>
         </div>
       ) : (
@@ -261,27 +261,27 @@ export default function OnboardingManagementPage() {
           {enrollments.map((e) => {
             const st = statusColors[e.status] || statusColors.pending;
             return (
-              <div key={e.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+              <div key={e.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "12px 16px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", transition: "background-color 0.15s" }} onMouseOver={(ev) => (ev.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)")} onMouseOut={(ev) => (ev.currentTarget.style.backgroundColor = "#FBFBFB")}>
                 <div style={{ flex: 1, minWidth: "180px" }}>
                   <div style={{ fontSize: "15px", fontWeight: 700, color: "#1A1313" }}>{e.firstName} {e.lastName}</div>
                   <div style={{ fontSize: "12px", color: "#94A3B8", marginTop: "2px" }}>{e.email}</div>
                 </div>
                 <div style={{ minWidth: "100px" }}>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Location</div>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.45)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Location</div>
                   <div style={{ fontSize: "13px", color: "#CDC9C0", marginTop: "2px" }}>{e.location?.name || "N/A"}</div>
                 </div>
                 <div style={{ minWidth: "80px" }}>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Role</div>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.45)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Role</div>
                   <div style={{ fontSize: "13px", color: "#94A3B8", marginTop: "2px" }}>{e.role}</div>
                 </div>
                 <div>
-                  <span style={{ display: "inline-block", padding: "4px 10px", borderRadius: "6px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", backgroundColor: st.bg, color: st.color }}>
+                  <span style={{ display: "inline-flex", padding: "3px 8px", borderRadius: 20, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", backgroundColor: st.bg, color: st.color }}>
                     {st.label}
                   </span>
                 </div>
                 {e.status === "completed" && e.verificationCode && (
                   <div style={{ minWidth: "80px", textAlign: "center" }}>
-                    <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Code</div>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.45)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Code</div>
                     <div style={{ fontSize: "16px", fontWeight: 900, color: "#CDC9C0", fontFamily: "monospace", marginTop: "2px" }}>{e.verificationCode}</div>
                   </div>
                 )}
@@ -354,8 +354,8 @@ export default function OnboardingManagementPage() {
       {/* Cancel Confirmation Modal */}
       {cancelTarget && (
         <>
-          <div onClick={() => setCancelTarget(null)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }} />
-          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "400px", backgroundColor: "#FBFBFB", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
+          <div onClick={() => setCancelTarget(null)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 100 }} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "400px", backgroundColor: "#FBFBFB", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 16, padding: "28px", zIndex: 101, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
             <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#ef4444", margin: "0 0 12px" }}>Cancel Enrollment</h2>
             <p style={{ fontSize: "14px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 20px" }}>
               Cancel <strong style={{ color: "#1A1313" }}>{cancelTarget.firstName} {cancelTarget.lastName}</strong>&apos;s enrollment? This cannot be undone.
@@ -375,8 +375,8 @@ export default function OnboardingManagementPage() {
       {/* New Enrollment Modal */}
       {showModal && (
         <>
-          <div onClick={() => setShowModal(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }} />
-          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "440px", backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
+          <div onClick={() => setShowModal(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 100 }} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "440px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 16, padding: "28px", zIndex: 101, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
             <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#1A1313", margin: "0 0 20px" }}>New Enrollment Invitation</h2>
             {message && (
               <div style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "10px 14px", marginBottom: "16px", color: "#f87171", fontSize: "12px" }}>

@@ -123,19 +123,19 @@ function SettingsInner() {
     setTimeout(() => setMsg(""), 3000)
   }
 
-  const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "28px", boxShadow: "inset 0 1px 0 rgba(26,19,19,0.02), 0 0 0 1px rgba(0,0,0,0.25)" }
+  const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "28px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }
   const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }
-  const labelStyle: React.CSSProperties = { fontSize: "10px", fontWeight: 700, color: "#7a8f96", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "6px", display: "block" }
+  const labelStyle: React.CSSProperties = { fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "6px", display: "block" }
 
   return (
-    <div style={{ maxWidth: "700px", margin: "0 auto", padding: "28px 20px" }}>
-      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 20px" }}>Settings</h1>
+    <div style={{ maxWidth: "700px", margin: "0 auto", padding: "32px 20px" }}>
+      <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", margin: "0 0 20px" }}>Settings</h1>
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: "0", borderBottom: "1px solid rgba(26,19,19,0.06)", marginBottom: "24px", overflowX: "auto" }}>
         {tabs.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
-            padding: "10px 18px", fontSize: "13px", fontWeight: 600, color: activeTab === t.key ? "#FBFBFB" : "#606E74",
+            padding: "10px 18px", fontSize: "13px", fontWeight: 600, color: activeTab === t.key ? "#7a8f96" : "rgba(26,19,19,0.5)",
             backgroundColor: "transparent", border: "none", borderBottom: activeTab === t.key ? "2px solid #7a8f96" : "2px solid transparent",
             cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s",
           }}>{t.label}</button>
@@ -151,7 +151,7 @@ function SettingsInner() {
             <div><label style={labelStyle}>Full Name</label><input value={name} onChange={e => setName(e.target.value)} style={inputStyle} /></div>
             <div><label style={labelStyle}>Email</label><input value={user?.email || ""} disabled style={{ ...inputStyle, color: "rgba(26,19,19,0.4)", cursor: "not-allowed" }} /></div>
             <div><label style={labelStyle}>Phone</label><input value={phone} onChange={e => setPhone(e.target.value)} placeholder="(361) 555-0123" style={inputStyle} /></div>
-            <button onClick={saveProfile} disabled={saving} style={{ padding: "12px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "14px", cursor: "pointer", opacity: saving ? 0.6 : 1 }}>{saving ? "Saving..." : "Save Profile"}</button>
+            <button onClick={saveProfile} disabled={saving} style={{ height: "40px", padding: "0 20px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "14px", cursor: "pointer", opacity: saving ? 0.6 : 1 }}>{saving ? "Saving..." : "Save Profile"}</button>
           </div>
         </div>
       )}
@@ -160,7 +160,7 @@ function SettingsInner() {
       {activeTab === "license" && (
         <div style={cardStyle}>
           <div style={{ marginBottom: "20px" }}>
-            <div style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}>License Status</div>
+            <div style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "8px" }}>License Status</div>
             {licenseStatus?.verified ? (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: licenseStatus.expired ? "#ef4444" : licenseStatus.expiringSoon ? "#f59e0b" : "#22c55e" }} />
@@ -178,7 +178,7 @@ function SettingsInner() {
 
           <div style={{ display: "flex", gap: "8px" }}>
             <input value={licenseNumber} onChange={e => setLicenseNumber(e.target.value)} placeholder="TX license number" style={{ ...inputStyle, flex: 1 }} />
-            <button onClick={verifyLicense} disabled={verifying || !licenseNumber.trim()} style={{ padding: "12px 20px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: "pointer", opacity: verifying ? 0.6 : 1, whiteSpace: "nowrap" }}>{verifying ? "Verifying..." : "Verify"}</button>
+            <button onClick={verifyLicense} disabled={verifying || !licenseNumber.trim()} style={{ height: "40px", padding: "0 20px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: "pointer", opacity: verifying ? 0.6 : 1, whiteSpace: "nowrap" }}>{verifying ? "Verifying..." : "Verify"}</button>
           </div>
           <div style={{ fontSize: "12px", color: "#606E74", marginTop: "12px" }}>Your license number can be found on your TDLR certificate or at tdlr.texas.gov</div>
         </div>
@@ -208,7 +208,7 @@ function SettingsInner() {
                 <div style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", marginBottom: "4px" }}>API Keys</div>
                 <div style={{ fontSize: "12px", color: "#606E74" }}>Generate keys for Kasse and RunMySalon integrations</div>
               </div>
-              <button onClick={() => { setShowKeyModal(true); setGeneratedKey("") }} style={{ padding: "8px 16px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Generate New Key</button>
+              <button onClick={() => { setShowKeyModal(true); setGeneratedKey("") }} style={{ height: "40px", padding: "0 16px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Generate New Key</button>
             </div>
 
             {apiKeysLoading ? (
@@ -260,8 +260,8 @@ function SettingsInner() {
       {/* Generate Key Modal */}
       {showKeyModal && (
         <>
-          <div onClick={() => { setShowKeyModal(false); setGeneratedKey("") }} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }} />
-          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "480px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.1)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
+          <div onClick={() => { setShowKeyModal(false); setGeneratedKey("") }} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 100 }} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "480px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)", padding: "28px", zIndex: 101 }}>
             {generatedKey ? (
               <div>
                 <div style={{ fontSize: "16px", fontWeight: 700, color: "#10B981", marginBottom: "12px" }}>API Key Generated</div>

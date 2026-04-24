@@ -389,8 +389,8 @@ export default function StaffPage() {
     return (
       <li
         key={m.id}
-        className="rounded-2xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] p-5 transition hover:border-[#7a8f96]/25"
-        style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)" }}
+        className="rounded-xl border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] p-5 transition hover:border-[#7a8f96]/25"
+        style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}
       >
         <div className="flex items-start gap-3">
           <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#F4F5F7] text-sm font-semibold text-[#7a8f96] ring-1 ring-[#7a8f96]/30">
@@ -481,7 +481,8 @@ export default function StaffPage() {
                   type="button"
                   onClick={() => verifyTdlr(m)}
                   disabled={verifyingTdlr === m.id}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/30 disabled:opacity-50"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/20 px-2.5 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/30 disabled:opacity-50"
+                  style={{ height: 32 }}
                 >
                   <ShieldCheck className="size-3" />
                   {verifyingTdlr === m.id ? "Verifying..." : "Verify License"}
@@ -491,7 +492,8 @@ export default function StaffPage() {
                 <button
                   type="button"
                   onClick={() => setEnrollTarget(m)}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/25"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#7a8f96]/15 px-2.5 text-[10px] font-bold uppercase tracking-wide text-[#7a8f96] transition hover:bg-[#7a8f96]/25"
+                  style={{ height: 32 }}
                 >
                   <Send className="size-3" />
                   Send Enrollment
@@ -501,7 +503,7 @@ export default function StaffPage() {
                 <button
                   type="button"
                   onClick={() => { setOffboardTarget(m); setOffboardForm({ terminationType: "voluntary", terminationDate: new Date().toISOString().split("T")[0], lastWorkingDay: new Date().toISOString().split("T")[0], reason: "", cancelAppointments: true, sendNotice: true, confirmed: false }); setOffboardResult(null); }}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 4, borderRadius: 6, border: "1px solid rgba(239,68,68,0.2)", background: "transparent", padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#ef4444", cursor: "pointer", letterSpacing: "0.05em", textTransform: "uppercase" as const }}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 4, height: 32, borderRadius: 6, border: "1px solid rgba(239,68,68,0.2)", background: "transparent", padding: "0 10px", fontSize: 10, fontWeight: 700, color: "#ef4444", cursor: "pointer", letterSpacing: "0.05em", textTransform: "uppercase" as const }}
                 >
                   Terminate
                 </button>
@@ -517,11 +519,12 @@ export default function StaffPage() {
     <div className="p-4 md:p-8">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-semibold text-[#1A1313]">Staff</h1>
+        <h1 className="font-bold text-[#1A1313]" style={{ fontSize: 24, fontWeight: 700 }}>Staff</h1>
         <button
           type="button"
           onClick={() => setShowInviteModal(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#7a8f96] px-4 py-2.5 text-sm font-semibold text-[#06080d] hover:bg-[#606E74]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#7a8f96] px-4 text-sm font-semibold text-[#06080d] hover:bg-[#606E74]"
+          style={{ height: 40 }}
         >
           <Plus className="size-4" />
           Invite Staff
@@ -596,7 +599,8 @@ export default function StaffPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name or email..."
-            className="w-full rounded-xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] py-2 pl-9 pr-3 text-sm text-[rgba(26,19,19,0.85)] placeholder-[rgba(26,19,19,0.35)] outline-none focus:border-[#7a8f96]/40"
+            className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] py-2 pl-9 pr-3 text-sm text-[rgba(26,19,19,0.85)] placeholder-[rgba(26,19,19,0.35)] outline-none focus:border-[#7a8f96]/40"
+            style={{ borderRadius: 8 }}
           />
         </div>
 
@@ -619,7 +623,7 @@ export default function StaffPage() {
       {loading ? (
         <p className="mt-8 text-sm text-[rgba(26,19,19,0.45)]">Loading team...</p>
       ) : filtered.length === 0 ? (
-        <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-6 py-16 text-center">
+        <div className="mt-10 flex flex-col items-center rounded-xl border border-dashed border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-6 py-16 text-center">
           <Users className="size-12 text-[rgba(26,19,19,0.35)]" />
           <p className="mt-4 text-[rgba(26,19,19,0.55)]">No staff found for this filter.</p>
         </div>
@@ -650,8 +654,8 @@ export default function StaffPage() {
 
       {/* ---- Invite Staff Modal ---- */}
       {showInviteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] p-6" style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)" }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" style={{ backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }}>
+          <div className="w-full max-w-md border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] p-6" style={{ borderRadius: 16, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-bold text-[#1A1313]">Invite Staff Member</h2>
               <button type="button" onClick={() => setShowInviteModal(false)}>
@@ -667,7 +671,7 @@ export default function StaffPage() {
                   value={inviteForm.fullName}
                   onChange={(e) => setInviteForm({ ...inviteForm, fullName: e.target.value })}
                   placeholder="Jane Doe"
-                  className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40"
+                  className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40" style={{ borderRadius: 8 }}
                 />
               </div>
               <div>
@@ -679,7 +683,7 @@ export default function StaffPage() {
                   value={inviteForm.email}
                   onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
                   placeholder="jane@example.com"
-                  className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40"
+                  className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40" style={{ borderRadius: 8 }}
                 />
               </div>
               <div>
@@ -691,7 +695,7 @@ export default function StaffPage() {
                   value={inviteForm.phone}
                   onChange={(e) => setInviteForm({ ...inviteForm, phone: e.target.value })}
                   placeholder="(xxx) xxx-xxxx"
-                  className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40"
+                  className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40" style={{ borderRadius: 8 }}
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -702,7 +706,8 @@ export default function StaffPage() {
                   <select
                     value={inviteForm.role}
                     onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
-                    className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none"
+                    className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none"
+                    style={{ borderRadius: 8 }}
                   >
                     <option value="stylist">Stylist</option>
                     <option value="manager">Manager</option>
@@ -715,7 +720,8 @@ export default function StaffPage() {
                   <select
                     value={inviteForm.locationId}
                     onChange={(e) => setInviteForm({ ...inviteForm, locationId: e.target.value })}
-                    className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none"
+                    className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none"
+                    style={{ borderRadius: 8 }}
                   >
                     {locations.map((loc) => (
                       <option key={loc.id} value={loc.id}>
@@ -739,7 +745,8 @@ export default function StaffPage() {
               <button
                 type="button"
                 onClick={() => setShowInviteModal(false)}
-                className="flex-1 rounded-xl border border-[rgba(26,19,19,0.08)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
+                className="flex-1 border border-[rgba(26,19,19,0.07)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
+                style={{ borderRadius: 8 }}
               >
                 Cancel
               </button>
@@ -747,7 +754,8 @@ export default function StaffPage() {
                 type="button"
                 onClick={handleInvite}
                 disabled={inviteSending || !inviteForm.fullName || !inviteForm.email || !inviteForm.locationId}
-                className="flex-[2] rounded-xl bg-[#7a8f96] py-2.5 text-sm font-bold text-[#06080d] hover:bg-[#606E74] disabled:opacity-50"
+                className="flex-[2] bg-[#7a8f96] py-2.5 text-sm font-bold text-[#06080d] hover:bg-[#606E74] disabled:opacity-50"
+                style={{ borderRadius: 8 }}
               >
                 {inviteSending ? "Sending..." : "Send Invitation"}
               </button>
@@ -759,12 +767,12 @@ export default function StaffPage() {
       {/* ---- License Verification Modal ---- */}
       {licenseModal && (
         <div style={{ position: "fixed", inset: 0, zIndex: 300 }}>
-          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} onClick={closeLicenseModal} />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} onClick={closeLicenseModal} />
           <div style={{
             position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
             width: "min(520px, calc(100vw - 32px))", background: "#FBFBFB",
-            border: "1px solid rgba(26,19,19,0.1)", borderRadius: 16, padding: 28,
-            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)", maxHeight: "90vh", overflowY: "auto" as const, zIndex: 301,
+            border: "1px solid rgba(26,19,19,0.07)", borderRadius: 16, padding: 28,
+            boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", maxHeight: "90vh", overflowY: "auto" as const, zIndex: 301,
           }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
@@ -924,8 +932,8 @@ export default function StaffPage() {
 
       {/* ---- Offboarding Modal ---- */}
       {offboardTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="w-full max-w-lg rounded-2xl border border-red-500/20 bg-[#FBFBFB] p-6" style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)", maxHeight: "90vh", overflowY: "auto" }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" style={{ backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }}>
+          <div className="w-full max-w-lg border border-red-500/20 bg-[#FBFBFB] p-6" style={{ borderRadius: 16, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", maxHeight: "90vh", overflowY: "auto" }}>
             {offboardResult ? (
               /* Success state */
               <div>
@@ -957,7 +965,7 @@ export default function StaffPage() {
                 <div className="flex flex-col gap-4">
                   <div>
                     <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Termination Type</label>
-                    <select value={offboardForm.terminationType} onChange={(e) => setOffboardForm({ ...offboardForm, terminationType: e.target.value })} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none">
+                    <select value={offboardForm.terminationType} onChange={(e) => setOffboardForm({ ...offboardForm, terminationType: e.target.value })} className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none" style={{ borderRadius: 8 }}>
                       <option value="voluntary">Voluntary Resignation</option>
                       <option value="involuntary">Involuntary Termination</option>
                       <option value="mutual">Mutual Agreement</option>
@@ -967,16 +975,16 @@ export default function StaffPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Termination Date</label>
-                      <input type="date" value={offboardForm.terminationDate} onChange={(e) => setOffboardForm({ ...offboardForm, terminationDate: e.target.value })} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none" style={{ colorScheme: "light" }} />
+                      <input type="date" value={offboardForm.terminationDate} onChange={(e) => setOffboardForm({ ...offboardForm, terminationDate: e.target.value })} className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none" style={{ borderRadius: 8, colorScheme: "light" }} />
                     </div>
                     <div>
                       <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Last Working Day</label>
-                      <input type="date" value={offboardForm.lastWorkingDay} onChange={(e) => setOffboardForm({ ...offboardForm, lastWorkingDay: e.target.value })} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none" style={{ colorScheme: "light" }} />
+                      <input type="date" value={offboardForm.lastWorkingDay} onChange={(e) => setOffboardForm({ ...offboardForm, lastWorkingDay: e.target.value })} className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none" style={{ borderRadius: 8, colorScheme: "light" }} />
                     </div>
                   </div>
                   <div>
                     <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Reason *</label>
-                    <textarea value={offboardForm.reason} onChange={(e) => setOffboardForm({ ...offboardForm, reason: e.target.value })} placeholder="Describe the reason for termination (min 20 chars)..." rows={3} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none resize-none" />
+                    <textarea value={offboardForm.reason} onChange={(e) => setOffboardForm({ ...offboardForm, reason: e.target.value })} placeholder="Describe the reason for termination (min 20 chars)..." rows={3} className="w-full border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none resize-none" style={{ borderRadius: 8 }} />
                     {offboardForm.reason.length > 0 && offboardForm.reason.length < 20 && <p className="mt-1 text-[11px] text-red-400">{20 - offboardForm.reason.length} more characters needed</p>}
                   </div>
                   <div className="flex flex-col gap-2">
@@ -989,7 +997,7 @@ export default function StaffPage() {
                   </label>
                 </div>
                 <div className="mt-5 flex gap-3">
-                  <button type="button" onClick={() => setOffboardTarget(null)} className="flex-1 rounded-xl border border-[rgba(26,19,19,0.08)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]">Cancel</button>
+                  <button type="button" onClick={() => setOffboardTarget(null)} className="flex-1 border border-[rgba(26,19,19,0.07)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]" style={{ borderRadius: 8 }}>Cancel</button>
                   <button
                     type="button"
                     disabled={offboarding || !offboardForm.confirmed || offboardForm.reason.length < 20}
@@ -1021,8 +1029,8 @@ export default function StaffPage() {
                       }
                       setOffboarding(false);
                     }}
-                    className="flex-[2] rounded-xl py-2.5 text-sm font-bold disabled:opacity-40"
-                    style={{ backgroundColor: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.4)", color: "#ef4444" }}
+                    className="flex-[2] py-2.5 text-sm font-bold disabled:opacity-40"
+                    style={{ borderRadius: 8, backgroundColor: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.4)", color: "#ef4444" }}
                   >
                     {offboarding ? "Processing termination..." : "Confirm Termination"}
                   </button>
@@ -1035,8 +1043,8 @@ export default function StaffPage() {
 
       {/* ---- Send Enrollment Modal ---- */}
       {enrollTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="w-full max-w-sm rounded-2xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] p-6" style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)" }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" style={{ backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }}>
+          <div className="w-full max-w-sm border border-[rgba(26,19,19,0.07)] bg-[#FBFBFB] p-6" style={{ borderRadius: 16, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-bold text-[#1A1313]">Send Enrollment</h2>
               <button type="button" onClick={() => setEnrollTarget(null)}>
@@ -1055,7 +1063,8 @@ export default function StaffPage() {
               <button
                 type="button"
                 onClick={() => setEnrollTarget(null)}
-                className="flex-1 rounded-xl border border-[rgba(26,19,19,0.08)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
+                className="flex-1 border border-[rgba(26,19,19,0.07)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
+                style={{ borderRadius: 8 }}
               >
                 Cancel
               </button>
@@ -1063,7 +1072,8 @@ export default function StaffPage() {
                 type="button"
                 onClick={handleSendEnrollment}
                 disabled={enrollSending}
-                className="flex-[2] rounded-xl bg-[#7a8f96] py-2.5 text-sm font-bold text-[#06080d] hover:bg-[#606E74] disabled:opacity-50"
+                className="flex-[2] bg-[#7a8f96] py-2.5 text-sm font-bold text-[#06080d] hover:bg-[#606E74] disabled:opacity-50"
+                style={{ borderRadius: 8 }}
               >
                 {enrollSending ? "Sending..." : "Send Enrollment Link"}
               </button>

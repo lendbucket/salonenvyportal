@@ -5,7 +5,7 @@ import { getCurrentPayPeriod, getPreviousPayPeriod, formatPeriodLabel, getPayDay
 
 const ACC = "#606E74", ACC_B = "#7a8f96", ACC_DIM = "rgba(96,110,116,0.08)", ACC_BDR = "rgba(96,110,116,0.2)"
 const BORDER = "rgba(26,19,19,0.06)", BORDER2 = "rgba(26,19,19,0.08)", S1 = "rgba(26,19,19,0.03)", S2 = "rgba(26,19,19,0.05)"
-const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const CARD_SHADOW = "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)"
 const MUTED = "rgba(26,19,19,0.3)", MID = "rgba(26,19,19,0.6)", GREEN = "#10B981", AMBER = "#ffb347", BLUE = "#4da6ff", RED = "#ff6b6b"
 const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 const jakarta: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
@@ -102,22 +102,22 @@ export default function PayrollPage() {
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
         {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px", marginBottom: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
-            <h1 style={{ fontSize: "18px", fontWeight: 500, margin: 0 }}>Payroll</h1>
+            <h1 style={{ fontSize: "24px", fontWeight: 700, margin: 0 }}>Payroll</h1>
             <div style={{ display: "flex", gap: "3px", background: S1, border: `1px solid ${BORDER}`, borderRadius: "8px", padding: "3px" }}>
-              {(["CC", "SA"] as const).map(l => <button key={l} onClick={() => setLoc(l)} style={{ padding: "5px 14px", borderRadius: "5px", border: "none", cursor: "pointer", background: loc === l ? `linear-gradient(135deg, ${ACC_B}, ${ACC})` : "transparent", color: loc === l ? "#fff" : MUTED, fontSize: "11px", fontWeight: loc === l ? 600 : 400, ...mono, textTransform: "uppercase", letterSpacing: "0.08em", transition: "all 0.15s" }}>{l === "CC" ? "Corpus Christi" : "San Antonio"}</button>)}
+              {(["CC", "SA"] as const).map(l => <button key={l} onClick={() => setLoc(l)} style={{ padding: "5px 14px", borderRadius: "5px", border: "none", cursor: "pointer", background: loc === l ? ACC_B : "transparent", color: loc === l ? "#FBFBFB" : "rgba(26,19,19,0.5)", fontSize: "11px", fontWeight: loc === l ? 600 : 400, ...mono, textTransform: "uppercase", letterSpacing: "0.08em", transition: "all 0.15s" }}>{l === "CC" ? "Corpus Christi" : "San Antonio"}</button>)}
             </div>
           </div>
           <div style={{ display: "flex", gap: "8px" }}>
-            {data && <button onClick={printReport} style={{ padding: "8px 16px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "7px", color: MID, fontSize: "12px", cursor: "pointer", ...jakarta }}>Print Report</button>}
-            {data && <button onClick={() => window.open(`/api/payroll/export?periodId=${data.id}`, "_blank")} style={{ padding: "8px 16px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "7px", color: MID, fontSize: "12px", cursor: "pointer", ...jakarta }}>Export CSV</button>}
-            {data && data.status === "pending" && isOwner && <button onClick={markPaid} disabled={marking} style={{ padding: "8px 18px", background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "7px", color: GREEN, fontSize: "12px", fontWeight: 600, cursor: "pointer", ...jakarta, opacity: marking ? 0.5 : 1 }}>{marking ? "..." : "Mark as Paid"}</button>}
+            {data && <button onClick={printReport} style={{ padding: "0 16px", height: "32px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "6px", color: MID, fontSize: "12px", cursor: "pointer", ...jakarta }}>Print Report</button>}
+            {data && <button onClick={() => window.open(`/api/payroll/export?periodId=${data.id}`, "_blank")} style={{ padding: "0 16px", height: "32px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "6px", color: MID, fontSize: "12px", cursor: "pointer", ...jakarta }}>Export CSV</button>}
+            {data && data.status === "pending" && isOwner && <button onClick={markPaid} disabled={marking} style={{ padding: "0 18px", height: "32px", background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "6px", color: GREEN, fontSize: "12px", fontWeight: 600, cursor: "pointer", ...jakarta, opacity: marking ? 0.5 : 1 }}>{marking ? "..." : "Mark as Paid"}</button>}
           </div>
         </div>
 
         {/* Period nav */}
-        <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "20px 24px", marginBottom: "20px", boxShadow: CARD_SHADOW }}>
+        <div style={{ background: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px 24px", marginBottom: "24px", boxShadow: CARD_SHADOW }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
             <button onClick={() => setOffset(o => o + 1)} style={{ width: "36px", height: "36px", borderRadius: "8px", background: S2, border: `1px solid ${BORDER2}`, color: MID, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px" }}>&#8592;</button>
             <div style={{ textAlign: "center", flex: 1 }}>
@@ -139,36 +139,36 @@ export default function PayrollPage() {
         {error && <div style={{ background: "rgba(255,107,107,0.08)", border: "1px solid rgba(255,107,107,0.2)", borderRadius: "10px", padding: "14px 18px", marginBottom: "16px", fontSize: "13px", color: RED }}>{error}</div>}
 
         {/* KPIs */}
-        <div className="pr4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "20px" }}>
+        <div className="pr4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "24px" }}>
           {[
             { label: "TOTAL COMMISSION", val: data ? `$${data.totalCommission.toFixed(2)}` : "\u2014", accent: GREEN },
             { label: "TOTAL TIPS", val: data ? `$${data.totalTips.toFixed(2)}` : "\u2014", accent: AMBER },
             { label: "TOTAL PAYOUT", val: data ? `$${totalPayout.toFixed(2)}` : "\u2014", accent: ACC_B },
             { label: "SERVICES", val: data ? String(data.totalServices) : "\u2014", accent: BLUE },
           ].map(k => (
-            <div key={k.label} style={{ background: S1, border: `1px solid ${BORDER2}`, borderLeft: `3px solid ${k.accent}`, borderRadius: "0 10px 10px 0", padding: "18px 20px", boxShadow: CARD_SHADOW }}>
-              {loading ? <div style={{ height: "28px", background: S2, borderRadius: "4px", marginBottom: "8px", animation: "pulse 1.5s infinite" }} /> : <div style={{ ...mono, fontSize: "26px", fontWeight: 500, marginBottom: "6px" }}>{k.val}</div>}
-              <div style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.12em", color: MUTED }}>{k.label}</div>
+            <div key={k.label} style={{ background: S1, border: "1px solid rgba(26,19,19,0.07)", borderLeft: `3px solid ${k.accent}`, borderRadius: "0 12px 12px 0", padding: "20px 24px", boxShadow: CARD_SHADOW }}>
+              {loading ? <div style={{ height: "28px", background: S2, borderRadius: "4px", marginBottom: "8px", animation: "pulse 1.5s infinite" }} /> : <div style={{ ...mono, fontSize: "26px", fontWeight: 700, marginBottom: "6px" }}>{k.val}</div>}
+              <div style={{ ...mono, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.06em", color: MUTED }}>{k.label}</div>
             </div>
           ))}
         </div>
 
         {/* Main content */}
         {loading ? (
-          <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "24px", boxShadow: CARD_SHADOW }}>
+          <div style={{ background: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "24px", boxShadow: CARD_SHADOW }}>
             {[1,2,3,4,5].map(i => <div key={i} style={{ height: "44px", background: S2, borderRadius: "6px", marginBottom: "8px", animation: "pulse 1.5s infinite", opacity: 1 - i * 0.15 }} />)}
           </div>
         ) : !data ? (
-          <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "60px 24px", textAlign: "center" }}>
+          <div style={{ background: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "60px 24px", textAlign: "center" }}>
             <div style={{ ...mono, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.12em", color: MUTED, marginBottom: "12px" }}>No payroll data</div>
             <div style={{ fontSize: "15px", fontWeight: 500, color: MID, marginBottom: "6px" }}>No payroll calculated for {label}</div>
             <div style={{ fontSize: "12px", color: MUTED, marginBottom: "24px" }}>Click Calculate to pull SalonTransact data and compute commissions</div>
-            <button onClick={calculate} disabled={calcing} style={{ padding: "12px 28px", background: calcing ? "rgba(96,110,116,0.3)" : `linear-gradient(135deg, ${ACC_B}, ${ACC})`, border: "none", borderRadius: "9px", color: "#fff", fontSize: "13px", fontWeight: 600, cursor: calcing ? "default" : "pointer", ...jakarta }}>
+            <button onClick={calculate} disabled={calcing} style={{ padding: "0 28px", height: "40px", background: calcing ? "rgba(96,110,116,0.3)" : `linear-gradient(135deg, ${ACC_B}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 600, cursor: calcing ? "default" : "pointer", ...jakarta }}>
               {calcing ? <span style={{ display: "flex", alignItems: "center", gap: "8px" }}><span style={{ display: "inline-block", width: "12px", height: "12px", border: "2px solid rgba(26,19,19,0.3)", borderTopColor: "#1A1313", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />Calculating...</span> : "Calculate Payroll"}
             </button>
           </div>
         ) : (
-          <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", overflow: "hidden", boxShadow: CARD_SHADOW }}>
+          <div style={{ background: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, overflow: "hidden", boxShadow: CARD_SHADOW }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: `1px solid ${BORDER}` }}>
               <span style={{ fontSize: "14px", fontWeight: 500 }}>Stylist Breakdown</span>
               <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -178,31 +178,31 @@ export default function PayrollPage() {
             </div>
             <div className="pr-tbl" style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "700px" }}>
-                <thead><tr style={{ background: "rgba(26,19,19,0.02)", borderBottom: `1px solid ${BORDER}` }}>
-                  {["Stylist", "Services", "Subtotal", "Commission (40%)", "Tips", "Total Payout"].map(h => <th key={h} style={{ padding: "10px 14px", textAlign: h === "Stylist" ? "left" : "right", ...mono, fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED }}>{h}</th>)}
+                <thead><tr style={{ background: "#F4F5F7", borderBottom: "1px solid rgba(26,19,19,0.05)" }}>
+                  {["Stylist", "Services", "Subtotal", "Commission (40%)", "Tips", "Total Payout"].map(h => <th key={h} style={{ padding: "12px 16px", textAlign: h === "Stylist" ? "left" : "right", ...mono, fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)" }}>{h}</th>)}
                 </tr></thead>
                 <tbody>
                   {entries.length === 0 ? <tr><td colSpan={6} style={{ padding: "40px", textAlign: "center", color: MUTED }}>No service data</td></tr> : entries.map((e: PData, i: number) => (
-                    <tr key={e.id || i} style={{ borderBottom: i < entries.length - 1 ? `1px solid ${BORDER}` : "none" }}>
-                      <td style={{ padding: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+                    <tr key={e.id || i} style={{ borderBottom: i < entries.length - 1 ? "1px solid rgba(26,19,19,0.05)" : "none" }}>
+                      <td style={{ padding: "12px 16px", display: "flex", alignItems: "center", gap: "8px" }}>
                         <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: `linear-gradient(135deg, ${ACC_B}, ${ACC})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 600, flexShrink: 0 }}>{e.teamMemberName.charAt(0)}</div>
-                        <div><div style={{ fontSize: "13px", fontWeight: 500 }}>{e.teamMemberName}</div>{TEAM_MEMBERS[e.teamMemberId]?.isManager && <div style={{ ...mono, fontSize: "8px", color: ACC_B, textTransform: "uppercase" }}>Manager</div>}</div>
+                        <div><div style={{ fontSize: "14px", fontWeight: 500 }}>{e.teamMemberName}</div>{TEAM_MEMBERS[e.teamMemberId]?.isManager && <div style={{ ...mono, fontSize: "8px", color: ACC_B, textTransform: "uppercase" }}>Manager</div>}</div>
                       </td>
-                      <td style={{ ...mono, padding: "14px", textAlign: "right", fontSize: "13px", color: MUTED }}>{e.serviceCount}</td>
-                      <td style={{ ...mono, padding: "14px", textAlign: "right", fontSize: "13px", color: MID }}>${e.serviceSubtotal.toFixed(2)}</td>
-                      <td style={{ ...mono, padding: "14px", textAlign: "right", fontSize: "14px", fontWeight: 600, color: GREEN }}>${e.commission.toFixed(2)}</td>
-                      <td style={{ ...mono, padding: "14px", textAlign: "right", fontSize: "13px", color: AMBER }}>${e.tips.toFixed(2)}</td>
-                      <td style={{ ...mono, padding: "14px", textAlign: "right", fontSize: "15px", fontWeight: 700 }}>${e.totalPayout.toFixed(2)}</td>
+                      <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontSize: "14px", color: MUTED }}>{e.serviceCount}</td>
+                      <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontSize: "14px", color: MID }}>${e.serviceSubtotal.toFixed(2)}</td>
+                      <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontSize: "14px", fontWeight: 600, color: GREEN }}>${e.commission.toFixed(2)}</td>
+                      <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontSize: "14px", color: AMBER }}>${e.tips.toFixed(2)}</td>
+                      <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontSize: "15px", fontWeight: 700 }}>${e.totalPayout.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
                 {entries.length > 0 && <tfoot><tr style={{ background: S2, borderTop: `2px solid ${BORDER2}` }}>
-                  <td style={{ padding: "14px", fontSize: "13px", fontWeight: 600, color: MID }}>TOTAL</td>
-                  <td style={{ ...mono, padding: "14px", textAlign: "right", fontWeight: 600, color: MUTED }}>{data.totalServices}</td>
-                  <td style={{ padding: "14px" }} />
-                  <td style={{ ...mono, padding: "14px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: GREEN }}>${data.totalCommission.toFixed(2)}</td>
-                  <td style={{ ...mono, padding: "14px", textAlign: "right", fontWeight: 600, color: AMBER }}>${data.totalTips.toFixed(2)}</td>
-                  <td style={{ ...mono, padding: "14px", textAlign: "right", fontSize: "15px", fontWeight: 700 }}>${totalPayout.toFixed(2)}</td>
+                  <td style={{ padding: "12px 16px", fontSize: "14px", fontWeight: 600, color: MID }}>TOTAL</td>
+                  <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontWeight: 600, color: MUTED }}>{data.totalServices}</td>
+                  <td style={{ padding: "12px 16px" }} />
+                  <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: GREEN }}>${data.totalCommission.toFixed(2)}</td>
+                  <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontWeight: 600, color: AMBER }}>${data.totalTips.toFixed(2)}</td>
+                  <td style={{ ...mono, padding: "12px 16px", textAlign: "right", fontSize: "15px", fontWeight: 700 }}>${totalPayout.toFixed(2)}</td>
                 </tr></tfoot>}
               </table>
             </div>
@@ -211,13 +211,13 @@ export default function PayrollPage() {
 
         {/* History */}
         {history.length > 0 && (
-          <div style={{ marginTop: "20px" }}>
+          <div style={{ marginTop: "24px" }}>
             <button onClick={() => setShowHist(h => !h)} style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", color: MID, fontSize: "13px", cursor: "pointer", padding: "8px 0", ...jakarta }}>
               <span style={{ ...mono, fontSize: "9px", color: MUTED, textTransform: "uppercase", letterSpacing: "0.1em" }}>Period History ({history.length})</span>
               <span style={{ color: MUTED, fontSize: "10px", transform: showHist ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>&#9660;</span>
             </button>
             {showHist && (
-              <div style={{ background: S1, border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden", marginTop: "8px" }}>
+              <div style={{ background: S1, border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, overflow: "hidden", marginTop: "8px", boxShadow: CARD_SHADOW }}>
                 {history.map((hp, i) => (
                   <div key={hp.id} onClick={() => loadHistPeriod(hp)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderBottom: i < history.length - 1 ? `1px solid ${BORDER}` : "none", cursor: "pointer", transition: "background 0.15s" }} onMouseEnter={e => (e.currentTarget.style.background = S2)} onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>

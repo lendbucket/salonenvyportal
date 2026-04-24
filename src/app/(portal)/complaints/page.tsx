@@ -9,17 +9,18 @@ type Complaint = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)",
-  borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)",
+  borderRadius: 12, padding: "clamp(16px,4vw,28px)",
+  boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
 }
 
 const btnPrimary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "none", cursor: "pointer",
+  height: "40px", padding: "0 16px", borderRadius: "8px", border: "none", cursor: "pointer",
   backgroundColor: "#CDC9C0", color: "#1A1313", fontSize: "12px", fontWeight: 700,
 }
 
 const btnSecondary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)",
+  height: "40px", padding: "0 16px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)",
   cursor: "pointer", backgroundColor: "transparent", color: "#CDC9C0", fontSize: "12px", fontWeight: 600,
 }
 
@@ -78,15 +79,15 @@ export default function ComplaintsPage() {
 
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
-      <h1 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 700, margin: "0 0 20px" }}>Anonymous Complaints</h1>
+      <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: "0 0 20px" }}>Anonymous Complaints</h1>
 
       {/* Filter tabs */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
         {(["all", "new", "reviewed"] as const).map(s => (
           <button key={s} onClick={() => setFilter(s)} style={{
             padding: "6px 14px", borderRadius: "6px", border: "1px solid rgba(26,19,19,0.08)",
-            backgroundColor: filter === s ? "rgba(26,19,19,0.06)" : "transparent",
-            color: filter === s ? "#CDC9C0" : "rgba(26,19,19,0.5)", cursor: "pointer",
+            backgroundColor: filter === s ? "#7a8f96" : "transparent",
+            color: filter === s ? "#FBFBFB" : "rgba(26,19,19,0.5)", cursor: "pointer",
             fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
           }}>
             {s} ({s === "all" ? complaints.length : s === "new" ? complaints.filter(c => !c.isReviewed).length : complaints.filter(c => c.isReviewed).length})
@@ -129,9 +130,9 @@ export default function ComplaintsPage() {
 
       {/* Detail / Review modal */}
       {selected && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
           onClick={() => setSelected(null)}>
-          <div style={{ ...cardStyle, maxWidth: "560px", width: "100%", maxHeight: "80vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+          <div style={{ ...cardStyle, maxWidth: "560px", width: "100%", maxHeight: "80vh", overflowY: "auto", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)" }} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
               <span style={{
                 padding: "4px 12px", borderRadius: "6px", fontSize: "11px", fontWeight: 700,

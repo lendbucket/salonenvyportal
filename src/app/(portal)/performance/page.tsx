@@ -90,10 +90,10 @@ const GOAL_ICONS: Record<string, string> = {
 /* ── Styles ── */
 const cardStyle: React.CSSProperties = {
   backgroundColor: "#FBFBFB",
-  border: "1px solid rgba(26,19,19,0.06)",
-  borderRadius: "10px",
+  border: "1px solid rgba(26,19,19,0.07)",
+  borderRadius: 12,
   padding: "20px",
-  boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)",
+  boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
 }
 
 function pill(active: boolean): React.CSSProperties {
@@ -130,10 +130,11 @@ function selectStyle(): React.CSSProperties {
 
 function btnStyle(variant: "primary" | "ghost" = "ghost"): React.CSSProperties {
   return {
-    padding: "8px 16px",
+    padding: variant === "primary" ? "0 16px" : "0 16px",
+    height: variant === "primary" ? "40px" : "32px",
     fontSize: "10px",
     fontWeight: 700,
-    borderRadius: "8px",
+    borderRadius: variant === "primary" ? "8px" : "6px",
     border: variant === "primary" ? "none" : "1px solid rgba(26,19,19,0.2)",
     backgroundColor: variant === "primary" ? "#CDC9C0" : "transparent",
     color: variant === "primary" ? "#0f1d24" : "rgba(26,19,19,0.6)",
@@ -356,7 +357,7 @@ export default function PerformancePage() {
 
       {/* ── Header ── */}
       <div style={{ marginBottom: "24px" }}>
-        <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+        <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
           Performance
         </h1>
         <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>
@@ -365,7 +366,7 @@ export default function PerformancePage() {
       </div>
 
       {/* ── Controls row ── */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap", alignItems: "center" }}>
         {/* Period selector */}
         <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.1)" }}>
           {PERIODS.map(p => (
@@ -430,15 +431,15 @@ export default function PerformancePage() {
       {tab === "Overview" && (
         <>
           {loading ? (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "24px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
               {[1, 2, 3, 4].map(i => (
-                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "120px", animation: "pulse 1.5s ease-in-out infinite" }} />
+                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: 12, padding: "20px", height: "120px", animation: "pulse 1.5s ease-in-out infinite" }} />
               ))}
             </div>
           ) : kpi ? (
             <>
               {/* KPI cards */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "24px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
                 {[
                   { label: "Revenue", value: fmt(kpi.revenue), target: `Target: ${fmt(kpi.targets.revenue)}`, pct: kpi.targets.revenue > 0 ? (kpi.revenue / kpi.targets.revenue) * 100 : 0, delta: kpi.deltas.revenue, icon: "payments" },
                   { label: "Checkouts", value: String(kpi.checkouts), target: `Target: ${kpi.targets.checkouts}`, pct: kpi.targets.checkouts > 0 ? (kpi.checkouts / kpi.targets.checkouts) * 100 : 0, delta: kpi.deltas.checkouts, icon: "content_cut" },
@@ -447,7 +448,7 @@ export default function PerformancePage() {
                 ].map(card => (
                   <div key={card.label} style={cardStyle}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
-                      <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>{card.label}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.06em", textTransform: "uppercase" }}>{card.label}</span>
                       <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(26,19,19,0.3)" }}>{card.icon}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "8px", marginBottom: "4px" }}>
@@ -464,7 +465,7 @@ export default function PerformancePage() {
               <div style={{ ...cardStyle, marginBottom: "24px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
                   <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#7a8f96" }}>account_balance_wallet</span>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>Commission Breakdown</span>
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.06em", textTransform: "uppercase" }}>Commission Breakdown</span>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "16px" }}>
                   {[
@@ -487,7 +488,7 @@ export default function PerformancePage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#7a8f96" }}>flag</span>
-                      <span style={{ fontSize: "11px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>Active Goals</span>
+                      <span style={{ fontSize: "11px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.06em", textTransform: "uppercase" }}>Active Goals</span>
                     </div>
                     <button onClick={() => setTab("Goals")} style={{ ...btnStyle(), padding: "4px 10px", fontSize: "9px" }}>
                       View All
@@ -542,7 +543,7 @@ export default function PerformancePage() {
           {loading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {[1, 2, 3].map(i => (
-                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
+                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: 12, padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
               ))}
             </div>
           ) : goals.length > 0 ? (
@@ -617,7 +618,7 @@ export default function PerformancePage() {
           )}
 
           {loading ? (
-            <div style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "300px", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div style={{ backgroundColor: "#FBFBFB", borderRadius: 12, padding: "20px", height: "300px", animation: "pulse 1.5s ease-in-out infinite" }} />
           ) : leaderboard.length > 0 ? (
             <div style={{ ...cardStyle, padding: 0, overflow: "hidden" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -625,8 +626,9 @@ export default function PerformancePage() {
                   <tr style={{ borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
                     {["Rank", "Name", "Checkouts", "Revenue", "Avg Ticket"].map(h => (
                       <th key={h} style={{
-                        padding: "12px 16px", fontSize: "9px", fontWeight: 700, color: "#606E74",
-                        letterSpacing: "0.12em", textTransform: "uppercase", textAlign: h === "Name" ? "left" : "right",
+                        padding: "12px 16px", fontSize: "11px", fontWeight: 700, color: "rgba(26,19,19,0.4)",
+                        letterSpacing: "0.06em", textTransform: "uppercase", textAlign: h === "Name" ? "left" : "right",
+                        background: "#F4F5F7",
                       }}>
                         {h}
                       </th>
@@ -641,7 +643,7 @@ export default function PerformancePage() {
                       : entry.name
                     return (
                       <tr key={entry.staffMemberId} style={{
-                        borderBottom: "1px solid rgba(26,19,19,0.03)",
+                        borderBottom: "1px solid rgba(26,19,19,0.05)",
                         backgroundColor: isMe ? "rgba(77,166,255,0.06)" : "transparent",
                       }}>
                         <td style={{ padding: "12px 16px", textAlign: "right" }}>
@@ -653,18 +655,18 @@ export default function PerformancePage() {
                           </span>
                         </td>
                         <td style={{ padding: "12px 16px", textAlign: "left" }}>
-                          <span style={{ fontSize: "13px", fontWeight: isMe ? 800 : 600, color: isMe ? "#4da6ff" : "#1A1313" }}>
+                          <span style={{ fontSize: "14px", fontWeight: isMe ? 800 : 600, color: isMe ? "#4da6ff" : "#1A1313" }}>
                             {displayName}
                           </span>
                           {isMe && <span style={{ fontSize: "9px", color: "#4da6ff", marginLeft: "6px", fontWeight: 700 }}>(YOU)</span>}
                         </td>
-                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "13px", color: "#CDC9C0" }}>
+                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "14px", color: "#CDC9C0" }}>
                           {entry.checkouts}
                         </td>
-                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "13px", color: "#10B981" }}>
+                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "14px", color: "#10B981" }}>
                           {fmt(entry.revenue)}
                         </td>
-                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "13px", color: "#CDC9C0" }}>
+                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "14px", color: "#CDC9C0" }}>
                           {fmt(entry.avgTicket)}
                         </td>
                       </tr>
@@ -699,7 +701,7 @@ export default function PerformancePage() {
           {loading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {[1, 2, 3].map(i => (
-                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "80px", animation: "pulse 1.5s ease-in-out infinite" }} />
+                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: 12, padding: "20px", height: "80px", animation: "pulse 1.5s ease-in-out infinite" }} />
               ))}
             </div>
           ) : bonuses.length > 0 ? (
@@ -763,7 +765,7 @@ export default function PerformancePage() {
          MODAL: Create Goal
          ══════════════════════════════════════ */}
       {goalModalOpen && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}
           onClick={() => setGoalModalOpen(false)}
         >
           <div style={{ ...cardStyle, width: "100%", maxWidth: "480px", maxHeight: "90vh", overflowY: "auto" }}
@@ -856,7 +858,7 @@ export default function PerformancePage() {
          MODAL: Create Bonus
          ══════════════════════════════════════ */}
       {bonusModalOpen && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}
           onClick={() => setBonusModalOpen(false)}
         >
           <div style={{ ...cardStyle, width: "100%", maxWidth: "480px", maxHeight: "90vh", overflowY: "auto" }}

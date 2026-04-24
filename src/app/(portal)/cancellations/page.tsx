@@ -157,7 +157,9 @@ function CustomerModal({
       style={{
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(0,0,0,0.6)",
+        backgroundColor: "rgba(0,0,0,0.25)",
+        backdropFilter: "blur(4px)",
+        WebkitBackdropFilter: "blur(4px)",
         zIndex: 100,
         display: "flex",
         alignItems: "center",
@@ -169,8 +171,9 @@ function CustomerModal({
       <div
         style={{
           backgroundColor: "#FBFBFB",
-          borderRadius: "12px",
-          border: "1px solid rgba(26,19,19,0.06)",
+          borderRadius: 16,
+          border: "1px solid rgba(26,19,19,0.07)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)",
           maxWidth: "480px",
           width: "100%",
           maxHeight: "80vh",
@@ -207,7 +210,7 @@ function CustomerModal({
         <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Contact info */}
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
               Contact Info
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -228,7 +231,7 @@ function CustomerModal({
 
           {/* Appointment details */}
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
               Appointment Details
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -261,7 +264,7 @@ function CustomerModal({
 
           {/* Client history */}
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
               Client History
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -392,8 +395,9 @@ export default function CancellationsPage() {
 
   const cardStyle: React.CSSProperties = {
     backgroundColor: "#FBFBFB",
-    borderRadius: "10px",
-    border: "1px solid rgba(26,19,19,0.06)",
+    borderRadius: 12,
+    border: "1px solid rgba(26,19,19,0.07)",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
     padding: "16px",
   }
 
@@ -410,14 +414,14 @@ export default function CancellationsPage() {
   }
 
   return (
-    <div style={{ padding: "24px", maxWidth: "1400px", margin: "0 auto" }}>
+    <div style={{ padding: "32px", maxWidth: "1400px", margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: "24px" }}>
         <h1
           style={{
             margin: 0,
-            fontSize: "22px",
-            fontWeight: 800,
+            fontSize: "24px",
+            fontWeight: 700,
             letterSpacing: "0.02em",
             color: "#1A1313",
           }}
@@ -545,9 +549,9 @@ export default function CancellationsPage() {
               <div key={kpi.label} style={cardStyle}>
                 <div
                   style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.15em",
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    letterSpacing: "0.06em",
                     color: "rgba(26,19,19,0.4)",
                     textTransform: "uppercase",
                     marginBottom: "8px",
@@ -570,9 +574,9 @@ export default function CancellationsPage() {
             <div style={cardStyle}>
               <div
                 style={{
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.15em",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
                   color: "rgba(26,19,19,0.4)",
                   textTransform: "uppercase",
                   marginBottom: "14px",
@@ -585,9 +589,9 @@ export default function CancellationsPage() {
             <div style={cardStyle}>
               <div
                 style={{
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.15em",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
                   color: "rgba(26,19,19,0.4)",
                   textTransform: "uppercase",
                   marginBottom: "14px",
@@ -732,12 +736,13 @@ export default function CancellationsPage() {
                         style={{
                           padding: "10px 12px",
                           textAlign: "left",
-                          fontSize: "9px",
-                          fontWeight: 700,
-                          letterSpacing: "0.15em",
-                          color: "rgba(26,19,19,0.35)",
+                          fontSize: "11px",
+                          fontWeight: 600,
+                          letterSpacing: "0.06em",
+                          color: "rgba(26,19,19,0.4)",
                           textTransform: "uppercase",
                           whiteSpace: "nowrap",
+                          backgroundColor: "#F4F5F7",
                         }}
                       >
                         {h}
@@ -766,11 +771,11 @@ export default function CancellationsPage() {
                     key={c.bookingId}
                     onClick={() => setSelectedEntry(c)}
                     style={{
-                      borderBottom: "1px solid rgba(205,201,192,0.05)",
+                      borderBottom: "1px solid rgba(26,19,19,0.05)",
                       cursor: "pointer",
                       transition: "background 0.1s",
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(205,201,192,0.04)")}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   >
                     <td style={{ padding: "10px 12px" }}>

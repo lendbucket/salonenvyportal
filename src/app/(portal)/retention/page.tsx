@@ -93,9 +93,10 @@ const COACH_TIPS: Record<string, string> = {
 
 const card = {
   backgroundColor: "#FBFBFB",
-  borderRadius: "12px",
-  border: "1px solid rgba(26,19,19,0.06)",
+  borderRadius: "12px" as const,
+  border: "1px solid rgba(26,19,19,0.07)",
   padding: "20px",
+  boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
 }
 
 const pill = (active: boolean) => ({
@@ -103,7 +104,7 @@ const pill = (active: boolean) => ({
   borderRadius: "20px",
   fontSize: "11px",
   fontWeight: 700 as const,
-  letterSpacing: "0.05em",
+  letterSpacing: "0.06em",
   cursor: "pointer" as const,
   border: active ? "1px solid #7a8f96" : "1px solid rgba(26,19,19,0.08)",
   backgroundColor: active ? "#7a8f96" : "transparent",
@@ -238,11 +239,11 @@ export default function RetentionPage() {
   ]
 
   return (
-    <div style={{ padding: "24px", maxWidth: "1200px", margin: "0 auto" }}>
+    <div style={{ padding: "32px", maxWidth: "1200px", margin: "0 auto" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h1 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 700, margin: 0 }}>Client Retention Engine</h1>
+          <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: 0 }}>Client Retention Engine</h1>
           <p style={{ color: "rgba(26,19,19,0.5)", fontSize: "13px", margin: "4px 0 0" }}>
             Analyze 3 years of booking data to identify lapsed clients and drive re-engagement
           </p>
@@ -273,6 +274,7 @@ export default function RetentionPage() {
               alignItems: "center",
               gap: "6px",
               padding: "10px 20px",
+              height: "40px",
               borderRadius: "8px",
               backgroundColor: loading ? "rgba(205,201,192,0.1)" : "#CDC9C0",
               color: loading ? "rgba(26,19,19,0.5)" : "#0f1d24",
@@ -353,7 +355,7 @@ export default function RetentionPage() {
                 {data.retentionGrade}
               </div>
               <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: "32px", fontWeight: 800, color: "#1A1313" }}>{data.retentionScore}</div>
+                <div style={{ fontSize: "32px", fontWeight: 700, color: "#1A1313" }}>{data.retentionScore}</div>
                 <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.5)" }}>out of 100</div>
               </div>
             </div>
@@ -380,7 +382,7 @@ export default function RetentionPage() {
           </div>
 
           {/* Summary Cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px", marginBottom: "20px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "16px", marginBottom: "24px" }}>
             {[
               { label: "Total Clients", value: data.totalCustomers.toLocaleString() },
               { label: "Active (< 90d)", value: data.activeCustomers.toLocaleString(), color: "#22c55e" },
@@ -393,7 +395,7 @@ export default function RetentionPage() {
                 <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.12em", color: "rgba(26,19,19,0.45)", textTransform: "uppercase" as const, marginBottom: "6px" }}>
                   {s.label}
                 </div>
-                <div style={{ fontSize: "24px", fontWeight: 800, color: s.color || "#FBFBFB" }}>{s.value}</div>
+                <div style={{ fontSize: "24px", fontWeight: 700, color: s.color || "#FBFBFB" }}>{s.value}</div>
               </div>
             ))}
           </div>
@@ -426,14 +428,14 @@ export default function RetentionPage() {
           {/* Tab Content */}
           {activeTab === "overview" && (
             <div>
-              <h3 style={{ color: "#1A1313", fontSize: "15px", fontWeight: 700, marginBottom: "16px" }}>Lapsed Segment Breakdown</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "12px", marginBottom: "24px" }}>
+              <h3 style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "16px" }}>Lapsed Segment Breakdown</h3>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "16px", marginBottom: "24px" }}>
                 {Object.entries(data.lapsedSegments).map(([seg, count]) => (
                   <div key={seg} style={{ ...card, borderLeft: `3px solid ${SEGMENT_COLORS[seg] || "#CDC9C0"}` }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em", color: "rgba(26,19,19,0.5)", textTransform: "uppercase" as const, marginBottom: "6px" }}>
                       {SEGMENT_LABELS[seg] || seg}
                     </div>
-                    <div style={{ fontSize: "28px", fontWeight: 800, color: SEGMENT_COLORS[seg] || "#FBFBFB" }}>
+                    <div style={{ fontSize: "28px", fontWeight: 700, color: SEGMENT_COLORS[seg] || "#FBFBFB" }}>
                       {count}
                     </div>
                     <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.4)", marginTop: "4px" }}>
@@ -457,7 +459,7 @@ export default function RetentionPage() {
               {/* Stylist Retention Breakdown */}
               {data.stylistBreakdown && data.stylistBreakdown.length > 0 && (
                 <div style={{ marginTop: "24px" }}>
-                  <h3 style={{ color: "#1A1313", fontSize: "15px", fontWeight: 700, marginBottom: "16px" }}>Stylist Retention Breakdown</h3>
+                  <h3 style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "16px" }}>Stylist Retention Breakdown</h3>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px" }}>
                     {(["Corpus Christi", "San Antonio"] as const).map((loc) => {
                       const locStylists = data.stylistBreakdown.filter((s) => s.location === loc)
@@ -468,9 +470,9 @@ export default function RetentionPage() {
                           </div>
                           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "11px" }}>
                             <thead>
-                              <tr style={{ borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
+                              <tr style={{ backgroundColor: "#F4F5F7" }}>
                                 {["Stylist", "Clients", "Repeat", "Retention %", "Avg Ticket"].map((h) => (
-                                  <th key={h} style={{ padding: "8px 6px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "9px", letterSpacing: "0.1em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
+                                  <th key={h} style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
                                     {h}
                                   </th>
                                 ))}
@@ -478,14 +480,14 @@ export default function RetentionPage() {
                             </thead>
                             <tbody>
                               {locStylists.map((s) => (
-                                <tr key={s.teamMemberId} style={{ borderBottom: "1px solid rgba(26,19,19,0.04)" }}>
-                                  <td style={{ padding: "8px 6px", color: "#1A1313", fontWeight: 600 }}>{s.name.split(" ")[0]}</td>
-                                  <td style={{ padding: "8px 6px", color: "rgba(26,19,19,0.7)" }}>{s.uniqueClients}</td>
-                                  <td style={{ padding: "8px 6px", color: "rgba(26,19,19,0.7)" }}>{s.repeatClients}</td>
-                                  <td style={{ padding: "8px 6px", fontWeight: 700, color: s.retentionRate >= 70 ? "#22c55e" : s.retentionRate >= 50 ? "#eab308" : "#ef4444" }}>
+                                <tr key={s.teamMemberId} style={{ borderBottom: "1px solid rgba(26,19,19,0.05)" }} onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)")} onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}>
+                                  <td style={{ padding: "12px 16px", color: "#1A1313", fontWeight: 600 }}>{s.name.split(" ")[0]}</td>
+                                  <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{s.uniqueClients}</td>
+                                  <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{s.repeatClients}</td>
+                                  <td style={{ padding: "12px 16px", fontWeight: 700, color: s.retentionRate >= 70 ? "#22c55e" : s.retentionRate >= 50 ? "#eab308" : "#ef4444" }}>
                                     {s.retentionRate}%
                                   </td>
-                                  <td style={{ padding: "8px 6px", color: "rgba(26,19,19,0.7)" }}>${s.avgTicket.toFixed(0)}</td>
+                                  <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>${s.avgTicket.toFixed(0)}</td>
                                 </tr>
                               ))}
                               {locStylists.length === 0 && (
@@ -553,14 +555,14 @@ export default function RetentionPage() {
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
                   <thead>
-                    <tr style={{ borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
-                      <th style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}></th>
-                      <th style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>Client</th>
-                      <th style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>Visits</th>
-                      <th style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>Last Visit</th>
-                      <th style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>Days Gone</th>
-                      <th style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>Stylist</th>
-                      <th style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>Segment</th>
+                    <tr style={{ backgroundColor: "#F4F5F7" }}>
+                      <th style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const }}></th>
+                      <th style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>Client</th>
+                      <th style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>Visits</th>
+                      <th style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>Last Visit</th>
+                      <th style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>Days Gone</th>
+                      <th style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>Stylist</th>
+                      <th style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>Segment</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -569,12 +571,14 @@ export default function RetentionPage() {
                         key={c.customerId}
                         onClick={() => toggleCustomer(c.customerId)}
                         style={{
-                          borderBottom: "1px solid rgba(26,19,19,0.04)",
+                          borderBottom: "1px solid rgba(26,19,19,0.05)",
                           cursor: "pointer",
                           backgroundColor: selectedCustomers.has(c.customerId) ? "rgba(26,19,19,0.04)" : "transparent",
                         }}
+                        onMouseEnter={e => { if (!selectedCustomers.has(c.customerId)) e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)" }}
+                        onMouseLeave={e => { if (!selectedCustomers.has(c.customerId)) e.currentTarget.style.backgroundColor = "transparent" }}
                       >
-                        <td style={{ padding: "8px" }}>
+                        <td style={{ padding: "12px 16px" }}>
                           <input
                             type="checkbox"
                             checked={selectedCustomers.has(c.customerId)}
@@ -582,12 +586,12 @@ export default function RetentionPage() {
                             style={{ accentColor: "#CDC9C0" }}
                           />
                         </td>
-                        <td style={{ padding: "8px", color: "#1A1313", fontWeight: 600 }}>{c.customerName}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>{c.totalVisits}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>{new Date(c.lastVisit).toLocaleDateString()}</td>
-                        <td style={{ padding: "8px", color: SEGMENT_COLORS[c.lapsedSegment] || "#CDC9C0", fontWeight: 700 }}>{c.daysSinceLastVisit}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>{c.preferredStylist}</td>
-                        <td style={{ padding: "8px" }}>
+                        <td style={{ padding: "12px 16px", color: "#1A1313", fontWeight: 600 }}>{c.customerName}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{c.totalVisits}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{new Date(c.lastVisit).toLocaleDateString()}</td>
+                        <td style={{ padding: "12px 16px", color: SEGMENT_COLORS[c.lapsedSegment] || "#CDC9C0", fontWeight: 700 }}>{c.daysSinceLastVisit}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{c.preferredStylist}</td>
+                        <td style={{ padding: "12px 16px" }}>
                           <span style={{
                             padding: "3px 8px",
                             borderRadius: "10px",
@@ -609,13 +613,13 @@ export default function RetentionPage() {
 
           {activeTab === "top" && (
             <div>
-              <h3 style={{ color: "#1A1313", fontSize: "15px", fontWeight: 700, marginBottom: "16px" }}>Top 20 Recurring Clients</h3>
+              <h3 style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "16px" }}>Top 20 Recurring Clients</h3>
               <div style={{ overflowX: "auto", marginBottom: "32px" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
                   <thead>
-                    <tr style={{ borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
+                    <tr style={{ backgroundColor: "#F4F5F7" }}>
                       {["#", "Client", "Visits", "Tickets", "Total Spend", "Avg", "Min", "Max", "Last Visit", "Stylist"].map((h) => (
-                        <th key={h} style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
+                        <th key={h} style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
                           {h}
                         </th>
                       ))}
@@ -623,30 +627,30 @@ export default function RetentionPage() {
                   </thead>
                   <tbody>
                     {data.top20Recurring.map((c, i) => (
-                      <tr key={c.customerId} onClick={() => setSelectedClient(c)} style={{ borderBottom: "1px solid rgba(26,19,19,0.04)", cursor: "pointer", transition: "background-color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.04)")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.4)", fontWeight: 700 }}>{i + 1}</td>
-                        <td style={{ padding: "8px", color: "#1A1313", fontWeight: 600 }}>{c.customerName}</td>
-                        <td style={{ padding: "8px", color: "#22c55e", fontWeight: 700 }}>{c.totalVisits}</td>
-                        <td style={{ padding: "8px", color: c.ticketCount !== c.totalVisits ? "#F59E0B" : "rgba(26,19,19,0.5)", fontWeight: 600 }}>{c.ticketCount}{c.ticketCount !== c.totalVisits && <span style={{ fontSize: "9px", color: "#94A3B8" }}> paid</span>}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 0 })}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>${c.avgTicket.toFixed(0)}</td>
-                        <td style={{ padding: "8px", color: c.minTicket >= 50 ? "#10B981" : "#94A3B8" }}>{c.minTicket > 0 ? `$${c.minTicket.toFixed(0)}` : "\u2014"}</td>
-                        <td style={{ padding: "8px", color: "#CDC9C0", fontWeight: 700 }}>{c.maxTicket > 0 ? `$${c.maxTicket.toFixed(0)}` : "\u2014"}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>{new Date(c.lastVisit).toLocaleDateString()}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>{c.preferredStylist}</td>
+                      <tr key={c.customerId} onClick={() => setSelectedClient(c)} style={{ borderBottom: "1px solid rgba(26,19,19,0.05)", cursor: "pointer", transition: "background-color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.4)", fontWeight: 700 }}>{i + 1}</td>
+                        <td style={{ padding: "12px 16px", color: "#1A1313", fontWeight: 600 }}>{c.customerName}</td>
+                        <td style={{ padding: "12px 16px", color: "#22c55e", fontWeight: 700 }}>{c.totalVisits}</td>
+                        <td style={{ padding: "12px 16px", color: c.ticketCount !== c.totalVisits ? "#F59E0B" : "rgba(26,19,19,0.5)", fontWeight: 600 }}>{c.ticketCount}{c.ticketCount !== c.totalVisits && <span style={{ fontSize: "9px", color: "#94A3B8" }}> paid</span>}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 0 })}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>${c.avgTicket.toFixed(0)}</td>
+                        <td style={{ padding: "12px 16px", color: c.minTicket >= 50 ? "#10B981" : "#94A3B8" }}>{c.minTicket > 0 ? `$${c.minTicket.toFixed(0)}` : "\u2014"}</td>
+                        <td style={{ padding: "12px 16px", color: "#CDC9C0", fontWeight: 700 }}>{c.maxTicket > 0 ? `$${c.maxTicket.toFixed(0)}` : "\u2014"}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{new Date(c.lastVisit).toLocaleDateString()}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{c.preferredStylist}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
 
-              <h3 style={{ color: "#1A1313", fontSize: "15px", fontWeight: 700, marginBottom: "16px" }}>Top 5 Highest Single Tickets</h3>
+              <h3 style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "16px" }}>Top 5 Highest Single Tickets</h3>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
                   <thead>
-                    <tr style={{ borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
+                    <tr style={{ backgroundColor: "#F4F5F7" }}>
                       {["#", "Client", "Max Ticket", "Avg Ticket", "Total Spend", "Visits", "Stylist"].map((h) => (
-                        <th key={h} style={{ padding: "10px 8px", textAlign: "left", color: "rgba(26,19,19,0.45)", fontWeight: 700, fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
+                        <th key={h} style={{ padding: "12px 16px", textAlign: "left", color: "rgba(26,19,19,0.4)", fontWeight: 600, fontSize: "11px", letterSpacing: "0.06em", textTransform: "uppercase" as const, whiteSpace: "nowrap" }}>
                           {h}
                         </th>
                       ))}
@@ -654,14 +658,14 @@ export default function RetentionPage() {
                   </thead>
                   <tbody>
                     {data.top5HighestTickets.map((c, i) => (
-                      <tr key={c.customerId} onClick={() => setSelectedClient(c)} style={{ borderBottom: "1px solid rgba(26,19,19,0.04)", cursor: "pointer", transition: "background-color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.04)")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.4)", fontWeight: 700 }}>{i + 1}</td>
-                        <td style={{ padding: "8px", color: "#1A1313", fontWeight: 600 }}>{c.customerName}</td>
-                        <td style={{ padding: "8px", color: "#CDC9C0", fontWeight: 700, fontSize: "14px" }}>${c.maxTicket.toFixed(2)}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>${c.avgTicket.toFixed(0)}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 0 })}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>{c.totalVisits}</td>
-                        <td style={{ padding: "8px", color: "rgba(26,19,19,0.7)" }}>{c.preferredStylist}</td>
+                      <tr key={c.customerId} onClick={() => setSelectedClient(c)} style={{ borderBottom: "1px solid rgba(26,19,19,0.05)", cursor: "pointer", transition: "background-color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.4)", fontWeight: 700 }}>{i + 1}</td>
+                        <td style={{ padding: "12px 16px", color: "#1A1313", fontWeight: 600 }}>{c.customerName}</td>
+                        <td style={{ padding: "12px 16px", color: "#CDC9C0", fontWeight: 700, fontSize: "14px" }}>${c.maxTicket.toFixed(2)}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>${c.avgTicket.toFixed(0)}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>${c.totalSpend.toLocaleString(undefined, { minimumFractionDigits: 0 })}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{c.totalVisits}</td>
+                        <td style={{ padding: "12px 16px", color: "rgba(26,19,19,0.7)" }}>{c.preferredStylist}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -697,6 +701,7 @@ export default function RetentionPage() {
                     disabled={selectedCustomers.size === 0 || sendingOutreach}
                     style={{
                       padding: "10px 20px",
+                      height: "40px",
                       borderRadius: "8px",
                       backgroundColor: selectedCustomers.size === 0 || sendingOutreach ? "rgba(205,201,192,0.1)" : "#CDC9C0",
                       color: selectedCustomers.size === 0 || sendingOutreach ? "rgba(26,19,19,0.4)" : "#0f1d24",
@@ -837,16 +842,16 @@ export default function RetentionPage() {
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "800px" }}>
                   <thead>
-                    <tr style={{ backgroundColor: "rgba(26,19,19,0.02)", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
+                    <tr style={{ backgroundColor: "#F4F5F7" }}>
                       {["Client", "Last Visit", "Days Since", "Risk", "Score", "Visits", "Spend", "Outreach", ""].map(h => (
-                        <th key={h} style={{ padding: "10px 14px", textAlign: h === "Client" ? "left" : "right", fontFamily: "'Inter', sans-serif", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "rgba(26,19,19,0.35)" }}>{h}</th>
+                        <th key={h} style={{ padding: "12px 16px", textAlign: h === "Client" ? "left" : "right", fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" as const, color: "rgba(26,19,19,0.4)" }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {churnData.map((c: any, i: number) => (
-                      <tr key={c.id} style={{ borderBottom: i < churnData.length - 1 ? "1px solid rgba(26,19,19,0.04)" : "none" }}>
+                      <tr key={c.id} style={{ borderBottom: i < churnData.length - 1 ? "1px solid rgba(26,19,19,0.05)" : "none" }} onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)")} onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}>
                         <td style={{ padding: "12px 14px" }}>
                           <div style={{ fontSize: "13px", fontWeight: 500, color: "#1A1313" }}>{c.clientName}</div>
                           {c.clientPhone && <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", color: "rgba(26,19,19,0.4)", marginTop: "1px" }}>{c.clientPhone}</div>}
@@ -893,7 +898,8 @@ export default function RetentionPage() {
           style={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "rgba(0,0,0,0.6)",
+            backgroundColor: "rgba(0,0,0,0.25)",
+            backdropFilter: "blur(4px)",
             zIndex: 100,
             display: "flex",
             alignItems: "center",
@@ -906,7 +912,8 @@ export default function RetentionPage() {
             style={{
               backgroundColor: "#FBFBFB",
               borderRadius: "12px",
-              border: "1px solid rgba(26,19,19,0.06)",
+              border: "1px solid rgba(26,19,19,0.07)",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
               maxWidth: "520px",
               width: "100%",
               maxHeight: "80vh",
@@ -953,7 +960,7 @@ export default function RetentionPage() {
                   ].map((s) => (
                     <div key={s.label} style={{ backgroundColor: "rgba(205,201,192,0.04)", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
                       <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", color: "rgba(26,19,19,0.4)", textTransform: "uppercase" as const, marginBottom: "4px" }}>{s.label}</div>
-                      <div style={{ fontSize: "16px", fontWeight: 800, color: "#1A1313" }}>{s.value}</div>
+                      <div style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313" }}>{s.value}</div>
                     </div>
                   ))}
                 </div>

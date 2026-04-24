@@ -157,13 +157,13 @@ export default function SchedulePage() {
   const pill = (active: boolean) => ({ padding: "6px 14px", fontSize: "10px", fontWeight: 700 as const, letterSpacing: "0.08em", textTransform: "uppercase" as const, borderRadius: "6px", border: "none", cursor: "pointer" as const, backgroundColor: active ? "#7a8f96" : "transparent", color: active ? "#FBFBFB" : "rgba(26,19,19,0.5)", transition: "all 0.15s" })
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px" }}>
+    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px" }}>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
 
       {/* Header */}
       <div style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Schedule Builder</h1>
+          <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Schedule Builder</h1>
           <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>Build weekly schedules and submit for owner approval</p>
         </div>
         <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.1)" }}>
@@ -193,13 +193,13 @@ export default function SchedulePage() {
           </div>
         )}
         <div style={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
-          {!schedule && <button onClick={createSchedule} disabled={saving} style={{ padding: "8px 16px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "7px", color: "#0f1d24", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>+ New Schedule</button>}
-          {schedule && canEdit && <button onClick={saveShifts} disabled={saving} style={{ padding: "8px 16px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.3)", borderRadius: "7px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>{saving ? "Saving..." : "Save Draft"}</button>}
-          {canSubmit && canEdit && <button onClick={submitForApproval} disabled={saving} style={{ padding: "8px 16px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "7px", color: "#0f1d24", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Submit for Approval</button>}
+          {!schedule && <button onClick={createSchedule} disabled={saving} style={{ padding: "8px 16px", height: "40px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>+ New Schedule</button>}
+          {schedule && canEdit && <button onClick={saveShifts} disabled={saving} style={{ padding: "8px 16px", height: "32px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.3)", borderRadius: "6px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>{saving ? "Saving..." : "Save Draft"}</button>}
+          {canSubmit && canEdit && <button onClick={submitForApproval} disabled={saving} style={{ padding: "8px 16px", height: "40px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Submit for Approval</button>}
           {isOwner && schedule?.status === "pending" && (
             <>
-              <button onClick={() => setRejectModal(schedule.id)} style={{ padding: "8px 16px", backgroundColor: "transparent", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "7px", color: "#FCA5A5", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Reject</button>
-              <button onClick={() => approveSchedule(schedule.id)} style={{ padding: "8px 16px", backgroundColor: "#10B981", border: "none", borderRadius: "7px", color: "#FBFBFB", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>{"\u2713"} Approve</button>
+              <button onClick={() => setRejectModal(schedule.id)} style={{ padding: "8px 16px", height: "32px", backgroundColor: "transparent", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", color: "#FCA5A5", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Reject</button>
+              <button onClick={() => approveSchedule(schedule.id)} style={{ padding: "8px 16px", height: "40px", backgroundColor: "#10B981", border: "none", borderRadius: "8px", color: "#FBFBFB", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>{"\u2713"} Approve</button>
             </>
           )}
         </div>
@@ -219,11 +219,11 @@ export default function SchedulePage() {
       {view === "builder" && (
         <>
           {!schedule ? (
-            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", padding: "60px", textAlign: "center", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(26,19,19,0.2)", display: "block", marginBottom: "16px" }}>calendar_month</span>
               <p style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", margin: "0 0 8px" }}>No schedule for this week</p>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Create a new schedule to start assigning shifts.</p>
-              <button onClick={createSchedule} style={{ padding: "10px 24px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "7px", color: "#0f1d24", fontSize: "12px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Create Schedule</button>
+              <button onClick={createSchedule} style={{ padding: "10px 24px", height: "40px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontSize: "12px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Create Schedule</button>
             </div>
           ) : loading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
@@ -233,21 +233,21 @@ export default function SchedulePage() {
             </div>
           ) : (
             !isMobile ? (
-            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", overflow: "auto" }}>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", overflow: "auto", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
                 <thead>
                   <tr style={{ backgroundColor: "#F4F5F7" }}>
-                    <th style={{ padding: "12px 16px", fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", textAlign: "left", width: "160px", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>Staff</th>
+                    <th style={{ padding: "12px 16px", fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", textAlign: "left", width: "160px", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>Staff</th>
                     {weekDates.map((date, i) => {
                       const isToday = date.toDateString() === new Date().toDateString()
                       return (
-                        <th key={i} style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: isToday ? "#1A1313" : "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(26,19,19,0.06)", borderLeft: "1px solid rgba(26,19,19,0.04)" }}>
+                        <th key={i} style={{ padding: "12px 8px", fontSize: "11px", fontWeight: 600, color: isToday ? "#1A1313" : "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(26,19,19,0.06)", borderLeft: "1px solid rgba(26,19,19,0.04)" }}>
                           <div>{DAYS[date.getDay()]}</div>
                           <div style={{ fontSize: "11px", fontWeight: 800, color: isToday ? "#1A1313" : "#1A1313", marginTop: "2px" }}>{date.getDate()}</div>
                         </th>
                       )
                     })}
-                    <th style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(26,19,19,0.06)", borderLeft: "1px solid rgba(26,19,19,0.04)", width: "70px" }}>Total</th>
+                    <th style={{ padding: "12px 8px", fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(26,19,19,0.06)", borderLeft: "1px solid rgba(26,19,19,0.04)", width: "70px" }}>Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -319,7 +319,7 @@ export default function SchedulePage() {
               {staff.map(m => {
                 const hrs = calcTotalHours(shifts[m.id])
                 return (
-                  <div key={m.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "16px" }}>
+                  <div key={m.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", padding: "16px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
@@ -385,10 +385,10 @@ export default function SchedulePage() {
           {/* Visual Hour Grid */}
           {schedule && !loading && Object.keys(shifts).length > 0 && (
             <div style={{ marginTop: "24px" }}>
-              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "12px" }}>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "12px" }}>
                 Visual Overview
               </div>
-              <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", overflow: "hidden", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
                 {/* Day headers */}
                 <div style={{ display: "grid", gridTemplateColumns: "60px repeat(7, 1fr)", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
                   <div style={{ padding: "8px", fontSize: "9px", color: "rgba(26,19,19,0.3)" }} />
@@ -445,11 +445,11 @@ export default function SchedulePage() {
       {view === "list" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {schedules.length === 0 ? (
-            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", padding: "60px", textAlign: "center", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
               <p style={{ color: "#94A3B8" }}>No schedules found.</p>
             </div>
           ) : schedules.map(s => (
-            <div key={s.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+            <div key={s.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: STATUS_COLOR[s.status], flexShrink: 0 }} />
                 <div>
@@ -478,9 +478,9 @@ export default function SchedulePage() {
 
       {/* Reject Modal */}
       {rejectModal && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
-          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "12px", padding: "28px", width: "100%", maxWidth: "440px", margin: "20px" }}>
-            <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Reject Schedule</h3>
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: "12px", padding: "28px", width: "100%", maxWidth: "440px", margin: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", margin: "0 0 8px" }}>Reject Schedule</h3>
             <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 16px" }}>Provide a reason so the manager knows what to fix.</p>
             <textarea value={rejectNote} onChange={e => setRejectNote(e.target.value)} placeholder="e.g. Please add coverage for Saturday afternoon..." rows={3} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#F4F5F7", border: "1px solid rgba(26,19,19,0.2)", borderRadius: "7px", color: "#1A1313", fontSize: "13px", resize: "none", outline: "none", boxSizing: "border-box", marginBottom: "16px" }} />
             <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>

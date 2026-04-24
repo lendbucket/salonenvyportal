@@ -14,17 +14,18 @@ const SEVERITY_COLORS: Record<string, string> = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)",
-  borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)",
+  borderRadius: 12, padding: "clamp(16px,4vw,28px)",
+  boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
 }
 
 const btnPrimary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "none", cursor: "pointer",
+  height: "40px", padding: "0 16px", borderRadius: "8px", border: "none", cursor: "pointer",
   backgroundColor: "#CDC9C0", color: "#1A1313", fontSize: "12px", fontWeight: 700,
 }
 
 const btnSecondary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)",
+  height: "40px", padding: "0 16px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)",
   cursor: "pointer", backgroundColor: "transparent", color: "#CDC9C0", fontSize: "12px", fontWeight: 600,
 }
 
@@ -35,8 +36,8 @@ const inputStyle: React.CSSProperties = {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.6)",
-  textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px", display: "block",
+  fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)",
+  textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px", display: "block",
 }
 
 export default function ConductPage() {
@@ -109,7 +110,7 @@ export default function ConductPage() {
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
-        <h1 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 700, margin: 0 }}>
+        <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: 0 }}>
           {isStylist ? "My Record" : "Conduct Records"}
         </h1>
         {canWrite && (
@@ -173,9 +174,9 @@ export default function ConductPage() {
 
       {/* Create modal */}
       {showForm && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
           onClick={() => setShowForm(false)}>
-          <div style={{ ...cardStyle, maxWidth: "560px", width: "100%", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+          <div style={{ ...cardStyle, maxWidth: "560px", width: "100%", maxHeight: "85vh", overflowY: "auto", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)" }} onClick={e => e.stopPropagation()}>
             <h2 style={{ color: "#1A1313", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Write-Up</h2>
 
             <div style={{ marginBottom: "12px" }}>

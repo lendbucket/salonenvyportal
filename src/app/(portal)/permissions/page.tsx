@@ -4,8 +4,8 @@ import { useUserRole } from "@/hooks/useUserRole"
 
 const BG = "#F4F5F7"
 const CARD = "#FBFBFB"
-const BORDER = "rgba(26,19,19,0.06)"
-const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const BORDER = "rgba(26,19,19,0.07)"
+const CARD_SHADOW = "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)"
 const ACC = "#606E74"
 const ACC_B = "#7a8f96"
 const MUTED = "rgba(26,19,19,0.3)"
@@ -204,14 +204,14 @@ export default function PermissionsPage() {
         <div style={{ width: "280px", minWidth: "280px", backgroundColor: "#F0F1F3", borderRight: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {/* Header */}
           <div style={{ padding: "24px 20px 16px" }}>
-            <div style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", marginBottom: "2px" }}>Access Control</div>
+            <div style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", marginBottom: "2px" }}>Access Control</div>
             <div style={{ ...mono, fontSize: "10px", color: MUTED }}>Manage role permissions</div>
           </div>
 
           <div style={{ flex: 1, overflowY: "auto", padding: "0 0 16px" }}>
             {/* Roles section */}
             <div style={{ padding: "0 16px" }}>
-              <div style={{ ...mono, fontSize: "9px", color: ACC, textTransform: "uppercase", letterSpacing: "0.15em", padding: "8px 4px 6px", fontWeight: 700 }}>Roles</div>
+              <div style={{ ...mono, fontSize: "11px", color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "8px 4px 6px", fontWeight: 600 }}>Roles</div>
 
               {([
                 { role: "OWNER" as const, icon: "shield", title: "Owner", sub: "Full access to everything", badge: "You", badgeColor: GOLD, count: null },
@@ -246,7 +246,7 @@ export default function PermissionsPage() {
 
             {/* Individual overrides */}
             <div style={{ padding: "0 16px" }}>
-              <div style={{ ...mono, fontSize: "9px", color: ACC, textTransform: "uppercase", letterSpacing: "0.15em", padding: "0 4px 6px", fontWeight: 700 }}>Individual Overrides</div>
+              <div style={{ ...mono, fontSize: "11px", color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "0 4px 6px", fontWeight: 600 }}>Individual Overrides</div>
               <div style={{ fontSize: "10px", color: MUTED, padding: "0 4px 8px" }}>Override permissions for a specific person</div>
               <div style={{ position: "relative", marginBottom: "8px" }}>
                 <span className="material-symbols-outlined" style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", fontSize: "14px", color: MUTED }}>search</span>
@@ -288,7 +288,7 @@ export default function PermissionsPage() {
           {/* Right header */}
           <div style={{ padding: "20px 28px", borderBottom: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, backgroundColor: "rgba(0,0,0,0.02)" }}>
             <div>
-              <div style={{ fontSize: "18px", fontWeight: 700, color: "#1A1313" }}>
+              <div style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313" }}>
                 {selectedStaff ? selectedStaff.fullName : activeRole} Permissions
               </div>
               <div style={{ fontSize: "12px", color: MUTED, marginTop: "2px" }}>
@@ -320,13 +320,13 @@ export default function PermissionsPage() {
           )}
 
           {/* Permission sections */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "16px 28px 80px" }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px 80px" }}>
             {loading ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 {[1,2,3,4,5].map(i => <div key={i} style={{ height: "56px", backgroundColor: "rgba(26,19,19,0.02)", borderRadius: "10px", animation: "pulse 1.5s infinite", opacity: 1 - i * 0.15 }} />)}
               </div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 {SECTIONS.map(section => {
                   const isCollapsed = collapsed[section.key]
                   const { enabled, total } = getSectionEnabledCount(section)
@@ -348,8 +348,8 @@ export default function PermissionsPage() {
 
                       {/* Section rows */}
                       {!isCollapsed && section.rows.map(row => (
-                        <div key={row.key} style={{ padding: "12px 18px 12px 48px", borderBottom: `1px solid rgba(26,19,19,0.03)`, display: "flex", alignItems: "center", gap: "16px", transition: "background 0.1s" }}
-                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(26,19,19,0.015)" }}
+                        <div key={row.key} style={{ padding: "12px 18px 12px 48px", borderBottom: `1px solid rgba(26,19,19,0.05)`, display: "flex", alignItems: "center", gap: "16px", transition: "background 0.1s" }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(26,19,19,0.02)" }}
                           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent" }}
                         >
                           {/* Left: feature info */}

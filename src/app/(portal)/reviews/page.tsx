@@ -163,11 +163,11 @@ export default function ReviewsPage() {
 
   /* ── Render ── */
   return (
-    <div style={{ padding: "24px", maxWidth: "1200px", margin: "0 auto" }}>
+    <div style={{ padding: "32px", maxWidth: "1200px", margin: "0 auto" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px", marginBottom: "24px" }}>
         <div>
-          <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#1A1313", margin: 0, display: "flex", alignItems: "center", gap: "10px" }}>
+          <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", margin: 0, display: "flex", alignItems: "center", gap: "10px" }}>
             <GoogleLogo size={24} />
             Reviews
           </h1>
@@ -182,9 +182,9 @@ export default function ReviewsPage() {
                 style={{
                   padding: "7px 16px",
                   borderRadius: "6px",
-                  border: `1px solid ${selectedLocation === loc ? ACCENT : "rgba(205,201,192,0.15)"}`,
-                  backgroundColor: selectedLocation === loc ? "rgba(205,201,192,0.1)" : "transparent",
-                  color: selectedLocation === loc ? ACCENT : "rgba(26,19,19,0.5)",
+                  border: `1px solid ${selectedLocation === loc ? "#7a8f96" : "rgba(205,201,192,0.15)"}`,
+                  backgroundColor: selectedLocation === loc ? "#7a8f96" : "transparent",
+                  color: selectedLocation === loc ? "#FBFBFB" : "rgba(26,19,19,0.5)",
                   fontSize: "11px",
                   fontWeight: 700,
                   letterSpacing: "0.08em",
@@ -215,8 +215,9 @@ export default function ReviewsPage() {
                 gap: "20px",
                 padding: "16px 20px",
                 backgroundColor: CARD_BG,
-                borderRadius: "10px",
-                border: "1px solid rgba(26,19,19,0.06)",
+                borderRadius: "12px",
+                border: "1px solid rgba(26,19,19,0.07)",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
                 marginBottom: "20px",
                 flexWrap: "wrap",
               }}
@@ -238,14 +239,15 @@ export default function ReviewsPage() {
                 key={loc.location}
                 style={{
                   backgroundColor: CARD_BG,
-                  borderRadius: "12px",
-                  border: "1px solid rgba(26,19,19,0.06)",
+                  borderRadius: 12,
+                  border: "1px solid rgba(26,19,19,0.07)",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
                   padding: "20px",
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
                   <div>
-                    <div style={{ fontSize: "12px", fontWeight: 700, color: ACCENT, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "4px" }}>
+                    <div style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "4px" }}>
                       {loc.label}
                     </div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
@@ -392,8 +394,9 @@ export default function ReviewsPage() {
                 key={`${review.authorName}-${idx}`}
                 style={{
                   backgroundColor: CARD_BG,
-                  borderRadius: "10px",
-                  border: "1px solid rgba(26,19,19,0.06)",
+                  borderRadius: 12,
+                  border: "1px solid rgba(26,19,19,0.07)",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
                   padding: "16px 20px",
                 }}
               >
@@ -486,8 +489,9 @@ export default function ReviewsPage() {
                   key={tip.title}
                   style={{
                     backgroundColor: CARD_BG,
-                    borderRadius: "10px",
-                    border: "1px solid rgba(26,19,19,0.06)",
+                    borderRadius: 12,
+                    border: "1px solid rgba(26,19,19,0.07)",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
                     padding: "16px",
                     display: "flex",
                     gap: "12px",

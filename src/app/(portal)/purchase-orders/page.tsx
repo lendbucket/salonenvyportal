@@ -20,19 +20,19 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)",
-  borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
-  boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)",
+  borderRadius: 12, padding: "clamp(16px,4vw,28px)",
+  boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
 }
 
 const btnPrimary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "1px solid #606E74", cursor: "pointer",
+  height: "40px", padding: "0 16px", borderRadius: "8px", border: "1px solid #606E74", cursor: "pointer",
   backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", fontWeight: 500,
   letterSpacing: "0.01em", transition: "all 0.15s ease",
 }
 
 const btnSecondary: React.CSSProperties = {
-  padding: "8px 16px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.08)",
+  height: "40px", padding: "0 16px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.08)",
   cursor: "pointer", backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", fontWeight: 500,
   letterSpacing: "0.01em", transition: "all 0.15s ease",
 }
@@ -45,8 +45,8 @@ const inputStyle: React.CSSProperties = {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: "11px", fontWeight: 600, color: "#606E74",
-  textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px", display: "block",
+  fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)",
+  textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px", display: "block",
 }
 
 export default function PurchaseOrdersPage() {
@@ -129,7 +129,7 @@ export default function PurchaseOrdersPage() {
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1200px", margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
-        <h1 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 700, margin: 0 }}>Purchase Orders</h1>
+        <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: 0 }}>Purchase Orders</h1>
         {(isOwner || isManager) && (
           <button style={btnPrimary} onClick={() => setShowCreate(true)}>+ New PO</button>
         )}
@@ -140,8 +140,8 @@ export default function PurchaseOrdersPage() {
         {["all", "draft", "pending", "approved", "ordered", "received", "cancelled"].map(s => (
           <button key={s} onClick={() => setFilter(s)} style={{
             padding: "6px 14px", borderRadius: "6px", border: "1px solid rgba(205,201,192,0.15)",
-            backgroundColor: filter === s ? "rgba(205,201,192,0.12)" : "transparent",
-            color: filter === s ? "#CDC9C0" : "rgba(26,19,19,0.5)", cursor: "pointer",
+            backgroundColor: filter === s ? "#7a8f96" : "transparent",
+            color: filter === s ? "#FBFBFB" : "rgba(26,19,19,0.5)", cursor: "pointer",
             fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
           }}>{s} {s !== "all" && `(${orders.filter(o => s === "all" || o.status === s).length})`}</button>
         ))}
@@ -179,9 +179,9 @@ export default function PurchaseOrdersPage() {
 
       {/* Detail panel */}
       {selected && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
           onClick={() => setSelected(null)}>
-          <div style={{ ...cardStyle, maxWidth: "600px", width: "100%", maxHeight: "80vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+          <div style={{ ...cardStyle, maxWidth: "600px", width: "100%", maxHeight: "80vh", overflowY: "auto", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)" }} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
               <h2 style={{ color: "#1A1313", fontSize: "18px", fontWeight: 700, margin: 0 }}>{selected.poNumber}</h2>
               <span style={{
@@ -199,9 +199,9 @@ export default function PurchaseOrdersPage() {
 
             {/* Items table */}
             <div style={{ marginBottom: "16px" }}>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "rgba(26,19,19,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>Items</div>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "8px" }}>Items</div>
               {selected.items.map((item, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(205,201,192,0.08)", fontSize: "12px", color: "#e9e5dc" }}>
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(26,19,19,0.05)", fontSize: "12px", color: "#e9e5dc" }}>
                   <span>{item.brand} - {item.productName}{item.shadeOrVolume ? ` (${item.shadeOrVolume})` : ""}</span>
                   <span style={{ color: "rgba(26,19,19,0.5)" }}>x{item.quantityOrdered} @ ${item.costPerUnit.toFixed(2)}</span>
                 </div>
@@ -225,9 +225,9 @@ export default function PurchaseOrdersPage() {
 
       {/* Create modal */}
       {showCreate && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
           onClick={() => setShowCreate(false)}>
-          <div style={{ ...cardStyle, maxWidth: "600px", width: "100%", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+          <div style={{ ...cardStyle, maxWidth: "600px", width: "100%", maxHeight: "85vh", overflowY: "auto", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)" }} onClick={e => e.stopPropagation()}>
             <h2 style={{ color: "#1A1313", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Purchase Order</h2>
 
             <div style={{ marginBottom: "12px" }}>

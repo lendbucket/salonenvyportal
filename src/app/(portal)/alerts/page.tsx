@@ -17,7 +17,7 @@ const ACC_DIM = "rgba(96,110,116,0.08)"
 const ACC_BORDER = "rgba(96,110,116,0.2)"
 const BORDER = "rgba(26,19,19,0.06)"
 const BORDER2 = "rgba(26,19,19,0.08)"
-const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const CARD_SHADOW = "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)"
 const S1 = "rgba(26,19,19,0.03)"
 const MUTED = "rgba(26,19,19,0.3)"
 const MID = "rgba(26,19,19,0.6)"
@@ -115,7 +115,7 @@ export default function AlertsPage() {
   })
 
   const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(26,19,19,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#1A1313", fontSize: "16px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
-  const labelStyle: React.CSSProperties = { display: "block", fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "6px", ...mono }
+  const labelStyle: React.CSSProperties = { display: "block", fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase" as const, marginBottom: "6px", ...mono }
 
   const ownerFilters: { id: Filter; label: string }[] = [
     { id: "all", label: "All" }, { id: "unread", label: "Unread" },
@@ -127,11 +127,11 @@ export default function AlertsPage() {
   const filterTabs = isOwner ? ownerFilters : staffFilters
 
   return (
-    <div style={{ ...jakarta, padding: "24px", maxWidth: "900px", margin: "0 auto", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
+    <div style={{ ...jakarta, padding: "32px", maxWidth: "900px", margin: "0 auto", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: 0, letterSpacing: "-0.02em" }}>Alerts</h1>
+          <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1A1313", margin: 0, letterSpacing: "-0.02em" }}>Alerts</h1>
           {unreadCount > 0 && (
             <span style={{ ...mono, fontSize: "10px", padding: "3px 10px", borderRadius: "100px", backgroundColor: ACC_DIM, border: `1px solid ${ACC_BORDER}`, color: ACC_BRIGHT }}>{unreadCount} unread</span>
           )}
@@ -230,7 +230,7 @@ export default function AlertsPage() {
               <div key={a.id} style={{
                 backgroundColor: a.isRead ? "#FBFBFB" : "rgba(96,110,116,0.08)",
                 boxShadow: CARD_SHADOW,
-                border: `1px solid ${a.isRead ? "rgba(26,35,50,0.8)" : BORDER2}`,
+                border: `1px solid rgba(26,19,19,0.07)`,
                 borderLeft: `3px solid ${sevColor}`,
                 borderRadius: "0 12px 12px 0",
                 padding: "16px 20px",

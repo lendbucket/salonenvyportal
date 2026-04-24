@@ -811,12 +811,12 @@ export default function AppointmentsPage() {
   const getBlockReason = (appt: Appointment) => appt.note || "Blocked"
 
   return (
-    <div style={{ padding: isMobile ? "16px" : "24px", maxWidth: "900px", margin: "0 auto" }}>
+    <div style={{ padding: isMobile ? "16px" : 32, maxWidth: "900px", margin: "0 auto" }}>
       {/* Header */}
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "10px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <h1 style={{ fontSize: isMobile ? "22px" : "24px", fontWeight: 800, color: "#1A1313", margin: 0 }}>
+            <h1 style={{ fontSize: isMobile ? "22px" : 24, fontWeight: 700, color: "#1A1313", letterSpacing: "-0.31px", margin: 0 }}>
               {activeTab === "appointments" ? "Appointments" : activeTab === "transactions" ? "Transactions" : "Clients"}
             </h1>
             <div style={{ display: "flex", gap: "2px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "8px", padding: "3px" }}>
@@ -1047,7 +1047,7 @@ export default function AppointmentsPage() {
             ].map(stat => (
               <div key={stat.label} style={{ display: "flex", flexDirection: "column", alignItems: isMobile ? "center" : "flex-start", padding: isMobile ? "10px 8px" : "0", backgroundColor: isMobile ? "#FBFBFB" : "transparent" }}>
                 <div style={{ fontSize: isMobile ? "20px" : "16px", fontWeight: isMobile ? 700 : 800, color: stat.color, fontFamily: "'Inter', sans-serif" }}>{stat.value}</div>
-                <div style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>{stat.label}</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -1093,7 +1093,7 @@ export default function AppointmentsPage() {
       {activeTab === "appointments" && <>
       {/* Error state */}
       {fetchError && !loading && (
-        <div style={{ background: '#FBFBFB', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: 20, textAlign: 'center', margin: '20px 0' }}>
+        <div style={{ background: '#FBFBFB', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12, padding: 20, textAlign: 'center', margin: '20px 0' }}>
           <div style={{ color: '#ef4444', fontSize: 14, fontFamily: 'Inter, sans-serif', marginBottom: 8 }}>{fetchError}</div>
           <button onClick={() => { setFetchError(null); fetchAppointments() }} style={{ background: 'transparent', border: '1px solid #606E74', color: '#7a8f96', borderRadius: 6, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Retry</button>
         </div>
@@ -1102,7 +1102,7 @@ export default function AppointmentsPage() {
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : viewMode === "week" ? (
@@ -1366,8 +1366,9 @@ export default function AppointmentsPage() {
       ) : sorted.length === 0 ? (
         <div style={{
           textAlign: "center", padding: "60px 20px",
-          backgroundColor: "#FBFBFB", borderRadius: "12px",
-          border: "1px solid rgba(26,19,19,0.06)",
+          backgroundColor: "#FBFBFB", borderRadius: 12,
+          border: "1px solid rgba(26,19,19,0.07)",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
         }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(26,19,19,0.2)" }}>event_busy</span>
           <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "14px", fontWeight: 600 }}>
@@ -1398,7 +1399,7 @@ export default function AppointmentsPage() {
 
           return (
             <div ref={dayViewRef} style={{ position: "relative", marginTop: "8px" }}>
-              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "8px" }}>
                 {sorted.length} Appointment{sorted.length !== 1 ? "s" : ""} &middot; Day View
               </div>
               <div style={{ display: "flex", position: "relative", minHeight: `${totalHeight}px` }}
@@ -1560,7 +1561,7 @@ export default function AppointmentsPage() {
         })()
       ) : (
         /* ── List View ── */
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {(() => {
             const timeGroups = [
               { label: "Morning", items: sorted.filter(a => new Date(a.startTime).getHours() < 12) },
@@ -1569,7 +1570,7 @@ export default function AppointmentsPage() {
             ].filter(g => g.items.length > 0)
             return timeGroups.map(group => (
               <div key={group.label}>
-                <div style={{ fontSize: "11px", fontWeight: 700, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0", borderBottom: "1px solid rgba(26,19,19,0.04)", marginBottom: "8px" }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "8px 0", borderBottom: "1px solid rgba(26,19,19,0.04)", marginBottom: "8px" }}>
                   {group.label} &middot; {group.items.length} appointment{group.items.length !== 1 ? "s" : ""}
                 </div>
                 {group.items.map((appt) => {
@@ -1582,9 +1583,9 @@ export default function AppointmentsPage() {
                 <div key={appt.id} style={{
                   padding: "14px 16px",
                   backgroundColor: "rgba(26,19,19,0.02)",
-                  border: "1px solid rgba(26,19,19,0.04)",
+                  border: "1px solid rgba(26,19,19,0.07)",
                   borderLeft: "3px solid rgba(26,19,19,0.25)",
-                  borderRadius: "10px",
+                  borderRadius: 12,
                   display: "flex", justifyContent: "space-between", alignItems: "center",
                 }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -1617,9 +1618,10 @@ export default function AppointmentsPage() {
                     textAlign: "left",
                     padding: "16px",
                     backgroundColor: "#FBFBFB",
-                    border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(26,19,19,0.06)",
+                    border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(26,19,19,0.07)",
                     borderLeft: `3px solid ${(appt.teamMemberId && stylistColorMap[appt.teamMemberId]) || (appt.isCheckedOut ? "rgba(16,185,129,0.3)" : statusStyle.border)}`,
-                    borderRadius: "10px",
+                    borderRadius: 12,
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
                     cursor: "pointer",
                     transition: "all 0.15s",
                     display: "flex",
@@ -1721,7 +1723,7 @@ export default function AppointmentsPage() {
                       </Link>
                       <button
                         onClick={(e) => { e.stopPropagation(); setCancelConfirm({ id: appt.id, clientName: appt.customerName, time: fmtTime(appt.startTime) }) }}
-                        style={{ background: "transparent", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444", borderRadius: 6, padding: "4px 10px", fontSize: 11, fontWeight: 600, cursor: "pointer", letterSpacing: "0.04em" }}
+                        style={{ background: "transparent", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444", borderRadius: 6, height: 32, padding: "0 10px", fontSize: 12, fontWeight: 600, cursor: "pointer", letterSpacing: "0.04em" }}
                       >Cancel</button>
                     </div>
                   )}
@@ -1743,7 +1745,7 @@ export default function AppointmentsPage() {
                     {/* Service details */}
                     {appt.services && appt.services.length > 0 && (
                       <div>
-                        <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "6px" }}>
                           Services
                         </div>
                         {appt.services.map((s, i) => (
@@ -1761,7 +1763,7 @@ export default function AppointmentsPage() {
 
                     {/* Customer contact */}
                     <div>
-                      <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "6px" }}>
                         Contact
                       </div>
                       <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)" }}>
@@ -1786,7 +1788,7 @@ export default function AppointmentsPage() {
                     {/* Notes */}
                     {appt.note && (
                       <div>
-                        <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "6px" }}>
                           Notes
                         </div>
                         <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)", fontStyle: "italic" }}>
@@ -1838,7 +1840,7 @@ export default function AppointmentsPage() {
 
       {/* Waitlist panel */}
       {showWaitlist && (
-        <div style={{ marginTop: "16px", backgroundColor: "#FBFBFB", borderRadius: "12px", border: "1px solid rgba(26,19,19,0.06)", overflow: "hidden" }}>
+        <div style={{ marginTop: "16px", backgroundColor: "#FBFBFB", borderRadius: 12, border: "1px solid rgba(26,19,19,0.07)", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", overflow: "hidden" }}>
           <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(26,19,19,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313" }}>Waitlist — {location === "Corpus Christi" ? "CC" : "SA"}</span>
           </div>
@@ -1868,8 +1870,8 @@ export default function AppointmentsPage() {
                 <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.5)" }}>{w.customerPhone}{w.notes ? ` — ${w.notes}` : ""}</div>
               </div>
               <div style={{ display: "flex", gap: "6px" }}>
-                <button onClick={() => updateWaitlistStatus(w.id, "booked")} style={{ padding: "4px 10px", fontSize: "9px", fontWeight: 700, textTransform: "uppercase", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "4px", backgroundColor: "transparent", color: "#10B981", cursor: "pointer" }}>Booked</button>
-                <button onClick={() => updateWaitlistStatus(w.id, "removed")} style={{ padding: "4px 10px", fontSize: "9px", fontWeight: 700, textTransform: "uppercase", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "4px", backgroundColor: "transparent", color: "#EF4444", cursor: "pointer" }}>Remove</button>
+                <button onClick={() => updateWaitlistStatus(w.id, "booked")} style={{ height: 32, padding: "0 10px", fontSize: 12, fontWeight: 600, textTransform: "uppercase", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 6, backgroundColor: "transparent", color: "#10B981", cursor: "pointer" }}>Booked</button>
+                <button onClick={() => updateWaitlistStatus(w.id, "removed")} style={{ height: 32, padding: "0 10px", fontSize: 12, fontWeight: 600, textTransform: "uppercase", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 6, backgroundColor: "transparent", color: "#EF4444", cursor: "pointer" }}>Remove</button>
               </div>
             </div>
           ))}
@@ -1878,8 +1880,8 @@ export default function AppointmentsPage() {
 
       {/* Block Time Modal */}
       {showBlock && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "420px" }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)", padding: "28px", width: "100%", maxWidth: "420px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#1A1313" }}>Block Time</h2>
               <button onClick={() => setShowBlock(false)} style={{ background: "none", border: "none", color: "rgba(26,19,19,0.5)", cursor: "pointer", fontSize: "20px" }}>&times;</button>
@@ -1934,8 +1936,8 @@ export default function AppointmentsPage() {
               {blockError && <div style={{ fontSize: "12px", color: "#EF4444" }}>{blockError}</div>}
 
               <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
-                <button onClick={() => setShowBlock(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Cancel</button>
-                <button onClick={submitBlock} disabled={blockSaving || !blockStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !blockStylist || blockSaving ? 0.5 : 1 }}>{blockSaving ? "Blocking..." : "Block Time"}</button>
+                <button onClick={() => setShowBlock(false)} style={{ flex: 1, height: 40, padding: "0 10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: 8, backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
+                <button onClick={submitBlock} disabled={blockSaving || !blockStylist} style={{ flex: 2, height: 40, padding: "0 10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: 8, color: "#0f1d24", fontSize: 13, fontWeight: 600, cursor: "pointer", opacity: !blockStylist || blockSaving ? 0.5 : 1 }}>{blockSaving ? "Blocking..." : "Block Time"}</button>
               </div>
             </div>
           </div>
@@ -1944,8 +1946,8 @@ export default function AppointmentsPage() {
 
       {/* Booking Modal */}
       {showBooking && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#1A1313" }}>New Appointment</h2>
@@ -1977,8 +1979,8 @@ export default function AppointmentsPage() {
                     <input value={newClientForm.phone} onChange={e => setNewClientForm(p => ({ ...p, phone: e.target.value }))} placeholder="Phone" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
                     <input value={newClientForm.email} onChange={e => setNewClientForm(p => ({ ...p, email: e.target.value }))} placeholder="Email (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
                     <div style={{ display: "flex", gap: "8px" }}>
-                      <button onClick={() => setNewClient(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
-                      <button onClick={createNewClient} disabled={bookSaving || !newClientForm.givenName} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !newClientForm.givenName ? 0.5 : 1 }}>{bookSaving ? "Creating..." : "Create Client"}</button>
+                      <button onClick={() => setNewClient(false)} style={{ flex: 1, height: 40, padding: "0 10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: 8, backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Back</button>
+                      <button onClick={createNewClient} disabled={bookSaving || !newClientForm.givenName} style={{ flex: 2, height: 40, padding: "0 10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: 8, color: "#0f1d24", fontSize: 13, fontWeight: 600, cursor: "pointer", opacity: !newClientForm.givenName ? 0.5 : 1 }}>{bookSaving ? "Creating..." : "Create Client"}</button>
                     </div>
                   </div>
                 </>)}
@@ -2012,8 +2014,8 @@ export default function AppointmentsPage() {
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => setBookStep(1)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
-                  <button onClick={() => setBookStep(3)} disabled={!bookStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !bookStylist ? 0.5 : 1 }}>Next</button>
+                  <button onClick={() => setBookStep(1)} style={{ flex: 1, height: 40, padding: "0 10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: 8, backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(3)} disabled={!bookStylist} style={{ flex: 2, height: 40, padding: "0 10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: 8, color: "#0f1d24", fontSize: 13, fontWeight: 600, cursor: "pointer", opacity: !bookStylist ? 0.5 : 1 }}>Next</button>
                 </div>
               </div>
             )}
@@ -2056,8 +2058,8 @@ export default function AppointmentsPage() {
                 </div>
                 {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#22c55e", textAlign: "right", marginBottom: "12px", fontFamily: "'Inter', sans-serif" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
-                  <button onClick={() => setBookStep(4)} disabled={bookSelectedSvcs.length === 0} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSelectedSvcs.length === 0 ? 0.5 : 1 }}>Next</button>
+                  <button onClick={() => setBookStep(2)} style={{ flex: 1, height: 40, padding: "0 10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: 8, backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(4)} disabled={bookSelectedSvcs.length === 0} style={{ flex: 2, height: 40, padding: "0 10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: 8, color: "#0f1d24", fontSize: 13, fontWeight: 600, cursor: "pointer", opacity: bookSelectedSvcs.length === 0 ? 0.5 : 1 }}>Next</button>
                 </div>
               </div>
             )}
@@ -2105,8 +2107,8 @@ export default function AppointmentsPage() {
 
                 {bookError && <div style={{ fontSize: "13px", color: "#EF4444", marginBottom: "10px", padding: "10px 14px", backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "8px", lineHeight: 1.5, wordBreak: "break-word" as const }}>{bookError}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
-                  <button onClick={submitBooking} disabled={bookSaving} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSaving ? 0.5 : 1 }}>{bookSaving ? "Booking..." : bookOverlap ? "Book Anyway" : "Book Appointment"}</button>
+                  <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, height: 40, padding: "0 10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: 8, backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Back</button>
+                  <button onClick={submitBooking} disabled={bookSaving} style={{ flex: 2, height: 40, padding: "0 10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: 8, color: "#0f1d24", fontSize: 13, fontWeight: 600, cursor: "pointer", opacity: bookSaving ? 0.5 : 1 }}>{bookSaving ? "Booking..." : bookOverlap ? "Book Anyway" : "Book Appointment"}</button>
                 </div>
               </div>
             )}
@@ -2170,7 +2172,7 @@ export default function AppointmentsPage() {
 
           {/* Summary cards */}
           {txData?.summary && !txLoading && (
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
               {[
                 { label: "Total Revenue", value: fmtCurrency(txData.summary.revenue), icon: "attach_money" },
                 { label: "Total Tips", value: fmtCurrency(txData.summary.tips), icon: "volunteer_activism" },
@@ -2179,10 +2181,10 @@ export default function AppointmentsPage() {
                 { label: "# Transactions", value: String(txData.summary.count), icon: "receipt" },
                 { label: "Avg Ticket", value: fmtCurrency(txData.summary.avgTicket), icon: "analytics" },
               ].map(c => (
-                <div key={c.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "12px", padding: "20px", boxShadow: "inset 0 1px 0 rgba(26,19,19,0.02), 0 0 0 1px rgba(0,0,0,0.06)" }}>
+                <div key={c.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(26,19,19,0.35)" }}>{c.icon}</span>
-                    <span style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#606E74" }}>{c.label}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)" }}>{c.label}</span>
                   </div>
                   <div style={{ fontSize: "24px", fontWeight: 600, color: "#1A1313", fontFamily: "'Inter', sans-serif" }}>{c.value}</div>
                 </div>
@@ -2194,16 +2196,16 @@ export default function AppointmentsPage() {
           {txData?.transactions && txData.transactions.length > 0 && !txLoading && (
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px", marginBottom: "12px" }}>
               <button onClick={exportTxCsv} style={{
-                padding: "8px 16px", fontSize: "13px", fontWeight: 600,
-                borderRadius: "8px", border: "1px solid #606E74", backgroundColor: "transparent",
+                height: 40, padding: "0 16px", fontSize: 13, fontWeight: 600,
+                borderRadius: 8, border: "1px solid #606E74", backgroundColor: "transparent",
                 color: "#7a8f96", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>download</span>
                 Export CSV
               </button>
               <button onClick={downloadTxReport} style={{
-                padding: "8px 16px", fontSize: "13px", fontWeight: 600,
-                borderRadius: "8px", border: "1px solid #606E74", backgroundColor: "transparent",
+                height: 40, padding: "0 16px", fontSize: 13, fontWeight: 600,
+                borderRadius: 8, border: "1px solid #606E74", backgroundColor: "transparent",
                 color: "#7a8f96", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>summarize</span>
@@ -2224,7 +2226,7 @@ export default function AppointmentsPage() {
 
           {/* Empty state */}
           {!txLoading && txData && txData.transactions.length === 0 && (
-            <div style={{ textAlign: "center", padding: "60px 20px", backgroundColor: "#FBFBFB", borderRadius: "12px", border: "1px solid rgba(26,19,19,0.06)" }}>
+            <div style={{ textAlign: "center", padding: "60px 20px", backgroundColor: "#FBFBFB", borderRadius: 12, border: "1px solid rgba(26,19,19,0.07)", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(26,19,19,0.2)" }}>receipt_long</span>
               <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "14px", fontWeight: 600 }}>No transactions found for this period.</div>
             </div>
@@ -2233,7 +2235,7 @@ export default function AppointmentsPage() {
           {/* Transaction table */}
           {!txLoading && txData && txData.transactions.length > 0 && (
             <>
-              <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(26,19,19,0.06)" }}>
+              <div style={{ overflowX: "auto", borderRadius: 12, border: "1px solid rgba(26,19,19,0.07)", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "700px" }}>
                   <thead>
                     <tr style={{ backgroundColor: "rgba(26,19,19,0.03)" }}>
@@ -2325,13 +2327,13 @@ export default function AppointmentsPage() {
           </div>
 
           {/* Stats row */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
             {[
               { label: "Total Clients", value: clientsTotal.toLocaleString(), color: "#1A1313" },
               { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#C9A84C" },
               { label: "Showing", value: String(clientsList.length), color: "#7a8f96" },
             ].map(s => (
-              <div key={s.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "12px 14px" }}>
+              <div key={s.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "12px 14px", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
                 <div style={{ fontSize: "20px", fontWeight: 700, color: s.color, fontFamily: "'Inter', sans-serif" }}>{s.value}</div>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginTop: "2px" }}>{s.label}</div>
               </div>
@@ -2365,7 +2367,7 @@ export default function AppointmentsPage() {
                 return (
                   <div key={c.id} onClick={() => openClientDetail(c)} style={{
                     display: "flex", alignItems: "center", gap: "14px", padding: "12px 16px",
-                    backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", cursor: "pointer",
+                    backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, cursor: "pointer",
                     transition: "all 0.15s",
                   }}
                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#F4F5F7"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(26,19,19,0.1)" }}
@@ -2412,7 +2414,7 @@ export default function AppointmentsPage() {
       {/* ══════════ CLIENT DETAIL SLIDE-IN PANEL ══════════ */}
       {selectedClient && (
         <>
-          <div onClick={() => { setSelectedClient(null); setClientDetail(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 299 }} />
+          <div onClick={() => { setSelectedClient(null); setClientDetail(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 299 }} />
           <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(480px, 95vw)", backgroundColor: "#FBFBFB", borderLeft: "1px solid rgba(26,19,19,0.08)", zIndex: 300, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {/* Header */}
             <div style={{ padding: "20px", borderBottom: "1px solid rgba(26,19,19,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
@@ -2599,7 +2601,7 @@ export default function AppointmentsPage() {
       {/* ══════════ CLIENT HISTORY SLIDE-OVER ══════════ */}
       {historyClientId && (
         <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", justifyContent: "flex-end" }}>
-          <div onClick={() => setHistoryClientId(null)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" }} />
+          <div onClick={() => setHistoryClientId(null)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
           <div style={{
             position: "relative", width: isMobile ? "100%" : "420px", maxWidth: "100%",
             background: "#FBFBFB", borderLeft: "1px solid rgba(26,19,19,0.06)",
@@ -2723,7 +2725,7 @@ export default function AppointmentsPage() {
       {/* Appointment detail bottom sheet */}
       {selectedAppt && (
         <>
-          <div onClick={() => setSelectedAppt(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 199 }} />
+          <div onClick={() => setSelectedAppt(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 199 }} />
           <div style={{
             position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
             background: "#FBFBFB", borderTop: "1px solid rgba(26,19,19,0.1)",
@@ -2803,8 +2805,8 @@ export default function AppointmentsPage() {
       {/* Cancel confirmation modal */}
       {cancelConfirm && (
         <div style={{ position: "fixed", inset: 0, zIndex: 400 }}>
-          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} onClick={() => setCancelConfirm(null)} />
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 16, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.8)", zIndex: 401 }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} onClick={() => setCancelConfirm(null)} />
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 16, padding: 28, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)", zIndex: 401 }}>
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 18, color: "#1A1313", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>
               <div style={{ fontSize: 14, color: "#7a8f96" }}>Are you sure you want to cancel {cancelConfirm.clientName}&apos;s appointment?</div>
