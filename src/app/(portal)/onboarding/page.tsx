@@ -26,11 +26,11 @@ const LOCATIONS: Location[] = [
 ];
 
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
-  pending: { bg: "rgba(234,179,8,0.12)", color: "#eab308", label: "Pending" },
-  in_progress: { bg: "rgba(59,130,246,0.12)", color: "#3b82f6", label: "In Progress" },
-  completed: { bg: "rgba(34,197,94,0.12)", color: "#22c55e", label: "Completed" },
-  expired: { bg: "rgba(239,68,68,0.12)", color: "#ef4444", label: "Expired" },
-  cancelled: { bg: "rgba(239,68,68,0.12)", color: "#ef4444", label: "Cancelled" },
+  pending: { bg: "rgba(234, 179, 8, 0.12)", color: "#ca8a04", label: "Pending" },
+  in_progress: { bg: "rgba(59, 130, 246, 0.12)", color: "#2563eb", label: "In Progress" },
+  completed: { bg: "rgba(34, 197, 94, 0.12)", color: "#16a34a", label: "Completed" },
+  expired: { bg: "rgba(148, 163, 184, 0.12)", color: "#64748b", label: "Expired" },
+  cancelled: { bg: "rgba(239, 68, 68, 0.12)", color: "#dc2626", label: "Cancelled" },
 };
 
 export default function OnboardingManagementPage() {
@@ -182,7 +182,7 @@ export default function OnboardingManagementPage() {
     backgroundColor: "#1a2a32",
     border: "1px solid rgba(205,201,192,0.15)",
     borderRadius: "7px",
-    color: "#FFFFFF",
+    color: "#FBFBFB",
     fontSize: "14px",
     boxSizing: "border-box",
     outline: "none",
@@ -203,7 +203,7 @@ export default function OnboardingManagementPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 4px" }}>Onboarding</h1>
+          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px" }}>Onboarding</h1>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>Manage stylist enrollment invitations</p>
         </div>
         <button
@@ -263,7 +263,7 @@ export default function OnboardingManagementPage() {
             return (
               <div key={e.id} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
                 <div style={{ flex: 1, minWidth: "180px" }}>
-                  <div style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF" }}>{e.firstName} {e.lastName}</div>
+                  <div style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB" }}>{e.firstName} {e.lastName}</div>
                   <div style={{ fontSize: "12px", color: "#94A3B8", marginTop: "2px" }}>{e.email}</div>
                 </div>
                 <div style={{ minWidth: "100px" }}>
@@ -358,7 +358,7 @@ export default function OnboardingManagementPage() {
           <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "400px", backgroundColor: "#0d1117", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
             <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#ef4444", margin: "0 0 12px" }}>Cancel Enrollment</h2>
             <p style={{ fontSize: "14px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 20px" }}>
-              Cancel <strong style={{ color: "#FFFFFF" }}>{cancelTarget.firstName} {cancelTarget.lastName}</strong>&apos;s enrollment? This cannot be undone.
+              Cancel <strong style={{ color: "#FBFBFB" }}>{cancelTarget.firstName} {cancelTarget.lastName}</strong>&apos;s enrollment? This cannot be undone.
             </p>
             <div style={{ display: "flex", gap: "12px" }}>
               <button onClick={() => setCancelTarget(null)} style={{ flex: 1, padding: "12px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "8px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>
@@ -377,7 +377,7 @@ export default function OnboardingManagementPage() {
         <>
           <div onClick={() => setShowModal(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }} />
           <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "440px", backgroundColor: "#0d1117", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
-            <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>New Enrollment Invitation</h2>
+            <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>New Enrollment Invitation</h2>
             {message && (
               <div style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "10px 14px", marginBottom: "16px", color: "#f87171", fontSize: "12px" }}>
                 {message}

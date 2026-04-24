@@ -143,7 +143,7 @@ export default function StylistProfilePage() {
           {initials}
         </div>
         <div>
-          <h1 style={{ fontSize: "28px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontSize: "28px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
             {name}
           </h1>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -201,7 +201,7 @@ export default function StylistProfilePage() {
                   <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>{card.label}</span>
                   <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "rgba(205,201,192,0.25)" }}>{card.icon}</span>
                 </div>
-                <div style={{ fontSize: "32px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, letterSpacing: "-0.02em" }}>
+                <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, letterSpacing: "-0.02em" }}>
                   {card.value}
                 </div>
               </div>
@@ -211,7 +211,7 @@ export default function StylistProfilePage() {
           {/* Performance comparison table */}
           <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", marginBottom: "24px", overflow: "hidden" }}>
             <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>
-              <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FFFFFF", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FBFBFB", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Performance Across Periods
               </h3>
             </div>
@@ -230,10 +230,10 @@ export default function StylistProfilePage() {
                       borderBottom: "1px solid rgba(205,201,192,0.06)",
                       backgroundColor: p.period === activePeriod ? "rgba(205,201,192,0.04)" : "transparent",
                     }}>
-                      <td style={{ padding: "12px 14px", fontSize: "13px", fontWeight: 600, color: "#FFFFFF" }}>{p.label}</td>
+                      <td style={{ padding: "12px 14px", fontSize: "13px", fontWeight: 600, color: "#FBFBFB" }}>{p.label}</td>
                       <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 800, color: "#CDC9C0" }}>{p.metrics ? fmt(p.metrics.revenue) : "\u2014"}</td>
-                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>{p.metrics?.checkoutCount ?? "\u2014"}</td>
-                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "13px", fontWeight: 700, color: "#FFFFFF" }}>{p.metrics && p.metrics.avgTicket > 0 ? fmt(p.metrics.avgTicket) : "\u2014"}</td>
+                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{p.metrics?.checkoutCount ?? "\u2014"}</td>
+                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>{p.metrics && p.metrics.avgTicket > 0 ? fmt(p.metrics.avgTicket) : "\u2014"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -276,7 +276,7 @@ export default function StylistProfilePage() {
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#CDC9C0" }}>psychology</span>
               </div>
               <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 2px", textTransform: "uppercase", letterSpacing: "0.08em" }}>AI Coaching</h3>
+                <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 2px", textTransform: "uppercase", letterSpacing: "0.08em" }}>AI Coaching</h3>
                 <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>Personalized performance insights for {name.split(" ")[0]}</p>
               </div>
               <button onClick={getCoaching} disabled={aiLoading} style={{

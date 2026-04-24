@@ -190,7 +190,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           textDecoration: "none",
           borderLeft: isActive ? "2px solid #7a8f96" : "2px solid transparent",
           backgroundColor: isActive ? "rgba(255,255,255,0.06)" : "transparent",
-          color: isActive ? "#FFFFFF" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.55)",
+          color: isActive ? "#FBFBFB" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.55)",
           transition: "all 0.15s ease",
         }}
       >
@@ -357,7 +357,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 {initials}
               </div>
               <div>
-                <div style={{ color: "#FFFFFF", fontSize: "13px", fontWeight: 700 }}>{userName}</div>
+                <div style={{ color: "#FBFBFB", fontSize: "13px", fontWeight: 700 }}>{userName}</div>
                 <div style={{ color: "rgba(205,201,192,0.5)", fontSize: "9px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>{userRole}</div>
               </div>
             </div>
@@ -583,7 +583,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{
-                color: "#FFFFFF",
+                color: "#FBFBFB",
                 fontSize: "12px",
                 fontWeight: 700,
                 whiteSpace: "nowrap",
@@ -657,7 +657,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           zIndex: 40,
         }}>
           <div style={{
-            color: "#FFFFFF",
+            color: "#FBFBFB",
             fontSize: "15px",
             fontWeight: 600,
             letterSpacing: "0.02em",

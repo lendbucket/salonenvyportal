@@ -61,7 +61,7 @@ function isKnownBank(name: string): boolean {
 
 const STEPS = ["Welcome", "Personal Info", "Verify Contact", "License", "W-9", "Consents", "Direct Deposit", "Emergency Contact", "Agreement", "Complete"];
 
-const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#FFFFFF", fontSize: "16px", boxSizing: "border-box", outline: "none" };
+const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#FBFBFB", fontSize: "16px", boxSizing: "border-box", outline: "none" };
 const inputErrorStyle: React.CSSProperties = { ...inputStyle, border: "1px solid rgba(239,68,68,0.6)" };
 const labelStyle: React.CSSProperties = { display: "block", fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" };
 const selectStyle: React.CSSProperties = { ...inputStyle, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23CDC9C0' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", paddingRight: "32px" };
@@ -345,7 +345,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
   };
 
   if (loading) return (<div style={{ minHeight: "100vh", backgroundColor: "#0f1d24", display: "flex", alignItems: "center", justifyContent: "center" }}><div style={{ color: "#CDC9C0", fontSize: "14px", fontWeight: 600 }}>Loading...</div></div>);
-  if (error && !enrollment) return (<div style={{ minHeight: "100vh", backgroundColor: "#0f1d24", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}><div style={{ textAlign: "center" }}><span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#94A3B8", display: "block", marginBottom: "16px" }}>lock</span><h2 style={{ color: "#FFFFFF", fontSize: "22px", fontWeight: 800, margin: "0 0 8px" }}>Link Unavailable</h2><p style={{ color: "#94A3B8", fontSize: "14px" }}>{error}</p></div></div>);
+  if (error && !enrollment) return (<div style={{ minHeight: "100vh", backgroundColor: "#0f1d24", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}><div style={{ textAlign: "center" }}><span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#94A3B8", display: "block", marginBottom: "16px" }}>lock</span><h2 style={{ color: "#FBFBFB", fontSize: "22px", fontWeight: 800, margin: "0 0 8px" }}>Link Unavailable</h2><p style={{ color: "#94A3B8", fontSize: "14px" }}>{error}</p></div></div>);
 
   const allAcked = agreement.ackPolicies && agreement.ackConfidentiality && agreement.ackAtWill && agreement.ackSafetyProtocol && agreement.ackTechPolicy;
   const resolvedSignedName = agreement.agreementSignedName || agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "");
@@ -388,7 +388,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 0: Welcome */}
           {step === 0 && enrollment && (
             <div>
-              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Welcome, {enrollment.firstName}!</h2>
+              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Welcome, {enrollment.firstName}!</h2>
               <p style={{ fontSize: "14px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 24px" }}>You have been invited to join <strong style={{ color: "#CDC9C0" }}>Salon Envy - {enrollment.locationName}</strong> as a <strong style={{ color: "#CDC9C0" }}>{enrollment.role === "MANAGER" ? "Manager" : "Stylist"}</strong>.</p>
               <p style={{ fontSize: "13px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 24px" }}>This enrollment process will collect your personal information, licensing details, tax information, and direct deposit setup. All data is transmitted securely.</p>
               <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", marginBottom: "24px", border: "1px solid rgba(205,201,192,0.08)" }}>
@@ -407,7 +407,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 1: Personal Info + Emergency + SSN */}
           {step === 1 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Personal Information</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Personal Information</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>All fields are required.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
@@ -469,7 +469,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 2: Verify Contact */}
           {step === 2 && enrollment && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Verify Your Contact Info</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Verify Your Contact Info</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>We need to verify your email and phone number before proceeding.</p>
               {verifyError && <div style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "10px 14px", marginBottom: "16px", color: "#f87171", fontSize: "12px" }}>{verifyError}</div>}
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -479,7 +479,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
                     <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase" }}>Email</div>
                     {emailVerified && <span style={{ fontSize: "10px", fontWeight: 700, color: "#22c55e", letterSpacing: "0.08em", textTransform: "uppercase" }}>Verified</span>}
                   </div>
-                  <p style={{ fontSize: "14px", color: "#FFFFFF", margin: "0 0 12px" }}>{enrollment.email}</p>
+                  <p style={{ fontSize: "14px", color: "#FBFBFB", margin: "0 0 12px" }}>{enrollment.email}</p>
                   {!emailVerified && (
                     <>
                       {!emailOtpSent ? (
@@ -504,7 +504,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
                     <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase" }}>Phone</div>
                     {phoneVerified && <span style={{ fontSize: "10px", fontWeight: 700, color: "#22c55e", letterSpacing: "0.08em", textTransform: "uppercase" }}>Verified</span>}
                   </div>
-                  <p style={{ fontSize: "14px", color: "#FFFFFF", margin: "0 0 12px" }}>{personal.phone}</p>
+                  <p style={{ fontSize: "14px", color: "#FBFBFB", margin: "0 0 12px" }}>{personal.phone}</p>
                   {phoneVerified && phoneSkipReason && (
                     <p style={{ fontSize: "11px", color: "#94A3B8", margin: "0", fontStyle: "italic" }}>{phoneSkipReason}</p>
                   )}
@@ -537,7 +537,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 3: License */}
           {step === 3 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>License Information</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>License Information</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Your professional cosmetology license details.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div><label style={labelStyle}>License Type</label><select value={license.licenseType} onChange={(e) => setLicense({ ...license, licenseType: e.target.value })} style={selectStyle}><option value="cosmetology">Cosmetology</option><option value="barber">Barber</option><option value="esthetician">Esthetician</option><option value="nail_tech">Nail Technician</option><option value="other">Other</option></select></div>
@@ -555,7 +555,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 4: W-9 */}
           {step === 4 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>W-9 Tax Information</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>W-9 Tax Information</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Required for tax reporting. This information is encrypted and secure.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div><label style={labelStyle}>Legal Name (as shown on tax return) *</label><input value={w9.w9LegalName} onChange={(e) => setW9({ ...w9, w9LegalName: e.target.value })} placeholder="Full legal name" style={inputStyle} /></div>
@@ -572,7 +572,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 5: Fortune 500 Consents */}
           {step === 5 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Acknowledgments &amp; Consents</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Acknowledgments &amp; Consents</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Please review and acknowledge each item below.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                 <CheckboxRow checked={consents.ackBackgroundCheck} onChange={(v) => setConsents({ ...consents, ackBackgroundCheck: v })} text="I consent to Salon Envy conducting a background check as a condition of engagement. I understand this may include criminal history, identity verification, and professional license verification." />
@@ -599,7 +599,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 6: Direct Deposit with validation */}
           {step === 6 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Direct Deposit</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Direct Deposit</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Banking info is used for direct deposit only and is stored securely.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
@@ -622,11 +622,11 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 7: Emergency Contact Confirm */}
           {step === 7 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>Confirm Emergency Contact</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Confirm Emergency Contact</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Please confirm the emergency contact you entered earlier.</p>
               <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", border: "1px solid rgba(205,201,192,0.08)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Name</span><span style={{ fontSize: "13px", color: "#FFFFFF", fontWeight: 600 }}>{personal.emergencyName}</span></div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Phone</span><span style={{ fontSize: "13px", color: "#FFFFFF", fontWeight: 600 }}>{personal.emergencyPhone}</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Name</span><span style={{ fontSize: "13px", color: "#FBFBFB", fontWeight: 600 }}>{personal.emergencyName}</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Phone</span><span style={{ fontSize: "13px", color: "#FBFBFB", fontWeight: 600 }}>{personal.emergencyPhone}</span></div>
               </div>
               <div style={{ display: "flex", gap: "12px", marginTop: "24px" }}><button type="button" onClick={() => setStep(6)} style={{ ...btnSecondary, flex: 1 }}>Back</button><button type="button" onClick={handleNext} disabled={saving} style={{ ...btnPrimary, flex: 2, opacity: saving ? 0.5 : 1 }}>{saving ? "Saving..." : "Continue"}</button></div>
             </div>
@@ -635,7 +635,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 8: Agreement */}
           {step === 8 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 8px" }}>{enrollment?.role === "MANAGER" ? "Manager Contractor Agreement" : "Hair Stylist Agreement"}</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>{enrollment?.role === "MANAGER" ? "Manager Contractor Agreement" : "Hair Stylist Agreement"}</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 20px" }}>Please review the agreement below and sign.</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
                 <div><label style={labelStyle}>Agreement Date</label><input type="date" value={agreement.agreementTopDate} onChange={(e) => setAgreement({ ...agreement, agreementTopDate: e.target.value })} style={inputStyle} /></div>
@@ -675,7 +675,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {step === 9 && enrollment && (
             <div style={{ textAlign: "center", padding: "16px 0" }}>
               <div style={{ width: "64px", height: "64px", borderRadius: "50%", backgroundColor: "rgba(34,197,94,0.1)", border: "2px solid #22c55e", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}><span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#22c55e" }}>check_circle</span></div>
-              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 12px" }}>Enrollment Complete!</h2>
+              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 12px" }}>Enrollment Complete!</h2>
               <p style={{ fontSize: "14px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 24px" }}>Thank you, {enrollment.firstName}. Your enrollment has been submitted successfully.</p>
               {verificationCode && (<div style={{ backgroundColor: "#1a2a32", borderRadius: "12px", padding: "24px", marginBottom: "24px", border: "1px solid rgba(205,201,192,0.15)" }}><div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "8px" }}>Your Verification Code</div><div style={{ fontSize: "36px", fontWeight: 900, color: "#CDC9C0", letterSpacing: "0.15em", fontFamily: "monospace" }}>{verificationCode}</div><p style={{ fontSize: "12px", color: "#94A3B8", margin: "12px 0 0" }}>Save this code. You may be asked for it on your first day.</p></div>)}
               <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", textAlign: "left", border: "1px solid rgba(205,201,192,0.08)" }}>

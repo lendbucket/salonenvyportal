@@ -31,7 +31,7 @@ const btnSecondary: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
   backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "8px", color: "#FFFFFF", fontSize: "13px", outline: "none",
+  borderRadius: "8px", color: "#FBFBFB", fontSize: "13px", outline: "none",
 }
 
 const labelStyle: React.CSSProperties = {
@@ -109,7 +109,7 @@ export default function ConductPage() {
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
-        <h1 style={{ color: "#FFFFFF", fontSize: "22px", fontWeight: 700, margin: 0 }}>
+        <h1 style={{ color: "#FBFBFB", fontSize: "22px", fontWeight: 700, margin: 0 }}>
           {isStylist ? "My Record" : "Conduct Records"}
         </h1>
         {canWrite && (
@@ -122,7 +122,7 @@ export default function ConductPage() {
           <div key={r.id} style={cardStyle}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
               <div>
-                <span style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 700 }}>{r.title}</span>
+                <span style={{ color: "#FBFBFB", fontSize: "14px", fontWeight: 700 }}>{r.title}</span>
                 {!isStylist && <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px", marginLeft: "12px" }}>{r.staffMember.fullName}</span>}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -176,7 +176,7 @@ export default function ConductPage() {
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
           onClick={() => setShowForm(false)}>
           <div style={{ ...cardStyle, maxWidth: "560px", width: "100%", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ color: "#FFFFFF", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Write-Up</h2>
+            <h2 style={{ color: "#FBFBFB", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Write-Up</h2>
 
             <div style={{ marginBottom: "12px" }}>
               <label style={labelStyle}>Staff Member</label>

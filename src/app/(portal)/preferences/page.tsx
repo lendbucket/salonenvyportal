@@ -118,7 +118,7 @@ export default function PreferencesPage() {
       <h1 style={{
         fontSize: "32px",
         fontWeight: 800,
-        color: "#FFFFFF",
+        color: "#FBFBFB",
         marginBottom: "28px",
         letterSpacing: "-0.02em",
       }}>
@@ -149,7 +149,7 @@ export default function PreferencesPage() {
               borderBottom: "1px solid rgba(255,255,255,0.04)",
             }}>
               <div>
-                <div style={{ fontSize: "14px", fontWeight: 600, color: "#FFFFFF", marginBottom: "3px" }}>
+                <div style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB", marginBottom: "3px" }}>
                   {row.label}
                 </div>
                 <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.45)" }}>

@@ -644,7 +644,7 @@ export default function StaffPage() {
       )}
 
       {/* Last refresh indicator */}
-      <p className="mt-4 text-[10px] text-neutral-600" style={{ fontFamily: "'Fira Code', monospace" }}>
+      <p className="mt-4 text-[10px] text-neutral-600" style={{ fontFamily: "'Inter', sans-serif" }}>
         Last refreshed {lastRefresh.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" })}
       </p>
 
@@ -769,7 +769,7 @@ export default function StaffPage() {
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
               <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: "#ffffff", margin: 0 }}>{licenseModal.staffName}</h2>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: "#FBFBFB", margin: 0 }}>{licenseModal.staffName}</h2>
                 {licenseModal.currentStatus && (() => {
                   const tb2 = tdlrBadge({ tdlrStatus: licenseModal.currentStatus, tdlrExpirationDate: null } as StaffRow)
                   return (
@@ -795,7 +795,7 @@ export default function StaffPage() {
                 value={licenseInput}
                 onChange={(e) => setLicenseInput(e.target.value)}
                 placeholder="e.g. 123456 or COST123456"
-                style={{ width: "100%", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", padding: "14px 16px", fontFamily: "'Fira Code', monospace", fontSize: 16, color: "#ffffff", outline: "none", boxSizing: "border-box" as const }}
+                style={{ width: "100%", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", padding: "14px 16px", fontFamily: "'Inter', sans-serif", fontSize: 16, color: "#FBFBFB", outline: "none", boxSizing: "border-box" as const }}
               />
             </div>
 
@@ -807,7 +807,7 @@ export default function StaffPage() {
               style={{
                 display: "flex", width: "100%", alignItems: "center", justifyContent: "center", gap: 8,
                 marginTop: 12, borderRadius: 12, border: "1px solid #7a8f96", padding: "12px 0",
-                fontSize: 15, fontWeight: 600, color: "#ffffff", cursor: "pointer", transition: "all 0.15s",
+                fontSize: 15, fontWeight: 600, color: "#FBFBFB", cursor: "pointer", transition: "all 0.15s",
                 background: licenseVerifying ? "rgba(96,110,116,0.2)" : "rgba(122,143,150,0.15)",
                 opacity: (licenseVerifying || !licenseInput.trim()) ? 0.4 : 1,
               }}
@@ -838,12 +838,12 @@ export default function StaffPage() {
                       <span style={{ fontSize: 11, fontWeight: 600, color: "#606E74", letterSpacing: "0.04em" }}>{r.label}</span>
                       {r.label === "LICENSE STATUS" ? (
                         <span style={{
-                          borderRadius: 9999, padding: "2px 10px", fontFamily: "'Fira Code', monospace", fontSize: 11, fontWeight: 600,
+                          borderRadius: 9999, padding: "2px 10px", fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
                           background: r.value === "ACTIVE" ? "rgba(16,185,129,0.1)" : r.value === "EXPIRED" ? "rgba(239,68,68,0.1)" : "rgba(245,158,11,0.1)",
                           color: r.value === "ACTIVE" ? "#34d399" : r.value === "EXPIRED" ? "#f87171" : "#fbbf24",
                         }}>{r.value}</span>
                       ) : (
-                        <span style={{ fontFamily: "'Fira Code', monospace", fontSize: 13, fontWeight: 500, color: "#ffffff" }}>{r.value}</span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500, color: "#FBFBFB" }}>{r.value}</span>
                       )}
                     </div>
                   ))}

@@ -106,7 +106,7 @@ const cardStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 14px", borderRadius: "8px",
   backgroundColor: C.dim, border: `1px solid ${C.border}`,
-  color: "#FFFFFF", fontSize: "13px", outline: "none",
+  color: "#FBFBFB", fontSize: "13px", outline: "none",
 }
 const labelStyle: React.CSSProperties = {
   display: "block", fontSize: "10px", fontWeight: 700,
@@ -116,7 +116,7 @@ const labelStyle: React.CSSProperties = {
 const btnPrimary = (color: string, disabled?: boolean): React.CSSProperties => ({
   padding: "8px 16px", borderRadius: "8px",
   background: disabled ? `${color}55` : `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`,
-  border: "none", color: "#FFFFFF", fontSize: "11px", fontWeight: 800,
+  border: "none", color: "#FBFBFB", fontSize: "11px", fontWeight: 800,
   letterSpacing: "0.06em", textTransform: "uppercase",
   cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "6px",
   boxShadow: disabled ? "none" : `0 2px 12px ${C.glow}`,
@@ -418,9 +418,9 @@ export default function StyleTaxPage() {
   if (!hasAccess) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-        <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 18, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>StyleTax</div>
-        <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
-        <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Plus Jakarta Sans, sans-serif" }}>View Plans</button>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>StyleTax</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
+        <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Inter, sans-serif" }}>View Plans</button>
       </div>
     )
   }
@@ -452,7 +452,7 @@ export default function StyleTaxPage() {
             <span style={{ fontSize: "12px", color: `${C.stone}44` }}>/</span>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "22px", color: C.bright }}>receipt_long</span>
-              <h1 style={{ fontSize: "20px", fontWeight: 800, color: "#FFFFFF", margin: 0 }}>StyleTax</h1>
+              <h1 style={{ fontSize: "20px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>StyleTax</h1>
             </div>
             <span style={{
               padding: "3px 12px", borderRadius: "20px",
@@ -502,7 +502,7 @@ export default function StyleTaxPage() {
           <div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "14px", marginBottom: "28px" }}>
               {[
-                { label: "YTD Income (Est.)", value: `$${totalIncome.toLocaleString()}`, color: "#FFFFFF", icon: "payments" },
+                { label: "YTD Income (Est.)", value: `$${totalIncome.toLocaleString()}`, color: "#FBFBFB", icon: "payments" },
                 { label: "Total Deductions", value: `$${totalDeductions.toFixed(0)}`, color: C.green, icon: "savings" },
                 { label: "Tax Savings", value: `$${tax.taxSavings.toFixed(0)}`, color: "#14b8a6", icon: "trending_down" },
                 { label: "Taxable Income", value: `$${tax.taxableIncome.toLocaleString()}`, color: C.amber, icon: "account_balance" },
@@ -521,9 +521,9 @@ export default function StyleTaxPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "28px" }}>
               <div style={cardStyle}>
-                <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "14px" }}>Tax Breakdown</h3>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "14px" }}>Tax Breakdown</h3>
                 {[
-                  { l: "Gross Income", v: `$${totalIncome.toLocaleString()}`, c: "#FFFFFF" },
+                  { l: "Gross Income", v: `$${totalIncome.toLocaleString()}`, c: "#FBFBFB" },
                   { l: "Deductions", v: `-$${totalDeductions.toFixed(0)}`, c: C.green },
                   { l: "SE Tax (15.3%)", v: `$${tax.seTax.toFixed(0)}`, c: C.amber },
                   { l: "SE Deduction (50%)", v: `-$${tax.seDeduction.toFixed(0)}`, c: C.green },
@@ -539,7 +539,7 @@ export default function StyleTaxPage() {
               </div>
 
               <div style={cardStyle}>
-                <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "14px" }}>Deductions by Category</h3>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "14px" }}>Deductions by Category</h3>
                 {Object.keys(categoryBreakdown).length === 0 ? (
                   <div style={{ textAlign: "center", padding: "20px", color: `${C.stone}55`, fontSize: "13px" }}>No deductions yet.</div>
                 ) : (
@@ -550,7 +550,7 @@ export default function StyleTaxPage() {
                         <div key={cat}>
                           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
                             <span style={{ fontSize: "11px", color: `${C.stone}aa` }}>{cat}</span>
-                            <span style={{ fontSize: "11px", fontWeight: 700, color: "#FFFFFF", ...mono }}>${amt.toFixed(0)}</span>
+                            <span style={{ fontSize: "11px", fontWeight: 700, color: "#FBFBFB", ...mono }}>${amt.toFixed(0)}</span>
                           </div>
                           <div style={{ height: "6px", borderRadius: "3px", backgroundColor: C.dim }}>
                             <div style={{ height: "100%", borderRadius: "3px", backgroundColor: CATEGORY_COLORS[cat] || "#6b7280", width: `${pct}%`, transition: "width 0.3s ease" }} />
@@ -562,7 +562,7 @@ export default function StyleTaxPage() {
                       <div>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
                           <span style={{ fontSize: "11px", color: `${C.stone}aa` }}>Mileage</span>
-                          <span style={{ fontSize: "11px", fontWeight: 700, color: "#FFFFFF", ...mono }}>${totalMileageAmount.toFixed(0)}</span>
+                          <span style={{ fontSize: "11px", fontWeight: 700, color: "#FBFBFB", ...mono }}>${totalMileageAmount.toFixed(0)}</span>
                         </div>
                         <div style={{ height: "6px", borderRadius: "3px", backgroundColor: C.dim }}>
                           <div style={{ height: "100%", borderRadius: "3px", backgroundColor: C.amber, width: `${(totalMileageAmount / totalDeductions) * 100}%` }} />
@@ -581,7 +581,7 @@ export default function StyleTaxPage() {
             }}>
               <span className="material-symbols-outlined" style={{ fontSize: "36px", color: C.bright }}>document_scanner</span>
               <div style={{ flex: 1, minWidth: "200px" }}>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginBottom: "4px" }}>Scan a Receipt</div>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>Scan a Receipt</div>
                 <div style={{ fontSize: "12px", color: `${C.stone}88` }}>AI extracts vendor, amount, category, and IRS Schedule C line automatically.</div>
               </div>
               <button onClick={handleScanReceipt} disabled={scanning} style={btnPrimary(C.accent, scanning)}>{scanning ? "Scanning..." : "Scan Now"}</button>
@@ -595,7 +595,7 @@ export default function StyleTaxPage() {
             {/* KPI row */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "14px", marginBottom: "20px" }}>
               {[
-                { label: "YTD (SalonTransact)", value: `$${estimatedIncome.toLocaleString()}`, color: "#FFFFFF" },
+                { label: "YTD (SalonTransact)", value: `$${estimatedIncome.toLocaleString()}`, color: "#FBFBFB" },
                 { label: "Other Income", value: `$${otherIncomeTotal.toLocaleString()}`, color: C.purple },
                 { label: "Total Income", value: `$${totalIncome.toLocaleString()}`, color: C.amber },
                 { label: "Projected Annual", value: `$${Math.round(totalIncome / Math.max(now.getMonth() + 1, 1) * 12).toLocaleString()}`, color: C.blue },
@@ -610,7 +610,7 @@ export default function StyleTaxPage() {
 
             {/* Tax reserve tracker */}
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "18px", color: C.amber }}>savings</span>
                 Tax Reserve Tracker
               </h3>
@@ -634,7 +634,7 @@ export default function StyleTaxPage() {
             {/* Other income */}
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-                <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", margin: 0 }}>Other Income Sources</h3>
+                <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", margin: 0 }}>Other Income Sources</h3>
                 <button onClick={() => setShowOtherIncomeForm(true)} style={btnPrimary(C.accent)}>
                   <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>add</span>Add Income
                 </button>
@@ -646,7 +646,7 @@ export default function StyleTaxPage() {
                   {otherIncome.map(o => (
                     <div key={o.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", borderRadius: "8px", backgroundColor: C.surfaceHover, border: `1px solid ${C.border}` }}>
                       <div>
-                        <div style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF" }}>{o.source}</div>
+                        <div style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>{o.source}</div>
                         {o.notes && <div style={{ fontSize: "10px", color: `${C.stone}55` }}>{o.notes}</div>}
                       </div>
                       <div style={{ textAlign: "right" }}>
@@ -663,7 +663,7 @@ export default function StyleTaxPage() {
             {showOtherIncomeForm && (
               <div onClick={() => setShowOtherIncomeForm(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "20px" }}>
                 <div onClick={e => e.stopPropagation()} style={{ background: "#0d1117", borderRadius: "18px", border: `1px solid ${C.border}`, padding: "28px", maxWidth: "440px", width: "100%", boxShadow: `0 24px 80px rgba(0,0,0,0.6)` }}>
-                  <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>Add Other Income</h3>
+                  <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>Add Other Income</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                     <div><label style={labelStyle}>Source</label><input value={otherIncomeForm.source} onChange={e => setOtherIncomeForm(p => ({ ...p, source: e.target.value }))} placeholder="e.g., Tips, Side gig, Freelance" style={inputStyle} /></div>
                     <div><label style={labelStyle}>Amount</label><input type="number" step="0.01" value={otherIncomeForm.amount} onChange={e => setOtherIncomeForm(p => ({ ...p, amount: e.target.value }))} placeholder="0.00" style={inputStyle} /></div>
@@ -672,7 +672,7 @@ export default function StyleTaxPage() {
                   </div>
                   <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
                     <button onClick={() => setShowOtherIncomeForm(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", backgroundColor: "transparent", border: `1px solid ${C.border}`, color: `${C.stone}66`, fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-                    <button onClick={handleAddOtherIncome} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FFFFFF", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", cursor: "pointer" }}>Save</button>
+                    <button onClick={handleAddOtherIncome} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FBFBFB", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", cursor: "pointer" }}>Save</button>
                   </div>
                 </div>
               </div>
@@ -735,7 +735,7 @@ export default function StyleTaxPage() {
                     <span className="material-symbols-outlined" style={{ fontSize: "24px", color: CATEGORY_COLORS[r.category] || "#6b7280" }}>receipt</span>
                     <div style={{ flex: 1, minWidth: "150px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>{r.vendor}</span>
+                        <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{r.vendor}</span>
                         {r.isDuplicate && <span style={{ padding: "2px 8px", borderRadius: "10px", backgroundColor: "rgba(255,107,107,0.12)", color: C.red, fontSize: "9px", fontWeight: 700 }}>DUPLICATE?</span>}
                         {r.isSplit && <span style={{ padding: "2px 8px", borderRadius: "10px", backgroundColor: "rgba(167,139,250,0.12)", color: C.purple, fontSize: "9px", fontWeight: 700 }}>{r.businessPercent}% BIZ</span>}
                       </div>
@@ -744,7 +744,7 @@ export default function StyleTaxPage() {
                     </div>
                     <span style={{ padding: "3px 10px", borderRadius: "20px", backgroundColor: `${CATEGORY_COLORS[r.category] || "#6b7280"}15`, color: CATEGORY_COLORS[r.category] || "#6b7280", fontSize: "10px", fontWeight: 700 }}>{r.category}</span>
                     <div style={{ textAlign: "right", minWidth: "80px" }}>
-                      <div style={{ fontSize: "16px", fontWeight: 800, color: r.isDeductible ? C.green : "#FFFFFF", ...mono }}>${(r.amount || 0).toFixed(2)}</div>
+                      <div style={{ fontSize: "16px", fontWeight: 800, color: r.isDeductible ? C.green : "#FBFBFB", ...mono }}>${(r.amount || 0).toFixed(2)}</div>
                       {r.isSplit && r.businessAmount != null && <div style={{ fontSize: "10px", color: C.purple, ...mono }}>Biz: ${r.businessAmount.toFixed(2)}</div>}
                     </div>
                     <div style={{ fontSize: "11px", color: `${C.stone}55`, minWidth: "80px", textAlign: "right" }}>
@@ -768,7 +768,7 @@ export default function StyleTaxPage() {
             {editingReceipt && (
               <div onClick={() => setEditingReceipt(null)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "20px" }}>
                 <div onClick={e => e.stopPropagation()} style={{ background: "#0d1117", borderRadius: "18px", border: `1px solid ${C.border}`, padding: "28px", maxWidth: "440px", width: "100%", boxShadow: `0 24px 80px rgba(0,0,0,0.6)` }}>
-                  <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>Edit Receipt</h3>
+                  <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>Edit Receipt</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                     <div><label style={labelStyle}>Category</label>
                       <select value={editForm.category} onChange={e => setEditForm(p => ({ ...p, category: e.target.value }))} style={inputStyle}>
@@ -784,7 +784,7 @@ export default function StyleTaxPage() {
                   </div>
                   <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
                     <button onClick={() => setEditingReceipt(null)} style={{ flex: 1, padding: "10px", borderRadius: "8px", backgroundColor: "transparent", border: `1px solid ${C.border}`, color: `${C.stone}66`, fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-                    <button onClick={handleEditReceipt} disabled={savingEdit} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FFFFFF", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", cursor: "pointer" }}>{savingEdit ? "Saving..." : "Save Changes"}</button>
+                    <button onClick={handleEditReceipt} disabled={savingEdit} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FBFBFB", fontSize: "11px", fontWeight: 800, textTransform: "uppercase", cursor: "pointer" }}>{savingEdit ? "Saving..." : "Save Changes"}</button>
                   </div>
                 </div>
               </div>
@@ -799,7 +799,7 @@ export default function StyleTaxPage() {
               {[
                 { label: "This Week", value: `${weekMiles.toFixed(1)} mi`, sub: `$${weekAmount.toFixed(2)}`, color: C.blue },
                 { label: "This Month", value: `${monthMiles.toFixed(1)} mi`, sub: `$${monthAmount.toFixed(2)}`, color: C.bright },
-                { label: "YTD Miles", value: totalMiles.toFixed(1), sub: "", color: "#FFFFFF" },
+                { label: "YTD Miles", value: totalMiles.toFixed(1), sub: "", color: "#FBFBFB" },
                 { label: "YTD Deduction", value: `$${totalMileageAmount.toFixed(2)}`, sub: "", color: C.green },
                 { label: "IRS Rate", value: "$0.70/mi", sub: "", color: C.amber },
               ].map(kpi => (
@@ -852,7 +852,7 @@ export default function StyleTaxPage() {
                   <div key={log.id} style={{ padding: "16px 20px", borderRadius: "12px", backgroundColor: C.surface, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "22px", color: C.bright }}>directions_car</span>
                     <div style={{ flex: 1, minWidth: "150px" }}>
-                      <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>{log.purpose}</div>
+                      <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{log.purpose}</div>
                       {log.notes && <div style={{ fontSize: "11px", color: `${C.stone}66`, marginTop: "2px" }}>{log.notes}</div>}
                     </div>
                     <div style={{ fontSize: "13px", color: `${C.stone}88`, ...mono }}>{log.miles.toFixed(1)} mi</div>
@@ -879,7 +879,7 @@ export default function StyleTaxPage() {
 
             {/* Safe Harbor Calculator */}
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "18px", color: C.green }}>shield</span>
                 Safe Harbor Protection
               </h3>
@@ -902,7 +902,7 @@ export default function StyleTaxPage() {
                   </div>
                   <div style={{ padding: "14px", borderRadius: "10px", backgroundColor: C.surface, border: `1px solid ${C.border}` }}>
                     <div style={subtext}>You Need / Quarter</div>
-                    <div style={{ fontSize: "20px", fontWeight: 800, color: "#FFFFFF", ...mono }}>${Math.min(safeHarborQuarterly, Math.ceil(tax.totalTax * 0.9 / 4)).toLocaleString()}</div>
+                    <div style={{ fontSize: "20px", fontWeight: 800, color: "#FBFBFB", ...mono }}>${Math.min(safeHarborQuarterly, Math.ceil(tax.totalTax * 0.9 / 4)).toLocaleString()}</div>
                   </div>
                 </div>
               )}
@@ -927,7 +927,7 @@ export default function StyleTaxPage() {
                       <span style={{ padding: "4px 12px", borderRadius: "20px", backgroundColor: `${statusColor}18`, color: statusColor, fontSize: "12px", fontWeight: 800 }}>{quarter.label}</span>
                       <span style={{ padding: "3px 10px", borderRadius: "10px", backgroundColor: `${statusColor}12`, color: statusColor, fontSize: "9px", fontWeight: 700, textTransform: "uppercase" }}>{status}</span>
                     </div>
-                    <div style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", marginBottom: "4px", ...mono }}>
+                    <div style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", marginBottom: "4px", ...mono }}>
                       ${(payment?.actualAmount ?? payment?.estimatedAmount ?? tax.quarterly).toFixed(0)}
                     </div>
                     <div style={{ fontSize: "11px", color: `${C.stone}66`, marginBottom: "4px" }}>Due: {quarter.due}</div>
@@ -961,7 +961,7 @@ export default function StyleTaxPage() {
 
             {/* How to Pay */}
             <div style={cardStyle}>
-              <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "18px", color: C.blue }}>info</span>
                 How to Pay Quarterly Taxes
               </h3>
@@ -986,7 +986,7 @@ export default function StyleTaxPage() {
         {tab === 5 && (
           <div>
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: C.purple }}>savings</span>
                 SEP-IRA / Solo 401(k)
               </h3>
@@ -1008,13 +1008,13 @@ export default function StyleTaxPage() {
                 </div>
                 <div style={{ padding: "14px", borderRadius: "10px", backgroundColor: C.surface, border: `1px solid ${C.border}` }}>
                   <div style={subtext}>Effective Cost</div>
-                  <div style={{ fontSize: "20px", fontWeight: 800, color: "#FFFFFF", ...mono }}>${(sepAnnual - sepTaxSaved).toFixed(0)}</div>
+                  <div style={{ fontSize: "20px", fontWeight: 800, color: "#FBFBFB", ...mono }}>${(sepAnnual - sepTaxSaved).toFixed(0)}</div>
                 </div>
               </div>
             </div>
 
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: C.blue }}>health_and_safety</span>
                 Health Insurance Deduction
               </h3>
@@ -1039,7 +1039,7 @@ export default function StyleTaxPage() {
 
             {/* Comprehensive deductions guide */}
             <div style={cardStyle}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: C.amber }}>lightbulb</span>
                 Complete Deductions Guide
               </h3>
@@ -1078,12 +1078,12 @@ export default function StyleTaxPage() {
         {tab === 6 && (
           <div>
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "16px" }}>Schedule C - Profit or Loss from Business</h3>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "16px" }}>Schedule C - Profit or Loss from Business</h3>
               <div style={{ fontSize: "12px", color: `${C.stone}66`, marginBottom: "16px", ...mono }}>Hair Styling / Cosmetology Services | Principal Business Code: 812111</div>
 
               <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF" }}>Line 1 - Gross Income</span>
-                <span style={{ fontSize: "14px", fontWeight: 800, color: "#FFFFFF", ...mono }}>${totalIncome.toLocaleString()}</span>
+                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>Line 1 - Gross Income</span>
+                <span style={{ fontSize: "14px", fontWeight: 800, color: "#FBFBFB", ...mono }}>${totalIncome.toLocaleString()}</span>
               </div>
 
               <div style={{ padding: "8px 0 4px", fontSize: "11px", fontWeight: 700, color: `${C.stone}55`, textTransform: "uppercase", letterSpacing: "0.08em" }}>Expenses by Schedule C Line</div>
@@ -1101,18 +1101,18 @@ export default function StyleTaxPage() {
               )}
 
               <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderTop: `2px solid ${C.borderHover}`, marginTop: "8px" }}>
-                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF" }}>Line 28 - Total Expenses</span>
+                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>Line 28 - Total Expenses</span>
                 <span style={{ fontSize: "14px", fontWeight: 800, color: C.green, ...mono }}>${totalDeductions.toFixed(2)}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderTop: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF" }}>Line 31 - Net Profit</span>
-                <span style={{ fontSize: "14px", fontWeight: 800, color: "#FFFFFF", ...mono }}>${tax.taxableIncome.toLocaleString()}</span>
+                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>Line 31 - Net Profit</span>
+                <span style={{ fontSize: "14px", fontWeight: 800, color: "#FBFBFB", ...mono }}>${tax.taxableIncome.toLocaleString()}</span>
               </div>
             </div>
 
             {/* Schedule 1 */}
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "14px" }}>Schedule 1 - Above-the-Line Deductions</h3>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "14px" }}>Schedule 1 - Above-the-Line Deductions</h3>
               {[
                 { line: "15", label: "Deductible part of SE tax", value: tax.seDeduction },
                 { line: "16", label: "SEP-IRA deduction", value: sepAnnual },
@@ -1127,7 +1127,7 @@ export default function StyleTaxPage() {
 
             {/* Important Deadlines */}
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "18px", color: C.red }}>event</span>
                 Important Tax Deadlines
               </h3>
@@ -1147,9 +1147,9 @@ export default function StyleTaxPage() {
 
             {/* Mileage Log Summary */}
             <div style={{ ...cardStyle, marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginTop: 0, marginBottom: "14px" }}>Mileage Log Summary</h3>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginTop: 0, marginBottom: "14px" }}>Mileage Log Summary</h3>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-                <div><div style={subtext}>Total Miles</div><div style={{ fontSize: "18px", fontWeight: 800, color: "#FFFFFF", ...mono }}>{totalMiles.toFixed(1)}</div></div>
+                <div><div style={subtext}>Total Miles</div><div style={{ fontSize: "18px", fontWeight: 800, color: "#FBFBFB", ...mono }}>{totalMiles.toFixed(1)}</div></div>
                 <div><div style={subtext}>IRS Rate</div><div style={{ fontSize: "18px", fontWeight: 800, color: C.amber, ...mono }}>$0.70</div></div>
                 <div><div style={subtext}>Total Deduction</div><div style={{ fontSize: "18px", fontWeight: 800, color: C.green, ...mono }}>${totalMileageAmount.toFixed(2)}</div></div>
               </div>
@@ -1207,7 +1207,7 @@ export default function StyleTaxPage() {
             <div style={{ ...cardStyle, marginBottom: "12px", padding: "14px 20px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: C.bright }}>smart_toy</span>
-                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF" }}>Reyna Tax Advisor</span>
+                <span style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>Reyna Tax Advisor</span>
                 <span style={{ fontSize: "10px", color: `${C.stone}55` }}>AI-powered tax guidance for salon professionals</span>
               </div>
             </div>
@@ -1262,7 +1262,7 @@ export default function StyleTaxPage() {
         {showMileageModal && (
           <div onClick={() => setShowMileageModal(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "20px" }}>
             <div onClick={(e) => e.stopPropagation()} style={{ background: "#0d1117", borderRadius: "18px", border: `1px solid ${C.border}`, padding: "28px", maxWidth: "440px", width: "100%", boxShadow: `0 24px 80px rgba(0,0,0,0.6), 0 0 60px ${C.glow}` }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: C.bright, verticalAlign: "middle", marginRight: "8px" }}>directions_car</span>
                 Log Business Trip
               </h3>
@@ -1287,7 +1287,7 @@ export default function StyleTaxPage() {
               </div>
               <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
                 <button onClick={() => setShowMileageModal(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", backgroundColor: "transparent", border: `1px solid ${C.border}`, color: `${C.stone}66`, fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-                <button onClick={handleLogMileage} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FFFFFF", fontSize: "11px", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer", boxShadow: `0 2px 12px ${C.glow}` }}>Save Trip</button>
+                <button onClick={handleLogMileage} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FBFBFB", fontSize: "11px", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer", boxShadow: `0 2px 12px ${C.glow}` }}>Save Trip</button>
               </div>
             </div>
           </div>
@@ -1297,7 +1297,7 @@ export default function StyleTaxPage() {
         {showPayModal !== null && (
           <div onClick={() => setShowPayModal(null)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "20px" }}>
             <div onClick={(e) => e.stopPropagation()} style={{ background: "#0d1117", borderRadius: "18px", border: `1px solid ${C.border}`, padding: "28px", maxWidth: "440px", width: "100%", boxShadow: `0 24px 80px rgba(0,0,0,0.6), 0 0 60px ${C.glow}` }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: C.green, verticalAlign: "middle", marginRight: "8px" }}>check_circle</span>
                 Mark Q{showPayModal} as Paid
               </h3>
@@ -1307,7 +1307,7 @@ export default function StyleTaxPage() {
               </div>
               <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
                 <button onClick={() => setShowPayModal(null)} style={{ flex: 1, padding: "10px", borderRadius: "8px", backgroundColor: "transparent", border: `1px solid ${C.border}`, color: `${C.stone}66`, fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-                <button onClick={handleMarkPaid} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FFFFFF", fontSize: "11px", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer", boxShadow: `0 2px 12px ${C.glow}` }}>Confirm Payment</button>
+                <button onClick={handleMarkPaid} style={{ flex: 1, padding: "10px", borderRadius: "8px", background: `linear-gradient(135deg, ${C.accent} 0%, ${C.bright} 100%)`, border: "none", color: "#FBFBFB", fontSize: "11px", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer", boxShadow: `0 2px 12px ${C.glow}` }}>Confirm Payment</button>
               </div>
             </div>
           </div>

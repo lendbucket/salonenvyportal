@@ -15,8 +15,8 @@ const BORDER = "rgba(255,255,255,0.06)", BORDER2 = "rgba(255,255,255,0.08)", S1 
 const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
 const MUTED = "rgba(255,255,255,0.3)", MID = "rgba(255,255,255,0.6)", GREEN = "#10B981", AMBER = "#ffb347"
 const FB = "#1877F2", IG = "#bc1888", CANVA = "#00C4CC"
-const mono: React.CSSProperties = { fontFamily: "'Fira Code', 'Courier New', monospace" }
-const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif" }
+const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
+const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
 const cs: React.CSSProperties = { backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "14px", padding: "20px", boxShadow: CARD_SHADOW }
 const inp: React.CSSProperties = { width: "100%", padding: "10px 14px", borderRadius: "8px", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER2}`, color: "#fff", fontSize: "16px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
 const lblS: React.CSSProperties = { ...mono, display: "block", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: MUTED, marginBottom: "8px" }
@@ -182,13 +182,13 @@ export default function SocialPage() {
           </div>
         ) : (
           <div style={{ background: `linear-gradient(135deg, rgba(24,119,242,0.08) 0%, rgba(131,58,180,0.08) 100%)`, border: `1px solid rgba(255,255,255,0.08)`, borderRadius: "16px", padding: "40px 24px", textAlign: "center", marginBottom: "20px" }}>
-            <div style={{ fontSize: "20px", fontWeight: 700, color: "#ffffff", marginBottom: "8px", ...jakarta }}>Connect Your Social Accounts</div>
+            <div style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB", marginBottom: "8px", ...jakarta }}>Connect Your Social Accounts</div>
             <div style={{ fontSize: "13px", color: ACC_B, marginBottom: "24px", maxWidth: "420px", margin: "0 auto 24px", lineHeight: 1.6, ...jakarta }}>
               Connect your Facebook and Instagram accounts to manage posts, view analytics, and engage with clients from one place.
             </div>
             {isOwner ? (
               <>
-                <button onClick={() => window.location.href = "/api/social/oauth/facebook"} style={{ background: FB, color: "#ffffff", border: "none", borderRadius: "10px", padding: "14px 28px", fontSize: "14px", fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "10px", ...jakarta }}>
+                <button onClick={() => window.location.href = "/api/social/oauth/facebook"} style={{ background: FB, color: "#FBFBFB", border: "none", borderRadius: "10px", padding: "14px 28px", fontSize: "14px", fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "10px", ...jakarta }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
                   Connect Facebook + Instagram
                 </button>

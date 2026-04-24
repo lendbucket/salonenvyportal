@@ -12,8 +12,8 @@ const MUTED = "rgba(255,255,255,0.3)"
 const MID = "rgba(255,255,255,0.6)"
 const GREEN = "#22c55e"
 const GOLD = "#C9A84C"
-const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', sans-serif" }
-const mono: React.CSSProperties = { fontFamily: "'Fira Code', monospace" }
+const jakarta: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
+const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 
 interface PermRow {
   key: string

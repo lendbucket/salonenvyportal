@@ -10,17 +10,17 @@ function getLocationStylists(loc: string) {
 const LOCATIONS = ["Corpus Christi", "San Antonio"]
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  CHECKED_OUT: { bg: "rgba(34,197,94,0.1)", text: "#22c55e", border: "#22c55e", label: "Checked Out" },
-  IN_PROGRESS: { bg: "rgba(201,168,76,0.1)", text: "#C9A84C", border: "#C9A84C", label: "In Progress" },
-  UPCOMING: { bg: "rgba(122,143,150,0.1)", text: "#7a8f96", border: "#7a8f96", label: "Upcoming" },
-  ACCEPTED: { bg: "rgba(96,165,250,0.1)", text: "#60a5fa", border: "#60a5fa", label: "Confirmed" },
-  PENDING: { bg: "rgba(251,191,36,0.08)", text: "#FBBF24", border: "#FBBF24", label: "Pending" },
-  CANCELLED: { bg: "rgba(239,68,68,0.08)", text: "#EF4444", border: "#EF4444", label: "Cancelled" },
-  CANCELLED_BY_SELLER: { bg: "rgba(239,68,68,0.08)", text: "#EF4444", border: "#EF4444", label: "Cancelled" },
-  CANCELLED_BY_CUSTOMER: { bg: "rgba(239,68,68,0.08)", text: "#EF4444", border: "#EF4444", label: "Cancelled" },
-  CANCELLED_BY_BUYER: { bg: "rgba(239,68,68,0.08)", text: "#EF4444", border: "#EF4444", label: "Cancelled" },
-  DECLINED: { bg: "rgba(239,68,68,0.08)", text: "#EF4444", border: "#EF4444", label: "Declined" },
-  NO_SHOW: { bg: "rgba(245,158,11,0.1)", text: "#f59e0b", border: "#f59e0b", label: "No Show" },
+  CHECKED_OUT: { bg: "rgba(34, 197, 94, 0.12)", text: "#16a34a", border: "rgba(34, 197, 94, 0.35)", label: "Checked Out" },
+  IN_PROGRESS: { bg: "rgba(234, 179, 8, 0.12)", text: "#ca8a04", border: "rgba(234, 179, 8, 0.35)", label: "In Progress" },
+  UPCOMING: { bg: "rgba(59, 130, 246, 0.12)", text: "#2563eb", border: "rgba(59, 130, 246, 0.35)", label: "Upcoming" },
+  ACCEPTED: { bg: "rgba(59, 130, 246, 0.12)", text: "#2563eb", border: "rgba(59, 130, 246, 0.35)", label: "Confirmed" },
+  PENDING: { bg: "rgba(234, 179, 8, 0.12)", text: "#ca8a04", border: "rgba(234, 179, 8, 0.35)", label: "Pending" },
+  CANCELLED: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
+  CANCELLED_BY_SELLER: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
+  CANCELLED_BY_CUSTOMER: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
+  CANCELLED_BY_BUYER: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
+  DECLINED: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Declined" },
+  NO_SHOW: { bg: "rgba(249, 115, 22, 0.12)", text: "#ea580c", border: "rgba(249, 115, 22, 0.35)", label: "No Show" },
 }
 
 const DEFAULT_STATUS = { bg: "rgba(205,201,192,0.06)", text: "rgba(205,201,192,0.5)", border: "rgba(205,201,192,0.3)", label: "Unknown" }
@@ -702,7 +702,7 @@ export default function AppointmentsPage() {
   }
 
   function paymentBadge(method: string) {
-    const badgeBase = { fontFamily: "'Fira Code', monospace", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "4px", whiteSpace: "nowrap" as const }
+    const badgeBase = { fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "4px", whiteSpace: "nowrap" as const }
     if (method === "Cash") return <span style={{ ...badgeBase, backgroundColor: "rgba(34,197,94,0.1)", color: "#22c55e" }}>CASH</span>
     if (method === "Apple Pay") return <span style={{ ...badgeBase, backgroundColor: "rgba(255,255,255,0.08)", color: "#fff" }}>Apple Pay</span>
     const parts = method.split(" ")
@@ -816,7 +816,7 @@ export default function AppointmentsPage() {
       <div style={{ marginBottom: "20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "10px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <h1 style={{ fontSize: isMobile ? "22px" : "24px", fontWeight: 800, color: "#FFFFFF", margin: 0 }}>
+            <h1 style={{ fontSize: isMobile ? "22px" : "24px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>
               {activeTab === "appointments" ? "Appointments" : activeTab === "transactions" ? "Transactions" : "Clients"}
             </h1>
             <div style={{ display: "flex", gap: "2px", backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "8px", padding: "3px" }}>
@@ -902,7 +902,7 @@ export default function AppointmentsPage() {
                 backgroundColor: "#0d1117",
                 border: "1px solid rgba(255,255,255,0.08)",
                 borderRadius: "8px",
-                color: "#FFFFFF",
+                color: "#FBFBFB",
                 fontSize: "13px",
                 fontWeight: 600,
                 outline: "none",
@@ -956,7 +956,7 @@ export default function AppointmentsPage() {
                 border: viewMode === v ? "1px solid #7a8f96" : "1px solid rgba(255,255,255,0.06)",
                 cursor: "pointer",
                 backgroundColor: viewMode === v ? "rgba(122,143,150,0.15)" : "transparent",
-                color: viewMode === v ? "#ffffff" : "#606E74",
+                color: viewMode === v ? "#FBFBFB" : "#606E74",
                 transition: "all 0.15s",
               }}
             >
@@ -992,7 +992,7 @@ export default function AppointmentsPage() {
                     borderRadius: "20px", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
                     border: stylistFilter === "all" ? "1px solid rgba(122,143,150,0.3)" : "1px solid rgba(255,255,255,0.06)",
                     backgroundColor: stylistFilter === "all" ? "rgba(122,143,150,0.1)" : "transparent",
-                    color: stylistFilter === "all" ? "#ffffff" : "rgba(205,201,192,0.45)",
+                    color: stylistFilter === "all" ? "#FBFBFB" : "rgba(205,201,192,0.45)",
                   }}
                 >
                   All ({allCount})
@@ -1010,7 +1010,7 @@ export default function AppointmentsPage() {
                         display: "flex", alignItems: "center", gap: "5px",
                         border: stylistFilter === s.id ? `1px solid ${clr}50` : "1px solid rgba(255,255,255,0.06)",
                         backgroundColor: stylistFilter === s.id ? `${clr}1A` : "transparent",
-                        color: stylistFilter === s.id ? "#ffffff" : "rgba(205,201,192,0.45)",
+                        color: stylistFilter === s.id ? "#FBFBFB" : "rgba(205,201,192,0.45)",
                       }}
                     >
                       <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: clr, flexShrink: 0 }} />
@@ -1038,15 +1038,15 @@ export default function AppointmentsPage() {
             overflow: "hidden",
           }}>
             {[
-              { label: "Total", value: String(appointments.filter(a => !isBlockedTime(a)).length), color: "#ffffff" },
+              { label: "Total", value: String(appointments.filter(a => !isBlockedTime(a)).length), color: "#FBFBFB" },
               { label: "Checked", value: String(appointments.filter(a => a.resolvedStatus === "CHECKED_OUT" || a.isCheckedOut).length), color: "#22c55e" },
               { label: "Confirmed", value: String(appointments.filter(a => (a.resolvedStatus === "ACCEPTED" || a.resolvedStatus === "UPCOMING" || a.resolvedStatus === "IN_PROGRESS") && !a.isCheckedOut).length), color: "#60a5fa" },
               { label: "Pending", value: String(appointments.filter(a => a.status === "PENDING").length), color: "#FBBF24" },
               { label: "Cancel", value: String(appointments.filter(a => a.resolvedStatus === "CANCELLED" || a.status?.startsWith("CANCELLED")).length), color: "#EF4444" },
-              { label: "Revenue", value: fmtCurrency(appointments.filter(a => a.isCheckedOut && a.checkoutDetails?.total).reduce((s, a) => s + (a.checkoutDetails?.total || 0), 0)), color: "#ffffff" },
+              { label: "Revenue", value: fmtCurrency(appointments.filter(a => a.isCheckedOut && a.checkoutDetails?.total).reduce((s, a) => s + (a.checkoutDetails?.total || 0), 0)), color: "#FBFBFB" },
             ].map(stat => (
               <div key={stat.label} style={{ display: "flex", flexDirection: "column", alignItems: isMobile ? "center" : "flex-start", padding: isMobile ? "10px 8px" : "0", backgroundColor: isMobile ? "#0d1117" : "transparent" }}>
-                <div style={{ fontSize: isMobile ? "20px" : "16px", fontWeight: isMobile ? 700 : 800, color: stat.color, fontFamily: "'Fira Code', monospace" }}>{stat.value}</div>
+                <div style={{ fontSize: isMobile ? "20px" : "16px", fontWeight: isMobile ? 700 : 800, color: stat.color, fontFamily: "'Inter', sans-serif" }}>{stat.value}</div>
                 <div style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>{stat.label}</div>
               </div>
             ))}
@@ -1062,7 +1062,7 @@ export default function AppointmentsPage() {
               borderWidth: "1px", borderStyle: "solid",
               borderColor: statusFilter === "all" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)",
             }}>
-              <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: statusFilter === "all" ? "#fff" : "#7a8f96" }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: statusFilter === "all" ? "#fff" : "#7a8f96" }}>
                 {appointments.filter(a => !isBlockedTime(a)).length}
               </span>
               <span style={{ fontSize: "11px", color: "#606E74", marginLeft: "4px" }}>all</span>
@@ -1076,7 +1076,7 @@ export default function AppointmentsPage() {
                   borderWidth: "1px", borderStyle: "solid",
                   borderColor: statusFilter === status ? sc.border : "rgba(255,255,255,0.06)",
                 }}>
-                  <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: statusFilter === status ? sc.text : "#fff" }}>
+                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: statusFilter === status ? sc.text : "#fff" }}>
                     {count}
                   </span>
                   <span style={{ fontSize: "11px", color: statusFilter === status ? sc.text : "#7a8f96", marginLeft: "4px" }}>
@@ -1094,8 +1094,8 @@ export default function AppointmentsPage() {
       {/* Error state */}
       {fetchError && !loading && (
         <div style={{ background: '#0d1117', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: 20, textAlign: 'center', margin: '20px 0' }}>
-          <div style={{ color: '#ef4444', fontSize: 14, fontFamily: 'Plus Jakarta Sans, sans-serif', marginBottom: 8 }}>{fetchError}</div>
-          <button onClick={() => { setFetchError(null); fetchAppointments() }} style={{ background: 'transparent', border: '1px solid #606E74', color: '#7a8f96', borderRadius: 6, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Retry</button>
+          <div style={{ color: '#ef4444', fontSize: 14, fontFamily: 'Inter, sans-serif', marginBottom: 8 }}>{fetchError}</div>
+          <button onClick={() => { setFetchError(null); fetchAppointments() }} style={{ background: 'transparent', border: '1px solid #606E74', color: '#7a8f96', borderRadius: 6, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Retry</button>
         </div>
       )}
       {/* Appointment list / day view */}
@@ -1136,7 +1136,7 @@ export default function AppointmentsPage() {
                     const hour = WEEK_START + i
                     return (
                       <div key={hour} style={{ height: i < totalHours ? `${WEEK_HOUR_PX}px` : "0", position: "relative" }}>
-                        <span style={{ position: "absolute", top: "-7px", right: "8px", fontSize: "11px", fontWeight: 600, color: "#606E74", fontFamily: "'Fira Code', monospace" }}>
+                        <span style={{ position: "absolute", top: "-7px", right: "8px", fontSize: "11px", fontWeight: 600, color: "#606E74", fontFamily: "'Inter', sans-serif" }}>
                           {hour === 0 ? "12a" : hour < 12 ? `${hour}a` : hour === 12 ? "12p" : `${hour - 12}p`}
                         </span>
                       </div>
@@ -1159,7 +1159,7 @@ export default function AppointmentsPage() {
                           {day.toLocaleDateString("en-US", { weekday: "short" })}
                         </span>
                         <span style={{
-                          fontSize: "18px", fontWeight: 700, fontFamily: "'Fira Code', monospace",
+                          fontSize: "18px", fontWeight: 700, fontFamily: "'Inter', sans-serif",
                           color: isCurrentDay ? "#0d1117" : "#7a8f96",
                           ...(isCurrentDay ? { backgroundColor: "#7a8f96", width: "28px", height: "28px", borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center" } : {}),
                         }}>
@@ -1203,7 +1203,7 @@ export default function AppointmentsPage() {
                                 boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
                               }}
                             >
-                              <div style={{ fontSize: "12px", fontWeight: 600, color: "#ffffff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
+                              <div style={{ fontSize: "12px", fontWeight: 600, color: "#FBFBFB", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
                                 {appt.customerName}
                               </div>
                               {height >= 60 && appt.services?.[0] && (
@@ -1212,7 +1212,7 @@ export default function AppointmentsPage() {
                                 </div>
                               )}
                               {height >= 60 && (
-                                <div style={{ fontSize: "10px", color: "#606E74", fontFamily: "'Fira Code', monospace", marginTop: "1px" }}>
+                                <div style={{ fontSize: "10px", color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: "1px" }}>
                                   {fmtTime(appt.startTime)}{appt.endTime ? ` – ${fmtTime(appt.endTime)}` : ""}
                                 </div>
                               )}
@@ -1316,11 +1316,11 @@ export default function AppointmentsPage() {
                       {/* Day header row */}
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
                         {dayAppts.length > 0 ? (
-                          <span style={{ fontSize: "10px", fontWeight: 700, fontFamily: "'Fira Code', monospace", padding: "1px 5px", borderRadius: "4px", backgroundColor: "rgba(96,110,116,0.15)", color: "#7a8f96" }}>{dayAppts.length}</span>
+                          <span style={{ fontSize: "10px", fontWeight: 700, fontFamily: "'Inter', sans-serif", padding: "1px 5px", borderRadius: "4px", backgroundColor: "rgba(96,110,116,0.15)", color: "#7a8f96" }}>{dayAppts.length}</span>
                         ) : <span />}
                         <span style={{
-                          fontSize: "13px", fontWeight: isDayToday ? 700 : 600, fontFamily: "'Fira Code', monospace",
-                          color: isDayToday ? "#ffffff" : isCurrentMonth ? "#7a8f96" : "rgba(255,255,255,0.2)",
+                          fontSize: "13px", fontWeight: isDayToday ? 700 : 600, fontFamily: "'Inter', sans-serif",
+                          color: isDayToday ? "#FBFBFB" : isCurrentMonth ? "#7a8f96" : "rgba(255,255,255,0.2)",
                           ...(isDayToday ? { backgroundColor: "#7a8f96", width: "22px", height: "22px", borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#0d1117" } : {}),
                         }}>
                           {day.getDate()}
@@ -1342,7 +1342,7 @@ export default function AppointmentsPage() {
                               opacity: isCancelled ? 0.4 : 1,
                             }}
                           >
-                            <span style={{ fontSize: "11px", color: isCancelled ? "#606E74" : "#ffffff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
+                            <span style={{ fontSize: "11px", color: isCancelled ? "#606E74" : "#FBFBFB", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
                               {clientShortName(appt.customerName)}
                             </span>
                             {appt.isCheckedOut && !isCancelled && (
@@ -1632,13 +1632,13 @@ export default function AppointmentsPage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span
                       onClick={e => { if (appt.customerId) { e.stopPropagation(); openClientHistory(appt.customerId) } }}
-                      style={{ color: "#FFFFFF", fontSize: "15px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(255,255,255,0.2)" }}
+                      style={{ color: "#FBFBFB", fontSize: "15px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(255,255,255,0.2)" }}
                     >
                       {appt.customerName}
                     </span>
                     <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                       {appt.isCheckedOut && appt.checkoutDetails && (
-                        <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "12px", fontWeight: 700, color: "#22c55e" }}>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "12px", fontWeight: 700, color: "#22c55e" }}>
                           ${appt.checkoutDetails.total.toFixed(2)}
                         </span>
                       )}
@@ -1658,7 +1658,7 @@ export default function AppointmentsPage() {
                   <div style={{ display: "flex", gap: "16px", fontSize: "13px", color: "rgba(205,201,192,0.55)", fontWeight: 500, alignItems: "center" }}>
                     <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                       <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>schedule</span>
-                      <span style={{ fontFamily: "'Fira Code', monospace", color: "#ffffff", fontWeight: 600 }}>{fmtTime(appt.startTime)}{appt.endTime ? ` - ${fmtTime(appt.endTime)}` : ""}</span>
+                      <span style={{ fontFamily: "'Inter', sans-serif", color: "#FBFBFB", fontWeight: 600 }}>{fmtTime(appt.startTime)}{appt.endTime ? ` - ${fmtTime(appt.endTime)}` : ""}</span>
                     </span>
                     {appt.teamMemberId && (
                       <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -1696,9 +1696,9 @@ export default function AppointmentsPage() {
                   {appt.isCheckedOut && appt.checkoutDetails && (
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "2px", fontSize: "11px", color: "rgba(205,201,192,0.45)" }}>
                       <span className="material-symbols-outlined" style={{ fontSize: "13px", color: "#22c55e" }}>check_circle</span>
-                      <span style={{ fontFamily: "'Fira Code', monospace", color: "rgba(205,201,192,0.5)" }}>{appt.checkoutDetails.paymentMethod}</span>
+                      <span style={{ fontFamily: "'Inter', sans-serif", color: "rgba(205,201,192,0.5)" }}>{appt.checkoutDetails.paymentMethod}</span>
                       {appt.checkoutDetails.closedAt && (
-                        <span style={{ fontFamily: "'Fira Code', monospace", color: "rgba(205,201,192,0.35)" }}>
+                        <span style={{ fontFamily: "'Inter', sans-serif", color: "rgba(205,201,192,0.35)" }}>
                           {new Date(appt.checkoutDetails.closedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" })}
                         </span>
                       )}
@@ -1840,7 +1840,7 @@ export default function AppointmentsPage() {
       {showWaitlist && (
         <div style={{ marginTop: "16px", backgroundColor: "#0d1117", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
           <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>Waitlist — {location === "Corpus Christi" ? "CC" : "SA"}</span>
+            <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>Waitlist — {location === "Corpus Christi" ? "CC" : "SA"}</span>
           </div>
           {/* Add form */}
           <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
@@ -2006,8 +2006,8 @@ export default function AppointmentsPage() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Time</div>
-                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", outline: "none", boxSizing: "border-box" as const }}>
-                      {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ backgroundColor: "#0d1117", color: busy ? "#606E74" : "#ffffff" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
+                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" as const }}>
+                      {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ backgroundColor: "#0d1117", color: busy ? "#606E74" : "#FBFBFB" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
                     </select>
                   </div>
                 </div>
@@ -2046,15 +2046,15 @@ export default function AppointmentsPage() {
                         <div key={s.id} data-svc={s.name} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "14px", borderRadius: "10px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(122,143,150,0.08)" : "#0d1117", border: sel ? "1px solid #7a8f96" : "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div>
                             <div style={{ fontSize: "13px", fontWeight: sel ? 600 : 400, color: sel ? "#fff" : "rgba(205,201,192,0.7)" }}>{s.name}</div>
-                            <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Fira Code', monospace" }}>{s.durationMinutes} min</div>
+                            <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Inter', sans-serif" }}>{s.durationMinutes} min</div>
                           </div>
-                          <div style={{ fontSize: "14px", fontWeight: 600, color: sel ? "#22c55e" : "rgba(205,201,192,0.5)", fontFamily: "'Fira Code', monospace" }}>${s.price.toFixed(2)}</div>
+                          <div style={{ fontSize: "14px", fontWeight: 600, color: sel ? "#22c55e" : "rgba(205,201,192,0.5)", fontFamily: "'Inter', sans-serif" }}>${s.price.toFixed(2)}</div>
                         </div>
                       )
                     })
                   })()}
                 </div>
-                {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#22c55e", textAlign: "right", marginBottom: "12px", fontFamily: "'Fira Code', monospace" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
+                {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#22c55e", textAlign: "right", marginBottom: "12px", fontFamily: "'Inter', sans-serif" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
                   <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={() => setBookStep(4)} disabled={bookSelectedSvcs.length === 0} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSelectedSvcs.length === 0 ? 0.5 : 1 }}>Next</button>
@@ -2093,11 +2093,11 @@ export default function AppointmentsPage() {
                   <div style={{ fontSize: 11, fontWeight: 600, color: "#7a8f96", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 12 }}>Card on File Request</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                     <input type="checkbox" id="sendCardSMS" checked={sendCardSMS} onChange={e => setSendCardSMS(e.target.checked)} style={{ width: 16, height: 16, accentColor: "#7a8f96", cursor: "pointer" }} />
-                    <label htmlFor="sendCardSMS" style={{ fontSize: 13, color: "#ffffff", cursor: "pointer" }}>Send secure card link to client after booking</label>
+                    <label htmlFor="sendCardSMS" style={{ fontSize: 13, color: "#FBFBFB", cursor: "pointer" }}>Send secure card link to client after booking</label>
                   </div>
                   {sendCardSMS && (
                     <div>
-                      <input type="tel" placeholder="Client phone number" value={cardPhone} onChange={e => setCardPhone(e.target.value)} style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#ffffff", fontSize: 14, boxSizing: "border-box" as const, outline: "none" }} />
+                      <input type="tel" placeholder="Client phone number" value={cardPhone} onChange={e => setCardPhone(e.target.value)} style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#FBFBFB", fontSize: 14, boxSizing: "border-box" as const, outline: "none" }} />
                       <div style={{ fontSize: 11, color: "#606E74", marginTop: 6 }}>Client receives: &quot;Add a card to secure your appointment&quot; with a secure link.</div>
                     </div>
                   )}
@@ -2115,7 +2115,7 @@ export default function AppointmentsPage() {
             {bookStep === 5 && bookSuccess && (
               <div style={{ textAlign: "center", padding: "32px 20px" }}>
                 <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(34,197,94,0.1)", border: "2px solid #22c55e", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontSize: 28, color: "#22c55e" }}>&#10003;</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>Appointment Booked!</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>Appointment Booked!</div>
                 <div style={{ fontSize: 14, color: "#7a8f96", marginBottom: 16 }}>
                   {bookClient?.name} is confirmed for {new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} with {TEAM_NAMES[bookStylist] || "stylist"}
                 </div>
@@ -2126,7 +2126,7 @@ export default function AppointmentsPage() {
                 )}
                 <button
                   onClick={() => { setShowBooking(false); resetBooking(); setBookSuccess(false); setSendCardSMS(true); setCardPhone("") }}
-                  style={{ width: "100%", height: 48, background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: 10, color: "#ffffff", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
+                  style={{ width: "100%", height: 48, background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: 10, color: "#FBFBFB", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
                 >
                   Done
                 </button>
@@ -2184,7 +2184,7 @@ export default function AppointmentsPage() {
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.35)" }}>{c.icon}</span>
                     <span style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#606E74" }}>{c.label}</span>
                   </div>
-                  <div style={{ fontSize: "24px", fontWeight: 600, color: "#ffffff", fontFamily: "'Fira Code', monospace" }}>{c.value}</div>
+                  <div style={{ fontSize: "24px", fontWeight: 600, color: "#FBFBFB", fontFamily: "'Inter', sans-serif" }}>{c.value}</div>
                 </div>
               ))}
             </div>
@@ -2248,14 +2248,14 @@ export default function AppointmentsPage() {
                         onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.02)")}
                         onMouseLeave={e => (e.currentTarget.style.backgroundColor = idx % 2 === 1 ? "rgba(255,255,255,0.01)" : "transparent")}
                       >
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontWeight: 600, fontFamily: "'Fira Code', monospace", borderBottom: "1px solid rgba(205,201,192,0.04)", whiteSpace: "nowrap" }}>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontWeight: 600, fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", whiteSpace: "nowrap" }}>
                           {new Date(tx.closedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" })}
                         </td>
-                        <td style={{ padding: "14px", fontSize: "14px", color: "#ffffff", fontWeight: 600, borderBottom: "1px solid rgba(205,201,192,0.04)" }}>{tx.customerName}</td>
+                        <td style={{ padding: "14px", fontSize: "14px", color: "#FBFBFB", fontWeight: 600, borderBottom: "1px solid rgba(205,201,192,0.04)" }}>{tx.customerName}</td>
                         <td style={{ padding: "14px", fontSize: "13px", color: "#7a8f96", borderBottom: "1px solid rgba(205,201,192,0.04)" }}>
                           {tx.stylistName}
                           {tx.stylistLocation && (
-                            <span style={{ marginLeft: "6px", fontSize: "10px", fontWeight: 700, fontFamily: "'Fira Code', monospace", padding: "1px 6px", borderRadius: "4px", backgroundColor: tx.stylistLocation === "CC" ? "rgba(59,130,246,0.1)" : "rgba(168,85,247,0.1)", color: tx.stylistLocation === "CC" ? "#60a5fa" : "#a78bfa" }}>{tx.stylistLocation}</span>
+                            <span style={{ marginLeft: "6px", fontSize: "10px", fontWeight: 700, fontFamily: "'Inter', sans-serif", padding: "1px 6px", borderRadius: "4px", backgroundColor: tx.stylistLocation === "CC" ? "rgba(59,130,246,0.1)" : "rgba(168,85,247,0.1)", color: tx.stylistLocation === "CC" ? "#60a5fa" : "#a78bfa" }}>{tx.stylistLocation}</span>
                           )}
                         </td>
                         <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", borderBottom: "1px solid rgba(205,201,192,0.04)", maxWidth: "200px" }}>
@@ -2265,10 +2265,10 @@ export default function AppointmentsPage() {
                           </div>
                         </td>
                         <td style={{ padding: "14px", borderBottom: "1px solid rgba(205,201,192,0.04)" }}>{paymentBadge(tx.paymentMethod)}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#ffffff", fontFamily: "'Fira Code', monospace", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.subtotal)}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: tx.tips > 0 ? "#22c55e" : "#606E74", fontFamily: "'Fira Code', monospace", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{tx.tips > 0 ? fmtCurrency(tx.tips) : "\u2014"}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontFamily: "'Fira Code', monospace", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.tax)}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#ffffff", fontWeight: 700, fontFamily: "'Fira Code', monospace", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.total)}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#FBFBFB", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.subtotal)}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: tx.tips > 0 ? "#22c55e" : "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{tx.tips > 0 ? fmtCurrency(tx.tips) : "\u2014"}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.tax)}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#FBFBFB", fontWeight: 700, fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.total)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -2311,7 +2311,7 @@ export default function AppointmentsPage() {
                 value={clientsSearch}
                 onChange={e => setClientsSearch(e.target.value)}
                 placeholder="Search by name, phone, or email..."
-                style={{ width: "100%", padding: "10px 12px 10px 36px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#ffffff", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}
+                style={{ width: "100%", padding: "10px 12px 10px 36px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#FBFBFB", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}
               />
               {clientsSearch && (
                 <button onClick={() => setClientsSearch("")} style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#606E74", fontSize: "16px", lineHeight: 1 }}>&times;</button>
@@ -2327,12 +2327,12 @@ export default function AppointmentsPage() {
           {/* Stats row */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "16px" }}>
             {[
-              { label: "Total Clients", value: clientsTotal.toLocaleString(), color: "#ffffff" },
+              { label: "Total Clients", value: clientsTotal.toLocaleString(), color: "#FBFBFB" },
               { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#C9A84C" },
               { label: "Showing", value: String(clientsList.length), color: "#7a8f96" },
             ].map(s => (
               <div key={s.label} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "12px 14px" }}>
-                <div style={{ fontSize: "20px", fontWeight: 700, color: s.color, fontFamily: "'Fira Code', monospace" }}>{s.value}</div>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: s.color, fontFamily: "'Inter', sans-serif" }}>{s.value}</div>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginTop: "2px" }}>{s.label}</div>
               </div>
             ))}
@@ -2375,15 +2375,15 @@ export default function AppointmentsPage() {
                       <span style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{initials}</span>
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: "14px", fontWeight: 600, color: "#ffffff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{c.firstName} {c.lastName}</div>
-                      <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Fira Code', monospace", marginTop: "2px" }}>
+                      <div style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{c.firstName} {c.lastName}</div>
+                      <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: "2px" }}>
                         {c.phone || c.email || "No contact"}{c.lastVisitAt ? ` · ${new Date(c.lastVisitAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Chicago" })}` : ""}
                       </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                       {(c.totalVisits || 0) > 0 && (
                         <div style={{ textAlign: "center" }}>
-                          <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "15px", fontWeight: 700, color: "#fff" }}>{c.totalVisits}</div>
+                          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700, color: "#fff" }}>{c.totalVisits}</div>
                           <div style={{ fontSize: "9px", color: "#606E74", textTransform: "uppercase" as const }}>visits</div>
                         </div>
                       )}
@@ -2446,7 +2446,7 @@ export default function AppointmentsPage() {
                       { label: "Avg Ticket", value: `$${(clientDetail.stats.avgTicket || 0).toFixed(0)}`, color: "#C9A84C" },
                     ].map(s => (
                       <div key={s.label} style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
-                        <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "18px", fontWeight: 700, color: s.color }}>{s.value}</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", fontWeight: 700, color: s.color }}>{s.value}</div>
                         <div style={{ fontSize: "9px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginTop: "3px" }}>{s.label}</div>
                       </div>
                     ))}
@@ -2458,7 +2458,7 @@ export default function AppointmentsPage() {
                     {clientDetail.client.phone && (
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#7a8f96" }}>phone</span>
-                        <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "13px", color: "#fff" }}>{clientDetail.client.phone}</span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#fff" }}>{clientDetail.client.phone}</span>
                       </div>
                     )}
                     {clientDetail.client.email && (
@@ -2540,7 +2540,7 @@ export default function AppointmentsPage() {
                           ].filter(r => r.value).map(r => (
                             <div key={r.label}>
                               <div style={{ fontSize: "9px", color: "#606E74", textTransform: "uppercase" as const }}>{r.label}</div>
-                              <div style={{ fontSize: "12px", color: "#fff", fontFamily: "'Fira Code', monospace" }}>{r.value}</div>
+                              <div style={{ fontSize: "12px", color: "#fff", fontFamily: "'Inter', sans-serif" }}>{r.value}</div>
                             </div>
                           ))}
                         </div>
@@ -2562,16 +2562,16 @@ export default function AppointmentsPage() {
                             </span>
                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                               <span style={{ fontSize: "9px", fontWeight: 700, padding: "2px 7px", borderRadius: "10px", backgroundColor: v.location === "CC" ? "rgba(99,102,241,0.1)" : "rgba(16,185,129,0.1)", color: v.location === "CC" ? "#818CF8" : "#10B981" }}>{v.location}</span>
-                              <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "13px", fontWeight: 700, color: "#22c55e" }}>${v.total.toFixed(2)}</span>
+                              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", fontWeight: 700, color: "#22c55e" }}>${v.total.toFixed(2)}</span>
                             </div>
                           </div>
                           <div style={{ fontSize: "11px", color: "#606E74" }}>
                             {v.services.map((s: { name: string }) => s.name).join(", ")}
                           </div>
-                          {v.tips > 0 && <div style={{ fontSize: "10px", color: "#7a8f96", marginTop: "2px", fontFamily: "'Fira Code', monospace" }}>Tip: ${v.tips.toFixed(2)}</div>}
+                          {v.tips > 0 && <div style={{ fontSize: "10px", color: "#7a8f96", marginTop: "2px", fontFamily: "'Inter', sans-serif" }}>Tip: ${v.tips.toFixed(2)}</div>}
                           {v.tenders?.[0] && (
                             <div style={{ marginTop: "3px" }}>
-                              <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "10px", color: v.tenders[0].type === "CASH" ? "#22c55e" : "#60a5fa" }}>
+                              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", color: v.tenders[0].type === "CASH" ? "#22c55e" : "#60a5fa" }}>
                                 {v.tenders[0].type === "CASH" ? "CASH" : `${(v.tenders[0].brand || "CARD").replace(/_/g, " ")} ····${v.tenders[0].last4 || "****"}`}
                               </span>
                             </div>
@@ -2647,10 +2647,10 @@ export default function AppointmentsPage() {
                     <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(79,142,247,0.12)", color: "#4F8EF7", fontSize: "11px", fontWeight: 700 }}>
                       {historyData.stats.totalVisits} visits
                     </span>
-                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(16,185,129,0.12)", color: "#10B981", fontSize: "11px", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>
+                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(16,185,129,0.12)", color: "#10B981", fontSize: "11px", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>
                       Total {fmtCurrency(historyData.stats.totalSpend)}
                     </span>
-                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.7)", fontSize: "11px", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>
+                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.7)", fontSize: "11px", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>
                       Avg {fmtCurrency(historyData.stats.avgTicket)}
                     </span>
                   </div>
@@ -2697,8 +2697,8 @@ export default function AppointmentsPage() {
                             ))}
                           </div>
                           <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
-                            <span style={{ color: "#CDC9C0", fontWeight: 700, fontFamily: "'Fira Code', monospace" }}>{fmtCurrency(v.amount)}</span>
-                            {v.tips > 0 && <span style={{ color: "#10B981", fontFamily: "'Fira Code', monospace" }}>+{fmtCurrency(v.tips)} tip</span>}
+                            <span style={{ color: "#CDC9C0", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{fmtCurrency(v.amount)}</span>
+                            {v.tips > 0 && <span style={{ color: "#10B981", fontFamily: "'Inter', sans-serif" }}>+{fmtCurrency(v.tips)} tip</span>}
                           </div>
                         </div>
                       ))}
@@ -2735,25 +2735,25 @@ export default function AppointmentsPage() {
             <div style={{ padding: "0 20px 16px" }}>
               {/* Client + status */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                <div style={{ fontSize: "20px", fontWeight: 700, color: "#ffffff" }}>{selectedAppt.customerName}</div>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB" }}>{selectedAppt.customerName}</div>
                 <span style={{ fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px", backgroundColor: (STATUS_COLORS[selectedAppt.resolvedStatus || selectedAppt.status] || DEFAULT_STATUS).bg, color: (STATUS_COLORS[selectedAppt.resolvedStatus || selectedAppt.status] || DEFAULT_STATUS).text, textTransform: "uppercase", letterSpacing: "0.06em" }}>{(STATUS_COLORS[selectedAppt.resolvedStatus || selectedAppt.status] || DEFAULT_STATUS).label}</span>
               </div>
               {/* Info */}
               <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "20px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#7a8f96" }}>schedule</span>
-                  <span style={{ fontSize: "14px", color: "#7a8f96", fontFamily: "'Fira Code', monospace" }}>{fmtTime(selectedAppt.startTime)}{selectedAppt.endTime ? ` – ${fmtTime(selectedAppt.endTime)}` : ""}</span>
+                  <span style={{ fontSize: "14px", color: "#7a8f96", fontFamily: "'Inter', sans-serif" }}>{fmtTime(selectedAppt.startTime)}{selectedAppt.endTime ? ` – ${fmtTime(selectedAppt.endTime)}` : ""}</span>
                 </div>
                 {selectedAppt.teamMemberId && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#7a8f96" }}>person</span>
-                    <span style={{ fontSize: "14px", color: "#ffffff" }}>{TEAM_NAMES[selectedAppt.teamMemberId] || ""}</span>
+                    <span style={{ fontSize: "14px", color: "#FBFBFB" }}>{TEAM_NAMES[selectedAppt.teamMemberId] || ""}</span>
                   </div>
                 )}
                 {selectedAppt.totalDurationMinutes && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#606E74" }}>timer</span>
-                    <span style={{ fontSize: "13px", color: "#606E74", fontFamily: "'Fira Code', monospace" }}>{selectedAppt.totalDurationMinutes} min</span>
+                    <span style={{ fontSize: "13px", color: "#606E74", fontFamily: "'Inter', sans-serif" }}>{selectedAppt.totalDurationMinutes} min</span>
                   </div>
                 )}
               </div>
@@ -2763,8 +2763,8 @@ export default function AppointmentsPage() {
                   <div style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}>Services</div>
                   {selectedAppt.services.map((s, i) => (
                     <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", marginBottom: "8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px" }}>
-                      <span style={{ fontSize: "14px", color: "#ffffff" }}>{s.serviceName}</span>
-                      <span style={{ fontSize: "14px", color: "#7a8f96", fontFamily: "'Fira Code', monospace" }}>{fmtCurrency(s.price)}</span>
+                      <span style={{ fontSize: "14px", color: "#FBFBFB" }}>{s.serviceName}</span>
+                      <span style={{ fontSize: "14px", color: "#7a8f96", fontFamily: "'Inter', sans-serif" }}>{fmtCurrency(s.price)}</span>
                     </div>
                   ))}
                 </div>
@@ -2773,7 +2773,7 @@ export default function AppointmentsPage() {
               {(selectedAppt.totalPrice ?? 0) > 0 && (
                 <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.1em" }}>Total</span>
-                  <span style={{ fontSize: "20px", fontWeight: 700, color: "#ffffff", fontFamily: "'Fira Code', monospace" }}>{fmtCurrency(selectedAppt.totalPrice || 0)}</span>
+                  <span style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB", fontFamily: "'Inter', sans-serif" }}>{fmtCurrency(selectedAppt.totalPrice || 0)}</span>
                 </div>
               )}
             </div>
@@ -2806,9 +2806,9 @@ export default function AppointmentsPage() {
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} onClick={() => setCancelConfirm(null)} />
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#0d1117", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.8)", zIndex: 401 }}>
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 18, color: "#ffffff", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>
+              <div style={{ fontSize: 18, color: "#FBFBFB", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>
               <div style={{ fontSize: 14, color: "#7a8f96" }}>Are you sure you want to cancel {cancelConfirm.clientName}&apos;s appointment?</div>
-              <div style={{ fontSize: 12, color: "#606E74", fontFamily: "'Fira Code', monospace", marginTop: 6 }}>{cancelConfirm.time}</div>
+              <div style={{ fontSize: 12, color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: 6 }}>{cancelConfirm.time}</div>
             </div>
             <div style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "12px 14px", marginBottom: 20, fontSize: 13, color: "#ef4444" }}>
               This will cancel the appointment in Square and notify the client via SMS.

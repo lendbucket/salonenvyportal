@@ -55,7 +55,7 @@ export default function ApprovalsPage() {
           style={{
             fontSize: "24px",
             fontWeight: 800,
-            color: "#FFFFFF",
+            color: "#FBFBFB",
             margin: "0 0 6px",
             letterSpacing: "-0.02em",
           }}
@@ -87,7 +87,7 @@ export default function ApprovalsPage() {
           >
             task_alt
           </span>
-          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 8px" }}>All caught up!</p>
+          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 8px" }}>All caught up!</p>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>No pending approval requests.</p>
         </div>
       ) : (
@@ -124,7 +124,7 @@ export default function ApprovalsPage() {
                 {user.name?.split(" ").map((n: string) => n[0]).join("").slice(0, 2) ?? "?"}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginBottom: "4px" }}>{user.name ?? user.email}</div>
+                <div style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>{user.name ?? user.email}</div>
                 <div style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "6px" }}>{user.email}</div>
                 <div style={{ display: "flex", gap: "8px" }}>
                   <span

@@ -167,7 +167,7 @@ export default function ReviewsPage() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px", marginBottom: "24px" }}>
         <div>
-          <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#FFFFFF", margin: 0, display: "flex", alignItems: "center", gap: "10px" }}>
+          <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#FBFBFB", margin: 0, display: "flex", alignItems: "center", gap: "10px" }}>
             <GoogleLogo size={24} />
             Reviews
           </h1>
@@ -222,7 +222,7 @@ export default function ReviewsPage() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <span style={{ fontSize: "28px", fontWeight: 800, color: "#FFFFFF" }}>{overallRating}</span>
+                <span style={{ fontSize: "28px", fontWeight: 800, color: "#FBFBFB" }}>{overallRating}</span>
                 <Stars rating={overallRating} size={18} />
               </div>
               <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.5)" }}>
@@ -249,7 +249,7 @@ export default function ReviewsPage() {
                       {loc.label}
                     </div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                      <span style={{ fontSize: "36px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1 }}>{loc.rating}</span>
+                      <span style={{ fontSize: "36px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1 }}>{loc.rating}</span>
                       <span style={{ fontSize: "12px", color: "rgba(205,201,192,0.4)" }}>/ 5</span>
                     </div>
                     <div style={{ marginTop: "4px" }}>
@@ -427,7 +427,7 @@ export default function ReviewsPage() {
                   )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF" }}>{review.authorName}</span>
+                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>{review.authorName}</span>
                       {locations.length > 1 && (
                         <span
                           style={{
@@ -476,7 +476,7 @@ export default function ReviewsPage() {
 
           {/* Tips section */}
           <div style={{ marginBottom: "40px" }}>
-            <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#FFFFFF", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: STAR_COLOR }}>lightbulb</span>
               How to Get More Reviews
             </h2>
@@ -501,7 +501,7 @@ export default function ReviewsPage() {
                     {tip.icon}
                   </span>
                   <div>
-                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF", marginBottom: "4px" }}>{tip.title}</div>
+                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>{tip.title}</div>
                     <div style={{ fontSize: "12px", lineHeight: "1.5", color: "rgba(205,201,192,0.5)" }}>{tip.desc}</div>
                   </div>
                 </div>

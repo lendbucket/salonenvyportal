@@ -84,10 +84,10 @@ export async function POST(req: NextRequest) {
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto; padding: 40px 20px;">
             <img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" style="max-width: 150px; margin-bottom: 24px; background: #0f1d24; padding: 8px 12px; border-radius: 6px;" />
-            <h2 style="color: #000000; margin: 0 0 8px;">Verify Your Email</h2>
+            <h2 style="color: #1A1313; margin: 0 0 8px;">Verify Your Email</h2>
             <p style="color: #666666; font-size: 14px; margin: 0 0 24px;">Enter this code to verify your email address:</p>
             <div style="background: #f5f5f5; border: 2px solid #e0e0e0; border-radius: 12px; padding: 24px; text-align: center; margin: 0 0 24px;">
-              <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; font-family: monospace; color: #000000;">${otp}</span>
+              <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; font-family: monospace; color: #1A1313;">${otp}</span>
             </div>
             <p style="color: #999999; font-size: 12px; margin: 0;">This code expires in 10 minutes. If you did not request this, please ignore this email.</p>
           </div>

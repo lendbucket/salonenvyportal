@@ -347,7 +347,7 @@ export default function DashboardPage() {
           <h1 style={{
             fontSize: "32px",
             fontWeight: 800,
-            color: "#FFFFFF",
+            color: "#FBFBFB",
             margin: 0,
             letterSpacing: "-0.02em",
             lineHeight: 1.1,
@@ -496,11 +496,11 @@ export default function DashboardPage() {
         <div style={{ display: "flex", gap: "10px", marginBottom: "16px", alignItems: "flex-end" }}>
           <div>
             <div style={{ fontSize: "12px", fontWeight: 600, color: "#606E74", marginBottom: "4px" }}>From</div>
-            <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
+            <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
           </div>
           <div>
             <div style={{ fontSize: "12px", fontWeight: 600, color: "#606E74", marginBottom: "4px" }}>To</div>
-            <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
+            <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
           </div>
           <button onClick={() => fetchData()} disabled={!customStart || !customEnd} style={{ padding: "6px 14px", border: "1px solid #606E74", borderRadius: "8px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", cursor: "pointer", opacity: (!customStart || !customEnd) ? 0.5 : 1 }}>Apply</button>
         </div>
@@ -509,8 +509,8 @@ export default function DashboardPage() {
       {/* Error state */}
       {fetchError && !loading && (
         <div style={{ background: '#0d1117', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: 20, textAlign: 'center', margin: '20px 0' }}>
-          <div style={{ color: '#ef4444', fontSize: 14, fontFamily: 'Plus Jakarta Sans, sans-serif', marginBottom: 8 }}>{fetchError}</div>
-          <button onClick={() => { setFetchError(null); fetchData() }} style={{ background: 'transparent', border: '1px solid #606E74', color: '#7a8f96', borderRadius: 6, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Retry</button>
+          <div style={{ color: '#ef4444', fontSize: 14, fontFamily: 'Inter, sans-serif', marginBottom: 8 }}>{fetchError}</div>
+          <button onClick={() => { setFetchError(null); fetchData() }} style={{ background: 'transparent', border: '1px solid #606E74', color: '#7a8f96', borderRadius: 6, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Retry</button>
         </div>
       )}
 
@@ -548,7 +548,7 @@ export default function DashboardPage() {
             <div style={{
               fontSize: "32px",
               fontWeight: 800,
-              color: "#FFFFFF",
+              color: "#FBFBFB",
               lineHeight: 1,
               marginBottom: "6px",
               letterSpacing: "-0.02em",
@@ -594,7 +594,7 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>event_busy</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Cancellations</span>
             </div>
-            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
               {cancellations?.totalCancellations ?? 0}
             </div>
             <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
@@ -617,7 +617,7 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>star</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Top Stylist</span>
             </div>
-            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
               {topStylist ? topStylist.name.split(" ")[0] : "\u2014"}
             </div>
             <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
@@ -640,7 +640,7 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>favorite</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Retention</span>
             </div>
-            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
               {retentionLoading ? <Skeleton /> : retention ? `${retention.retentionRate}%` : "\u2014"}
             </div>
             <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
@@ -732,7 +732,7 @@ export default function DashboardPage() {
           flexDirection: "column",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-            <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FFFFFF", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
+            <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FBFBFB", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
               {allStylists.length > 0 ? "Stylist Leaderboard" : "Recent Activity"}
             </h3>
             <span className="material-symbols-outlined" style={{ color: "rgba(205,201,192,0.25)", fontSize: "18px" }}>
@@ -768,7 +768,7 @@ export default function DashboardPage() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <span style={{ color: i === 0 ? "#FFFFFF" : "rgba(205,201,192,0.8)", fontSize: "13px", fontWeight: 600 }}>{s.name}</span>
+                      <span style={{ color: i === 0 ? "#FBFBFB" : "rgba(205,201,192,0.8)", fontSize: "13px", fontWeight: 600 }}>{s.name}</span>
                       <span style={{
                         fontSize: "9px",
                         fontWeight: 700,
@@ -785,7 +785,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: "14px", fontWeight: 800, color: i === 0 ? "#FFFFFF" : "rgba(205,201,192,0.7)" }}>
+                    <div style={{ fontSize: "14px", fontWeight: 800, color: i === 0 ? "#FBFBFB" : "rgba(205,201,192,0.7)" }}>
                       {fmt(s.revenue)}
                     </div>
                   </div>
@@ -806,7 +806,7 @@ export default function DashboardPage() {
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "24px", color: "#CDC9C0" }}>sync</span>
               </div>
-              <p style={{ fontSize: "13px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 3px" }}>Awaiting Activity</p>
+              <p style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 3px" }}>Awaiting Activity</p>
               <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>The portal is synchronized.</p>
             </div>
           )}
@@ -828,7 +828,7 @@ export default function DashboardPage() {
             <div style={{ fontSize: "8px", fontWeight: 700, color: "rgba(205,201,192,0.3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, marginBottom: "6px" }}>
               System Health
             </div>
-            <div style={{ fontSize: "22px", fontWeight: 800, color: "#FFFFFF", marginBottom: "10px" }}>Optimal</div>
+            <div style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", marginBottom: "10px" }}>Optimal</div>
             <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
               <div style={{ height: "2px", width: "28px", backgroundColor: "#CDC9C0", borderRadius: "4px" }} />
               <div style={{ height: "2px", width: "28px", backgroundColor: "rgba(205,201,192,0.15)", borderRadius: "4px" }} />
@@ -850,7 +850,7 @@ export default function DashboardPage() {
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
               <div>
-                <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 2px" }}>{drillDown.title}</h3>
+                <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 2px" }}>{drillDown.title}</h3>
                 <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>{pLabel} {activeLocation === "Both" ? "· Both locations" : `· ${activeLocation}`}</p>
               </div>
               <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -881,14 +881,14 @@ export default function DashboardPage() {
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                             <div style={{ width: "36px", height: "36px", borderRadius: "50%", backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 700, color: "#ef4444", flexShrink: 0 }}>{c.clientInitials || "?"}</div>
                             <div>
-                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#FFFFFF" }}>{c.clientName || "Client"}</div>
-                              {c.clientPhone && <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#7a8f96", marginTop: "1px" }}>{c.clientPhone}</div>}
+                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB" }}>{c.clientName || "Client"}</div>
+                              {c.clientPhone && <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#7a8f96", marginTop: "1px" }}>{c.clientPhone}</div>}
                             </div>
                           </div>
                           <span style={{ fontSize: "9px", padding: "3px 10px", borderRadius: "4px", backgroundColor: c.cancelledBy === "client" ? "rgba(239,68,68,0.1)" : "rgba(245,158,11,0.1)", color: c.cancelledBy === "client" ? "#ef4444" : "#f59e0b", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", flexShrink: 0 }}>{c.cancelledBy === "client" ? "BY CLIENT" : "BY SALON"}</span>
                         </div>
                         <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap", marginBottom: "6px" }}>
-                          <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#7a8f96" }}>{c.appointmentDate} {c.appointmentTime}</span>
+                          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#7a8f96" }}>{c.appointmentDate} {c.appointmentTime}</span>
                           <span style={{ fontSize: "11px", color: "#606E74" }}>{c.stylist?.name}</span>
                           <span style={{ fontSize: "9px", padding: "2px 6px", borderRadius: "4px", backgroundColor: c.stylist?.location === "CC" ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)", color: c.stylist?.location === "CC" ? "#818CF8" : "#10B981", fontWeight: 700 }}>{c.stylist?.location}</span>
                         </div>
@@ -914,15 +914,15 @@ export default function DashboardPage() {
                     {drillDown.summary && (
                       <div style={{ display: "flex", overflowX: "auto", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
                         {[
-                          { label: "Total", value: fmt(drillDown.summary.totalRevenue), color: "#FFFFFF" },
+                          { label: "Total", value: fmt(drillDown.summary.totalRevenue), color: "#FBFBFB" },
                           { label: "Tips", value: fmt(drillDown.summary.totalTips), color: "#22c55e" },
                           { label: "Tax", value: fmt(drillDown.summary.totalTax), color: "#606E74" },
                           { label: "Fees", value: `~${fmt(drillDown.summary.totalProcessingFees)}`, color: "#fb923c" },
-                          { label: "Net", value: fmt(drillDown.summary.netAfterFees), color: "#FFFFFF" },
+                          { label: "Net", value: fmt(drillDown.summary.netAfterFees), color: "#FBFBFB" },
                           { label: "Count", value: String(drillDown.summary.transactionCount), color: "#7a8f96" },
                         ].map(s => (
                           <div key={s.label} style={{ flex: "1 0 auto", padding: "14px 16px", textAlign: "center", minWidth: "70px" }}>
-                            <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "14px", fontWeight: 700, color: s.color, marginBottom: "2px" }}>{s.value}</div>
+                            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 700, color: s.color, marginBottom: "2px" }}>{s.value}</div>
                             <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.35)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{s.label}</div>
                           </div>
                         ))}
@@ -946,11 +946,11 @@ export default function DashboardPage() {
                               <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "3px" }}>
                                   {drillDown.type === "checkouts" && t.checkInTime ? (
-                                    <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#606E74", flexShrink: 0 }}>{t.checkInTime} <span style={{ color: "#22c55e" }}>&rarr;</span> <span style={{ color: "#22c55e" }}>{t.checkOutTime}</span></span>
+                                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#606E74", flexShrink: 0 }}>{t.checkInTime} <span style={{ color: "#22c55e" }}>&rarr;</span> <span style={{ color: "#22c55e" }}>{t.checkOutTime}</span></span>
                                   ) : (
-                                    <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "12px", color: "#7a8f96", flexShrink: 0 }}>{t.time}</span>
+                                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "12px", color: "#7a8f96", flexShrink: 0 }}>{t.time}</span>
                                   )}
-                                  <span style={{ fontSize: "14px", fontWeight: 600, color: "#FFFFFF", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.client?.name}</span>
+                                  <span style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.client?.name}</span>
                                 </div>
                                 <div style={{ fontSize: "12px", color: "#606E74", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                   {t.services?.map((s: { name: string }) => s.name).join(", ").slice(0, 45) || "Services"}
@@ -960,13 +960,13 @@ export default function DashboardPage() {
                               {/* Right: payment + stylist + total */}
                               <div style={{ textAlign: "right", flexShrink: 0 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end", marginBottom: "4px" }}>
-                                  <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "10px", padding: "2px 8px", borderRadius: "4px", backgroundColor: ps.bg, color: ps.color, border: `1px solid ${ps.border}`, fontWeight: 600 }}>{t.payment?.method}</span>
-                                  {t.payment?.last4 && <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "10px", color: "#606E74" }}>{t.payment.last4}</span>}
+                                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", padding: "2px 8px", borderRadius: "4px", backgroundColor: ps.bg, color: ps.color, border: `1px solid ${ps.border}`, fontWeight: 600 }}>{t.payment?.method}</span>
+                                  {t.payment?.last4 && <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", color: "#606E74" }}>{t.payment.last4}</span>}
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end" }}>
                                   <span style={{ fontSize: "11px", color: "#7a8f96" }}>{t.stylist?.name?.split(" ")[0]}</span>
                                   <span style={{ fontSize: "8px", padding: "1px 5px", borderRadius: "3px", backgroundColor: t.stylist?.location === "CC" ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)", color: t.stylist?.location === "CC" ? "#818CF8" : "#10B981", fontWeight: 700 }}>{t.stylist?.location}</span>
-                                  <span style={{ fontFamily: "'Fira Code', monospace", fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginLeft: "4px" }}>{fmt(t.amounts?.total)}</span>
+                                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginLeft: "4px" }}>{fmt(t.amounts?.total)}</span>
                                 </div>
                               </div>
                             </div>
@@ -975,24 +975,24 @@ export default function DashboardPage() {
                             {isExpanded && (
                               <div style={{ marginTop: "12px", padding: "12px 16px", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.04)" }}>
                                 {[
-                                  { label: "Subtotal", value: fmt(t.amounts?.subtotal), color: "#FFFFFF" },
+                                  { label: "Subtotal", value: fmt(t.amounts?.subtotal), color: "#FBFBFB" },
                                   { label: "Tip", value: fmt(t.amounts?.tip), color: "#22c55e" },
                                   { label: "Tax", value: fmt(t.amounts?.tax), color: "#606E74" },
                                   { label: "Proc. Fee", value: `~${fmt(t.amounts?.processingFee)}`, color: "#fb923c", note: "estimated" },
                                   null,
-                                  { label: "Total", value: fmt(t.amounts?.total), color: "#FFFFFF", bold: true },
+                                  { label: "Total", value: fmt(t.amounts?.total), color: "#FBFBFB", bold: true },
                                 ].map((row, ri) => row === null ? (
                                   <div key={ri} style={{ borderTop: "1px solid rgba(255,255,255,0.06)", margin: "6px 0" }} />
                                 ) : (
                                   <div key={ri} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "3px 0" }}>
                                     <span style={{ fontSize: "12px", color: "#7a8f96" }}>{row.label}{row.note ? <span style={{ fontSize: "10px", color: "#606E74", fontStyle: "italic", marginLeft: "4px" }}>{row.note}</span> : ""}</span>
-                                    <span style={{ fontFamily: "'Fira Code', monospace", fontSize: row.bold ? "14px" : "12px", fontWeight: row.bold ? 700 : 400, color: row.color }}>{row.value}</span>
+                                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: row.bold ? "14px" : "12px", fontWeight: row.bold ? 700 : 400, color: row.color }}>{row.value}</span>
                                   </div>
                                 ))}
                                 {/* Services list */}
                                 <div style={{ marginTop: "10px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
                                   {t.services?.map((s: { name: string; price: number }, si: number) => (
-                                    <span key={si} style={{ fontSize: "11px", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#7a8f96" }}>{s.name} <span style={{ fontFamily: "'Fira Code', monospace", color: "#FFFFFF" }}>{fmt(s.price)}</span></span>
+                                    <span key={si} style={{ fontSize: "11px", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#7a8f96" }}>{s.name} <span style={{ fontFamily: "'Inter', sans-serif", color: "#FBFBFB" }}>{fmt(s.price)}</span></span>
                                   ))}
                                 </div>
                               </div>

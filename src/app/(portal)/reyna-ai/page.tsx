@@ -128,7 +128,7 @@ export default function ReynaAIPage() {
         </div>
       }
       if (line.startsWith("**") && line.endsWith("**")) {
-        return <div key={i} style={{ fontWeight: 700, color: "#FFFFFF", marginBottom: "6px", marginTop: "10px" }}>{line.replace(/\*\*/g, "")}</div>
+        return <div key={i} style={{ fontWeight: 700, color: "#FBFBFB", marginBottom: "6px", marginTop: "10px" }}>{line.replace(/\*\*/g, "")}</div>
       }
       if (line === "") return <div key={i} style={{ height: "8px" }} />
       return <div key={i} style={{ marginBottom: "2px" }}>{line}</div>
@@ -161,7 +161,7 @@ export default function ReynaAIPage() {
         <h2 style={{
           fontSize: isMobile ? "22px" : "28px",
           fontWeight: 800,
-          color: "#FFFFFF",
+          color: "#FBFBFB",
           margin: "0 0 10px",
           letterSpacing: "-0.03em",
         }}>
@@ -356,7 +356,7 @@ export default function ReynaAIPage() {
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <ReynaAvatar size={isMobile ? 32 : 36} />
         <div>
-          <div style={{ fontSize: isMobile ? "14px" : "15px", fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.01em" }}>Reyna AI</div>
+          <div style={{ fontSize: isMobile ? "14px" : "15px", fontWeight: 700, color: "#FBFBFB", letterSpacing: "-0.01em" }}>Reyna AI</div>
           <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: "4px" }}>
             <div style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "#10B981" }} />
             Salon Envy Intelligence

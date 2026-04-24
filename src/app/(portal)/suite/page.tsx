@@ -3,8 +3,8 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useUserRole } from "@/hooks/useUserRole"
 
-const mono: React.CSSProperties = { fontFamily: "'Fira Code', 'Courier New', monospace" }
-const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif" }
+const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
+const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
 
 const ACC = "#606E74"
 const ACC_BRIGHT = "#7a8f96"

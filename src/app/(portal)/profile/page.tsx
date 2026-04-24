@@ -18,7 +18,7 @@ const inputStyle: React.CSSProperties = {
   backgroundColor: "rgba(205,201,192,0.06)",
   border: "1px solid rgba(205,201,192,0.15)",
   borderRadius: "8px",
-  color: "#FFFFFF",
+  color: "#FBFBFB",
   fontSize: "14px",
   fontWeight: 500,
   outline: "none",
@@ -125,7 +125,7 @@ export default function ProfilePage() {
       <h1 style={{
         fontSize: "32px",
         fontWeight: 800,
-        color: "#FFFFFF",
+        color: "#FBFBFB",
         marginBottom: "28px",
         letterSpacing: "-0.02em",
       }}>
@@ -151,7 +151,7 @@ export default function ProfilePage() {
           {initials}
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: "20px", fontWeight: 700, color: "#FFFFFF", marginBottom: "4px" }}>
+          <div style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>
             {user?.name || "User"}
           </div>
           <div style={{ fontSize: "13px", color: "rgba(205,201,192,0.5)", marginBottom: "8px" }}>

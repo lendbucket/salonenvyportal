@@ -65,17 +65,17 @@ const TABS = ["Overview", "Goals", "Leaderboard", "Bonuses"] as const
 type Tab = (typeof TABS)[number]
 
 const GOAL_STATUS_COLORS: Record<string, string> = {
-  ON_TRACK: "#10B981",
-  BEHIND: "#f59e0b",
-  MISSED: "#ef4444",
-  HIT: "#4da6ff",
+  ON_TRACK: "#0d9488",
+  BEHIND: "#d97706",
+  MISSED: "#dc2626",
+  HIT: "#2563eb",
 }
 
 const BONUS_STATUS_COLORS: Record<string, string> = {
-  PENDING: "#f59e0b",
-  APPROVED: "#4da6ff",
-  PAID: "#10B981",
-  DENIED: "#ef4444",
+  PENDING: "#ca8a04",
+  APPROVED: "#0d9488",
+  PAID: "#16a34a",
+  DENIED: "#dc2626",
 }
 
 const GOAL_ICONS: Record<string, string> = {
@@ -356,7 +356,7 @@ export default function PerformancePage() {
 
       {/* ── Header ── */}
       <div style={{ marginBottom: "24px" }}>
-        <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+        <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
           Performance
         </h1>
         <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>
@@ -414,7 +414,7 @@ export default function PerformancePage() {
               border: "none",
               borderBottom: tab === t ? "2px solid #7a8f96" : "2px solid transparent",
               backgroundColor: "transparent",
-              color: tab === t ? "#FFFFFF" : "rgba(205,201,192,0.45)",
+              color: tab === t ? "#FBFBFB" : "rgba(205,201,192,0.45)",
               cursor: "pointer",
               transition: "all 0.15s",
             }}
@@ -451,7 +451,7 @@ export default function PerformancePage() {
                       <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.3)" }}>{card.icon}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "8px", marginBottom: "4px" }}>
-                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.02em", fontFamily: "Fira Code, monospace" }}>{card.value}</span>
+                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#FBFBFB", letterSpacing: "-0.02em", fontFamily: "Inter, sans-serif" }}>{card.value}</span>
                       <DeltaBadge delta={card.delta} />
                     </div>
                     <div style={{ fontSize: "11px", color: "#94A3B8", marginBottom: "10px" }}>{card.target}</div>
@@ -468,14 +468,14 @@ export default function PerformancePage() {
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "16px" }}>
                   {[
-                    { label: "Services Subtotal", value: fmt(kpi.commission.servicesSubtotal), color: "#FFFFFF" },
+                    { label: "Services Subtotal", value: fmt(kpi.commission.servicesSubtotal), color: "#FBFBFB" },
                     { label: `Commission (${(kpi.commission.commissionRate * 100).toFixed(0)}%)`, value: fmt(kpi.commission.commissionAmount), color: "#10B981" },
                     { label: "Tips", value: fmt(kpi.commission.tips), color: "#10B981" },
                     { label: "Total Payout", value: fmt(kpi.commission.totalPayout), color: "#22c55e" },
                   ].map(item => (
                     <div key={item.label}>
                       <div style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.08em" }}>{item.label}</div>
-                      <div style={{ fontSize: "22px", fontWeight: 800, color: item.color, fontFamily: "Fira Code, monospace", letterSpacing: "-0.02em" }}>{item.value}</div>
+                      <div style={{ fontSize: "22px", fontWeight: 800, color: item.color, fontFamily: "Inter, sans-serif", letterSpacing: "-0.02em" }}>{item.value}</div>
                     </div>
                   ))}
                 </div>
@@ -501,12 +501,12 @@ export default function PerformancePage() {
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                               <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#7a8f96" }}>{GOAL_ICONS[g.type] || "flag"}</span>
-                              <span style={{ fontSize: "12px", fontWeight: 700, color: "#FFFFFF" }}>{g.label}</span>
+                              <span style={{ fontSize: "12px", fontWeight: 700, color: "#FBFBFB" }}>{g.label}</span>
                             </div>
                             <StatusBadge status={g.status} colors={GOAL_STATUS_COLORS} />
                           </div>
                           <div style={{ fontSize: "11px", color: "#94A3B8", marginBottom: "6px" }}>
-                            <span style={{ fontFamily: "Fira Code, monospace", color: "#CDC9C0" }}>{g.current}</span> / {g.target} ({pct.toFixed(0)}%)
+                            <span style={{ fontFamily: "Inter, sans-serif", color: "#CDC9C0" }}>{g.current}</span> / {g.target} ({pct.toFixed(0)}%)
                           </div>
                           <ProgressBar pct={pct} color={GOAL_STATUS_COLORS[g.status] || "#7a8f96"} />
                         </div>
@@ -561,7 +561,7 @@ export default function PerformancePage() {
                           <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#7a8f96" }}>{GOAL_ICONS[g.type] || "flag"}</span>
                         </div>
                         <div>
-                          <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginBottom: "2px" }}>{g.label}</div>
+                          <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "2px" }}>{g.label}</div>
                           {g.staffMemberName && <div style={{ fontSize: "11px", color: "#606E74" }}>{g.staffMemberName}</div>}
                         </div>
                       </div>
@@ -579,9 +579,9 @@ export default function PerformancePage() {
                       </div>
                     </div>
                     <div style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "8px" }}>
-                      <span style={{ fontFamily: "Fira Code, monospace", color: "#CDC9C0", fontWeight: 700 }}>{g.current}</span>
+                      <span style={{ fontFamily: "Inter, sans-serif", color: "#CDC9C0", fontWeight: 700 }}>{g.current}</span>
                       {" / "}
-                      <span style={{ fontFamily: "Fira Code, monospace" }}>{g.target}</span>
+                      <span style={{ fontFamily: "Inter, sans-serif" }}>{g.target}</span>
                       {" "}
                       <span style={{ color: "#606E74" }}>({pct.toFixed(0)}%)</span>
                     </div>
@@ -610,8 +610,8 @@ export default function PerformancePage() {
           {currentUserEntry && (
             <div style={{ ...cardStyle, marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "22px", color: "#f59e0b" }}>emoji_events</span>
-              <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>
-                You are ranked <span style={{ fontFamily: "Fira Code, monospace", color: "#4da6ff" }}>#{currentUserEntry.rank}</span> of <span style={{ fontFamily: "Fira Code, monospace", color: "#CDC9C0" }}>{leaderboard.length}</span> stylists
+              <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>
+                You are ranked <span style={{ fontFamily: "Inter, sans-serif", color: "#4da6ff" }}>#{currentUserEntry.rank}</span> of <span style={{ fontFamily: "Inter, sans-serif", color: "#CDC9C0" }}>{leaderboard.length}</span> stylists
               </span>
             </div>
           )}
@@ -646,25 +646,25 @@ export default function PerformancePage() {
                       }}>
                         <td style={{ padding: "12px 16px", textAlign: "right" }}>
                           <span style={{
-                            fontFamily: "Fira Code, monospace", fontSize: "14px", fontWeight: 800,
+                            fontFamily: "Inter, sans-serif", fontSize: "14px", fontWeight: 800,
                             color: entry.rank <= 3 ? "#f59e0b" : "#CDC9C0",
                           }}>
                             {entry.rank}
                           </span>
                         </td>
                         <td style={{ padding: "12px 16px", textAlign: "left" }}>
-                          <span style={{ fontSize: "13px", fontWeight: isMe ? 800 : 600, color: isMe ? "#4da6ff" : "#FFFFFF" }}>
+                          <span style={{ fontSize: "13px", fontWeight: isMe ? 800 : 600, color: isMe ? "#4da6ff" : "#FBFBFB" }}>
                             {displayName}
                           </span>
                           {isMe && <span style={{ fontSize: "9px", color: "#4da6ff", marginLeft: "6px", fontWeight: 700 }}>(YOU)</span>}
                         </td>
-                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Fira Code, monospace", fontSize: "13px", color: "#CDC9C0" }}>
+                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "13px", color: "#CDC9C0" }}>
                           {entry.checkouts}
                         </td>
-                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Fira Code, monospace", fontSize: "13px", color: "#10B981" }}>
+                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "13px", color: "#10B981" }}>
                           {fmt(entry.revenue)}
                         </td>
-                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Fira Code, monospace", fontSize: "13px", color: "#CDC9C0" }}>
+                        <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "Inter, sans-serif", fontSize: "13px", color: "#CDC9C0" }}>
                           {fmt(entry.avgTicket)}
                         </td>
                       </tr>
@@ -709,7 +709,7 @@ export default function PerformancePage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
                     <div style={{ flex: 1, minWidth: "200px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                        <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>{b.staffMemberName}</span>
+                        <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{b.staffMemberName}</span>
                         <StatusBadge status={b.status} colors={BONUS_STATUS_COLORS} />
                       </div>
                       <div style={{ fontSize: "11px", color: "#94A3B8", marginBottom: "4px" }}>{b.goalLabel}</div>
@@ -718,7 +718,7 @@ export default function PerformancePage() {
                       </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "22px", fontWeight: 800, color: "#10B981", fontFamily: "Fira Code, monospace" }}>
+                      <span style={{ fontSize: "22px", fontWeight: 800, color: "#10B981", fontFamily: "Inter, sans-serif" }}>
                         {fmt(b.amount)}
                       </span>
                       {isOwner && b.status === "PENDING" && (
@@ -770,7 +770,7 @@ export default function PerformancePage() {
             onClick={e => e.stopPropagation()}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: 0 }}>Create Goal</h2>
+              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>Create Goal</h2>
               <button onClick={() => setGoalModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>close</span>
               </button>
@@ -809,7 +809,7 @@ export default function PerformancePage() {
                   value={goalForm.target}
                   onChange={e => setGoalForm(f => ({ ...f, target: e.target.value }))}
                   placeholder="e.g. 5000"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", fontFamily: "Fira Code, monospace", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 
@@ -821,7 +821,7 @@ export default function PerformancePage() {
                   value={goalForm.bonus}
                   onChange={e => setGoalForm(f => ({ ...f, bonus: e.target.value }))}
                   placeholder="e.g. 100"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", fontFamily: "Fira Code, monospace", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 
@@ -863,7 +863,7 @@ export default function PerformancePage() {
             onClick={e => e.stopPropagation()}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#FFFFFF", margin: 0 }}>Create Bonus</h2>
+              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>Create Bonus</h2>
               <button onClick={() => setBonusModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>close</span>
               </button>
@@ -889,7 +889,7 @@ export default function PerformancePage() {
                   value={bonusForm.amount}
                   onChange={e => setBonusForm(f => ({ ...f, amount: e.target.value }))}
                   placeholder="e.g. 150"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", fontFamily: "Fira Code, monospace", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 
@@ -901,7 +901,7 @@ export default function PerformancePage() {
                   value={bonusForm.reason}
                   onChange={e => setBonusForm(f => ({ ...f, reason: e.target.value }))}
                   placeholder="e.g. Hit monthly revenue goal"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#ffffff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 

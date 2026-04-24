@@ -15,8 +15,8 @@ type PO = {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  draft: "#94A3B8", pending: "#F59E0B", approved: "#3B82F6",
-  ordered: "#8B5CF6", received: "#10B981", cancelled: "#EF4444",
+  draft: "#9333ea", pending: "#ca8a04", approved: "#0d9488",
+  ordered: "#2563eb", received: "#16a34a", cancelled: "#dc2626",
 }
 
 const cardStyle: React.CSSProperties = {
@@ -40,7 +40,7 @@ const btnSecondary: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 14px", boxSizing: "border-box",
   backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "8px", color: "#FFFFFF", fontSize: "14px", outline: "none",
+  borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none",
   transition: "border-color 0.15s, box-shadow 0.15s",
 }
 
@@ -129,7 +129,7 @@ export default function PurchaseOrdersPage() {
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1200px", margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
-        <h1 style={{ color: "#FFFFFF", fontSize: "22px", fontWeight: 700, margin: 0 }}>Purchase Orders</h1>
+        <h1 style={{ color: "#FBFBFB", fontSize: "22px", fontWeight: 700, margin: 0 }}>Purchase Orders</h1>
         {(isOwner || isManager) && (
           <button style={btnPrimary} onClick={() => setShowCreate(true)}>+ New PO</button>
         )}
@@ -156,7 +156,7 @@ export default function PurchaseOrdersPage() {
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
               <div>
-                <span style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 700 }}>{po.poNumber}</span>
+                <span style={{ color: "#FBFBFB", fontSize: "14px", fontWeight: 700 }}>{po.poNumber}</span>
                 <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px", marginLeft: "12px" }}>{po.supplier}</span>
                 <span style={{ color: "rgba(205,201,192,0.4)", fontSize: "11px", marginLeft: "12px" }}>{po.location.name}</span>
               </div>
@@ -183,7 +183,7 @@ export default function PurchaseOrdersPage() {
           onClick={() => setSelected(null)}>
           <div style={{ ...cardStyle, maxWidth: "600px", width: "100%", maxHeight: "80vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <h2 style={{ color: "#FFFFFF", fontSize: "18px", fontWeight: 700, margin: 0 }}>{selected.poNumber}</h2>
+              <h2 style={{ color: "#FBFBFB", fontSize: "18px", fontWeight: 700, margin: 0 }}>{selected.poNumber}</h2>
               <span style={{
                 padding: "4px 12px", borderRadius: "6px", fontSize: "11px", fontWeight: 700,
                 textTransform: "uppercase", backgroundColor: `${STATUS_COLORS[selected.status]}20`,
@@ -228,7 +228,7 @@ export default function PurchaseOrdersPage() {
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
           onClick={() => setShowCreate(false)}>
           <div style={{ ...cardStyle, maxWidth: "600px", width: "100%", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ color: "#FFFFFF", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Purchase Order</h2>
+            <h2 style={{ color: "#FBFBFB", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Purchase Order</h2>
 
             <div style={{ marginBottom: "12px" }}>
               <label style={labelStyle}>Location</label>
@@ -273,7 +273,7 @@ export default function PurchaseOrdersPage() {
             </div>
 
             {createError && (
-              <div style={{ color: "#ef4444", fontSize: "13px", fontFamily: "Plus Jakarta Sans, sans-serif", marginBottom: "12px" }}>{createError}</div>
+              <div style={{ color: "#ef4444", fontSize: "13px", fontFamily: "Inter, sans-serif", marginBottom: "12px" }}>{createError}</div>
             )}
             <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
               <button style={btnSecondary} onClick={() => setShowCreate(false)}>Cancel</button>

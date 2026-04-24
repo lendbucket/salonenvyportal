@@ -210,10 +210,10 @@ export default function StyleCreditPage() {
     : 0
 
   const mono: React.CSSProperties = {
-    fontFamily: "'Fira Code', 'Courier New', monospace",
+    fontFamily: "'Inter', sans-serif",
   }
   const jakarta: React.CSSProperties = {
-    fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif",
+    fontFamily: "'Inter', -apple-system, sans-serif",
   }
   const inputStyle: React.CSSProperties = {
     width: "100%",
@@ -221,7 +221,7 @@ export default function StyleCreditPage() {
     backgroundColor: "rgba(255,255,255,0.06)",
     border: `1px solid ${BORDER2}`,
     borderRadius: "8px",
-    color: "#FFFFFF",
+    color: "#FBFBFB",
     fontSize: "14px",
     outline: "none",
     boxSizing: "border-box" as const,
@@ -253,9 +253,9 @@ export default function StyleCreditPage() {
   if (!hasAccess) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-        <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 18, fontWeight: 700, color: "#ffffff", marginBottom: 8 }}>StyleCredit</div>
-        <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
-        <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Plus Jakarta Sans, sans-serif" }}>View Plans</button>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>StyleCredit</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
+        <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Inter, sans-serif" }}>View Plans</button>
       </div>
     )
   }

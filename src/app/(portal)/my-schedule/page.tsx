@@ -97,7 +97,7 @@ export default function MySchedulePage() {
         </div>
       )}
 
-      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 4px", letterSpacing: "-0.02em" }}>My Schedule</h1>
+      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>My Schedule</h1>
       <p style={{ fontSize: "12px", color: "#94A3B8", margin: "0 0 24px" }}>Your upcoming shifts</p>
 
       {loading ? (
@@ -109,7 +109,7 @@ export default function MySchedulePage() {
       ) : shifts.length === 0 ? (
         <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "16px" }}>event_busy</span>
-          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 8px" }}>No shifts scheduled</p>
+          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 8px" }}>No shifts scheduled</p>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>Your upcoming shifts will appear here once assigned.</p>
         </div>
       ) : (
@@ -125,7 +125,7 @@ export default function MySchedulePage() {
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>{formatDay(sh.date)}</span>
+                    <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{formatDay(sh.date)}</span>
                     {badge && (
                       <span style={{
                         padding: "2px 8px",

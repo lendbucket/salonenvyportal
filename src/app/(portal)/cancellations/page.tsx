@@ -64,9 +64,9 @@ const STATUS_FILTERS = [
 ]
 
 const STATUS_COLORS: Record<string, string> = {
-  CANCELLED_BY_CUSTOMER: "#F59E0B",
-  CANCELLED_BY_SELLER: "#94A3B8",
-  NO_SHOW: "#EF4444",
+  CANCELLED_BY_CUSTOMER: "#dc2626",
+  CANCELLED_BY_SELLER: "#dc2626",
+  NO_SHOW: "#ea580c",
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -419,7 +419,7 @@ export default function CancellationsPage() {
             fontSize: "22px",
             fontWeight: 800,
             letterSpacing: "0.02em",
-            color: "#FFFFFF",
+            color: "#FBFBFB",
           }}
         >
           Cancellations
@@ -530,7 +530,7 @@ export default function CancellationsPage() {
             }}
           >
             {[
-              { label: "Total Cancellations", value: data.stats.totalCancellations, color: "#FFFFFF" },
+              { label: "Total Cancellations", value: data.stats.totalCancellations, color: "#FBFBFB" },
               { label: "Client Cancelled", value: data.stats.cancelledByCustomer, color: "#F59E0B" },
               { label: "No Shows", value: data.stats.noShows, color: "#EF4444" },
               { label: "Salon Cancelled", value: data.stats.cancelledBySeller, color: "#94A3B8" },
@@ -559,7 +559,7 @@ export default function CancellationsPage() {
                   {kpi.value}
                 </div>
                 {"sub" in kpi && kpi.sub && (
-                  <div style={{ fontFamily: "'Fira Code', monospace", fontSize: "10px", color: "#606E74", marginTop: "4px" }}>{kpi.sub}</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", color: "#606E74", marginTop: "4px" }}>{kpi.sub}</div>
                 )}
               </div>
             ))}
@@ -615,7 +615,7 @@ export default function CancellationsPage() {
                       padding: "5px 12px",
                       fontSize: "10px",
                       backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.15)" : "transparent",
-                      color: statusFilter === sf.value ? "#FFFFFF" : "rgba(205,201,192,0.5)",
+                      color: statusFilter === sf.value ? "#FBFBFB" : "rgba(205,201,192,0.5)",
                       border: statusFilter === sf.value ? "1px solid rgba(205,201,192,0.2)" : "1px solid transparent",
                       display: "flex",
                       alignItems: "center",
@@ -672,7 +672,7 @@ export default function CancellationsPage() {
                     <span style={{ padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(16,185,129,0.15)", color: "#10B981" }}>REPEAT</span>
                   )}
                 </div>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginBottom: "6px" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "6px" }}>
                   {c.customerName}
                   {(c.visitCount ?? c.totalPastVisits) > 1 && (
                     <span style={{ marginLeft: "6px", padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.5)" }}>

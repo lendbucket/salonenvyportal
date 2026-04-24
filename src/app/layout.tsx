@@ -6,7 +6,9 @@ import { Providers } from "./providers"
 
 const inter = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-inter",
+  display: "swap",
 })
 
 const notoSerif = Noto_Serif({
@@ -48,9 +50,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <body
-        className={`${inter.variable} ${notoSerif.variable}`}
+        className={notoSerif.variable}
         style={{ backgroundColor: "#0f1d24", margin: 0 }}
       >
         <Providers>

@@ -399,7 +399,7 @@ function POSPageInner() {
           }}
         >
           <span
-            style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 700 }}
+            style={{ color: "#FBFBFB", fontSize: "14px", fontWeight: 700 }}
           >
             {appt.customerName}
           </span>
@@ -500,7 +500,7 @@ function POSPageInner() {
                 backgroundColor: "transparent",
                 border: "none",
                 outline: "none",
-                color: "#FFFFFF",
+                color: "#FBFBFB",
                 fontSize: "13px",
               }}
             />
@@ -556,7 +556,7 @@ function POSPageInner() {
                 >
                   <span
                     style={{
-                      color: "#FFFFFF",
+                      color: "#FBFBFB",
                       fontSize: "12px",
                       fontWeight: 600,
                       lineHeight: 1.3,
@@ -625,7 +625,7 @@ function POSPageInner() {
             >
               Client
             </div>
-            <div style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 700 }}>
+            <div style={{ color: "#FBFBFB", fontSize: "14px", fontWeight: 700 }}>
               {selectedAppt.customerName}
             </div>
             <div
@@ -687,7 +687,7 @@ function POSPageInner() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div
                     style={{
-                      color: "#FFFFFF",
+                      color: "#FBFBFB",
                       fontSize: "12px",
                       fontWeight: 600,
                       whiteSpace: "nowrap",
@@ -756,7 +756,7 @@ function POSPageInner() {
                   </button>
                   <span
                     style={{
-                      color: "#FFFFFF",
+                      color: "#FBFBFB",
                       fontSize: "13px",
                       fontWeight: 700,
                       minWidth: "18px",
@@ -787,7 +787,7 @@ function POSPageInner() {
                 </div>
                 <span
                   style={{
-                    color: "#FFFFFF",
+                    color: "#FBFBFB",
                     fontSize: "13px",
                     fontWeight: 700,
                     minWidth: "60px",
@@ -863,7 +863,7 @@ function POSPageInner() {
                   borderRadius: "7px",
                   border: "1px solid rgba(205,201,192,0.15)",
                   backgroundColor: "transparent",
-                  color: "#FFFFFF",
+                  color: "#FBFBFB",
                   fontSize: "12px",
                   fontWeight: 600,
                   outline: "none",
@@ -923,7 +923,7 @@ function POSPageInner() {
                 justifyContent: "space-between",
                 fontSize: "18px",
                 fontWeight: 800,
-                color: "#FFFFFF",
+                color: "#FBFBFB",
                 paddingTop: "6px",
                 borderTop: "1px solid rgba(205,201,192,0.1)",
               }}
@@ -1006,7 +1006,7 @@ function POSPageInner() {
                       borderRadius: "7px",
                       border: "1px solid rgba(205,201,192,0.15)",
                       backgroundColor: "rgba(255,255,255,0.03)",
-                      color: "#FFFFFF",
+                      color: "#FBFBFB",
                       fontSize: "16px",
                       fontWeight: 700,
                       outline: "none",
@@ -1118,7 +1118,7 @@ function POSPageInner() {
         </div>
         <div
           style={{
-            color: "#FFFFFF",
+            color: "#FBFBFB",
             fontSize: "24px",
             fontWeight: 800,
           }}
@@ -1206,7 +1206,7 @@ function POSPageInner() {
               style={{
                 fontSize: "22px",
                 fontWeight: 800,
-                color: "#FFFFFF",
+                color: "#FBFBFB",
                 margin: 0,
               }}
             >
@@ -1362,7 +1362,7 @@ function POSPageInner() {
             style={{
               fontSize: "20px",
               fontWeight: 800,
-              color: "#FFFFFF",
+              color: "#FBFBFB",
               margin: "0 0 2px",
             }}
           >

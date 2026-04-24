@@ -7,8 +7,8 @@ const ACC = "#606E74", ACC_B = "#7a8f96", ACC_DIM = "rgba(96,110,116,0.08)", ACC
 const BORDER = "rgba(255,255,255,0.06)", S1 = "rgba(255,255,255,0.03)", S2 = "rgba(255,255,255,0.05)"
 const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
 const MUTED = "rgba(255,255,255,0.3)", MID = "rgba(255,255,255,0.6)", GREEN = "#10B981", AMBER = "#ffb347", BLUE = "#4da6ff", RED = "#ff6b6b"
-const mono: React.CSSProperties = { fontFamily: "'Fira Code', monospace" }
-const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', sans-serif" }
+const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
+const jakarta: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyObj = any
@@ -422,7 +422,7 @@ function InvoicesTab({ locationId, isMobile }: { locationId: string; isMobile: b
     setSaving(false)
   }
 
-  const statusColors: Record<string, string> = { draft: MUTED, sent: BLUE, paid: GREEN, overdue: RED, cancelled: "#666" }
+  const statusColors: Record<string, string> = { draft: "#9333ea", sent: "#2563eb", paid: "#16a34a", overdue: "#ea580c", cancelled: "#dc2626" }
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "8px 12px", backgroundColor: S2, border: `1px solid ${BORDER}`, borderRadius: "8px",

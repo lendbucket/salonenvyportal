@@ -42,15 +42,15 @@ function getCatColor(cat: string): string {
 }
 
 function getStatus(qty: number, threshold: number): { label: string; color: string; key: string } {
-  if (qty <= 0) return { label: "Out", color: "#EF4444", key: "out" }
-  if (qty <= threshold) return { label: "Low", color: "#F59E0B", key: "low" }
-  return { label: "OK", color: "#10B981", key: "ok" }
+  if (qty <= 0) return { label: "Out", color: "#dc2626", key: "out" }
+  if (qty <= threshold) return { label: "Low", color: "#ea580c", key: "low" }
+  return { label: "OK", color: "#16a34a", key: "ok" }
 }
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
   backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "8px", color: "#FFFFFF", fontSize: "13px", outline: "none",
+  borderRadius: "8px", color: "#FBFBFB", fontSize: "13px", outline: "none",
 }
 
 const labelStyle: React.CSSProperties = {
@@ -313,7 +313,7 @@ export default function InventoryPage() {
               </span>
             </div>
             <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "2px" }}>{item.brand}</div>
-            <div style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF", marginBottom: "2px" }}>{item.productName}</div>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "2px" }}>{item.productName}</div>
             {item.shadeOrVolume && <div style={{ fontSize: "11px", color: "#94A3B8" }}>{item.shadeOrVolume}</div>}
           </div>
         </div>
@@ -345,7 +345,7 @@ export default function InventoryPage() {
         {/* +/- and action buttons */}
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
           <button onClick={() => adjustQty(item, -1)} disabled={updating === item.id || item.quantityOnHand <= 0} style={qtyBtn("#EF4444", updating === item.id || item.quantityOnHand <= 0)}>-</button>
-          <span style={{ fontSize: "15px", fontWeight: 800, color: "#FFFFFF", minWidth: "28px", textAlign: "center" }}>{item.quantityOnHand}</span>
+          <span style={{ fontSize: "15px", fontWeight: 800, color: "#FBFBFB", minWidth: "28px", textAlign: "center" }}>{item.quantityOnHand}</span>
           <button onClick={() => adjustQty(item, 1)} disabled={updating === item.id} style={qtyBtn("#10B981", updating === item.id)}>+</button>
           {canEdit && (
             <div style={{ marginLeft: "auto", display: "flex", gap: "4px" }}>
@@ -365,7 +365,7 @@ export default function InventoryPage() {
   // ---- RENDER TABLE ----
   const renderTable = () => {
     const thStyle: React.CSSProperties = { padding: "10px 12px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.06)" }
-    const tdStyle: React.CSSProperties = { padding: "10px 12px", fontSize: "13px", color: "#FFFFFF", borderBottom: "1px solid rgba(205,201,192,0.06)" }
+    const tdStyle: React.CSSProperties = { padding: "10px 12px", fontSize: "13px", color: "#FBFBFB", borderBottom: "1px solid rgba(205,201,192,0.06)" }
     return (
       <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(205,201,192,0.1)", backgroundColor: "#0d1117" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -452,7 +452,7 @@ export default function InventoryPage() {
                 style={{
                   width: "100%", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center",
                   background: "none", border: "none", borderBottom: collapsed ? "none" : "1px solid rgba(255,255,255,0.06)",
-                  cursor: "pointer", color: "#FFFFFF",
+                  cursor: "pointer", color: "#FBFBFB",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -471,13 +471,13 @@ export default function InventoryPage() {
                           {item.category.replace("_", " ")}
                         </span>
                         <div style={{ flex: 1, minWidth: "120px" }}>
-                          <span style={{ fontSize: "13px", fontWeight: 600, color: "#FFFFFF" }}>{item.productName}</span>
+                          <span style={{ fontSize: "13px", fontWeight: 600, color: "#FBFBFB" }}>{item.productName}</span>
                           {item.shadeOrVolume && <span style={{ fontSize: "11px", color: "#94A3B8", marginLeft: "6px" }}>{item.shadeOrVolume}</span>}
                         </div>
                         <span style={{ padding: "2px 8px", borderRadius: "8px", fontSize: "9px", fontWeight: 700, backgroundColor: `${st.color}15`, color: st.color }}>{st.label}</span>
                         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                           <button onClick={() => adjustQty(item, -1)} disabled={updating === item.id || item.quantityOnHand <= 0} style={qtyBtn("#EF4444", updating === item.id || item.quantityOnHand <= 0)}>-</button>
-                          <span style={{ fontSize: "14px", fontWeight: 800, color: "#FFFFFF", minWidth: "24px", textAlign: "center" }}>{item.quantityOnHand}</span>
+                          <span style={{ fontSize: "14px", fontWeight: 800, color: "#FBFBFB", minWidth: "24px", textAlign: "center" }}>{item.quantityOnHand}</span>
                           <button onClick={() => adjustQty(item, 1)} disabled={updating === item.id} style={qtyBtn("#10B981", updating === item.id)}>+</button>
                         </div>
                         {canEdit && (
@@ -508,7 +508,7 @@ export default function InventoryPage() {
     return (
       <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" }} onClick={() => setShowModal(false)}>
         <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "540px", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-          <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>{editingId ? "Edit Item" : "Add Item"}</h2>
+          <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>{editingId ? "Edit Item" : "Add Item"}</h2>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             {/* Brand */}
@@ -623,7 +623,7 @@ export default function InventoryPage() {
       <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" }} onClick={() => setShowReorder(false)}>
         <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "540px", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-            <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FFFFFF", margin: 0 }}>Reorder List ({reorderItems.length})</h2>
+            <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>Reorder List ({reorderItems.length})</h2>
             <button onClick={copyReorderList} style={btnPrimary}>
               <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>content_copy</span> Copy
@@ -640,7 +640,7 @@ export default function InventoryPage() {
                   <div key={item.id} style={{ padding: "10px 14px", backgroundColor: "#0d1117", borderRadius: "8px", border: `1px solid ${st.color}20` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
-                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#FFFFFF" }}>{item.brand} - {item.productName}</span>
+                        <span style={{ fontSize: "12px", fontWeight: 700, color: "#FBFBFB" }}>{item.brand} - {item.productName}</span>
                         {item.shadeOrVolume && <span style={{ fontSize: "11px", color: "#94A3B8", marginLeft: "6px" }}>{item.shadeOrVolume}</span>}
                       </div>
                       <span style={{ padding: "2px 8px", borderRadius: "8px", fontSize: "9px", fontWeight: 700, backgroundColor: `${st.color}15`, color: st.color }}>{st.label}</span>
@@ -670,7 +670,7 @@ export default function InventoryPage() {
       {/* Header */}
       <div style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Inventory</h1>
+          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Inventory</h1>
           <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>Track and manage product stock levels</p>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
@@ -694,7 +694,7 @@ export default function InventoryPage() {
 
       {/* Stats row */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
-        {statCard("Total Items", stats.total, "#FFFFFF")}
+        {statCard("Total Items", stats.total, "#FBFBFB")}
         {statCard("In Stock", stats.inStock, "#10B981")}
         {statCard("Low Stock", stats.low, "#F59E0B")}
         {statCard("Out of Stock", stats.outOfStock, "#EF4444")}
@@ -708,7 +708,7 @@ export default function InventoryPage() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search brand, product, shade, SKU..."
-          style={{ width: "100%", padding: "10px 14px 10px 38px", boxSizing: "border-box", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", color: "#FFFFFF", fontSize: "13px", outline: "none" }}
+          style={{ width: "100%", padding: "10px 14px 10px 38px", boxSizing: "border-box", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", color: "#FBFBFB", fontSize: "13px", outline: "none" }}
         />
       </div>
 
@@ -758,7 +758,7 @@ export default function InventoryPage() {
       ) : filtered.length === 0 ? (
         <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "16px" }}>inventory_2</span>
-          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: "0 0 8px" }}>No items found</p>
+          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 8px" }}>No items found</p>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>Try adjusting your search or filters.</p>
         </div>
       ) : viewMode === "grid" ? (

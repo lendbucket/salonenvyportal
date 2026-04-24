@@ -124,18 +124,18 @@ function SettingsInner() {
   }
 
   const cardStyle: React.CSSProperties = { backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "28px", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), 0 0 0 1px rgba(0,0,0,0.25)" }
-  const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#FFFFFF", fontSize: "14px", outline: "none", boxSizing: "border-box" }
+  const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" }
   const labelStyle: React.CSSProperties = { fontSize: "10px", fontWeight: 700, color: "#7a8f96", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "6px", display: "block" }
 
   return (
     <div style={{ maxWidth: "700px", margin: "0 auto", padding: "28px 20px" }}>
-      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FFFFFF", margin: "0 0 20px" }}>Settings</h1>
+      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>Settings</h1>
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: "0", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: "24px", overflowX: "auto" }}>
         {tabs.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
-            padding: "10px 18px", fontSize: "13px", fontWeight: 600, color: activeTab === t.key ? "#ffffff" : "#606E74",
+            padding: "10px 18px", fontSize: "13px", fontWeight: 600, color: activeTab === t.key ? "#FBFBFB" : "#606E74",
             backgroundColor: "transparent", border: "none", borderBottom: activeTab === t.key ? "2px solid #7a8f96" : "2px solid transparent",
             cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s",
           }}>{t.label}</button>
@@ -174,7 +174,7 @@ function SettingsInner() {
           </div>
 
           {licenseStatus?.holderName && <div style={{ fontSize: "13px", color: "#7a8f96", marginBottom: "8px" }}>TDLR Name: {licenseStatus.holderName}</div>}
-          {licenseStatus?.expirationDate && <div style={{ fontSize: "13px", color: "#606E74", marginBottom: "16px", fontFamily: "'Fira Code', monospace" }}>Expires: {new Date(licenseStatus.expirationDate).toLocaleDateString()}</div>}
+          {licenseStatus?.expirationDate && <div style={{ fontSize: "13px", color: "#606E74", marginBottom: "16px", fontFamily: "'Inter', sans-serif" }}>Expires: {new Date(licenseStatus.expirationDate).toLocaleDateString()}</div>}
 
           <div style={{ display: "flex", gap: "8px" }}>
             <input value={licenseNumber} onChange={e => setLicenseNumber(e.target.value)} placeholder="TX license number" style={{ ...inputStyle, flex: 1 }} />
@@ -205,7 +205,7 @@ function SettingsInner() {
           <div style={cardStyle}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700, color: "#ffffff", marginBottom: "4px" }}>API Keys</div>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>API Keys</div>
                 <div style={{ fontSize: "12px", color: "#606E74" }}>Generate keys for Kasse and RunMySalon integrations</div>
               </div>
               <button onClick={() => { setShowKeyModal(true); setGeneratedKey("") }} style={{ padding: "8px 16px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Generate New Key</button>
@@ -220,8 +220,8 @@ function SettingsInner() {
                 {apiKeys.map((k: any) => (
                   <div key={k.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#ffffff" }}>{k.name}</div>
-                      <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Fira Code', monospace", marginTop: "2px" }}>{k.keyId}</div>
+                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#FBFBFB" }}>{k.name}</div>
+                      <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: "2px" }}>{k.keyId}</div>
                     </div>
                     <div style={{ fontSize: "10px", color: "#606E74" }}>
                       {k.lastUsedAt ? `Used ${new Date(k.lastUsedAt).toLocaleDateString()}` : "Never used"}
@@ -240,9 +240,9 @@ function SettingsInner() {
 
           {/* Quick start docs */}
           <div style={{ ...cardStyle, marginTop: "16px" }}>
-            <div style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff", marginBottom: "12px" }}>Quick Start</div>
-            <div style={{ fontSize: "12px", color: "#606E74", marginBottom: "8px" }}>Base URL: <span style={{ color: "#7a8f96", fontFamily: "'Fira Code', monospace" }}>https://portal.salonenvyusa.com/api/v1</span></div>
-            <div style={{ backgroundColor: "rgba(0,0,0,0.3)", borderRadius: "8px", padding: "16px", fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#7a8f96", lineHeight: 1.8, overflow: "auto" }}>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "12px" }}>Quick Start</div>
+            <div style={{ fontSize: "12px", color: "#606E74", marginBottom: "8px" }}>Base URL: <span style={{ color: "#7a8f96", fontFamily: "'Inter', sans-serif" }}>https://portal.salonenvyusa.com/api/v1</span></div>
+            <div style={{ backgroundColor: "rgba(0,0,0,0.3)", borderRadius: "8px", padding: "16px", fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#7a8f96", lineHeight: 1.8, overflow: "auto" }}>
               <div style={{ color: "#606E74" }}>{"// Fetch today's appointments"}</div>
               <div><span style={{ color: "#c792ea" }}>const</span> res = <span style={{ color: "#c792ea" }}>await</span> <span style={{ color: "#82aaff" }}>fetch</span>(</div>
               <div style={{ paddingLeft: "16px" }}><span style={{ color: "#c3e88d" }}>{`'https://portal.salonenvyusa.com/api/v1/appointments?date=2026-04-16'`}</span>,</div>
@@ -266,7 +266,7 @@ function SettingsInner() {
               <div>
                 <div style={{ fontSize: "16px", fontWeight: 700, color: "#10B981", marginBottom: "12px" }}>API Key Generated</div>
                 <div style={{ fontSize: "12px", color: "#f59e0b", marginBottom: "16px" }}>This key will only be shown once. Copy it now.</div>
-                <div style={{ backgroundColor: "rgba(0,0,0,0.4)", borderRadius: "8px", padding: "14px", fontFamily: "'Fira Code', monospace", fontSize: "11px", color: "#ffffff", wordBreak: "break-all", marginBottom: "16px", border: "1px solid rgba(16,185,129,0.3)" }}>
+                <div style={{ backgroundColor: "rgba(0,0,0,0.4)", borderRadius: "8px", padding: "14px", fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#FBFBFB", wordBreak: "break-all", marginBottom: "16px", border: "1px solid rgba(16,185,129,0.3)" }}>
                   {generatedKey}
                 </div>
                 <div style={{ display: "flex", gap: "8px" }}>
@@ -276,7 +276,7 @@ function SettingsInner() {
               </div>
             ) : (
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700, color: "#ffffff", marginBottom: "20px" }}>Generate API Key</div>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", marginBottom: "20px" }}>Generate API Key</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                   <div><label style={labelStyle}>Key Name</label><input value={newKey.name} onChange={e => setNewKey({ ...newKey, name: e.target.value })} placeholder="e.g. Kasse Production" style={inputStyle} /></div>
                   <div><label style={labelStyle}>Location</label>
@@ -293,7 +293,7 @@ function SettingsInner() {
                           <input type="checkbox" checked={newKey.permissions.includes(p)} onChange={e => {
                             setNewKey({ ...newKey, permissions: e.target.checked ? [...newKey.permissions, p] : newKey.permissions.filter(x => x !== p) })
                           }} style={{ accentColor: "#7a8f96" }} />
-                          <span style={{ fontSize: "12px", color: "#7a8f96", fontFamily: "'Fira Code', monospace" }}>{p}</span>
+                          <span style={{ fontSize: "12px", color: "#7a8f96", fontFamily: "'Inter', sans-serif" }}>{p}</span>
                         </label>
                       ))}
                     </div>

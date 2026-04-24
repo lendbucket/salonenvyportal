@@ -24,8 +24,8 @@ const MID = "rgba(255,255,255,0.6)"
 const GREEN = "#10B981"
 const AMBER = "#f59e0b"
 
-const mono: React.CSSProperties = { fontFamily: "'Fira Code', monospace" }
-const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif" }
+const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
+const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
 
 const ACTION_GROUPS: Record<string, string[]> = {
   Auth: ["USER_LOGIN", "USER_LOGOUT"],

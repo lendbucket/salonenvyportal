@@ -26,7 +26,7 @@ const btnSecondary: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
   backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "8px", color: "#FFFFFF", fontSize: "13px", outline: "none",
+  borderRadius: "8px", color: "#FBFBFB", fontSize: "13px", outline: "none",
 }
 
 export default function ComplaintsPage() {
@@ -78,7 +78,7 @@ export default function ComplaintsPage() {
 
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
-      <h1 style={{ color: "#FFFFFF", fontSize: "22px", fontWeight: 700, margin: "0 0 20px" }}>Anonymous Complaints</h1>
+      <h1 style={{ color: "#FBFBFB", fontSize: "22px", fontWeight: 700, margin: "0 0 20px" }}>Anonymous Complaints</h1>
 
       {/* Filter tabs */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>

@@ -26,8 +26,8 @@ const GREEN = "#10B981"
 const SEV_COLORS: Record<string, string> = { info: ACC, warning: "#f59e0b", critical: "#ef4444" }
 const SEV_LABELS: Record<string, string> = { info: "Info", warning: "Warning", critical: "Critical" }
 
-const mono: React.CSSProperties = { fontFamily: "'Fira Code', monospace" }
-const jakarta: React.CSSProperties = { fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif" }
+const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
+const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
 
 function timeAgo(d: string) {
   const mins = Math.round((Date.now() - new Date(d).getTime()) / 60000)

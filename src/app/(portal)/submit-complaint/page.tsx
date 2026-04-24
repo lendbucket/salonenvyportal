@@ -9,7 +9,7 @@ const cardStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 14px", boxSizing: "border-box",
   backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)",
-  borderRadius: "8px", color: "#FFFFFF", fontSize: "14px", outline: "none",
+  borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none",
 }
 
 const labelStyle: React.CSSProperties = {
@@ -53,7 +53,7 @@ export default function SubmitComplaintPage() {
       <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "560px", margin: "0 auto" }}>
         <div style={{ ...cardStyle, textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#10B981", display: "block", marginBottom: "12px" }}>check_circle</span>
-          <h2 style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: 700, margin: "0 0 8px" }}>Report Submitted</h2>
+          <h2 style={{ color: "#FBFBFB", fontSize: "20px", fontWeight: 700, margin: "0 0 8px" }}>Report Submitted</h2>
           <p style={{ color: "rgba(205,201,192,0.6)", fontSize: "14px", margin: "0 0 20px", lineHeight: 1.5 }}>
             Your anonymous report has been submitted securely. Management will review it promptly.
           </p>
@@ -70,7 +70,7 @@ export default function SubmitComplaintPage() {
       <div style={cardStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "22px", color: "#CDC9C0" }}>shield</span>
-          <h1 style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: 700, margin: 0 }}>Report an Issue</h1>
+          <h1 style={{ color: "#FBFBFB", fontSize: "20px", fontWeight: 700, margin: 0 }}>Report an Issue</h1>
         </div>
         <p style={{ color: "rgba(205,201,192,0.5)", fontSize: "13px", margin: "0 0 24px", lineHeight: 1.5 }}>
           This form is completely anonymous. Your identity is not tracked or stored.
