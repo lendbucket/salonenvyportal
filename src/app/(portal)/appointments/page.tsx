@@ -10,17 +10,17 @@ function getLocationStylists(loc: string) {
 const LOCATIONS = ["Corpus Christi", "San Antonio"]
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  CHECKED_OUT: { bg: "rgba(34, 197, 94, 0.1)", text: "#15803d", border: "rgba(34, 197, 94, 0.25)", label: "Checked Out" },
-  IN_PROGRESS: { bg: "rgba(234, 179, 8, 0.1)", text: "#a16207", border: "rgba(234, 179, 8, 0.25)", label: "In Progress" },
-  UPCOMING: { bg: "rgba(59, 130, 246, 0.1)", text: "#1d4ed8", border: "rgba(59, 130, 246, 0.25)", label: "Upcoming" },
-  ACCEPTED: { bg: "rgba(59, 130, 246, 0.1)", text: "#1d4ed8", border: "rgba(59, 130, 246, 0.25)", label: "Confirmed" },
-  PENDING: { bg: "rgba(234, 179, 8, 0.1)", text: "#a16207", border: "rgba(234, 179, 8, 0.25)", label: "Pending" },
-  CANCELLED: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
-  CANCELLED_BY_SELLER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
-  CANCELLED_BY_CUSTOMER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
-  CANCELLED_BY_BUYER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
-  DECLINED: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Declined" },
-  NO_SHOW: { bg: "rgba(249, 115, 22, 0.1)", text: "#c2410c", border: "rgba(249, 115, 22, 0.25)", label: "No Show" },
+  CHECKED_OUT: { bg: "rgba(34, 197, 94, 0.1)", text: "#15803d", border: "#22c55e", label: "Checked Out" },
+  IN_PROGRESS: { bg: "rgba(234, 179, 8, 0.1)", text: "#a16207", border: "#eab308", label: "In Progress" },
+  UPCOMING: { bg: "rgba(59, 130, 246, 0.1)", text: "#1d4ed8", border: "#3b82f6", label: "Upcoming" },
+  ACCEPTED: { bg: "rgba(59, 130, 246, 0.1)", text: "#1d4ed8", border: "#3b82f6", label: "Confirmed" },
+  PENDING: { bg: "rgba(234, 179, 8, 0.1)", text: "#a16207", border: "#eab308", label: "Pending" },
+  CANCELLED: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239,68,68,0.5)", label: "Cancelled" },
+  CANCELLED_BY_SELLER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239,68,68,0.5)", label: "Cancelled" },
+  CANCELLED_BY_CUSTOMER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239,68,68,0.5)", label: "Cancelled" },
+  CANCELLED_BY_BUYER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239,68,68,0.5)", label: "Cancelled" },
+  DECLINED: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239,68,68,0.5)", label: "Declined" },
+  NO_SHOW: { bg: "rgba(249, 115, 22, 0.1)", text: "#c2410c", border: "#f97316", label: "No Show" },
 }
 
 const DEFAULT_STATUS = { bg: "rgba(26,19,19,0.06)", text: "rgba(26,19,19,0.45)", border: "rgba(26,19,19,0.3)", label: "Unknown" }
@@ -811,21 +811,22 @@ export default function AppointmentsPage() {
   const getBlockReason = (appt: Appointment) => appt.note || "Blocked"
 
   return (
-    <div style={{ padding: isMobile ? "16px" : 32, maxWidth: "900px", margin: "0 auto" }}>
+    <div style={{ padding: isMobile ? "16px" : "24px 32px" }}>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "10px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <h1 style={{ fontSize: isMobile ? "22px" : 24, fontWeight: 700, color: "#1A1313", letterSpacing: "-0.31px", margin: 0 }}>
+            <h1 style={{ fontSize: 22, fontWeight: 700, color: "#1A1313", letterSpacing: "-0.31px", margin: 0 }}>
               {activeTab === "appointments" ? "Appointments" : activeTab === "transactions" ? "Transactions" : "Clients"}
             </h1>
-            <div style={{ display: "flex", gap: "2px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "8px", padding: "3px" }}>
+            <div style={{ display: "flex", gap: "2px", borderRadius: "8px", padding: "3px" }}>
               {(["appointments", "transactions", "clients"] as const).map(tab => (
                 <button key={tab} onClick={() => setActiveTab(tab)} style={{
-                  padding: "6px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+                  padding: "6px 14px", fontSize: "10px", fontWeight: activeTab === tab ? 600 : 700, letterSpacing: "0.08em", textTransform: "uppercase",
                   borderRadius: "6px", border: "none", cursor: "pointer",
-                  backgroundColor: activeTab === tab ? "#CDC9C0" : "transparent",
-                  color: activeTab === tab ? "#0f1d24" : "rgba(26,19,19,0.45)",
+                  backgroundColor: "transparent",
+                  borderBottom: activeTab === tab ? "2px solid #7a8f96" : "2px solid transparent",
+                  color: activeTab === tab ? "#1A1313" : "rgba(26,19,19,0.4)",
                   transition: "all 0.15s",
                 }}>{tab === "appointments" ? "Appts" : tab === "transactions" ? "Transactions" : "Clients"}</button>
               ))}
@@ -846,8 +847,9 @@ export default function AppointmentsPage() {
                     borderRadius: "6px",
                     border: "none",
                     cursor: "pointer",
-                    backgroundColor: location === l ? "#CDC9C0" : "rgba(26,19,19,0.04)",
-                    color: location === l ? "#0f1d24" : "rgba(26,19,19,0.45)",
+                    backgroundColor: location === l ? "#fff" : "rgba(26,19,19,0.04)",
+                    color: location === l ? "#1A1313" : "rgba(26,19,19,0.45)",
+                    boxShadow: location === l ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
                   }}
                 >
                   {l === "Corpus Christi" ? "CC" : "SA"}
@@ -1561,7 +1563,7 @@ export default function AppointmentsPage() {
         })()
       ) : (
         /* ── List View ── */
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {(() => {
             const timeGroups = [
               { label: "Morning", items: sorted.filter(a => new Date(a.startTime).getHours() < 12) },
@@ -1880,7 +1882,7 @@ export default function AppointmentsPage() {
 
       {/* Block Time Modal */}
       {showBlock && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.15)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
           <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)", padding: "28px", width: "100%", maxWidth: "420px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#1A1313" }}>Block Time</h2>
@@ -1946,7 +1948,7 @@ export default function AppointmentsPage() {
 
       {/* Booking Modal */}
       {showBooking && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.15)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
           <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
@@ -2147,10 +2149,11 @@ export default function AppointmentsPage() {
           <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
             {TX_PERIODS.map(p => (
               <button key={p.key} onClick={() => setTxPeriod(p.key)} style={{
-                padding: "6px 12px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.06em",
+                padding: "6px 12px", fontSize: "10px", fontWeight: txPeriod === p.key ? 600 : 700, letterSpacing: "0.06em",
                 borderRadius: "20px", border: "none", cursor: "pointer", whiteSpace: "nowrap",
-                backgroundColor: txPeriod === p.key ? "#CDC9C0" : "rgba(26,19,19,0.04)",
-                color: txPeriod === p.key ? "#0f1d24" : "rgba(26,19,19,0.45)",
+                backgroundColor: txPeriod === p.key ? "#fff" : "rgba(26,19,19,0.04)",
+                color: txPeriod === p.key ? "#1A1313" : "rgba(26,19,19,0.45)",
+                boxShadow: txPeriod === p.key ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
               }}>{p.label}</button>
             ))}
           </div>
@@ -2344,7 +2347,7 @@ export default function AppointmentsPage() {
           {clientsLoading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               {[1,2,3,4,5,6,7,8].map(i => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px" }}>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 12 }}>
                   <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.04)", animation: "pulse 1.5s infinite" }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ width: "140px", height: "14px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "4px", marginBottom: "6px", animation: "pulse 1.5s infinite" }} />
@@ -2368,6 +2371,7 @@ export default function AppointmentsPage() {
                   <div key={c.id} onClick={() => openClientDetail(c)} style={{
                     display: "flex", alignItems: "center", gap: "14px", padding: "12px 16px",
                     backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, cursor: "pointer",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
                     transition: "all 0.15s",
                   }}
                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#F4F5F7"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(26,19,19,0.12)" }}
@@ -2414,7 +2418,7 @@ export default function AppointmentsPage() {
       {/* ══════════ CLIENT DETAIL SLIDE-IN PANEL ══════════ */}
       {selectedClient && (
         <>
-          <div onClick={() => { setSelectedClient(null); setClientDetail(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 299 }} />
+          <div onClick={() => { setSelectedClient(null); setClientDetail(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.15)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", zIndex: 299 }} />
           <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(480px, 95vw)", backgroundColor: "#FBFBFB", borderLeft: "1px solid rgba(26,19,19,0.08)", zIndex: 300, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {/* Header */}
             <div style={{ padding: "20px", borderBottom: "1px solid rgba(26,19,19,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
@@ -2601,7 +2605,7 @@ export default function AppointmentsPage() {
       {/* ══════════ CLIENT HISTORY SLIDE-OVER ══════════ */}
       {historyClientId && (
         <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", justifyContent: "flex-end" }}>
-          <div onClick={() => setHistoryClientId(null)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} />
+          <div onClick={() => setHistoryClientId(null)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.15)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }} />
           <div style={{
             position: "relative", width: isMobile ? "100%" : "420px", maxWidth: "100%",
             background: "#FBFBFB", borderLeft: "1px solid rgba(26,19,19,0.06)",
@@ -2725,7 +2729,7 @@ export default function AppointmentsPage() {
       {/* Appointment detail bottom sheet */}
       {selectedAppt && (
         <>
-          <div onClick={() => setSelectedAppt(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 199 }} />
+          <div onClick={() => setSelectedAppt(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.15)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", zIndex: 199 }} />
           <div style={{
             position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
             background: "#FBFBFB", borderTop: "1px solid rgba(26,19,19,0.07)",
@@ -2805,7 +2809,7 @@ export default function AppointmentsPage() {
       {/* Cancel confirmation modal */}
       {cancelConfirm && (
         <div style={{ position: "fixed", inset: 0, zIndex: 400 }}>
-          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }} onClick={() => setCancelConfirm(null)} />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.15)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }} onClick={() => setCancelConfirm(null)} />
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 16, padding: 28, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)", zIndex: 401 }}>
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 18, color: "#1A1313", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>

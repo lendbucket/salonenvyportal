@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
   const role = user.role as string
   const search = req.nextUrl.searchParams.get("q") || ""
   const page = parseInt(req.nextUrl.searchParams.get("page") || "0")
-  const limit = 50
+  const limit = parseInt(req.nextUrl.searchParams.get("limit") || "200")
 
   try {
     // Fetch from local DB first (fast)
