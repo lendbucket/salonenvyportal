@@ -1,6 +1,7 @@
 "use client"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useSession } from "next-auth/react"
+import { Sparkles, Palette, Droplets, User, TrendingUp, DollarSign, Wrench, Settings2, MessageSquare, ArrowUp, Camera } from "lucide-react"
 
 interface Message {
   role: "user" | "assistant"
@@ -10,14 +11,14 @@ interface Message {
 }
 
 const SUGGESTED_PROMPTS = [
-  { icon: "palette", text: "Shades EQ formula for level 9 with yellow tones", category: "Color" },
-  { icon: "bolt", text: "How do I fix orange brassy hair after bleaching?", category: "Correction" },
-  { icon: "auto_fix_high", text: "Best toner for platinum blonde — level 10", category: "Toner" },
-  { icon: "trending_up", text: "What should I focus on to grow revenue this week?", category: "Business" },
-  { icon: "person", text: "How do I handle a client unhappy with their color?", category: "Client" },
-  { icon: "payments", text: "How can I increase my average ticket price?", category: "Revenue" },
-  { icon: "science", text: "Going from box dye to natural brown — what is the plan?", category: "Correction" },
-  { icon: "today", text: "Give me a daily briefing for today", category: "Operations" },
+  { icon: Palette, text: "Shades EQ formula for level 9 with yellow tones", category: "Color" },
+  { icon: Wrench, text: "How do I fix orange brassy hair after bleaching?", category: "Correction" },
+  { icon: Droplets, text: "Best toner for platinum blonde — level 10", category: "Toner" },
+  { icon: TrendingUp, text: "What should I focus on to grow revenue this week?", category: "Business" },
+  { icon: User, text: "How do I handle a client unhappy with their color?", category: "Client" },
+  { icon: DollarSign, text: "How can I increase my average ticket price?", category: "Revenue" },
+  { icon: Wrench, text: "Going from box dye to natural brown — what is the plan?", category: "Correction" },
+  { icon: Settings2, text: "Give me a daily briefing for today", category: "Operations" },
 ]
 
 function ReynaAvatar({ size = 36 }: { size?: number }) {
@@ -25,16 +26,15 @@ function ReynaAvatar({ size = 36 }: { size?: number }) {
     <div style={{
       width: size,
       height: size,
-      borderRadius: size * 0.28,
-      background: "linear-gradient(135deg, #0a2a2a 0%, #1a4a4a 50%, #0f3535 100%)",
-      border: "1px solid rgba(26,19,19,0.4)",
+      borderRadius: size > 40 ? 16 : 8,
+      background: "linear-gradient(135deg, #7a8f96 0%, #606E74 100%)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      overflow: "hidden",
       flexShrink: 0,
+      boxShadow: size > 40 ? "0 4px 12px rgba(122,143,150,0.25), 0 1px 3px rgba(122,143,150,0.15)" : "none",
     }}>
-      <img src="/images/logo-white.png" alt="Reyna" style={{ width: size * 0.75, height: "auto", objectFit: "contain", opacity: 0.9 }} />
+      <Sparkles size={size * 0.42} color="#FBFBFB" strokeWidth={1.5} />
     </div>
   )
 }
@@ -153,71 +153,62 @@ export default function ReynaAIPage() {
      SHARED: Welcome screen
      ═══════════════════════════════════════════ */
   const welcomeScreen = (
-    <div style={{ maxWidth: isMobile ? "100%" : "720px", margin: "0 auto", padding: isMobile ? "24px 16px" : "48px 24px 24px" }}>
-      <div style={{ textAlign: "center", marginBottom: isMobile ? "28px" : "48px" }}>
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "16px" }}>
-          <ReynaAvatar size={isMobile ? 56 : 64} />
-        </div>
-        <h2 style={{
-          fontSize: isMobile ? "22px" : "28px",
-          fontWeight: 800,
-          color: "#1A1313",
-          margin: "0 0 10px",
-          letterSpacing: "-0.03em",
-        }}>
-          Hey {firstName}, I&apos;m Reyna
-        </h2>
-        <p style={{
-          fontSize: isMobile ? "14px" : "15px",
-          color: "rgba(26,19,19,0.45)",
-          margin: "0 0 4px",
-          lineHeight: 1.6,
-          maxWidth: "400px",
-          marginInline: "auto",
-        }}>
-          Salon Envy Intelligence System
-        </p>
-        <p style={{
-          fontSize: isMobile ? "12px" : "13px",
-          color: "rgba(26,19,19,0.3)",
-          margin: 0,
-          lineHeight: 1.5,
-          maxWidth: "400px",
-          marginInline: "auto",
-        }}>
-          Color Director &middot; Operations Copilot &middot; Business Coach
-        </p>
-      </div>
-      <div style={{
-        display: isMobile ? "flex" : "grid",
-        flexDirection: isMobile ? "column" : undefined,
-        gridTemplateColumns: isMobile ? undefined : "repeat(auto-fill, minmax(280px, 1fr))",
-        gap: "8px",
+    <div style={{
+      display: "flex", flexDirection: "column" as const, alignItems: "center",
+      paddingTop: isMobile ? 24 : 64, paddingBottom: isMobile ? 28 : 48,
+      textAlign: "center" as const,
+      width: "100%", maxWidth: isMobile ? "100%" : 760, margin: "0 auto",
+      padding: isMobile ? "24px 16px" : "64px 24px 48px",
+    }}>
+      <ReynaAvatar size={56} />
+      <h2 style={{
+        fontFamily: "Inter", fontSize: isMobile ? 22 : 28, fontWeight: 700,
+        color: "#1A1313", letterSpacing: "-0.31px", lineHeight: 1.2,
+        marginTop: 24, marginBottom: 8,
       }}>
-        {SUGGESTED_PROMPTS.map((prompt, i) => (
-          <button
-            key={i}
-            onClick={() => sendMessage(prompt.text)}
-            style={{
-              padding: isMobile ? "12px 14px" : "14px 16px",
-              backgroundColor: "rgba(26,19,19,0.03)",
-              border: "1px solid rgba(26,19,19,0.07)",
-              borderRadius: "12px",
-              textAlign: "left",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "12px",
-              width: "100%",
-            }}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0", flexShrink: 0, marginTop: "1px" }}>{prompt.icon}</span>
-            <div>
-              <div style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "4px" }}>{prompt.category}</div>
-              <div style={{ fontSize: "13px", color: "rgba(26,19,19,0.7)", lineHeight: 1.4 }}>{prompt.text}</div>
-            </div>
-          </button>
-        ))}
+        Hey {firstName}, I&apos;m Reyna
+      </h2>
+      <p style={{
+        fontFamily: "Inter", fontSize: 15, fontWeight: 400,
+        color: "rgba(26,19,19,0.5)", letterSpacing: "-0.31px",
+        lineHeight: 1.5, maxWidth: 420, margin: "0 auto 32px",
+      }}>
+        Your Salon Envy intelligence system. Ask me about color formulas, business strategy, client situations, or operations.
+      </p>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+        gap: 12, width: "100%", maxWidth: 640,
+      }}>
+        {SUGGESTED_PROMPTS.map((prompt, i) => {
+          const Icon = prompt.icon
+          return (
+            <button
+              key={i}
+              onClick={() => sendMessage(prompt.text)}
+              style={{
+                background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)",
+                borderRadius: 12, padding: "16px 18px", cursor: "pointer",
+                transition: "all 0.15s ease", display: "flex", flexDirection: "column" as const,
+                gap: 6, textAlign: "left" as const, width: "100%",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(122,143,150,0.25)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)"; e.currentTarget.style.transform = "translateY(-1px)" }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(26,19,19,0.07)"; e.currentTarget.style.boxShadow = "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)"; e.currentTarget.style.transform = "translateY(0)" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+                <Icon size={13} color="rgba(26,19,19,0.3)" strokeWidth={1.5} />
+                <span style={{ fontFamily: "Inter", fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>
+                  {prompt.category}
+                </span>
+              </div>
+              <span style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 500, color: "rgba(26,19,19,0.75)", letterSpacing: "-0.31px", lineHeight: 1.4 }}>
+                {prompt.text}
+              </span>
+            </button>
+          )
+        })}
       </div>
     </div>
   )
@@ -226,66 +217,67 @@ export default function ReynaAIPage() {
      SHARED: Messages list
      ═══════════════════════════════════════════ */
   const messagesList = (
-    <div style={{ maxWidth: isMobile ? "100%" : "720px", margin: "0 auto", padding: isMobile ? "16px 12px 8px" : "24px 24px 8px" }}>
+    <div style={{ maxWidth: isMobile ? "100%" : 760, margin: "0 auto", padding: isMobile ? "16px 12px 8px" : "32px 24px 24px", display: "flex", flexDirection: "column" as const, gap: 24 }}>
       {messages.map((message, i) => (
-        <div key={i} style={{
-          marginBottom: isMobile ? "16px" : "24px",
-          display: "flex",
-          gap: isMobile ? "8px" : "12px",
-          flexDirection: message.role === "user" ? "row-reverse" : "row",
-        }}>
-          <div style={{
-            width: "32px", height: "32px",
-            borderRadius: message.role === "assistant" ? "9px" : "50%",
-            overflow: "hidden",
-            background: message.role === "user" ? "rgba(26,19,19,0.1)" : undefined,
-            border: message.role === "user" ? "1px solid rgba(26,19,19,0.15)" : "none",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            flexShrink: 0, marginTop: "2px",
-            fontSize: "11px",
-            fontWeight: 800, color: "rgba(26,19,19,0.8)",
-          }}>
-            {message.role === "assistant" ? <ReynaAvatar size={32} /> : initials}
-          </div>
-          <div style={{ maxWidth: "85%", flex: 1 }}>
-            {message.image && (
-              <img src={message.image} alt="Uploaded" style={{ maxWidth: "240px", borderRadius: "10px", marginBottom: "8px", display: "block", border: "1px solid rgba(26,19,19,0.1)" }} />
-            )}
-            <div style={{
-              padding: "12px 16px",
-              borderRadius: message.role === "user" ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
-              backgroundColor: message.role === "user" ? "rgba(96,110,116,0.15)" : "#FBFBFB",
-              border: message.role === "user" ? "1px solid rgba(205,201,192,0.2)" : "1px solid rgba(26,19,19,0.06)",
-              fontSize: "14px", lineHeight: 1.65, color: "rgba(26,19,19,0.88)",
-            }}>
-              {message.role === "assistant" ? formatContent(message.content) : message.content}
-            </div>
-            <div style={{ fontSize: "10px", color: "rgba(26,19,19,0.2)", marginTop: "4px", textAlign: message.role === "user" ? "right" : "left", paddingInline: "4px" }}>
-              {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        message.role === "user" ? (
+          <div key={i} style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+            <div style={{ maxWidth: "70%" }}>
+              {message.image && (
+                <img src={message.image} alt="Uploaded" style={{ maxWidth: "240px", borderRadius: "10px", marginBottom: "8px", display: "block", border: "1px solid rgba(26,19,19,0.1)", marginLeft: "auto" }} />
+              )}
+              <div style={{
+                background: "#7a8f96", color: "#FBFBFB",
+                borderRadius: "16px 16px 4px 16px", padding: "12px 16px",
+                fontFamily: "Inter", fontSize: 14, fontWeight: 400,
+                letterSpacing: "-0.31px", lineHeight: 1.5,
+              }}>
+                {message.content}
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(26,19,19,0.2)", marginTop: 4, textAlign: "right" as const, paddingRight: 4 }}>
+                {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12, width: "100%" }}>
+            <div style={{ marginTop: 2, flexShrink: 0 }}>
+              <ReynaAvatar size={28} />
+            </div>
+            <div style={{ maxWidth: "80%" }}>
+              {message.image && (
+                <img src={message.image} alt="Uploaded" style={{ maxWidth: "240px", borderRadius: "10px", marginBottom: "8px", display: "block", border: "1px solid rgba(26,19,19,0.1)" }} />
+              )}
+              <div style={{
+                background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)",
+                borderRadius: "4px 16px 16px 16px", padding: "14px 18px",
+                fontFamily: "Inter", fontSize: 14, fontWeight: 400,
+                color: "#1A1313", letterSpacing: "-0.31px", lineHeight: 1.65,
+                boxShadow: "0 1px 3px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.03)",
+              }}>
+                {formatContent(message.content)}
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(26,19,19,0.2)", marginTop: 4, textAlign: "left" as const, paddingLeft: 4 }}>
+                {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </div>
+            </div>
+          </div>
+        )
       ))}
 
       {loading && (
-        <div style={{ display: "flex", gap: isMobile ? "8px" : "12px", marginBottom: "24px" }}>
-          <div style={{ width: "32px", height: "32px", borderRadius: "9px", overflow: "hidden", flexShrink: 0 }}>
-            <ReynaAvatar size={32} />
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+          <div style={{ marginTop: 2, flexShrink: 0 }}>
+            <ReynaAvatar size={28} />
           </div>
           <div style={{
-            padding: "14px 18px",
-            borderRadius: "4px 16px 16px 16px",
-            backgroundColor: "rgba(26,19,19,0.04)",
-            border: "1px solid rgba(26,19,19,0.06)",
-            display: "flex", alignItems: "center", gap: "4px",
+            background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)",
+            borderRadius: "4px 16px 16px 16px", padding: "14px 18px",
+            display: "flex", alignItems: "center", gap: 4,
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.03)",
           }}>
-            {[0, 1, 2].map(j => (
-              <div key={j} style={{
-                width: "6px", height: "6px", borderRadius: "50%",
-                backgroundColor: "#CDC9C0",
-                animation: `reyna-pulse 1.4s ease-in-out ${j * 0.2}s infinite`,
-              }} />
-            ))}
+            <div className="reyna-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(26,19,19,0.25)" }} />
+            <div className="reyna-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(26,19,19,0.25)" }} />
+            <div className="reyna-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(26,19,19,0.25)" }} />
           </div>
         </div>
       )}
@@ -502,68 +494,82 @@ export default function ReynaAIPage() {
      ═══════════════════════════════════════════ */
   return (
     <div style={{
-      display: "flex",
-      flexDirection: "column",
-      height: "calc(100vh - 52px)",
-      backgroundColor: "#F4F5F7",
+      minHeight: "calc(100vh - 56px)", background: "#F4F5F7",
+      display: "flex", flexDirection: "column" as const, alignItems: "center",
       position: "relative",
-      overflow: "hidden",
     }}>
       {hiddenFileInput}
 
-      {/* Ambient teal gradient glow */}
+      {/* Main content — scrollable */}
       <div style={{
-        position: "absolute",
-        top: "-200px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: "600px",
-        height: "400px",
-        background: "radial-gradient(ellipse, rgba(42,90,90,0.12) 0%, transparent 70%)",
-        pointerEvents: "none",
-        zIndex: 0,
-      }} />
+        width: "100%", maxWidth: 760, flex: 1,
+        display: "flex", flexDirection: "column" as const,
+        padding: "0 24px", paddingBottom: 120,
+        overflowY: "auto",
+      }}>
+        {/* Header bar when messages exist */}
+        {messages.length > 0 && (
+          <div style={{
+            position: "sticky" as const, top: 0, zIndex: 5,
+            padding: "12px 0", display: "flex", justifyContent: "space-between",
+            alignItems: "center", background: "#F4F5F7",
+            borderBottom: "1px solid rgba(26,19,19,0.06)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <ReynaAvatar size={28} />
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "#1A1313", letterSpacing: "-0.31px" }}>Reyna AI</div>
+                <div style={{ fontSize: 11, color: "rgba(26,19,19,0.4)", display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#10B981" }} />
+                  Salon Envy Intelligence
+                </div>
+              </div>
+            </div>
+            <button onClick={clearChat} style={{
+              padding: "6px 14px", background: "rgba(26,19,19,0.04)",
+              border: "1px solid rgba(26,19,19,0.08)", borderRadius: 8,
+              color: "rgba(26,19,19,0.4)", fontSize: 11, fontWeight: 600,
+              cursor: "pointer", letterSpacing: "0.04em",
+            }}>
+              Clear
+            </button>
+          </div>
+        )}
 
-      {/* Header */}
-      {headerBar}
-
-      {/* Messages Area */}
-      <div style={{ flex: 1, overflowY: "auto", position: "relative", zIndex: 1 }}>
         {messages.length === 0 ? welcomeScreen : messagesList}
         {errorBanner}
       </div>
 
-      {/* Input Area */}
+      {/* Fixed input bar at bottom */}
       <div style={{
-        position: "relative", zIndex: 1,
-        padding: "16px 24px 20px",
-        borderTop: "1px solid rgba(26,19,19,0.05)",
-        backgroundColor: "rgba(244,245,247,0.98)",
-        backdropFilter: "blur(12px)",
+        position: "fixed" as const, bottom: 0, left: 220, right: 0,
+        background: "linear-gradient(to top, #F4F5F7 80%, transparent)",
+        padding: "16px 0 24px", display: "flex", justifyContent: "center",
+        zIndex: 30,
       }}>
-        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
+        <div style={{ width: "100%", maxWidth: 760, padding: "0 24px" }}>
           {imagePreview}
 
           <div style={{
-            display: "flex", gap: "8px", alignItems: "flex-end",
-            backgroundColor: "rgba(26,19,19,0.05)",
-            border: "1px solid rgba(26,19,19,0.1)",
-            borderRadius: "14px", padding: "10px 12px",
+            display: "flex", alignItems: "flex-end", gap: 8,
+            background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.1)",
+            borderRadius: 16, padding: "10px 10px 10px 16px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.03)",
+            transition: "all 0.15s ease",
           }}>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               style={{
-                width: "34px", height: "34px", borderRadius: "8px",
-                backgroundColor: uploadedImage ? "rgba(42,90,90,0.3)" : "transparent",
+                width: 34, height: 34, borderRadius: 8,
+                backgroundColor: uploadedImage ? "rgba(122,143,150,0.15)" : "transparent",
                 border: "none", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0, color: uploadedImage ? "#CDC9C0" : "rgba(26,19,19,0.25)",
+                flexShrink: 0, color: uploadedImage ? "#7a8f96" : "rgba(26,19,19,0.25)",
+                transition: "all 0.15s ease",
               }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>
-                {uploadedImage ? "image" : "add_photo_alternate"}
-              </span>
+              <Camera size={18} />
             </button>
 
             <textarea
@@ -571,18 +577,18 @@ export default function ReynaAIPage() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about color formulas, client situations, business strategy..."
+              placeholder="Ask Reyna about color formulas, business strategy, or operations..."
               rows={1}
               style={{
-                flex: 1, backgroundColor: "transparent", border: "none", outline: "none",
-                color: "rgba(26,19,19,0.9)", fontSize: "14px", lineHeight: 1.5,
-                resize: "none", maxHeight: "120px", overflowY: "auto",
-                fontFamily: "inherit", padding: "4px 0",
+                flex: 1, border: "none", outline: "none", background: "transparent",
+                fontFamily: "Inter", fontSize: 14, fontWeight: 400,
+                color: "#1A1313", letterSpacing: "-0.31px", lineHeight: 1.5,
+                resize: "none", minHeight: 24, maxHeight: 160, padding: 0,
               }}
               onInput={e => {
                 const t = e.target as HTMLTextAreaElement
                 t.style.height = "auto"
-                t.style.height = Math.min(t.scrollHeight, 120) + "px"
+                t.style.height = Math.min(t.scrollHeight, 160) + "px"
               }}
             />
 
@@ -590,34 +596,25 @@ export default function ReynaAIPage() {
               onClick={() => sendMessage(input)}
               disabled={loading || (!input.trim() && !uploadedImage)}
               style={{
-                width: "34px", height: "34px", borderRadius: "50%",
-                backgroundColor: (input.trim() || uploadedImage) ? "#CDC9C0" : "rgba(26,19,19,0.06)",
-                border: "none",
+                width: 36, height: 36, borderRadius: 10,
+                background: (input.trim() || uploadedImage) ? "#7a8f96" : "rgba(26,19,19,0.08)",
+                border: "none", display: "flex", alignItems: "center", justifyContent: "center",
                 cursor: (input.trim() || uploadedImage) ? "pointer" : "not-allowed",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0,
+                flexShrink: 0, transition: "all 0.15s ease",
+                boxShadow: (input.trim() || uploadedImage) ? "0 1px 3px rgba(122,143,150,0.3)" : "none",
               }}
             >
-              <span className="material-symbols-outlined" style={{
-                fontSize: "16px",
-                color: (input.trim() || uploadedImage) ? "#F4F5F7" : "rgba(26,19,19,0.2)",
-              }}>arrow_upward</span>
+              <ArrowUp size={16} color={(input.trim() || uploadedImage) ? "#FBFBFB" : "rgba(26,19,19,0.3)"} />
             </button>
           </div>
 
-          <div style={{ textAlign: "center", fontSize: "11px", color: "rgba(26,19,19,0.15)", marginTop: "8px", letterSpacing: "0.02em" }}>
-            Enter to send · Shift+Enter for new line · Upload photos for color analysis
+          <div style={{ fontFamily: "Inter", fontSize: 11, color: "rgba(26,19,19,0.3)", letterSpacing: "-0.31px", textAlign: "center" as const, marginTop: 8 }}>
+            Enter to send &middot; Shift+Enter for new line
           </div>
         </div>
       </div>
 
-      <style>{`
-        @keyframes reyna-pulse {
-          0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
-          30% { opacity: 1; transform: scale(1); }
-        }
-        textarea::placeholder { color: rgba(26,19,19,0.25); }
-      `}</style>
+      <style>{`textarea::placeholder { color: rgba(26,19,19,0.35); }`}</style>
     </div>
   )
 }
