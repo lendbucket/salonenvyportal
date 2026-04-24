@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useSession } from "next-auth/react"
 import { signOut } from "next-auth/react"
 import Link from "next/link"
@@ -105,6 +105,8 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   const [isMobile, setIsMobile] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [locations, setLocations] = useState<{ id: string; name: string }[]>([])
+  const [profileOpen, setProfileOpen] = useState(false)
+  const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetch("/api/locations").then(r => r.json()).then(d => {
@@ -115,6 +117,17 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   // suppress unused var warning — locations available for future use
   void locations
 
+  /* Close profile dropdown on outside click */
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false)
+      }
+    }
+    if (profileOpen) document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [profileOpen])
+
   /* Responsive listener */
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -124,7 +137,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   }, [])
 
   /* Close drawer on navigation */
-  useEffect(() => { setDrawerOpen(false) }, [pathname])
+  useEffect(() => { setDrawerOpen(false); setProfileOpen(false) }, [pathname])
 
   /* Stylist redirect */
   useEffect(() => {
@@ -786,57 +799,173 @@ export default function PortalShell({ children }: { children: React.ReactNode })
 
       {/* TOPBAR — 56px fixed, light */}
       <header style={{
-        height: 56,
-        minHeight: 56,
-        position: "fixed",
-        top: 0,
-        left: 220,
-        right: 0,
-        background: "#FBFBFB",
-        borderBottom: "1px solid rgba(26,19,19,0.08)",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 24px",
-        zIndex: 40,
-        boxSizing: "border-box" as const,
+        height: 56, minHeight: 56, position: "fixed", top: 0, left: 220, right: 0,
+        background: "#FBFBFB", borderBottom: "1px solid rgba(26,19,19,0.08)",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 24px", zIndex: 40, boxSizing: "border-box" as const, gap: 16,
       }}>
-        <div style={{
-          fontFamily: "Inter",
-          fontSize: 16,
-          fontWeight: 600,
-          color: "#1A1313",
-          letterSpacing: "-0.31px",
-        }}>
-          {pageTitle}
+        {/* LEFT — page title */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
+          <span style={{ fontFamily: "Inter", fontSize: 15, fontWeight: 600, color: "#1A1313", letterSpacing: "-0.31px", whiteSpace: "nowrap" as const }}>
+            {pageTitle}
+          </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Link href="/reyna-ai" style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            padding: "0 14px",
-            height: 32,
-            borderRadius: 6,
-            background: "rgba(122,143,150,0.08)",
-            border: "1px solid rgba(122,143,150,0.2)",
-            color: "#7a8f96",
-            fontFamily: "Inter",
-            fontSize: 12,
-            fontWeight: 600,
-            letterSpacing: "-0.31px",
-            cursor: "pointer",
-            whiteSpace: "nowrap" as const,
-            transition: "all 0.15s ease",
-            textDecoration: "none",
+
+        {/* CENTER — search */}
+        <div style={{ flex: 1, maxWidth: 320, position: "relative" as const }}>
+          <span className="material-symbols-outlined" style={{ position: "absolute" as const, left: 10, top: "50%", transform: "translateY(-50%)", color: "rgba(26,19,19,0.3)", fontSize: 14 }}>search</span>
+          <input
+            type="text"
+            placeholder="Search..."
+            style={{
+              width: "100%", height: 32, background: "#F4F5F7", border: "1px solid rgba(26,19,19,0.08)",
+              borderRadius: 8, padding: "0 12px 0 34px", fontFamily: "Inter", fontSize: 13,
+              color: "#1A1313", letterSpacing: "-0.31px", outline: "none", transition: "all 0.15s ease",
+              boxSizing: "border-box" as const,
+            }}
+            onFocus={e => { e.currentTarget.style.background = "#FBFBFB"; e.currentTarget.style.border = "1px solid rgba(122,143,150,0.4)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(122,143,150,0.1)" }}
+            onBlur={e => { e.currentTarget.style.background = "#F4F5F7"; e.currentTarget.style.border = "1px solid rgba(26,19,19,0.08)"; e.currentTarget.style.boxShadow = "none" }}
+          />
+        </div>
+
+        {/* RIGHT — actions */}
+        <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+          {/* Notifications */}
+          <Link href="/alerts" style={{
+            width: 32, height: 32, borderRadius: 8, background: "transparent", border: "none",
+            display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+            color: "rgba(26,19,19,0.5)", position: "relative" as const, transition: "all 0.15s ease",
+            flexShrink: 0, textDecoration: "none",
           }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(122,143,150,0.15)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.4)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(26,19,19,0.05)"; e.currentTarget.style.color = "rgba(26,19,19,0.8)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(26,19,19,0.5)" }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>notifications</span>
+            {alertCount > 0 && (
+              <span style={{ position: "absolute" as const, top: 4, right: 4, width: 8, height: 8, borderRadius: "50%", background: "#ef4444", border: "2px solid #FBFBFB" }} />
+            )}
+          </Link>
+
+          {/* Help */}
+          <button style={{
+            width: 32, height: 32, borderRadius: 8, background: "transparent", border: "none",
+            display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+            color: "rgba(26,19,19,0.5)", transition: "all 0.15s ease", flexShrink: 0,
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(26,19,19,0.05)"; e.currentTarget.style.color = "rgba(26,19,19,0.8)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(26,19,19,0.5)" }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>help</span>
+          </button>
+
+          {/* Divider */}
+          <div style={{ width: 1, height: 20, background: "rgba(26,19,19,0.1)", margin: "0 8px", flexShrink: 0 }} />
+
+          {/* Reyna AI */}
+          <Link href="/reyna-ai" style={{
+            display: "inline-flex", alignItems: "center", gap: 6, padding: "0 12px",
+            height: 32, borderRadius: 8, background: "rgba(122,143,150,0.08)",
+            border: "1px solid rgba(122,143,150,0.2)", color: "#7a8f96",
+            fontFamily: "Inter", fontSize: 12, fontWeight: 600, letterSpacing: "-0.31px",
+            cursor: "pointer", whiteSpace: "nowrap" as const, transition: "all 0.15s ease",
+            textDecoration: "none", marginRight: 4,
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(122,143,150,0.14)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.35)" }}
             onMouseLeave={e => { e.currentTarget.style.background = "rgba(122,143,150,0.08)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.2)" }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 14 }}>auto_awesome</span>
             Reyna AI
           </Link>
+
+          {/* Profile button + dropdown */}
+          <div ref={profileRef} style={{ position: "relative" as const }}>
+            <button
+              onClick={() => setProfileOpen(o => !o)}
+              style={{
+                display: "flex", alignItems: "center", gap: 8, padding: "4px 8px 4px 4px",
+                height: 36, borderRadius: 8, background: "transparent",
+                border: "1px solid transparent", cursor: "pointer", transition: "all 0.15s ease",
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(26,19,19,0.04)"; e.currentTarget.style.borderColor = "rgba(26,19,19,0.08)" }}
+              onMouseLeave={e => { if (!profileOpen) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent" } }}
+            >
+              <div style={{
+                width: 28, height: 28, borderRadius: "50%", background: "rgba(122,143,150,0.15)",
+                border: "1.5px solid rgba(122,143,150,0.3)", display: "flex", alignItems: "center",
+                justifyContent: "center", fontFamily: "Inter", fontSize: 11, fontWeight: 700,
+                color: "#7a8f96", letterSpacing: "0", flexShrink: 0,
+              }}>
+                {initials}
+              </div>
+              <span style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 500, color: "#1A1313", letterSpacing: "-0.31px", maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+                {userName?.split(" ")[0] || "User"}
+              </span>
+              <span className="material-symbols-outlined" style={{ fontSize: 14, color: "rgba(26,19,19,0.4)" }}>expand_more</span>
+            </button>
+
+            {/* Dropdown */}
+            {profileOpen && (
+              <div style={{
+                position: "absolute" as const, top: "calc(100% + 8px)", right: 0, width: 220,
+                background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: 12,
+                boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.08), 0 20px 25px rgba(0,0,0,0.06)",
+                zIndex: 100, overflow: "hidden", padding: "4px 0",
+              }}>
+                {/* Header */}
+                <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(26,19,19,0.06)", marginBottom: 4 }}>
+                  <div style={{ fontFamily: "Inter", fontSize: 14, fontWeight: 600, color: "#1A1313", letterSpacing: "-0.31px" }}>{userName}</div>
+                  <div style={{ fontFamily: "Inter", fontSize: 12, fontWeight: 400, color: "rgba(26,19,19,0.45)", letterSpacing: "-0.31px", marginTop: 2 }}>{session?.user?.email || ""}</div>
+                  <span style={{
+                    display: "inline-flex", alignItems: "center", padding: "2px 8px", borderRadius: 20,
+                    background: "rgba(122,143,150,0.1)", border: "1px solid rgba(122,143,150,0.2)",
+                    color: "#7a8f96", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const,
+                    letterSpacing: "0.06em", marginTop: 6,
+                  }}>
+                    {userRole}
+                  </span>
+                </div>
+
+                {/* Menu items */}
+                {[
+                  { icon: "person", label: "My Profile", href: "/profile" },
+                  { icon: "settings", label: "Settings", href: "/settings" },
+                  ...(isOwner ? [{ icon: "admin_panel_settings", label: "Permissions", href: "/permissions" }] : []),
+                ].map(item => (
+                  <Link key={item.href} href={item.href} onClick={() => setProfileOpen(false)} style={{
+                    display: "flex", alignItems: "center", gap: 10, padding: "8px 16px",
+                    cursor: "pointer", transition: "all 0.1s ease", color: "rgba(26,19,19,0.7)",
+                    fontFamily: "Inter", fontSize: 13, fontWeight: 500, letterSpacing: "-0.31px",
+                    textDecoration: "none",
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(26,19,19,0.04)"; e.currentTarget.style.color = "#1A1313" }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(26,19,19,0.7)" }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: 15, color: "rgba(26,19,19,0.4)" }}>{item.icon}</span>
+                    {item.label}
+                  </Link>
+                ))}
+
+                {/* Divider */}
+                <div style={{ height: 1, background: "rgba(26,19,19,0.06)", margin: "4px 0" }} />
+
+                {/* Sign out */}
+                <button onClick={() => { setProfileOpen(false); signOut({ callbackUrl: "/login" }) }} style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "8px 16px",
+                  cursor: "pointer", transition: "all 0.1s ease", color: "#dc2626",
+                  fontFamily: "Inter", fontSize: 13, fontWeight: 500, letterSpacing: "-0.31px",
+                  width: "100%", background: "transparent", border: "none", textAlign: "left" as const,
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.05)" }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "transparent" }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: 15, color: "#dc2626" }}>logout</span>
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 

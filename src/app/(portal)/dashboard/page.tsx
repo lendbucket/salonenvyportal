@@ -112,12 +112,13 @@ function generateAlerts(
   return alerts.map((alert, idx) => (
     <div key={idx} style={{
       backgroundColor: "#FBFBFB",
-      border: "1px solid rgba(26,19,19,0.06)",
+      border: "1px solid rgba(26,19,19,0.05)",
       borderLeft: `3px solid ${alert.color}`,
-      borderRadius: "0 8px 8px 0",
+      borderRadius: "0 12px 12px 0",
       padding: "14px 16px",
       display: "flex",
       gap: "12px",
+      boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
     }}>
       <span className="material-symbols-outlined" style={{ color: alert.color, fontSize: "18px", flexShrink: 0 }}>{alert.icon}</span>
       <div>
@@ -338,7 +339,7 @@ export default function DashboardPage() {
   void now
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px" }}>
+    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px" }}>
       <style>{`@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} } @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }`}</style>
 
       {/* HERO HEADER */}
@@ -518,19 +519,20 @@ export default function DashboardPage() {
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(2, 1fr)",
-        gap: "14px",
-        marginBottom: "20px",
+        gap: 16,
+        marginBottom: 24,
       }}>
         {metrics.map((m) => (
           <div key={m.label} onClick={() => m.drillType && openDrillDown(m.drillType)} style={{
             backgroundColor: "#FBFBFB",
-            border: m.alert ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(26,19,19,0.1)",
-            borderRadius: "10px",
+            border: m.alert ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(26,19,19,0.05)",
+            borderRadius: 12,
             padding: "20px",
             transition: "transform 0.15s, box-shadow 0.15s, background-color 0.15s",
             cursor: m.drillType ? "pointer" : "default",
             position: "relative",
-          }} onMouseEnter={e => { if (m.drillType) e.currentTarget.style.backgroundColor = "#F4F5F7" }} onMouseLeave={e => { e.currentTarget.style.backgroundColor = "#FBFBFB" }}>
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
+          }} onMouseEnter={e => { if (m.drillType) { e.currentTarget.style.backgroundColor = "#F4F5F7"; e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.06), 0 8px 16px rgba(0,0,0,0.06)" } }} onMouseLeave={e => { e.currentTarget.style.backgroundColor = "#FBFBFB"; e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
               <span style={{
                 fontSize: "9px",
@@ -577,19 +579,20 @@ export default function DashboardPage() {
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-        gap: "14px",
-        marginBottom: "20px",
+        gap: 16,
+        marginBottom: 24,
       }}>
         {/* Cancellations */}
         <div onClick={() => openDrillDown("cancellations")} style={{ cursor: "pointer" }}>
           <div style={{
             backgroundColor: "#FBFBFB",
-            border: "1px solid rgba(26,19,19,0.06)",
-            borderRadius: "10px",
+            border: "1px solid rgba(26,19,19,0.05)",
+            borderRadius: 12,
             padding: "20px",
             cursor: "pointer",
-            transition: "background-color 0.15s",
-          }}>
+            transition: "background-color 0.15s, box-shadow 0.15s",
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
+          }} onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.06), 0 8px 16px rgba(0,0,0,0.06)" }} onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>event_busy</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Cancellations</span>
@@ -607,12 +610,13 @@ export default function DashboardPage() {
         <Link href="/metrics" style={{ textDecoration: "none" }}>
           <div style={{
             backgroundColor: "#FBFBFB",
-            border: "1px solid rgba(26,19,19,0.06)",
-            borderRadius: "10px",
+            border: "1px solid rgba(26,19,19,0.05)",
+            borderRadius: 12,
             padding: "20px",
             cursor: "pointer",
-            transition: "background-color 0.15s",
-          }}>
+            transition: "background-color 0.15s, box-shadow 0.15s",
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
+          }} onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.06), 0 8px 16px rgba(0,0,0,0.06)" }} onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>star</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Top Stylist</span>
@@ -630,12 +634,13 @@ export default function DashboardPage() {
         <Link href="/retention" style={{ textDecoration: "none" }}>
           <div style={{
             backgroundColor: "#FBFBFB",
-            border: "1px solid rgba(26,19,19,0.06)",
-            borderRadius: "10px",
+            border: "1px solid rgba(26,19,19,0.05)",
+            borderRadius: 12,
             padding: "20px",
             cursor: "pointer",
-            transition: "background-color 0.15s",
-          }}>
+            transition: "background-color 0.15s, box-shadow 0.15s",
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
+          }} onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.06), 0 8px 16px rgba(0,0,0,0.06)" }} onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>favorite</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Retention</span>
@@ -653,15 +658,16 @@ export default function DashboardPage() {
       {/* QUICK ACTIONS */}
       <div style={{
         backgroundColor: "#FBFBFB",
-        border: "1px solid rgba(26,19,19,0.06)",
-        borderRadius: "10px",
+        border: "1px solid rgba(26,19,19,0.05)",
+        borderRadius: 12,
         padding: "16px 20px",
         display: "flex",
         flexWrap: "nowrap" as const,
         overflowX: "auto",
         gap: "10px",
         alignItems: "center",
-        marginBottom: "20px",
+        marginBottom: 24,
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
       }}>
         <span style={{
           fontSize: "9px",
@@ -676,39 +682,41 @@ export default function DashboardPage() {
         </span>
         {quickActions.map(({ href, icon, label }) => (
           <Link key={href} href={href} style={{
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            gap: "6px",
-            padding: "9px 16px",
+            gap: 6,
+            padding: "0 12px",
+            height: 32,
+            borderRadius: 6,
             backgroundColor: "transparent",
-            border: "1px solid rgba(26,19,19,0.25)",
-            borderRadius: "7px",
-            color: "#CDC9C0",
+            border: "1px solid rgba(26,19,19,0.1)",
+            color: "rgba(26,19,19,0.65)",
             textDecoration: "none",
-            fontSize: "10px",
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase" as const,
+            fontSize: 12,
+            fontWeight: 500,
+            whiteSpace: "nowrap" as const,
+            transition: "all 0.15s ease",
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>{icon}</span>
             {label}
           </Link>
         ))}
         <Link href="/reyna-ai" style={{
-          display: "flex",
+          display: "inline-flex",
           alignItems: "center",
-          gap: "6px",
-          padding: "9px 20px",
-          backgroundColor: "#CDC9C0",
-          borderRadius: "7px",
-          color: "#0f1d24",
+          gap: 6,
+          padding: "0 16px",
+          height: 40,
+          borderRadius: 8,
+          backgroundColor: "#7a8f96",
+          border: "1px solid #7a8f96",
+          color: "#FBFBFB",
           textDecoration: "none",
-          fontSize: "10px",
-          fontWeight: 800,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase" as const,
+          fontSize: 13,
+          fontWeight: 600,
+          whiteSpace: "nowrap" as const,
           marginLeft: "auto",
-          boxShadow: "0 2px 8px rgba(26,19,19,0.15)",
+          boxShadow: "0 1px 2px rgba(122,143,150,0.3)",
         }}>
           <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>auto_awesome</span>
           Ask Reyna AI
@@ -719,17 +727,18 @@ export default function DashboardPage() {
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        gap: "20px",
+        gap: 24,
       }}>
         {/* Recent Activity / Stylist Leaderboard */}
         <div style={{
           backgroundColor: "#FBFBFB",
-          border: "1px solid rgba(26,19,19,0.06)",
-          borderRadius: "10px",
+          border: "1px solid rgba(26,19,19,0.05)",
+          borderRadius: 12,
           padding: "24px",
           minHeight: "340px",
           display: "flex",
           flexDirection: "column",
+          boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
             <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#1A1313", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
@@ -820,10 +829,11 @@ export default function DashboardPage() {
           {generateAlerts(metricsData, cancellations, activePeriod)}
           <div style={{
             backgroundColor: "#F4F5F7",
-            border: "1px solid rgba(26,19,19,0.06)",
-            borderRadius: "8px",
+            border: "1px solid rgba(26,19,19,0.05)",
+            borderRadius: 12,
             padding: "20px",
             textAlign: "center" as const,
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)",
           }}>
             <div style={{ fontSize: "8px", fontWeight: 700, color: "rgba(26,19,19,0.3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, marginBottom: "6px" }}>
               System Health
