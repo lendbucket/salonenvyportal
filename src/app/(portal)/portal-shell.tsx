@@ -242,7 +242,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
     )
   }
 
-  /* ── Desktop nav link ── */
+  /* ── Desktop nav link (white sidebar, dark text) ── */
   function desktopNavLink(item: NavItem) {
     const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
     return (
@@ -267,20 +267,20 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           whiteSpace: "nowrap" as const,
           transition: "all 0.15s ease",
           position: "relative" as const,
-          borderLeft: isActive ? "3px solid #C9A84C" : "3px solid transparent",
-          background: isActive ? "rgba(201,168,76,0.08)" : "transparent",
-          color: isActive ? "#C9A84C" : "rgba(255,255,255,0.5)",
+          borderLeft: isActive ? "3px solid #7a8f96" : "3px solid transparent",
+          background: isActive ? "rgba(122,143,150,0.08)" : "transparent",
+          color: isActive ? "#7a8f96" : "rgba(26,19,19,0.5)",
         }}
         onMouseEnter={e => {
           if (!isActive) {
-            e.currentTarget.style.background = "rgba(255,255,255,0.04)"
-            e.currentTarget.style.color = "rgba(255,255,255,0.75)"
+            e.currentTarget.style.background = "rgba(26,19,19,0.04)"
+            e.currentTarget.style.color = "rgba(26,19,19,0.8)"
           }
         }}
         onMouseLeave={e => {
           if (!isActive) {
             e.currentTarget.style.background = "transparent"
-            e.currentTarget.style.color = "rgba(255,255,255,0.5)"
+            e.currentTarget.style.color = "rgba(26,19,19,0.5)"
           }
         }}
       >
@@ -291,7 +291,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               width: 16, height: 16, fontSize: 16, flexShrink: 0,
               display: "flex", alignItems: "center", justifyContent: "center",
               lineHeight: 1,
-              color: isActive ? "#C9A84C" : "rgba(255,255,255,0.4)",
+              color: isActive ? "#7a8f96" : "rgba(26,19,19,0.4)",
             }}
           >
             {item.icon}
@@ -300,6 +300,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         {!item.icon && <span style={{ width: 16, height: 16, flexShrink: 0 }} />}
         <span style={{
           fontFamily: "Inter", fontSize: 13, fontWeight: isActive ? 600 : 500,
+          color: isActive ? "#7a8f96" : "rgba(26,19,19,0.55)",
           letterSpacing: "-0.31px", overflow: "hidden", textOverflow: "ellipsis",
           whiteSpace: "nowrap" as const, flex: 1, lineHeight: "1",
         }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
@@ -600,7 +601,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
       />
 
-      {/* SIDEBAR — 220px fixed */}
+      {/* SIDEBAR — 220px fixed, white */}
       <aside style={{
         width: 220,
         minWidth: 220,
@@ -609,8 +610,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         position: "fixed",
         left: 0,
         top: 0,
-        background: "#0d1117",
-        borderRight: "1px solid rgba(255,255,255,0.06)",
+        background: "#FBFBFB",
+        borderRight: "1px solid rgba(26,19,19,0.08)",
+        boxShadow: "4px 0 24px rgba(0,0,0,0.06)",
         display: "flex",
         flexDirection: "column",
         overflowX: "hidden",
@@ -620,11 +622,12 @@ export default function PortalShell({ children }: { children: React.ReactNode })
       }}>
         {/* Logo */}
         <div style={{
-          height: 44,
+          height: 56,
+          minHeight: 56,
           display: "flex",
           alignItems: "center",
           padding: "0 16px",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid rgba(26,19,19,0.06)",
           marginBottom: 8,
           flexShrink: 0,
         }}>
@@ -632,11 +635,11 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             src="/images/logo-white.png"
             alt="Salon Envy"
             style={{
-              maxHeight: 32,
+              maxHeight: 36,
               width: "auto",
               objectFit: "contain" as const,
               display: "block",
-              filter: "brightness(0) saturate(100%) invert(78%) sepia(35%) saturate(800%) hue-rotate(5deg) brightness(95%)",
+              filter: "brightness(0) saturate(100%) invert(60%) sepia(15%) saturate(600%) hue-rotate(155deg) brightness(90%)",
             }}
           />
         </div>
@@ -652,13 +655,14 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                     fontFamily: "Inter",
                     fontSize: 11,
                     fontWeight: 600,
-                    color: "rgba(255,255,255,0.3)",
+                    color: "rgba(26,19,19,0.35)",
                     textTransform: "uppercase" as const,
                     letterSpacing: "0.06em",
                     padding: "0 20px",
                     marginTop: 24,
                     marginBottom: 4,
                     display: "block",
+                    whiteSpace: "nowrap" as const,
                   }}>
                     {sectionLabel}
                   </span>
@@ -680,7 +684,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             fontFamily: "Inter",
             fontSize: 10,
             fontWeight: 400,
-            color: "rgba(255,255,255,0.2)",
+            color: "rgba(26,19,19,0.2)",
             letterSpacing: "0.04em",
             textTransform: "uppercase" as const,
           }}>
@@ -692,7 +696,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         <div style={{
           marginTop: "auto",
           padding: "12px 16px",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
+          borderTop: "1px solid rgba(26,19,19,0.06)",
           display: "flex",
           alignItems: "center",
           gap: 10,
@@ -703,8 +707,8 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             width: 28,
             height: 28,
             borderRadius: "50%",
-            background: "rgba(201,168,76,0.15)",
-            border: "1px solid rgba(201,168,76,0.3)",
+            background: "rgba(122,143,150,0.12)",
+            border: "1px solid rgba(122,143,150,0.25)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -712,7 +716,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             fontFamily: "Inter",
             fontSize: 11,
             fontWeight: 600,
-            color: "#C9A84C",
+            color: "#7a8f96",
             letterSpacing: "0",
           }}>
             {initials}
@@ -723,7 +727,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               fontFamily: "Inter",
               fontSize: 13,
               fontWeight: 500,
-              color: "rgba(255,255,255,0.85)",
+              color: "rgba(26,19,19,0.85)",
               letterSpacing: "-0.31px",
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -736,7 +740,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               fontFamily: "Inter",
               fontSize: 11,
               fontWeight: 400,
-              color: "rgba(255,255,255,0.35)",
+              color: "rgba(26,19,19,0.4)",
               letterSpacing: "0.02em",
               textTransform: "uppercase" as const,
               overflow: "hidden",
@@ -751,13 +755,13 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           <Link href="/profile" style={{
             width: 28, height: 28, borderRadius: 6,
             background: "transparent",
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid rgba(26,19,19,0.1)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", color: "rgba(255,255,255,0.4)",
+            cursor: "pointer", color: "rgba(26,19,19,0.4)",
             flexShrink: 0, transition: "all 0.15s ease", textDecoration: "none",
           }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)" }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.4)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(26,19,19,0.04)"; e.currentTarget.style.color = "rgba(26,19,19,0.7)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(26,19,19,0.4)" }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 14 }}>settings</span>
           </Link>
@@ -767,13 +771,13 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             style={{
               width: 28, height: 28, borderRadius: 6,
               background: "transparent",
-              border: "1px solid rgba(255,255,255,0.08)",
+              border: "1px solid rgba(26,19,19,0.1)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              cursor: "pointer", color: "rgba(255,255,255,0.4)",
+              cursor: "pointer", color: "rgba(26,19,19,0.4)",
               flexShrink: 0, transition: "all 0.15s ease",
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)" }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.4)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(26,19,19,0.04)"; e.currentTarget.style.color = "rgba(26,19,19,0.7)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(26,19,19,0.4)" }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 14 }}>logout</span>
           </button>
@@ -815,9 +819,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             padding: "0 14px",
             height: 32,
             borderRadius: 6,
-            background: "rgba(201,168,76,0.1)",
-            border: "1px solid rgba(201,168,76,0.25)",
-            color: "#C9A84C",
+            background: "rgba(122,143,150,0.1)",
+            border: "1px solid rgba(122,143,150,0.25)",
+            color: "#7a8f96",
             fontFamily: "Inter",
             fontSize: 12,
             fontWeight: 600,
@@ -827,8 +831,8 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             transition: "all 0.15s ease",
             textDecoration: "none",
           }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(201,168,76,0.15)"; e.currentTarget.style.borderColor = "rgba(201,168,76,0.4)" }}
-            onMouseLeave={e => { e.currentTarget.style.background = "rgba(201,168,76,0.1)"; e.currentTarget.style.borderColor = "rgba(201,168,76,0.25)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(122,143,150,0.15)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.4)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(122,143,150,0.1)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.25)" }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 14 }}>auto_awesome</span>
             Reyna AI
