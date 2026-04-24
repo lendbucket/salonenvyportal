@@ -78,20 +78,11 @@ export async function POST(req: NextRequest) {
       const resend = new Resend(process.env.RESEND_API_KEY)
 
       const result = await resend.emails.send({
-        from: "Salon Envy <waivers@salonenvyusa.com>",
+        from: "Salon Envy Team <team@salonenvyusa.com>",
+        replyTo: "team@salonenvyusa.com",
         to: email,
-        subject: "Your Salon Envy Verification Code",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto; padding: 40px 20px;">
-            <img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" style="max-width: 150px; margin-bottom: 24px; background: #0f1d24; padding: 8px 12px; border-radius: 6px;" />
-            <h2 style="color: #1A1313; margin: 0 0 8px;">Verify Your Email</h2>
-            <p style="color: #666666; font-size: 14px; margin: 0 0 24px;">Enter this code to verify your email address:</p>
-            <div style="background: #f5f5f5; border: 2px solid #e0e0e0; border-radius: 12px; padding: 24px; text-align: center; margin: 0 0 24px;">
-              <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; font-family: monospace; color: #1A1313;">${otp}</span>
-            </div>
-            <p style="color: #999999; font-size: 12px; margin: 0;">This code expires in 10 minutes. If you did not request this, please ignore this email.</p>
-          </div>
-        `,
+        subject: "Your verification code — Salon Envy",
+        html: `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:0;padding:0;background-color:#F4F5F7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;"><div style="display:none;color:#F4F5F7;">Your Salon Envy verification code: ${otp}</div><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F4F5F7;padding:40px 16px;"><tr><td align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;"><tr><td align="center" style="padding-bottom:24px;"><img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" width="120" style="display:block;height:auto;filter:brightness(0) saturate(100%) invert(60%) sepia(15%) saturate(600%) hue-rotate(155deg) brightness(90%);" /></td></tr><tr><td style="background-color:#FBFBFB;border-radius:16px;border:1px solid rgba(26,19,19,0.07);box-shadow:0 4px 24px rgba(0,0,0,0.06);overflow:hidden;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="height:4px;background:linear-gradient(90deg,#7a8f96,#9aafb7);"></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:36px 40px;"><tr><td style="padding-bottom:6px;"><p style="margin:0;font-size:13px;font-weight:600;color:rgba(26,19,19,0.4);text-transform:uppercase;letter-spacing:0.08em;">Email Verification</p></td></tr><tr><td style="padding-bottom:24px;"><h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#1A1313;">Verify your email</h1><p style="margin:0;font-size:14px;color:rgba(26,19,19,0.55);line-height:1.6;">Enter this code to verify your email address and continue your onboarding.</p></td></tr><tr><td style="padding-bottom:24px;" align="center"><div style="background:#F4F5F7;border-radius:12px;border:1px solid rgba(26,19,19,0.08);padding:24px 32px;display:inline-block;"><p style="margin:0 0 4px;font-size:11px;font-weight:600;color:rgba(26,19,19,0.4);text-transform:uppercase;letter-spacing:0.1em;text-align:center;">Your Code</p><p style="margin:0;font-size:40px;font-weight:700;color:#1A1313;letter-spacing:12px;text-align:center;">${otp}</p></div></td></tr><tr><td><p style="margin:0;font-size:13px;color:rgba(26,19,19,0.4);text-align:center;line-height:1.6;">This code expires in <strong style="color:#1A1313;">10 minutes</strong>.<br/>If you did not request this, please ignore this email.</p></td></tr></table></td></tr><tr><td style="padding:20px 0 0;" align="center"><p style="margin:0;font-size:12px;color:rgba(26,19,19,0.3);">Salon Envy USA LLC · Corpus Christi, TX · San Antonio, TX</p></td></tr></table></td></tr></table></body></html>`,
         text: `Your Salon Envy verification code is: ${otp}. Expires in 10 minutes.`,
       })
 

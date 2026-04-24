@@ -42,7 +42,8 @@ export async function POST(req: Request) {
     const { Resend } = await import("resend")
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
-      from: process.env.EMAIL_FROM || "Salon Envy Portal <noreply@salonenvyusa.com>",
+      from: "Salon Envy Portal <portal@salonenvyusa.com>",
+      replyTo: "team@salonenvyusa.com",
       to: "ceo@36west.org",
       subject: `New Anonymous Complaint: ${category}`,
       html: `<div style="font-family:sans-serif;padding:20px;background:#0a1520;color:#e9e5dc;">

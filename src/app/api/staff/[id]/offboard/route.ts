@@ -174,7 +174,8 @@ export async function POST(
       const termDateStr = new Date(terminationDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
 
       await resend.emails.send({
-        from: "waivers@salonenvyusa.com",
+        from: "Salon Envy Team <team@salonenvyusa.com>",
+        replyTo: "team@salonenvyusa.com",
         to: staffMember.email,
         subject: "Important Notice — Salon Envy Contractor Agreement",
         html: `
@@ -214,7 +215,8 @@ export async function POST(
     const { Resend } = await import("resend")
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
-      from: "waivers@salonenvyusa.com",
+      from: "Salon Envy Portal <portal@salonenvyusa.com>",
+      replyTo: "team@salonenvyusa.com",
       to: "ceo@36west.org",
       subject: `Staff Offboarding Complete — ${staffMember.fullName} — ${staffMember.location.name} — ${new Date().toLocaleDateString()}`,
       html: `

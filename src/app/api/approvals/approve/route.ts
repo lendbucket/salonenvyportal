@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
     if (resend) {
       try {
         await resend.emails.send({
-          from: "Salon Envy Portal <noreply@salonenvyusa.com>",
+          from: "Salon Envy Team <team@salonenvyusa.com>",
+          replyTo: "team@salonenvyusa.com",
           to: user.email,
           subject: "Your Salon Envy® Portal Access is Approved!",
           html: `

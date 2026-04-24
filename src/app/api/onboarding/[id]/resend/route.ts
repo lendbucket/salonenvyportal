@@ -40,29 +40,11 @@ export async function POST(
       const { Resend } = await import("resend")
       const resend = new Resend(process.env.RESEND_API_KEY)
       await resend.emails.send({
-        from: "waivers@salonenvyusa.com",
+        from: "Salon Envy Team <team@salonenvyusa.com>",
+        replyTo: "team@salonenvyusa.com",
         to: enrollment.email,
-        subject: "Reminder: Complete Your Salon Envy Onboarding",
-        html: `
-          <div style="font-family: -apple-system, sans-serif; max-width: 480px; margin: 0 auto; background: #0f1d24; color: #ffffff; padding: 40px; border-radius: 12px;">
-            <div style="text-align: center; margin-bottom: 32px;">
-              <img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" width="160" style="display:block;height:auto;margin:0 auto;" />
-            </div>
-            <h2 style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0 0 8px;">Reminder, ${enrollment.firstName}!</h2>
-            <p style="color: #94A3B8; margin: 0 0 8px; font-size: 14px; line-height: 1.6;">
-              You have a pending onboarding enrollment for Salon Envy ${enrollment.location.name}.
-            </p>
-            <p style="color: #94A3B8; margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
-              Please complete your enrollment by clicking the button below. ${enrollment.expiresAt ? `This link expires ${new Date(enrollment.expiresAt).toLocaleDateString()}.` : ""}
-            </p>
-            <a href="${enrollLink}" style="display: block; background: #CDC9C0; color: #0f1d24; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; margin-bottom: 24px;">
-              Complete Enrollment
-            </a>
-            <p style="color: #555; font-size: 12px; text-align: center; margin: 0;">
-              Questions? Call (361) 889-1102
-            </p>
-          </div>
-        `,
+        subject: "Reminder: Complete your Salon Envy onboarding",
+        html: `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background-color:#F4F5F7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;"><div style="display:none;color:#F4F5F7;">Reminder: Complete your Salon Envy onboarding</div><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F4F5F7;padding:40px 16px;"><tr><td align="center"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;"><tr><td align="center" style="padding-bottom:24px;"><img src="https://portal.salonenvyusa.com/images/logo-white.png" alt="Salon Envy" width="130" style="display:block;height:auto;filter:brightness(0) saturate(100%) invert(60%) sepia(15%) saturate(600%) hue-rotate(155deg) brightness(90%);" /></td></tr><tr><td style="background-color:#FBFBFB;border-radius:16px;border:1px solid rgba(26,19,19,0.07);box-shadow:0 4px 24px rgba(0,0,0,0.06);overflow:hidden;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="height:4px;background:linear-gradient(90deg,#7a8f96,#9aafb7);"></td></tr></table><table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:36px 40px;"><tr><td style="padding-bottom:6px;"><p style="margin:0;font-size:13px;font-weight:600;color:rgba(26,19,19,0.4);text-transform:uppercase;letter-spacing:0.08em;">Friendly Reminder</p></td></tr><tr><td style="padding-bottom:20px;"><h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#1A1313;">Complete your onboarding</h1><p style="margin:0;font-size:14px;color:rgba(26,19,19,0.55);line-height:1.6;">You have a pending onboarding invitation for the <strong style="color:#1A1313;">${enrollment.location?.name || "Salon Envy"}</strong> location. Your link expires on <strong style="color:#1A1313;">${enrollment.expiresAt ? new Date(enrollment.expiresAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "soon"}</strong>.</p></td></tr><tr><td style="padding-bottom:24px;" align="center"><a href="${process.env.NEXTAUTH_URL || "https://portal.salonenvyusa.com"}/onboarding/enroll/${enrollment.inviteToken}" style="display:inline-block;padding:14px 32px;background-color:#7a8f96;color:#FBFBFB;text-decoration:none;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(122,143,150,0.3);">Complete Onboarding →</a></td></tr><tr><td><p style="margin:0;font-size:12px;color:rgba(26,19,19,0.35);text-align:center;">Questions? Contact us at (361) 889-1102 or reply to this email.</p></td></tr></table></td></tr><tr><td style="padding:20px 0 0;" align="center"><p style="margin:0;font-size:12px;color:rgba(26,19,19,0.3);">Salon Envy USA LLC · Corpus Christi, TX · San Antonio, TX</p></td></tr></table></td></tr></table></body></html>`,
       })
     } catch (e) {
       console.error("[resend] Failed to send reminder email:", e)

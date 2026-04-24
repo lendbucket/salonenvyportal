@@ -156,7 +156,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       const { Resend } = await import("resend")
       const resend = new Resend(process.env.RESEND_API_KEY)
       await resend.emails.send({
-        from: process.env.EMAIL_FROM || "Salon Envy Portal <noreply@salonenvyusa.com>",
+        from: "Salon Envy Team <team@salonenvyusa.com>",
+        replyTo: "team@salonenvyusa.com",
         to: staff.email,
         subject: "Verify Your Cosmetology License — Salon Envy",
         html: `<div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:32px;"><h2>License Verification</h2><p>Hi ${staff.fullName.split(" ")[0]},</p><p>Please click the link below to verify your cosmetology license:</p><a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:#7a8f96;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;">Verify License</a><p style="color:#666;font-size:12px;margin-top:24px;">This link expires in 24 hours.</p></div>`,

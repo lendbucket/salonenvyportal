@@ -45,7 +45,8 @@ export async function POST(req: NextRequest) {
       const { Resend } = await import("resend")
       const resend = new Resend(process.env.RESEND_API_KEY)
       await resend.emails.send({
-        from: process.env.EMAIL_FROM || "Salon Envy <noreply@salonenvyusa.com>",
+        from: "Salon Envy Team <team@salonenvyusa.com>",
+        replyTo: "team@salonenvyusa.com",
         to: clientEmail,
         subject: "Secure Your Appointment — Salon Envy",
         html: `<div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:32px;"><h2>Add Card on File</h2><p>Hi ${clientName.split(" ")[0]},</p><p>To secure your appointment, please add a card on file. Your card will only be charged in case of a no-show.</p><a href="${link}" style="display:inline-block;padding:14px 28px;background:#7a8f96;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;">Add Card</a><p style="color:#666;font-size:12px;margin-top:24px;">This link expires in 24 hours.</p></div>`,

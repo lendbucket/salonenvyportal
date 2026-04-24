@@ -60,7 +60,8 @@ export async function POST(req: NextRequest) {
 
     try {
       await resend.emails.send({
-        from: "Salon Envy <noreply@salonenvy.com>",
+        from: "Salon Envy Team <team@salonenvyusa.com>",
+        replyTo: "team@salonenvyusa.com",
         to: customer.email,
         subject: "We Miss You at Salon Envy!",
         html: `

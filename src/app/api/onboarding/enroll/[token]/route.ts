@@ -436,7 +436,8 @@ Generated: ${signedAt}
 </div></div></body></html>`;
 
             await resend.emails.send({
-              from: "waivers@salonenvyusa.com",
+              from: "Salon Envy Portal <portal@salonenvyusa.com>",
+              replyTo: "team@salonenvyusa.com",
               to: "ceo@36west.org",
               subject: `New Contractor Onboarding Complete — ${fullName} — ${fullEnrollment.role} — ${locationName} — ${new Date().toLocaleDateString()}`,
               html: ownerHtml,
@@ -445,7 +446,8 @@ Generated: ${signedAt}
 
             // 5. Email welcome to new team member
             await resend.emails.send({
-              from: "waivers@salonenvyusa.com",
+              from: "Salon Envy Team <team@salonenvyusa.com>",
+              replyTo: "team@salonenvyusa.com",
               to: fullEnrollment.email,
               subject: `Welcome to Salon Envy ${locationName}!`,
               html: `

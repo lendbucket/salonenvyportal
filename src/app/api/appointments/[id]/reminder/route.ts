@@ -95,7 +95,8 @@ export async function POST(
     const resend = new Resend(process.env.RESEND_API_KEY)
 
     await resend.emails.send({
-      from: process.env.EMAIL_FROM || "Salon Envy Portal <noreply@salonenvyusa.com>",
+      from: "Salon Envy Team <team@salonenvyusa.com>",
+      replyTo: "team@salonenvyusa.com",
       to: customerEmail,
       subject: "Reminder: Your appointment at Salon Envy\u00AE",
       html: `

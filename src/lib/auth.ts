@@ -29,13 +29,14 @@ export const authOptions: NextAuthOptions = {
           pass: process.env.EMAIL_SERVER_PASSWORD || process.env.RESEND_API_KEY || "",
         },
       },
-      from: process.env.EMAIL_FROM || "Salon Envy Portal <noreply@salonenvyusa.com>",
+      from: "Salon Envy Team <team@salonenvyusa.com>",
       async sendVerificationRequest({ identifier: email, url }) {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
 
         await resend.emails.send({
-          from: process.env.EMAIL_FROM || "Salon Envy Portal <noreply@salonenvyusa.com>",
+          from: "Salon Envy Team <team@salonenvyusa.com>",
+          replyTo: "team@salonenvyusa.com",
           to: email,
           subject: "Sign in to Salon Envy Portal",
           html: `<!DOCTYPE html>
