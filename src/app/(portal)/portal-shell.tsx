@@ -171,8 +171,15 @@ export default function PortalShell({ children }: { children: React.ReactNode })
     return () => clearInterval(id)
   }, [isOwner, isManager])
 
-  /* ── Shared helpers ── */
-  function navLink(item: NavItem, compact?: boolean) {
+  /* ── Section labels for desktop nav ── */
+  const sectionStarts = useMemo((): Record<string, string> => {
+    if (isOwner) return { "/appointments": "SALON", "/staff": "TEAM", "/payroll": "BUSINESS", "/alerts": "SYSTEM" }
+    if (isManager) return { "/appointments": "SALON", "/staff": "TEAM", "/payroll": "BUSINESS", "/social": "SYSTEM" }
+    return { "/my-schedule": "MY WORK", "/submit-complaint": "OTHER", "/settings": "SYSTEM" }
+  }, [isOwner, isManager])
+
+  /* ── Mobile drawer nav link ── */
+  function mobileNavLink(item: NavItem) {
     const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
     return (
       <Link
@@ -184,18 +191,14 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           flexDirection: "row" as const,
           alignItems: "center",
           gap: 10,
-          padding: compact ? "0 12px" : "0 12px",
+          padding: "0 12px",
           margin: "1px 8px",
-          height: compact ? 38 : 40,
+          height: 38,
           borderRadius: 6,
-          fontSize: "11px",
-          fontWeight: 600,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
           textDecoration: "none",
-          borderLeft: isActive ? "2px solid #7a8f96" : "2px solid transparent",
-          backgroundColor: isActive ? "rgba(255,255,255,0.06)" : "transparent",
-          color: isActive ? "#FBFBFB" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.55)",
+          borderLeft: isActive ? "3px solid #C9A84C" : "3px solid transparent",
+          backgroundColor: isActive ? "rgba(201,168,76,0.08)" : "transparent",
+          color: isActive ? "#C9A84C" : item.highlight ? "#C9A84C" : "rgba(255,255,255,0.5)",
           transition: "all 0.15s ease",
           overflow: "hidden",
           whiteSpace: "nowrap" as const,
@@ -207,14 +210,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           <span
             className="material-symbols-outlined"
             style={{
-              fontSize: "16px",
-              width: 16,
-              height: 16,
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: isActive ? "#CDC9C0" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.4)",
+              fontSize: 16, width: 16, height: 16, flexShrink: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: isActive ? "#C9A84C" : "rgba(255,255,255,0.4)",
             }}
           >
             {item.icon}
@@ -222,31 +220,98 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         )}
         {!item.icon && <span style={{ width: 16, height: 16, flexShrink: 0 }} />}
         <span style={{
-          flex: 1,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap" as const,
-          fontSize: 11,
-          fontWeight: 600,
-          letterSpacing: "0.08em",
+          flex: 1, overflow: "hidden", textOverflow: "ellipsis",
+          whiteSpace: "nowrap" as const, fontSize: 13, fontWeight: isActive ? 600 : 500,
+          letterSpacing: "-0.31px", lineHeight: "1",
         }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
         {item.badge && (() => {
           const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : 0
           if (!count) return null
           return (
             <span style={{
-              minWidth: "18px",
-              height: "18px",
-              borderRadius: "9px",
-              backgroundColor: "#EF4444",
-              color: "#fff",
-              fontSize: "9px",
-              fontWeight: 800,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "0 5px",
-              flexShrink: 0,
+              minWidth: 18, height: 18, borderRadius: 9, background: "#ef4444",
+              color: "#ffffff", fontSize: 10, fontWeight: 600,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              marginLeft: "auto", flexShrink: 0, letterSpacing: "0",
+            }}>
+              {count}
+            </span>
+          )
+        })()}
+      </Link>
+    )
+  }
+
+  /* ── Desktop nav link ── */
+  function desktopNavLink(item: NavItem) {
+    const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        style={{
+          display: "flex",
+          flexDirection: "row" as const,
+          alignItems: "center",
+          gap: 10,
+          padding: "0 12px",
+          margin: "1px 8px",
+          height: 40,
+          minHeight: 40,
+          borderRadius: 6,
+          cursor: "pointer",
+          textDecoration: "none",
+          width: "calc(100% - 16px)",
+          boxSizing: "border-box" as const,
+          overflow: "hidden",
+          whiteSpace: "nowrap" as const,
+          transition: "all 0.15s ease",
+          position: "relative" as const,
+          borderLeft: isActive ? "3px solid #C9A84C" : "3px solid transparent",
+          background: isActive ? "rgba(201,168,76,0.08)" : "transparent",
+          color: isActive ? "#C9A84C" : "rgba(255,255,255,0.5)",
+        }}
+        onMouseEnter={e => {
+          if (!isActive) {
+            e.currentTarget.style.background = "rgba(255,255,255,0.04)"
+            e.currentTarget.style.color = "rgba(255,255,255,0.75)"
+          }
+        }}
+        onMouseLeave={e => {
+          if (!isActive) {
+            e.currentTarget.style.background = "transparent"
+            e.currentTarget.style.color = "rgba(255,255,255,0.5)"
+          }
+        }}
+      >
+        {item.icon && (
+          <span
+            className="material-symbols-outlined"
+            style={{
+              width: 16, height: 16, fontSize: 16, flexShrink: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              lineHeight: 1,
+              color: isActive ? "#C9A84C" : "rgba(255,255,255,0.4)",
+            }}
+          >
+            {item.icon}
+          </span>
+        )}
+        {!item.icon && <span style={{ width: 16, height: 16, flexShrink: 0 }} />}
+        <span style={{
+          fontFamily: "Inter", fontSize: 13, fontWeight: isActive ? 600 : 500,
+          letterSpacing: "-0.31px", overflow: "hidden", textOverflow: "ellipsis",
+          whiteSpace: "nowrap" as const, flex: 1, lineHeight: "1",
+        }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
+        {item.badge && (() => {
+          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : 0
+          if (!count) return null
+          return (
+            <span style={{
+              minWidth: 18, height: 18, borderRadius: 9, background: "#ef4444",
+              color: "#ffffff", fontSize: 10, fontWeight: 600,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              marginLeft: "auto", flexShrink: 0, letterSpacing: "0",
             }}>
               {count}
             </span>
@@ -285,7 +350,13 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             <img
               src="/images/logo-white.png"
               alt="Salon Envy"
-              style={{ height: "40px", width: "auto", objectFit: "contain", display: "block" }}
+              style={{
+                height: "32px",
+                width: "auto",
+                objectFit: "contain" as const,
+                display: "block",
+                filter: "brightness(0) saturate(100%) invert(78%) sepia(35%) saturate(800%) hue-rotate(5deg) brightness(95%)",
+              }}
             />
             {isOwner && pendingCount > 0 && (
               <Link href="/approvals" style={{
@@ -405,7 +476,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
 
           {/* Nav items */}
           <nav style={{ flex: 1, padding: "8px 0" }}>
-            {navItems.map(item => navLink(item, true))}
+            {navItems.map(item => mobileNavLink(item))}
           </nav>
 
           {/* Profile / Sign out at bottom */}
@@ -501,7 +572,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 flexDirection: "column",
                 alignItems: "center",
                 gap: "2px",
-                color: isActive ? "#CDC9C0" : "rgba(205,201,192,0.35)",
+                color: isActive ? "#C9A84C" : "rgba(255,255,255,0.35)",
                 textDecoration: "none",
                 fontSize: "9px",
                 fontWeight: 700,
@@ -523,211 +594,258 @@ export default function PortalShell({ children }: { children: React.ReactNode })
      DESKTOP LAYOUT
      ═══════════════════════════════════════════ */
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#1e2d35", display: "flex" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#06080d" }}>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
       />
 
-      {/* SIDEBAR — 220px */}
+      {/* SIDEBAR — 220px fixed */}
       <aside style={{
         width: 220,
         minWidth: 220,
         maxWidth: 220,
-        backgroundColor: "#080c10",
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: 0,
+        background: "#0d1117",
+        borderRight: "1px solid rgba(255,255,255,0.06)",
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
-        position: "sticky",
-        top: 0,
-        borderRight: "1px solid rgba(255,255,255,0.06)",
         overflowX: "hidden",
         overflowY: "auto",
         zIndex: 50,
+        paddingBottom: 16,
       }}>
         {/* Logo */}
         <div style={{
-          padding: "18px 20px",
-          backgroundColor: "rgba(0,0,0,0.2)",
+          height: 44,
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
+          alignItems: "center",
+          padding: "0 16px",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          marginBottom: 8,
+          flexShrink: 0,
         }}>
           <img
             src="/images/logo-white.png"
             alt="Salon Envy"
-            style={{ width: "120px", height: "auto", objectFit: "contain", display: "block" }}
+            style={{
+              maxHeight: 32,
+              width: "auto",
+              objectFit: "contain" as const,
+              display: "block",
+              filter: "brightness(0) saturate(100%) invert(78%) sepia(35%) saturate(800%) hue-rotate(5deg) brightness(95%)",
+            }}
           />
-          <div style={{
-            marginTop: "8px",
-            fontSize: "8px",
-            fontWeight: 700,
-            letterSpacing: "0.25em",
-            color: "rgba(205,201,192,0.4)",
-            textTransform: "uppercase",
-          }}>
-            Management Portal
-          </div>
-          {isManager && locationName && (
-            <div style={{
-              marginTop: "4px",
-              fontSize: "9px",
-              fontWeight: 600,
-              letterSpacing: "0.1em",
-              color: "rgba(205,201,192,0.55)",
-              textTransform: "uppercase",
-            }}>
-              {locationName}
-            </div>
-          )}
         </div>
-        <div style={{ height: "1px", backgroundColor: "rgba(205,201,192,0.2)" }} />
 
-        {/* Nav */}
-        <nav style={{ flex: 1, overflowY: "auto", padding: "12px 0" }}>
-          {navItems.map(item => navLink(item))}
+        {/* Nav with section labels */}
+        <nav style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+          {navItems.map(item => {
+            const sectionLabel = sectionStarts[item.href]
+            return (
+              <div key={item.href}>
+                {sectionLabel && (
+                  <span style={{
+                    fontFamily: "Inter",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: "rgba(255,255,255,0.3)",
+                    textTransform: "uppercase" as const,
+                    letterSpacing: "0.06em",
+                    padding: "0 20px",
+                    marginTop: 24,
+                    marginBottom: 4,
+                    display: "block",
+                  }}>
+                    {sectionLabel}
+                  </span>
+                )}
+                {desktopNavLink(item)}
+              </div>
+            )
+          })}
         </nav>
+
+        {/* Powered by */}
+        <div style={{
+          padding: "8px 16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+          <span style={{
+            fontFamily: "Inter",
+            fontSize: 10,
+            fontWeight: 400,
+            color: "rgba(255,255,255,0.2)",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase" as const,
+          }}>
+            Powered by RunMySalon
+          </span>
+        </div>
 
         {/* User section */}
         <div style={{
-          padding: "14px 20px",
+          marginTop: "auto",
+          padding: "12px 16px",
           borderTop: "1px solid rgba(255,255,255,0.06)",
-          backgroundColor: "rgba(0,0,0,0.2)",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          flexShrink: 0,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+          {/* Avatar */}
+          <div style={{
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            background: "rgba(201,168,76,0.15)",
+            border: "1px solid rgba(201,168,76,0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            fontFamily: "Inter",
+            fontSize: 11,
+            fontWeight: 600,
+            color: "#C9A84C",
+            letterSpacing: "0",
+          }}>
+            {initials}
+          </div>
+          {/* User info */}
+          <div style={{ flex: 1, overflow: "hidden" }}>
             <div style={{
-              width: "34px",
-              height: "34px",
-              borderRadius: "50%",
-              backgroundColor: "rgba(255,255,255,0.06)",
-              border: "1.5px solid rgba(205,201,192,0.25)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#CDC9C0",
-              fontSize: "12px",
-              fontWeight: 800,
-              flexShrink: 0,
+              fontFamily: "Inter",
+              fontSize: 13,
+              fontWeight: 500,
+              color: "rgba(255,255,255,0.85)",
+              letterSpacing: "-0.31px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap" as const,
+              lineHeight: 1.3,
             }}>
-              {initials}
+              {userName}
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{
-                color: "#FBFBFB",
-                fontSize: "12px",
-                fontWeight: 700,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}>
-                {userName}
-              </div>
-              <div style={{
-                color: "#CDC9C0",
-                fontSize: "9px",
-                fontWeight: 600,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                opacity: 0.6,
-              }}>
-                {userRole}
-              </div>
+            <div style={{
+              fontFamily: "Inter",
+              fontSize: 11,
+              fontWeight: 400,
+              color: "rgba(255,255,255,0.35)",
+              letterSpacing: "0.02em",
+              textTransform: "uppercase" as const,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap" as const,
+              lineHeight: 1.3,
+            }}>
+              {userRole}
             </div>
           </div>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <Link href="/profile" style={{
-              flex: 1,
-              padding: "7px",
-              backgroundColor: "rgba(205,201,192,0.06)",
-              border: "1px solid rgba(205,201,192,0.12)",
-              borderRadius: "6px",
-              color: "rgba(205,201,192,0.6)",
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>settings</span>
-            </Link>
-            <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              style={{
-                flex: 1,
-                padding: "7px",
-                backgroundColor: "rgba(205,201,192,0.06)",
-                border: "1px solid rgba(205,201,192,0.12)",
-                borderRadius: "6px",
-                color: "rgba(205,201,192,0.6)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>logout</span>
-            </button>
-          </div>
+          {/* Settings */}
+          <Link href="/profile" style={{
+            width: 28, height: 28, borderRadius: 6,
+            background: "transparent",
+            border: "1px solid rgba(255,255,255,0.08)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", color: "rgba(255,255,255,0.4)",
+            flexShrink: 0, transition: "all 0.15s ease", textDecoration: "none",
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.4)" }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>settings</span>
+          </Link>
+          {/* Logout */}
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            style={{
+              width: 28, height: 28, borderRadius: 6,
+              background: "transparent",
+              border: "1px solid rgba(255,255,255,0.08)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", color: "rgba(255,255,255,0.4)",
+              flexShrink: 0, transition: "all 0.15s ease",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.4)" }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>logout</span>
+          </button>
         </div>
       </aside>
 
-      {/* MAIN AREA */}
-      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
-        {/* TOP BAR — 52px */}
-        <header style={{
-          height: "52px",
-          flexShrink: 0,
-          backgroundColor: "#080c10",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 20px",
-          position: "sticky",
-          top: 0,
-          zIndex: 40,
+      {/* TOPBAR — 56px fixed */}
+      <header style={{
+        height: 56,
+        minHeight: 56,
+        position: "fixed",
+        top: 0,
+        left: 220,
+        right: 0,
+        background: "#0d1117",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.25)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 24px",
+        zIndex: 40,
+        boxSizing: "border-box" as const,
+      }}>
+        <div style={{
+          fontFamily: "Inter",
+          fontSize: 16,
+          fontWeight: 600,
+          color: "#ffffff",
+          letterSpacing: "-0.31px",
         }}>
-          <div style={{
-            color: "#FBFBFB",
-            fontSize: "15px",
-            fontWeight: 600,
-            letterSpacing: "0.02em",
-          }}>
-            {pageTitle}
-          </div>
+          {pageTitle}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Link href="/reyna-ai" style={{
             display: "inline-flex",
-            flexDirection: "row" as const,
             alignItems: "center",
-            justifyContent: "center",
-            gap: 5,
-            padding: "7px 14px",
-            backgroundColor: "#CDC9C0",
-            borderRadius: "7px",
-            color: "#0f1d24",
-            textDecoration: "none",
-            fontSize: "10px",
-            fontWeight: 800,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
+            gap: 6,
+            padding: "0 14px",
+            height: 32,
+            borderRadius: 6,
+            background: "rgba(201,168,76,0.1)",
+            border: "1px solid rgba(201,168,76,0.25)",
+            color: "#C9A84C",
+            fontFamily: "Inter",
+            fontSize: 12,
+            fontWeight: 600,
+            letterSpacing: "-0.31px",
+            cursor: "pointer",
             whiteSpace: "nowrap" as const,
-            overflow: "hidden",
-          }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>auto_awesome</span>
+            transition: "all 0.15s ease",
+            textDecoration: "none",
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(201,168,76,0.15)"; e.currentTarget.style.borderColor = "rgba(201,168,76,0.4)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(201,168,76,0.1)"; e.currentTarget.style.borderColor = "rgba(201,168,76,0.25)" }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>auto_awesome</span>
             Reyna AI
           </Link>
-        </header>
+        </div>
+      </header>
 
-        {/* PAGE CONTENT */}
-        <main style={{
-          flex: 1,
-          backgroundColor: "#1e2d35",
-          overflowY: "auto",
-          overflowX: "hidden",
-          WebkitOverflowScrolling: "touch",
-        }}>
-          {children}
-        </main>
-      </div>
+      {/* PAGE CONTENT — offset by sidebar and topbar */}
+      <main style={{
+        marginLeft: 220,
+        marginTop: 56,
+        minHeight: "calc(100vh - 56px)",
+        background: "#06080d",
+        overflowX: "hidden",
+      }}>
+        {children}
+      </main>
     </div>
   )
 }
