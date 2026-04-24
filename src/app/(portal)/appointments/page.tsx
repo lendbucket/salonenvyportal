@@ -159,6 +159,7 @@ export default function AppointmentsPage() {
   const [txLoading, setTxLoading] = useState(false)
   const [txPage, setTxPage] = useState(0)
   const TX_PER_PAGE = 25
+  const [expandedTxRow, setExpandedTxRow] = useState<string | null>(null)
 
   // ── Client history panel ──
   const [historyClientId, setHistoryClientId] = useState<string | null>(null)
@@ -2169,13 +2170,13 @@ export default function AppointmentsPage() {
                 <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "4px" }}>End</div>
                 <input type="date" value={txCustomEnd} onChange={e => setTxCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "13px", outline: "none", colorScheme: "light" }} />
               </div>
-              <button onClick={fetchTransactions} style={{ padding: "8px 16px", backgroundColor: "#CDC9C0", color: "#0f1d24", border: "none", borderRadius: "8px", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Apply</button>
+              <button onClick={fetchTransactions} style={{ padding: "8px 16px", backgroundColor: "#7a8f96", color: "#FBFBFB", border: "none", borderRadius: "8px", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Apply</button>
             </div>
           )}
 
           {/* Summary cards */}
           {txData?.summary && !txLoading && (
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(150px, 1fr))", gap: 16, marginBottom: 24 }}>
               {[
                 { label: "Total Revenue", value: fmtCurrency(txData.summary.revenue), icon: "attach_money" },
                 { label: "Total Tips", value: fmtCurrency(txData.summary.tips), icon: "volunteer_activism" },
@@ -2200,16 +2201,16 @@ export default function AppointmentsPage() {
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px", marginBottom: "12px" }}>
               <button onClick={exportTxCsv} style={{
                 height: 40, padding: "0 16px", fontSize: 13, fontWeight: 600,
-                borderRadius: 8, border: "1px solid #606E74", backgroundColor: "transparent",
-                color: "#7a8f96", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
+                borderRadius: 8, border: "1px solid rgba(26,19,19,0.12)", backgroundColor: "transparent",
+                color: "rgba(26,19,19,0.6)", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>download</span>
                 Export CSV
               </button>
               <button onClick={downloadTxReport} style={{
                 height: 40, padding: "0 16px", fontSize: 13, fontWeight: 600,
-                borderRadius: 8, border: "1px solid #606E74", backgroundColor: "transparent",
-                color: "#7a8f96", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
+                borderRadius: 8, border: "1px solid rgba(26,19,19,0.12)", backgroundColor: "transparent",
+                color: "rgba(26,19,19,0.6)", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>summarize</span>
                 Download Report
@@ -2241,9 +2242,9 @@ export default function AppointmentsPage() {
               <div style={{ overflowX: "auto", borderRadius: 12, border: "1px solid rgba(26,19,19,0.07)", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03)" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "700px" }}>
                   <thead>
-                    <tr style={{ backgroundColor: "rgba(26,19,19,0.03)" }}>
+                    <tr style={{ backgroundColor: "#F4F5F7" }}>
                       {["Time", "Client", "Stylist", "Services", "Payment", "Subtotal", "Tips", "Tax", "Total"].map(h => (
-                        <th key={h} style={{ padding: "12px 14px", textAlign: h === "Subtotal" || h === "Tips" || h === "Tax" || h === "Total" ? "right" : "left", fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#606E74", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>{h}</th>
+                        <th key={h} style={{ padding: "12px 14px", textAlign: h === "Subtotal" || h === "Tips" || h === "Tax" || h === "Total" ? "right" : "left", fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.38)", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -2269,7 +2270,18 @@ export default function AppointmentsPage() {
                             {tx.services.length > 2 && <span style={{ color: "rgba(96,110,116,0.6)" }}>+{tx.services.length - 2} more</span>}
                           </div>
                         </td>
-                        <td style={{ padding: "14px", borderBottom: "1px solid rgba(26,19,19,0.03)" }}>{paymentBadge(tx.paymentMethod)}</td>
+                        <td style={{ padding: "14px", borderBottom: "1px solid rgba(26,19,19,0.03)" }}>
+                          <span style={{
+                            padding: "2px 7px", borderRadius: 5, fontFamily: "Inter", fontSize: 10, fontWeight: 700,
+                            textTransform: "uppercase" as const, letterSpacing: "0.05em", display: "inline-block",
+                            background: tx.paymentMethod === "VISA" ? "rgba(37,99,235,0.08)" : tx.paymentMethod === "MASTERCARD" ? "rgba(239,68,68,0.08)" : tx.paymentMethod === "CASH" ? "rgba(34,197,94,0.08)" : "rgba(26,19,19,0.06)",
+                            border: `1px solid ${tx.paymentMethod === "VISA" ? "rgba(37,99,235,0.18)" : tx.paymentMethod === "MASTERCARD" ? "rgba(239,68,68,0.18)" : tx.paymentMethod === "CASH" ? "rgba(34,197,94,0.18)" : "rgba(26,19,19,0.1)"}`,
+                            color: tx.paymentMethod === "VISA" ? "#1d4ed8" : tx.paymentMethod === "MASTERCARD" ? "#b91c1c" : tx.paymentMethod === "CASH" ? "#15803d" : "rgba(26,19,19,0.5)",
+                          }}>
+                            {tx.paymentMethod}
+                          </span>
+                          {tx.last4 && <div style={{ fontSize: 11, color: "rgba(26,19,19,0.38)", marginTop: 3, fontVariantNumeric: "tabular-nums" }}>•••• {tx.last4}</div>}
+                        </td>
                         <td style={{ padding: "14px", fontSize: "12px", color: "#1A1313", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", textAlign: "right" }}>{fmtCurrency(tx.subtotal)}</td>
                         <td style={{ padding: "14px", fontSize: "12px", color: tx.tips > 0 ? "#22c55e" : "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", textAlign: "right" }}>{tx.tips > 0 ? fmtCurrency(tx.tips) : "\u2014"}</td>
                         <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", textAlign: "right" }}>{fmtCurrency(tx.tax)}</td>

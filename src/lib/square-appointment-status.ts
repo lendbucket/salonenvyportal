@@ -144,5 +144,49 @@ export function resolveStatuses(
     }
   }
 
+  // Strategy 3: Time-based matching for orders without customerId
+  for (const order of completedOrders) {
+    if (!order.customerId && !usedOrderIds.has(order.id)) {
+      const closedAt = order.closedAt ? new Date(order.closedAt) : null
+      if (!closedAt) continue
+
+      for (const booking of bookings) {
+        const existing = resolved.get(booking.id)
+        if (!existing || existing.status !== "ACCEPTED") continue
+
+        const bookingStart = new Date(booking.startAt)
+        const segDuration = booking.appointmentSegments?.[0]?.durationMinutes || 60
+        const bookingEnd = new Date(bookingStart.getTime() + segDuration * 60000)
+        const bookingLocationId = booking.locationId
+
+        // Match: same location + order closed within booking window + 3 hour grace
+        const windowEnd = new Date(bookingEnd.getTime() + 3 * 60 * 60 * 1000)
+        if (order.locationId === bookingLocationId && closedAt >= bookingStart && closedAt <= windowEnd) {
+          const tender = order.tenders?.[0]
+          resolved.set(booking.id, {
+            bookingId: booking.id,
+            squareOrderId: order.id,
+            status: "CHECKED_OUT",
+            checkedOutAt: order.closedAt,
+            totalAmount: Number(order.totalMoney?.amount || 0) / 100,
+            paymentMethod: tender?.type || "CARD",
+            last4: tender?.cardDetails?.card?.last4,
+          })
+          usedOrderIds.add(order.id)
+          break
+        }
+      }
+    }
+  }
+
+  // Log unmatched orders for debugging
+  const unmatchedOrders = completedOrders.filter(o => !usedOrderIds.has(o.id))
+  if (unmatchedOrders.length > 0) {
+    console.log(`[appt-status] ${unmatchedOrders.length} unmatched orders:`, unmatchedOrders.map(o => ({
+      id: o.id, closedAt: o.closedAt, customerId: o.customerId,
+      total: Number(o.totalMoney?.amount || 0) / 100,
+    })))
+  }
+
   return resolved
 }

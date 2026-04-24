@@ -1,7 +1,7 @@
 "use client"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useUserRole } from "@/hooks/useUserRole"
-import { RefreshCw, Upload, Download, Search, ChevronRight, CreditCard, List, LayoutGrid, X } from "lucide-react"
+import { RefreshCw, Upload, Download, Search, ChevronRight, CreditCard, List, LayoutGrid, X, Phone, Mail, Calendar, CalendarPlus, Star, Plus, MessageSquare, FlaskConical } from "lucide-react"
 
 const AVATAR_COLORS = [
   { bg: "rgba(122,143,150,0.15)", color: "#4a7080" },
@@ -45,6 +45,10 @@ export default function ClientsPage() {
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [selectedClient, setSelectedClient] = useState<ClientRow | null>(null)
+  const [clientDetail, setClientDetail] = useState<ClientRow | null>(null)
+  const [detailLoading, setDetailLoading] = useState(false)
+  const [activeDetailTab, setActiveDetailTab] = useState<"overview" | "visits" | "formula" | "notes">("overview")
 
   const fetchClients = useCallback(async (p: number, q: string) => {
     setLoading(true)
@@ -84,6 +88,18 @@ export default function ClientsPage() {
     fetchClients(next, search)
   }
 
+  const openClientDetail = async (client: ClientRow) => {
+    setSelectedClient(client)
+    setActiveDetailTab("overview")
+    setDetailLoading(true)
+    try {
+      const res = await fetch(`/api/clients/${client.id}`)
+      const data = await res.json()
+      setClientDetail(data)
+    } catch { /* ignore */ }
+    setDetailLoading(false)
+  }
+
   const remaining = total - clients.length
 
   // A-Z grouping
@@ -115,7 +131,7 @@ export default function ClientsPage() {
     const ci = (c.name?.charCodeAt(0) || 0) % 7
     const av = AVATAR_COLORS[ci]
     return (
-      <div key={c.id} style={{
+      <div key={c.id} onClick={() => openClientDetail(c)} style={{
         background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 10,
         padding: "11px 16px", display: "flex", alignItems: "center", gap: 14,
         cursor: "pointer", transition: "all 0.15s ease", boxShadow: "0 1px 1px rgba(0,0,0,0.03)",
@@ -305,6 +321,214 @@ export default function ClientsPage() {
           )}
         </>
       )}
+
+      {/* Client Detail Panel Backdrop */}
+      {selectedClient && (
+        <div onClick={() => { setSelectedClient(null); setClientDetail(null) }} style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.15)", backdropFilter: "blur(2px)",
+          WebkitBackdropFilter: "blur(2px)", zIndex: 199,
+        }} />
+      )}
+
+      {/* Client Detail Panel */}
+      <div style={{
+        position: "fixed", top: 56, right: selectedClient ? 0 : -580, width: 540,
+        height: "calc(100vh - 56px)", background: "#FBFBFB",
+        borderLeft: "1px solid rgba(26,19,19,0.08)", boxShadow: "-8px 0 40px rgba(0,0,0,0.08)",
+        zIndex: 200, display: "flex", flexDirection: "column" as const,
+        transition: "right 0.3s cubic-bezier(0.4,0,0.2,1)", overflow: "hidden",
+      }}>
+        {/* Panel Header */}
+        <div style={{ padding: "18px 22px 0", flexShrink: 0 }}>
+          <button onClick={() => { setSelectedClient(null); setClientDetail(null) }} style={{
+            position: "absolute", top: 14, right: 14, width: 28, height: 28, borderRadius: 8,
+            background: "rgba(26,19,19,0.04)", border: "none", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}><X size={15} color="rgba(26,19,19,0.4)" /></button>
+
+          <div style={{ fontFamily: "Inter", fontSize: 11, fontWeight: 600, color: "rgba(26,19,19,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 14 }}>Client Profile</div>
+
+          {selectedClient && (() => {
+            const ci = (selectedClient.name?.charCodeAt(0) || 0) % 7
+            const av = AVATAR_COLORS[ci]
+            return (
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 14, background: av.bg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Inter", fontSize: 18, fontWeight: 700, color: av.color, flexShrink: 0 }}>
+                  {getInitials(selectedClient.name || "?")}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: "Inter", fontSize: 20, fontWeight: 700, color: "#1A1313", letterSpacing: "-0.31px" }}>{selectedClient.name}</div>
+                  <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 12, marginTop: 4 }}>
+                    {selectedClient.phone && <span style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 400, color: "rgba(26,19,19,0.45)", display: "inline-flex", alignItems: "center", gap: 4 }}><Phone size={12} />{selectedClient.phone}</span>}
+                    {selectedClient.email && <span style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 400, color: "rgba(26,19,19,0.45)", display: "inline-flex", alignItems: "center", gap: 4 }}><Mail size={12} />{selectedClient.email}</span>}
+                  </div>
+                  {clientDetail?.client?.createdAt && (
+                    <span style={{ fontFamily: "Inter", fontSize: 12, fontWeight: 400, color: "rgba(26,19,19,0.35)", display: "inline-flex", alignItems: "center", gap: 4, marginTop: 3 }}><Calendar size={11} />Member since {new Date(clientDetail.client.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })}</span>
+                  )}
+                </div>
+              </div>
+            )
+          })()}
+        </div>
+
+        {/* Stats Strip */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", background: "#F4F5F7", margin: "0 0 0 0", flexShrink: 0 }}>
+          {[
+            { label: "Total Visits", value: clientDetail?.stats?.totalVisits ?? selectedClient?.visitCount ?? "—" },
+            { label: "Total Spend", value: clientDetail?.stats?.totalSpend != null ? `$${Math.round(clientDetail.stats.totalSpend).toLocaleString()}` : selectedClient?.totalSpend > 0 ? `$${Math.round(selectedClient.totalSpend).toLocaleString()}` : "—", color: "#15803d" },
+            { label: "Avg Ticket", value: clientDetail?.stats?.avgTicket != null ? `$${Math.round(clientDetail.stats.avgTicket)}` : "—" },
+          ].map((s, i) => (
+            <div key={s.label} style={{
+              padding: "12px 16px", textAlign: "center" as const,
+              borderRight: i < 2 ? "1px solid rgba(26,19,19,0.06)" : "none",
+            }}>
+              <div style={{ fontFamily: "Inter", fontSize: 20, fontWeight: 700, color: s.color || "#1A1313", fontVariantNumeric: "tabular-nums" }}>{s.value}</div>
+              <div style={{ fontFamily: "Inter", fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginTop: 2 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <div style={{ display: "flex", gap: 0, borderBottom: "1px solid rgba(26,19,19,0.08)", flexShrink: 0, padding: "0 22px" }}>
+          {(["overview", "visits", "formula", "notes"] as const).map(tab => (
+            <button key={tab} onClick={() => setActiveDetailTab(tab)} style={{
+              padding: "10px 14px", fontFamily: "Inter", fontSize: 13, fontWeight: 600,
+              color: activeDetailTab === tab ? "#1A1313" : "rgba(26,19,19,0.4)",
+              background: "none", border: "none", borderBottom: activeDetailTab === tab ? "2px solid #7a8f96" : "2px solid transparent",
+              cursor: "pointer", textTransform: "capitalize" as const, transition: "all 0.15s ease",
+            }}>{tab}</button>
+          ))}
+        </div>
+
+        {/* Scrollable Body */}
+        <div style={{ flex: 1, overflowY: "auto" as const, padding: "18px 22px" }}>
+          {detailLoading ? (
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+              {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: 48, borderRadius: 10 }} />)}
+            </div>
+          ) : activeDetailTab === "overview" ? (
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
+              {/* Contact Card */}
+              <div style={{ background: "rgba(26,19,19,0.02)", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, padding: "14px 16px", display: "flex", flexDirection: "column" as const, gap: 10 }}>
+                {[
+                  { icon: <Phone size={13} />, label: "Phone", value: clientDetail?.client?.phone || selectedClient?.phone || "—" },
+                  { icon: <Mail size={13} />, label: "Email", value: clientDetail?.client?.email || selectedClient?.email || "—" },
+                  { icon: <Calendar size={13} />, label: "Birthday", value: clientDetail?.client?.birthday || "—" },
+                  { icon: <MessageSquare size={13} />, label: "Notes", value: clientDetail?.client?.notes || "—" },
+                ].map(f => (
+                  <div key={f.label} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                    <span style={{ color: "rgba(26,19,19,0.3)", marginTop: 2 }}>{f.icon}</span>
+                    <div>
+                      <div style={{ fontFamily: "Inter", fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>{f.label}</div>
+                      <div style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 500, color: "#1A1313", marginTop: 1 }}>{f.value}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Quick Actions */}
+              <div style={{ display: "flex", gap: 8 }}>
+                <button style={{
+                  flex: 1, height: 38, borderRadius: 9, background: "#1A1313", border: "none", color: "#fff",
+                  fontFamily: "Inter", fontSize: 13, fontWeight: 600, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                }}><CalendarPlus size={14} />Book Appointment</button>
+                <button style={{
+                  flex: 1, height: 38, borderRadius: 9, background: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.1)", color: "#1A1313",
+                  fontFamily: "Inter", fontSize: 13, fontWeight: 600, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                }}><Plus size={14} />Add Note</button>
+              </div>
+            </div>
+          ) : activeDetailTab === "visits" ? (
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+              {clientDetail?.visits?.length ? clientDetail.visits.map((v: ClientRow, i: number) => (
+                <div key={v.orderId || i} style={{ border: "1px solid rgba(26,19,19,0.07)", borderRadius: 10, padding: "13px 14px", background: "#fff" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 600, color: "#1A1313" }}>{new Date(v.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                    <span style={{ fontFamily: "Inter", fontSize: 15, fontWeight: 700, color: "#15803d", fontVariantNumeric: "tabular-nums" }}>${(v.total / 100).toFixed(2)}</span>
+                  </div>
+                  {v.services?.length > 0 && (
+                    <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 4, marginBottom: 6 }}>
+                      {v.services.map((s: string, si: number) => (
+                        <span key={si} style={{ padding: "2px 8px", borderRadius: 5, background: "rgba(122,143,150,0.08)", border: "1px solid rgba(122,143,150,0.15)", fontFamily: "Inter", fontSize: 11, fontWeight: 500, color: "#5a7a82" }}>{s}</span>
+                      ))}
+                    </div>
+                  )}
+                  <div style={{ display: "flex", gap: 12, fontFamily: "Inter", fontSize: 11, fontWeight: 400, color: "rgba(26,19,19,0.4)" }}>
+                    {v.stylistName && <span>{v.stylistName}</span>}
+                    {v.paymentMethod && <span>{v.paymentMethod}{v.last4 ? ` ····${v.last4}` : ""}</span>}
+                  </div>
+                </div>
+              )) : (
+                <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", padding: "40px 20px", textAlign: "center" as const }}>
+                  <Calendar size={28} color="rgba(26,19,19,0.15)" />
+                  <div style={{ fontFamily: "Inter", fontSize: 14, fontWeight: 500, color: "rgba(26,19,19,0.35)", marginTop: 10 }}>No visits recorded</div>
+                </div>
+              )}
+            </div>
+          ) : activeDetailTab === "formula" ? (
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+              {clientDetail?.formulas?.length ? clientDetail.formulas.map((f: ClientRow, i: number) => (
+                <div key={f.id || i} style={{
+                  border: i === 0 ? "1px solid rgba(122,143,150,0.2)" : "1px solid rgba(26,19,19,0.07)",
+                  background: i === 0 ? "rgba(122,143,150,0.03)" : "#fff",
+                  borderRadius: 10, padding: "14px 16px",
+                }}>
+                  {i === 0 && <div style={{ fontFamily: "Inter", fontSize: 10, fontWeight: 700, color: "#7a8f96", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 10 }}>Latest Formula</div>}
+                  {i > 0 && f.appliedAt && <div style={{ fontFamily: "Inter", fontSize: 11, fontWeight: 500, color: "rgba(26,19,19,0.4)", marginBottom: 8 }}>{new Date(f.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 16px" }}>
+                    {[
+                      { label: "Base Color", value: f.baseColor },
+                      { label: "Color Brand", value: f.colorBrand },
+                      { label: "Developer", value: f.developer },
+                      { label: "Toner", value: f.toner },
+                      { label: "Processing Time", value: f.processingTime },
+                      { label: "Technique", value: f.technique },
+                    ].filter(x => x.value).map(x => (
+                      <div key={x.label}>
+                        <div style={{ fontFamily: "Inter", fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>{x.label}</div>
+                        <div style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 500, color: "#1A1313", marginTop: 1 }}>{x.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {f.notes && (
+                    <div style={{ marginTop: 8 }}>
+                      <div style={{ fontFamily: "Inter", fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>Notes</div>
+                      <div style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 400, color: "#1A1313", marginTop: 1 }}>{f.notes}</div>
+                    </div>
+                  )}
+                  {f.appliedBy && <div style={{ fontFamily: "Inter", fontSize: 11, fontWeight: 400, color: "rgba(26,19,19,0.35)", marginTop: 8 }}>Applied by {f.appliedBy}{i === 0 && f.appliedAt ? ` · ${new Date(f.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` : ""}</div>}
+                </div>
+              )) : (
+                <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", padding: "40px 20px", textAlign: "center" as const }}>
+                  <FlaskConical size={28} color="rgba(26,19,19,0.15)" />
+                  <div style={{ fontFamily: "Inter", fontSize: 14, fontWeight: 500, color: "rgba(26,19,19,0.35)", marginTop: 10 }}>No formulas recorded</div>
+                </div>
+              )}
+            </div>
+          ) : activeDetailTab === "notes" ? (
+            <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", padding: "40px 20px", textAlign: "center" as const }}>
+              <MessageSquare size={28} color="rgba(26,19,19,0.15)" />
+              <div style={{ fontFamily: "Inter", fontSize: 14, fontWeight: 500, color: "rgba(26,19,19,0.35)", marginTop: 10 }}>No notes yet</div>
+            </div>
+          ) : null}
+        </div>
+
+        {/* Panel Footer */}
+        <div style={{ padding: "12px 22px 16px", borderTop: "1px solid rgba(26,19,19,0.06)", display: "flex", gap: 8, flexShrink: 0 }}>
+          <button style={{
+            flex: 1, height: 40, borderRadius: 9, background: "#1A1313", border: "none", color: "#fff",
+            fontFamily: "Inter", fontSize: 13, fontWeight: 600, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          }}><CalendarPlus size={14} />Book Appointment</button>
+          <button style={{
+            height: 40, padding: "0 16px", borderRadius: 9, background: "rgba(26,19,19,0.04)",
+            border: "1px solid rgba(26,19,19,0.1)", color: "#1A1313",
+            fontFamily: "Inter", fontSize: 13, fontWeight: 600, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          }}><Star size={14} />Request Review</button>
+        </div>
+      </div>
 
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } } input::placeholder { color: rgba(26,19,19,0.3); }`}</style>
     </div>
