@@ -181,8 +181,13 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         onClick={() => setDrawerOpen(false)}
         style={{
           display: "flex",
+          flexDirection: "row" as const,
           alignItems: "center",
-          padding: compact ? "10px 20px" : "9px 20px",
+          gap: 10,
+          padding: compact ? "0 12px" : "0 12px",
+          margin: "1px 8px",
+          height: compact ? 38 : 40,
+          borderRadius: 6,
           fontSize: "11px",
           fontWeight: 600,
           letterSpacing: "0.08em",
@@ -192,22 +197,39 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           backgroundColor: isActive ? "rgba(255,255,255,0.06)" : "transparent",
           color: isActive ? "#FBFBFB" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.55)",
           transition: "all 0.15s ease",
+          overflow: "hidden",
+          whiteSpace: "nowrap" as const,
+          width: "calc(100% - 16px)",
+          boxSizing: "border-box" as const,
         }}
       >
         {item.icon && (
           <span
             className="material-symbols-outlined"
             style={{
-              fontSize: "17px",
-              marginRight: "10px",
+              fontSize: "16px",
+              width: 16,
+              height: 16,
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               color: isActive ? "#CDC9C0" : item.highlight ? "#CDC9C0" : "rgba(205,201,192,0.4)",
             }}
           >
             {item.icon}
           </span>
         )}
-        {!item.icon && <span style={{ width: "17px", marginRight: "10px" }} />}
-        <span style={{ flex: 1 }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
+        {!item.icon && <span style={{ width: 16, height: 16, flexShrink: 0 }} />}
+        <span style={{
+          flex: 1,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap" as const,
+          fontSize: 11,
+          fontWeight: 600,
+          letterSpacing: "0.08em",
+        }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
         {item.badge && (() => {
           const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : 0
           if (!count) return null
@@ -224,6 +246,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               alignItems: "center",
               justifyContent: "center",
               padding: "0 5px",
+              flexShrink: 0,
             }}>
               {count}
             </span>
@@ -400,14 +423,16 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               borderRadius: "8px",
               color: "rgba(205,201,192,0.6)",
               textDecoration: "none",
-              display: "flex",
+              display: "inline-flex",
+              flexDirection: "row" as const,
               alignItems: "center",
               justifyContent: "center",
-              gap: "6px",
+              gap: 6,
               fontSize: "10px",
               fontWeight: 700,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
+              overflow: "hidden",
             }}>
               <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>person</span>
               Profile
@@ -422,14 +447,16 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 borderRadius: "8px",
                 color: "rgba(205,201,192,0.6)",
                 cursor: "pointer",
-                display: "flex",
+                display: "inline-flex",
+                flexDirection: "row" as const,
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "6px",
+                gap: 6,
                 fontSize: "10px",
                 fontWeight: 700,
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
+                overflow: "hidden",
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>logout</span>
@@ -504,8 +531,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
 
       {/* SIDEBAR — 220px */}
       <aside style={{
-        width: "220px",
-        minWidth: "220px",
+        width: 220,
+        minWidth: 220,
+        maxWidth: 220,
         backgroundColor: "#080c10",
         display: "flex",
         flexDirection: "column",
@@ -513,7 +541,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         position: "sticky",
         top: 0,
         borderRight: "1px solid rgba(255,255,255,0.06)",
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: "auto",
+        zIndex: 50,
       }}>
         {/* Logo */}
         <div style={{
@@ -665,9 +695,11 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             {pageTitle}
           </div>
           <Link href="/reyna-ai" style={{
-            display: "flex",
+            display: "inline-flex",
+            flexDirection: "row" as const,
             alignItems: "center",
-            gap: "5px",
+            justifyContent: "center",
+            gap: 5,
             padding: "7px 14px",
             backgroundColor: "#CDC9C0",
             borderRadius: "7px",
@@ -677,6 +709,8 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             fontWeight: 800,
             letterSpacing: "0.1em",
             textTransform: "uppercase",
+            whiteSpace: "nowrap" as const,
+            overflow: "hidden",
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>auto_awesome</span>
             Reyna AI

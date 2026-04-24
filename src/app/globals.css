@@ -20,6 +20,26 @@
 /* Warm white override for bg-white Tailwind class */
 .bg-white { background-color: #FBFBFB !important; }
 
+/* Material Icons — exempt from Inter font and letter-spacing overrides */
+.material-icons,
+.material-symbols-outlined,
+[class*="material-icons"],
+[class*="material-symbols"] {
+  font-family: 'Material Symbols Outlined' !important;
+  letter-spacing: normal !important;
+  font-feature-settings: 'liga' !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  text-rendering: optimizeLegibility !important;
+  word-wrap: normal !important;
+  white-space: nowrap !important;
+  direction: ltr !important;
+}
+
+/* Prevent buttons and links from wrapping text */
+button, a, [role="button"] {
+  white-space: nowrap;
+}
+
 /* Native app feel — no horizontal scroll */
 html, body {
   overflow-x: hidden;
