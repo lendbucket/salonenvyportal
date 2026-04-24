@@ -378,10 +378,10 @@ function POSPageInner() {
           width: "100%",
           textAlign: "left",
           padding: "14px 16px",
-          backgroundColor: isSelected ? "rgba(205,201,192,0.1)" : "#0d1117",
+          backgroundColor: isSelected ? "rgba(205,201,192,0.1)" : "#FBFBFB",
           border: isSelected
-            ? "1px solid rgba(205,201,192,0.3)"
-            : "1px solid rgba(255,255,255,0.06)",
+            ? "1px solid rgba(26,19,19,0.3)"
+            : "1px solid rgba(26,19,19,0.06)",
           borderRadius: "10px",
           cursor: "pointer",
           transition: "all 0.15s",
@@ -399,7 +399,7 @@ function POSPageInner() {
           }}
         >
           <span
-            style={{ color: "#FBFBFB", fontSize: "14px", fontWeight: 700 }}
+            style={{ color: "#1A1313", fontSize: "14px", fontWeight: 700 }}
           >
             {appt.customerName}
           </span>
@@ -412,9 +412,9 @@ function POSPageInner() {
               backgroundColor:
                 appt.status === "ACCEPTED"
                   ? "rgba(16,185,129,0.12)"
-                  : "rgba(255,255,255,0.06)",
+                  : "rgba(26,19,19,0.06)",
               color:
-                appt.status === "ACCEPTED" ? "#10B981" : "rgba(205,201,192,0.5)",
+                appt.status === "ACCEPTED" ? "#10B981" : "rgba(26,19,19,0.5)",
               textTransform: "uppercase",
               letterSpacing: "0.05em",
             }}
@@ -427,7 +427,7 @@ function POSPageInner() {
             display: "flex",
             gap: "12px",
             fontSize: "11px",
-            color: "rgba(205,201,192,0.55)",
+            color: "rgba(26,19,19,0.55)",
             fontWeight: 500,
           }}
         >
@@ -447,7 +447,7 @@ function POSPageInner() {
                 padding: "2px 6px",
                 borderRadius: "3px",
                 backgroundColor: "rgba(205,201,192,0.06)",
-                color: "rgba(205,201,192,0.5)",
+                color: "rgba(26,19,19,0.5)",
               }}>
                 {s.serviceName}
               </span>
@@ -486,7 +486,7 @@ function POSPageInner() {
           >
             <span
               className="material-symbols-outlined"
-              style={{ fontSize: "18px", color: "rgba(205,201,192,0.35)" }}
+              style={{ fontSize: "18px", color: "rgba(26,19,19,0.35)" }}
             >
               search
             </span>
@@ -500,7 +500,7 @@ function POSPageInner() {
                 backgroundColor: "transparent",
                 border: "none",
                 outline: "none",
-                color: "#FBFBFB",
+                color: "#1A1313",
                 fontSize: "13px",
               }}
             />
@@ -511,7 +511,7 @@ function POSPageInner() {
             style={{
               textAlign: "center",
               padding: "40px 0",
-              color: "rgba(205,201,192,0.35)",
+              color: "rgba(26,19,19,0.35)",
               fontSize: "12px",
             }}
           >
@@ -522,7 +522,7 @@ function POSPageInner() {
             style={{
               textAlign: "center",
               padding: "40px 0",
-              color: "rgba(205,201,192,0.35)",
+              color: "rgba(26,19,19,0.35)",
               fontSize: "12px",
             }}
           >
@@ -543,8 +543,8 @@ function POSPageInner() {
                   onClick={() => addToCart(service, v)}
                   style={{
                     padding: "14px 12px",
-                    backgroundColor: "#0d1117",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    backgroundColor: "#FBFBFB",
+                    border: "1px solid rgba(26,19,19,0.06)",
                     borderRadius: "10px",
                     cursor: "pointer",
                     textAlign: "left",
@@ -556,7 +556,7 @@ function POSPageInner() {
                 >
                   <span
                     style={{
-                      color: "#FBFBFB",
+                      color: "#1A1313",
                       fontSize: "12px",
                       fontWeight: 600,
                       lineHeight: 1.3,
@@ -567,7 +567,7 @@ function POSPageInner() {
                   {service.variations.length > 1 && (
                     <span
                       style={{
-                        color: "rgba(205,201,192,0.45)",
+                        color: "rgba(26,19,19,0.45)",
                         fontSize: "10px",
                         fontWeight: 500,
                       }}
@@ -608,7 +608,7 @@ function POSPageInner() {
             style={{
               padding: "14px 16px",
               backgroundColor: "rgba(205,201,192,0.04)",
-              border: "1px solid rgba(255,255,255,0.06)",
+              border: "1px solid rgba(26,19,19,0.06)",
               borderRadius: "10px",
               marginBottom: "14px",
             }}
@@ -617,7 +617,7 @@ function POSPageInner() {
               style={{
                 fontSize: "9px",
                 fontWeight: 700,
-                color: "rgba(205,201,192,0.4)",
+                color: "rgba(26,19,19,0.4)",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 marginBottom: "6px",
@@ -625,12 +625,12 @@ function POSPageInner() {
             >
               Client
             </div>
-            <div style={{ color: "#FBFBFB", fontSize: "14px", fontWeight: 700 }}>
+            <div style={{ color: "#1A1313", fontSize: "14px", fontWeight: 700 }}>
               {selectedAppt.customerName}
             </div>
             <div
               style={{
-                color: "rgba(205,201,192,0.5)",
+                color: "rgba(26,19,19,0.5)",
                 fontSize: "11px",
                 marginTop: "2px",
               }}
@@ -658,7 +658,7 @@ function POSPageInner() {
               style={{
                 textAlign: "center",
                 padding: "30px 0",
-                color: "rgba(205,201,192,0.3)",
+                color: "rgba(26,19,19,0.3)",
                 fontSize: "12px",
               }}
             >
@@ -679,15 +679,15 @@ function POSPageInner() {
                   alignItems: "center",
                   gap: "10px",
                   padding: "10px 12px",
-                  backgroundColor: "#0d1117",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  backgroundColor: "#FBFBFB",
+                  border: "1px solid rgba(26,19,19,0.06)",
                   borderRadius: "8px",
                 }}
               >
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div
                     style={{
-                      color: "#FBFBFB",
+                      color: "#1A1313",
                       fontSize: "12px",
                       fontWeight: 600,
                       whiteSpace: "nowrap",
@@ -699,7 +699,7 @@ function POSPageInner() {
                   </div>
                   <div
                     style={{
-                      color: "rgba(205,201,192,0.45)",
+                      color: "rgba(26,19,19,0.45)",
                       fontSize: "10px",
                     }}
                   >
@@ -741,7 +741,7 @@ function POSPageInner() {
                       width: "26px",
                       height: "26px",
                       borderRadius: "6px",
-                      backgroundColor: "rgba(255,255,255,0.06)",
+                      backgroundColor: "rgba(26,19,19,0.06)",
                       border: "1px solid rgba(205,201,192,0.15)",
                       color: "#CDC9C0",
                       cursor: "pointer",
@@ -756,7 +756,7 @@ function POSPageInner() {
                   </button>
                   <span
                     style={{
-                      color: "#FBFBFB",
+                      color: "#1A1313",
                       fontSize: "13px",
                       fontWeight: 700,
                       minWidth: "18px",
@@ -771,7 +771,7 @@ function POSPageInner() {
                       width: "26px",
                       height: "26px",
                       borderRadius: "6px",
-                      backgroundColor: "rgba(255,255,255,0.06)",
+                      backgroundColor: "rgba(26,19,19,0.06)",
                       border: "1px solid rgba(205,201,192,0.15)",
                       color: "#CDC9C0",
                       cursor: "pointer",
@@ -787,7 +787,7 @@ function POSPageInner() {
                 </div>
                 <span
                   style={{
-                    color: "#FBFBFB",
+                    color: "#1A1313",
                     fontSize: "13px",
                     fontWeight: 700,
                     minWidth: "60px",
@@ -808,7 +808,7 @@ function POSPageInner() {
               style={{
                 fontSize: "9px",
                 fontWeight: 700,
-                color: "rgba(205,201,192,0.4)",
+                color: "rgba(26,19,19,0.4)",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 marginBottom: "8px",
@@ -839,8 +839,8 @@ function POSPageInner() {
                         ? "1px solid #CDC9C0"
                         : "1px solid rgba(205,201,192,0.15)",
                     backgroundColor:
-                      tipPercent === pct ? "rgba(255,255,255,0.06)" : "transparent",
-                    color: tipPercent === pct ? "#CDC9C0" : "rgba(205,201,192,0.5)",
+                      tipPercent === pct ? "rgba(26,19,19,0.06)" : "transparent",
+                    color: tipPercent === pct ? "#CDC9C0" : "rgba(26,19,19,0.5)",
                     cursor: "pointer",
                     fontSize: "12px",
                     fontWeight: 700,
@@ -863,7 +863,7 @@ function POSPageInner() {
                   borderRadius: "7px",
                   border: "1px solid rgba(205,201,192,0.15)",
                   backgroundColor: "transparent",
-                  color: "#FBFBFB",
+                  color: "#1A1313",
                   fontSize: "12px",
                   fontWeight: 600,
                   outline: "none",
@@ -889,7 +889,7 @@ function POSPageInner() {
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: "12px",
-                color: "rgba(205,201,192,0.55)",
+                color: "rgba(26,19,19,0.55)",
               }}
             >
               <span>Subtotal</span>
@@ -900,7 +900,7 @@ function POSPageInner() {
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: "12px",
-                color: "rgba(205,201,192,0.55)",
+                color: "rgba(26,19,19,0.55)",
               }}
             >
               <span>Tax (8.25%)</span>
@@ -911,7 +911,7 @@ function POSPageInner() {
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: "12px",
-                color: "rgba(205,201,192,0.55)",
+                color: "rgba(26,19,19,0.55)",
               }}
             >
               <span>Tip</span>
@@ -923,7 +923,7 @@ function POSPageInner() {
                 justifyContent: "space-between",
                 fontSize: "18px",
                 fontWeight: 800,
-                color: "#FBFBFB",
+                color: "#1A1313",
                 paddingTop: "6px",
                 borderTop: "1px solid rgba(205,201,192,0.1)",
               }}
@@ -934,7 +934,7 @@ function POSPageInner() {
 
             {/* Payment method toggle */}
             <div style={{ marginTop: "12px" }}>
-              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
                 Payment Method
               </div>
               <div style={{ display: "flex", gap: "4px", marginBottom: "12px" }}>
@@ -952,8 +952,8 @@ function POSPageInner() {
                       borderRadius: "7px",
                       border: paymentMethod === method ? "1px solid #CDC9C0" : "1px solid rgba(205,201,192,0.15)",
                       cursor: "pointer",
-                      backgroundColor: paymentMethod === method ? "rgba(255,255,255,0.06)" : "transparent",
-                      color: paymentMethod === method ? "#CDC9C0" : "rgba(205,201,192,0.5)",
+                      backgroundColor: paymentMethod === method ? "rgba(26,19,19,0.06)" : "transparent",
+                      color: paymentMethod === method ? "#CDC9C0" : "rgba(26,19,19,0.5)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -992,7 +992,7 @@ function POSPageInner() {
             {paymentMethod === "cash" && (
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <label style={{ fontSize: "11px", fontWeight: 600, color: "rgba(205,201,192,0.55)", whiteSpace: "nowrap" }}>Cash Received:</label>
+                  <label style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.55)", whiteSpace: "nowrap" }}>Cash Received:</label>
                   <input
                     type="number"
                     inputMode="decimal"
@@ -1005,8 +1005,8 @@ function POSPageInner() {
                       padding: "10px 12px",
                       borderRadius: "7px",
                       border: "1px solid rgba(205,201,192,0.15)",
-                      backgroundColor: "rgba(255,255,255,0.03)",
-                      color: "#FBFBFB",
+                      backgroundColor: "rgba(26,19,19,0.03)",
+                      color: "#1A1313",
                       fontSize: "16px",
                       fontWeight: 700,
                       outline: "none",
@@ -1055,10 +1055,10 @@ function POSPageInner() {
               style={{
                 marginTop: "10px",
                 padding: "16px",
-                backgroundColor: (charging || !allServicesHaveStylist || (paymentMethod === "cash" && cashReceivedNum < total)) ? "rgba(205,201,192,0.5)" : "#CDC9C0",
+                backgroundColor: (charging || !allServicesHaveStylist || (paymentMethod === "cash" && cashReceivedNum < total)) ? "rgba(26,19,19,0.5)" : "#CDC9C0",
                 border: "none",
                 borderRadius: "10px",
-                color: "#0f1d24",
+                color: "#1A1313",
                 fontSize: "13px",
                 fontWeight: 800,
                 letterSpacing: "0.1em",
@@ -1088,7 +1088,7 @@ function POSPageInner() {
         style={{
           position: "fixed",
           inset: 0,
-          backgroundColor: "rgba(15,29,36,0.95)",
+          backgroundColor: "rgba(244,245,247,0.98)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -1118,14 +1118,14 @@ function POSPageInner() {
         </div>
         <div
           style={{
-            color: "#FBFBFB",
+            color: "#1A1313",
             fontSize: "24px",
             fontWeight: 800,
           }}
         >
           Payment Successful
         </div>
-        <div style={{ color: "rgba(205,201,192,0.5)", fontSize: "14px" }}>
+        <div style={{ color: "rgba(26,19,19,0.5)", fontSize: "14px" }}>
           {fmtCurrency(checkoutResult?.totalCharged ?? total)} charged
           {selectedAppt ? ` for ${selectedAppt.customerName}` : ""}
         </div>
@@ -1133,7 +1133,7 @@ function POSPageInner() {
         {/* Commission breakdown — owner only */}
         {isOwner && checkoutResult?.commissionBreakdown && checkoutResult.commissionBreakdown.length > 0 && (
           <div style={{ backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "10px", padding: "16px 20px", width: "100%", maxWidth: "360px", textAlign: "left", marginTop: "8px" }}>
-            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "10px" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "10px" }}>
               Commission (40%)
             </div>
             {checkoutResult.commissionBreakdown.map((item, i) => (
@@ -1165,7 +1165,7 @@ function POSPageInner() {
             backgroundColor: "#CDC9C0",
             border: "none",
             borderRadius: "10px",
-            color: "#0f1d24",
+            color: "#1A1313",
             fontSize: "12px",
             fontWeight: 800,
             letterSpacing: "0.1em",
@@ -1206,7 +1206,7 @@ function POSPageInner() {
               style={{
                 fontSize: "22px",
                 fontWeight: 800,
-                color: "#FBFBFB",
+                color: "#1A1313",
                 margin: 0,
               }}
             >
@@ -1218,7 +1218,7 @@ function POSPageInner() {
                 onChange={(e) => setLocation(e.target.value)}
                 style={{
                   padding: "6px 10px",
-                  backgroundColor: "#0d1117",
+                  backgroundColor: "#FBFBFB",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "6px",
                   color: "#CDC9C0",
@@ -1239,7 +1239,7 @@ function POSPageInner() {
             style={{
               fontSize: "10px",
               fontWeight: 600,
-              color: "rgba(205,201,192,0.4)",
+              color: "rgba(26,19,19,0.4)",
               letterSpacing: "0.12em",
               textTransform: "uppercase",
             }}
@@ -1253,10 +1253,10 @@ function POSPageInner() {
           style={{
             display: "flex",
             gap: "2px",
-            backgroundColor: "#0d1117",
+            backgroundColor: "#FBFBFB",
             padding: "3px",
             borderRadius: "8px",
-            border: "1px solid rgba(255,255,255,0.06)",
+            border: "1px solid rgba(26,19,19,0.06)",
             marginBottom: "16px",
           }}
         >
@@ -1277,7 +1277,7 @@ function POSPageInner() {
                 backgroundColor:
                   mobileTab === tab ? "#CDC9C0" : "transparent",
                 color:
-                  mobileTab === tab ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                  mobileTab === tab ? "#1A1313" : "rgba(26,19,19,0.45)",
                 transition: "all 0.15s",
               }}
             >
@@ -1294,7 +1294,7 @@ function POSPageInner() {
                 style={{
                   textAlign: "center",
                   padding: "40px 0",
-                  color: "rgba(205,201,192,0.35)",
+                  color: "rgba(26,19,19,0.35)",
                   fontSize: "12px",
                 }}
               >
@@ -1305,7 +1305,7 @@ function POSPageInner() {
                 style={{
                   textAlign: "center",
                   padding: "40px 0",
-                  color: "rgba(205,201,192,0.35)",
+                  color: "rgba(26,19,19,0.35)",
                   fontSize: "12px",
                 }}
               >
@@ -1325,7 +1325,7 @@ function POSPageInner() {
                 style={{
                   fontSize: "9px",
                   fontWeight: 700,
-                  color: "rgba(205,201,192,0.4)",
+                  color: "rgba(26,19,19,0.4)",
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
                   marginBottom: "10px",
@@ -1350,7 +1350,7 @@ function POSPageInner() {
       <div
         style={{
           padding: "16px 24px",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid rgba(26,19,19,0.06)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -1362,7 +1362,7 @@ function POSPageInner() {
             style={{
               fontSize: "20px",
               fontWeight: 800,
-              color: "#FBFBFB",
+              color: "#1A1313",
               margin: "0 0 2px",
             }}
           >
@@ -1372,7 +1372,7 @@ function POSPageInner() {
             style={{
               fontSize: "10px",
               fontWeight: 600,
-              color: "rgba(205,201,192,0.4)",
+              color: "rgba(26,19,19,0.4)",
               letterSpacing: "0.12em",
               textTransform: "uppercase",
             }}
@@ -1398,7 +1398,7 @@ function POSPageInner() {
                   backgroundColor:
                     location === l ? "#CDC9C0" : "rgba(205,201,192,0.06)",
                   color:
-                    location === l ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                    location === l ? "#1A1313" : "rgba(26,19,19,0.45)",
                   transition: "all 0.15s",
                 }}
               >
@@ -1421,7 +1421,7 @@ function POSPageInner() {
         {/* LEFT — Appointments */}
         <div
           style={{
-            borderRight: "1px solid rgba(255,255,255,0.06)",
+            borderRight: "1px solid rgba(26,19,19,0.06)",
             overflowY: "auto",
             padding: "16px",
             display: "flex",
@@ -1433,7 +1433,7 @@ function POSPageInner() {
             style={{
               fontSize: "9px",
               fontWeight: 700,
-              color: "rgba(205,201,192,0.4)",
+              color: "rgba(26,19,19,0.4)",
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               marginBottom: "6px",
@@ -1446,7 +1446,7 @@ function POSPageInner() {
               style={{
                 textAlign: "center",
                 padding: "40px 0",
-                color: "rgba(205,201,192,0.35)",
+                color: "rgba(26,19,19,0.35)",
                 fontSize: "12px",
               }}
             >
@@ -1457,7 +1457,7 @@ function POSPageInner() {
               style={{
                 textAlign: "center",
                 padding: "40px 0",
-                color: "rgba(205,201,192,0.35)",
+                color: "rgba(26,19,19,0.35)",
                 fontSize: "12px",
               }}
             >
@@ -1473,7 +1473,7 @@ function POSPageInner() {
         {/* CENTER — Catalog */}
         <div
           style={{
-            borderRight: "1px solid rgba(255,255,255,0.06)",
+            borderRight: "1px solid rgba(26,19,19,0.06)",
             overflowY: "auto",
             padding: "16px",
           }}
@@ -1482,7 +1482,7 @@ function POSPageInner() {
             style={{
               fontSize: "9px",
               fontWeight: 700,
-              color: "rgba(205,201,192,0.4)",
+              color: "rgba(26,19,19,0.4)",
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               marginBottom: "10px",
@@ -1498,7 +1498,7 @@ function POSPageInner() {
           style={{
             overflowY: "auto",
             padding: "16px",
-            backgroundColor: "#0f1d24",
+            backgroundColor: "#F4F5F7",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1507,7 +1507,7 @@ function POSPageInner() {
             style={{
               fontSize: "9px",
               fontWeight: 700,
-              color: "rgba(205,201,192,0.4)",
+              color: "rgba(26,19,19,0.4)",
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               marginBottom: "10px",

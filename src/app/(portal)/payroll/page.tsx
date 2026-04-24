@@ -4,9 +4,9 @@ import { useUserRole } from "@/hooks/useUserRole"
 import { getCurrentPayPeriod, getPreviousPayPeriod, formatPeriodLabel, getPayDay, TEAM_MEMBERS } from "@/lib/payrollUtils"
 
 const ACC = "#606E74", ACC_B = "#7a8f96", ACC_DIM = "rgba(96,110,116,0.08)", ACC_BDR = "rgba(96,110,116,0.2)"
-const BORDER = "rgba(255,255,255,0.06)", BORDER2 = "rgba(255,255,255,0.08)", S1 = "rgba(255,255,255,0.03)", S2 = "rgba(255,255,255,0.05)"
-const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
-const MUTED = "rgba(255,255,255,0.3)", MID = "rgba(255,255,255,0.6)", GREEN = "#10B981", AMBER = "#ffb347", BLUE = "#4da6ff", RED = "#ff6b6b"
+const BORDER = "rgba(26,19,19,0.06)", BORDER2 = "rgba(26,19,19,0.08)", S1 = "rgba(26,19,19,0.03)", S2 = "rgba(26,19,19,0.05)"
+const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const MUTED = "rgba(26,19,19,0.3)", MID = "rgba(26,19,19,0.6)", GREEN = "#10B981", AMBER = "#ffb347", BLUE = "#4da6ff", RED = "#ff6b6b"
 const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 const jakarta: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 
@@ -97,7 +97,7 @@ export default function PayrollPage() {
   if (isStylist) return <div style={{ padding: "40px", textAlign: "center", color: MUTED }}><div style={{ fontSize: "16px", fontWeight: 700 }}>Owner / Manager Access Only</div></div>
 
   return (
-    <div style={{ ...jakarta, minHeight: "100%", backgroundColor: "#06080d", color: "#fff", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
+    <div style={{ ...jakarta, minHeight: "100%", backgroundColor: "#F4F5F7", color: "#1A1313", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       <style>{`@media(max-width:767px){.pr4{grid-template-columns:1fr 1fr !important}.pr-tbl{display:block !important;overflow-x:auto}} @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}} @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
@@ -130,7 +130,7 @@ export default function PayrollPage() {
             </div>
             <div style={{ display: "flex", gap: "6px" }}>
               {offset > 0 && <button onClick={() => setOffset(0)} style={{ padding: "8px 12px", borderRadius: "8px", background: ACC_DIM, border: `1px solid ${ACC_BDR}`, color: ACC_B, fontSize: "10px", fontWeight: 600, cursor: "pointer", ...mono, letterSpacing: "0.06em" }}>TODAY</button>}
-              <button onClick={() => setOffset(o => Math.max(0, o - 1))} disabled={offset === 0} style={{ width: "36px", height: "36px", borderRadius: "8px", background: offset === 0 ? "rgba(255,255,255,0.02)" : S2, border: `1px solid ${BORDER2}`, color: offset === 0 ? "rgba(255,255,255,0.15)" : MID, cursor: offset === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px" }}>&#8594;</button>
+              <button onClick={() => setOffset(o => Math.max(0, o - 1))} disabled={offset === 0} style={{ width: "36px", height: "36px", borderRadius: "8px", background: offset === 0 ? "rgba(26,19,19,0.02)" : S2, border: `1px solid ${BORDER2}`, color: offset === 0 ? "rgba(26,19,19,0.15)" : MID, cursor: offset === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px" }}>&#8594;</button>
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function PayrollPage() {
             <div style={{ fontSize: "15px", fontWeight: 500, color: MID, marginBottom: "6px" }}>No payroll calculated for {label}</div>
             <div style={{ fontSize: "12px", color: MUTED, marginBottom: "24px" }}>Click Calculate to pull SalonTransact data and compute commissions</div>
             <button onClick={calculate} disabled={calcing} style={{ padding: "12px 28px", background: calcing ? "rgba(96,110,116,0.3)" : `linear-gradient(135deg, ${ACC_B}, ${ACC})`, border: "none", borderRadius: "9px", color: "#fff", fontSize: "13px", fontWeight: 600, cursor: calcing ? "default" : "pointer", ...jakarta }}>
-              {calcing ? <span style={{ display: "flex", alignItems: "center", gap: "8px" }}><span style={{ display: "inline-block", width: "12px", height: "12px", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />Calculating...</span> : "Calculate Payroll"}
+              {calcing ? <span style={{ display: "flex", alignItems: "center", gap: "8px" }}><span style={{ display: "inline-block", width: "12px", height: "12px", border: "2px solid rgba(26,19,19,0.3)", borderTopColor: "#1A1313", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />Calculating...</span> : "Calculate Payroll"}
             </button>
           </div>
         ) : (
@@ -178,7 +178,7 @@ export default function PayrollPage() {
             </div>
             <div className="pr-tbl" style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "700px" }}>
-                <thead><tr style={{ background: "rgba(255,255,255,0.02)", borderBottom: `1px solid ${BORDER}` }}>
+                <thead><tr style={{ background: "rgba(26,19,19,0.02)", borderBottom: `1px solid ${BORDER}` }}>
                   {["Stylist", "Services", "Subtotal", "Commission (40%)", "Tips", "Total Payout"].map(h => <th key={h} style={{ padding: "10px 14px", textAlign: h === "Stylist" ? "left" : "right", ...mono, fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: MUTED }}>{h}</th>)}
                 </tr></thead>
                 <tbody>
@@ -233,7 +233,7 @@ export default function PayrollPage() {
         )}
       </div>
 
-      {toast && <div style={{ position: "fixed", bottom: "90px", right: "20px", zIndex: 999, background: toast.type === "success" ? "rgba(16,185,129,0.15)" : "rgba(255,107,107,0.15)", border: `1px solid ${toast.type === "success" ? "rgba(16,185,129,0.3)" : "rgba(255,107,107,0.3)"}`, borderRadius: "10px", padding: "12px 20px", color: "#fff", fontSize: "13px", fontWeight: 500, backdropFilter: "blur(8px)", ...jakarta }}>{toast.msg}</div>}
+      {toast && <div style={{ position: "fixed", bottom: "90px", right: "20px", zIndex: 999, background: toast.type === "success" ? "rgba(16,185,129,0.15)" : "rgba(255,107,107,0.15)", border: `1px solid ${toast.type === "success" ? "rgba(16,185,129,0.3)" : "rgba(255,107,107,0.3)"}`, borderRadius: "10px", padding: "12px 20px", color: "#1A1313", fontSize: "13px", fontWeight: 500, backdropFilter: "blur(8px)", ...jakarta }}>{toast.msg}</div>}
     </div>
   )
 }

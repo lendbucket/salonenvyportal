@@ -45,7 +45,7 @@ function Skeleton() {
     <div style={{
       height: "32px",
       width: "80px",
-      backgroundColor: "rgba(205,201,192,0.1)",
+      backgroundColor: "rgba(26,19,19,0.08)",
       borderRadius: "6px",
       animation: "pulse 1.5s ease-in-out infinite",
     }} />
@@ -111,8 +111,8 @@ function generateAlerts(
 
   return alerts.map((alert, idx) => (
     <div key={idx} style={{
-      backgroundColor: "#0d1117",
-      border: "1px solid rgba(255,255,255,0.06)",
+      backgroundColor: "#FBFBFB",
+      border: "1px solid rgba(26,19,19,0.06)",
       borderLeft: `3px solid ${alert.color}`,
       borderRadius: "0 8px 8px 0",
       padding: "14px 16px",
@@ -124,7 +124,7 @@ function generateAlerts(
         <div style={{ fontSize: "9px", fontWeight: 800, color: alert.color, letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "3px" }}>
           {alert.priority}
         </div>
-        <div style={{ fontSize: "12px", color: "#CBD5E1", lineHeight: 1.4 }}>{alert.text}</div>
+        <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.65)", lineHeight: 1.4 }}>{alert.text}</div>
       </div>
     </div>
   ))
@@ -211,8 +211,8 @@ export default function DashboardPage() {
     AMEX: { bg: "rgba(0,114,206,0.15)", color: "#7dd3fc", border: "rgba(0,114,206,0.3)" },
     DISCOVER: { bg: "rgba(255,127,0,0.15)", color: "#fb923c", border: "rgba(255,127,0,0.3)" },
     CASH: { bg: "rgba(34,197,94,0.15)", color: "#22c55e", border: "rgba(34,197,94,0.3)" },
-    CARD: { bg: "rgba(148,163,184,0.15)", color: "#94A3B8", border: "rgba(148,163,184,0.3)" },
-    OTHER: { bg: "rgba(148,163,184,0.15)", color: "#94A3B8", border: "rgba(148,163,184,0.3)" },
+    CARD: { bg: "rgba(148,163,184,0.15)", color: "rgba(26,19,19,0.45)", border: "rgba(148,163,184,0.3)" },
+    OTHER: { bg: "rgba(148,163,184,0.15)", color: "rgba(26,19,19,0.45)", border: "rgba(148,163,184,0.3)" },
   }
   const payStyle = (method: string) => PAYMENT_COLORS[method] || PAYMENT_COLORS.OTHER
 
@@ -347,7 +347,7 @@ export default function DashboardPage() {
           <h1 style={{
             fontSize: "32px",
             fontWeight: 800,
-            color: "#FBFBFB",
+            color: "#1A1313",
             margin: 0,
             letterSpacing: "-0.02em",
             lineHeight: 1.1,
@@ -358,7 +358,7 @@ export default function DashboardPage() {
           <p style={{
             fontSize: "11px",
             fontWeight: 600,
-            color: "#94A3B8",
+            color: "rgba(26,19,19,0.45)",
             letterSpacing: "0.15em",
             textTransform: "uppercase" as const,
             margin: 0,
@@ -369,7 +369,7 @@ export default function DashboardPage() {
             <span style={{
               fontSize: "10px",
               fontWeight: 600,
-              color: "rgba(205,201,192,0.4)",
+              color: "rgba(26,19,19,0.4)",
               display: "flex",
               alignItems: "center",
               gap: "4px",
@@ -413,7 +413,7 @@ export default function DashboardPage() {
 
       {/* QUICK STATS BAR */}
       {!loading && (
-        <div style={{ marginBottom: "16px", fontSize: "12px", color: "rgba(205,201,192,0.45)", fontWeight: 500 }}>
+        <div style={{ marginBottom: "16px", fontSize: "12px", color: "rgba(26,19,19,0.45)", fontWeight: 500 }}>
           {summaryLabel}{activeLocation === "Both" ? " · Both locations" : ` · ${activeLocation}`}: {fmt(totalRevenue)} net sales &middot; {totalCheckouts} checkouts{cancellations ? ` \u00b7 ${cancellations.totalCancellations} cancellations` : ""} &middot; Avg ticket {fmt(totalAvg)}
         </div>
       )}
@@ -423,10 +423,10 @@ export default function DashboardPage() {
         <div style={{
           display: "inline-flex",
           gap: "2px",
-          backgroundColor: "#0d1117",
+          backgroundColor: "#FBFBFB",
           padding: "3px",
           borderRadius: "8px",
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: "1px solid rgba(26,19,19,0.06)",
         }}>
           {[
             { key: "today", label: "Today" },
@@ -450,8 +450,8 @@ export default function DashboardPage() {
                 borderRadius: "6px",
                 border: "none",
                 cursor: "pointer",
-                backgroundColor: activePeriod === key ? "#CDC9C0" : "transparent",
-                color: activePeriod === key ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                backgroundColor: activePeriod === key ? "#7a8f96" : "transparent",
+                color: activePeriod === key ? "#FBFBFB" : "rgba(26,19,19,0.45)",
                 transition: "all 0.15s",
               }}
             >
@@ -462,10 +462,10 @@ export default function DashboardPage() {
         <div style={{
           display: "inline-flex",
           gap: "2px",
-          backgroundColor: "#0d1117",
+          backgroundColor: "#FBFBFB",
           padding: "3px",
           borderRadius: "8px",
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: "1px solid rgba(26,19,19,0.06)",
         }}>
         {(isOwner ? ["Both", "Corpus Christi", "San Antonio"] : [userLocation || "Both"]).map((loc) => (
           <button
@@ -480,8 +480,8 @@ export default function DashboardPage() {
               borderRadius: "6px",
               border: "none",
               cursor: "pointer",
-              backgroundColor: activeLocation === loc ? "#CDC9C0" : "transparent",
-              color: activeLocation === loc ? "#0f1d24" : "rgba(205,201,192,0.45)",
+              backgroundColor: activeLocation === loc ? "#7a8f96" : "transparent",
+              color: activeLocation === loc ? "#FBFBFB" : "rgba(26,19,19,0.45)",
               transition: "all 0.15s",
             }}
           >
@@ -496,11 +496,11 @@ export default function DashboardPage() {
         <div style={{ display: "flex", gap: "10px", marginBottom: "16px", alignItems: "flex-end" }}>
           <div>
             <div style={{ fontSize: "12px", fontWeight: 600, color: "#606E74", marginBottom: "4px" }}>From</div>
-            <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
+            <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", colorScheme: "light" }} />
           </div>
           <div>
             <div style={{ fontSize: "12px", fontWeight: 600, color: "#606E74", marginBottom: "4px" }}>To</div>
-            <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
+            <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", colorScheme: "light" }} />
           </div>
           <button onClick={() => fetchData()} disabled={!customStart || !customEnd} style={{ padding: "6px 14px", border: "1px solid #606E74", borderRadius: "8px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", cursor: "pointer", opacity: (!customStart || !customEnd) ? 0.5 : 1 }}>Apply</button>
         </div>
@@ -508,7 +508,7 @@ export default function DashboardPage() {
 
       {/* Error state */}
       {fetchError && !loading && (
-        <div style={{ background: '#0d1117', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: 20, textAlign: 'center', margin: '20px 0' }}>
+        <div style={{ background: '#FBFBFB', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: 20, textAlign: 'center', margin: '20px 0' }}>
           <div style={{ color: '#ef4444', fontSize: 14, fontFamily: 'Inter, sans-serif', marginBottom: 8 }}>{fetchError}</div>
           <button onClick={() => { setFetchError(null); fetchData() }} style={{ background: 'transparent', border: '1px solid #606E74', color: '#7a8f96', borderRadius: 6, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Retry</button>
         </div>
@@ -523,14 +523,14 @@ export default function DashboardPage() {
       }}>
         {metrics.map((m) => (
           <div key={m.label} onClick={() => m.drillType && openDrillDown(m.drillType)} style={{
-            backgroundColor: "#0d1117",
-            border: m.alert ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(205,201,192,0.1)",
+            backgroundColor: "#FBFBFB",
+            border: m.alert ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(26,19,19,0.1)",
             borderRadius: "10px",
             padding: "20px",
             transition: "transform 0.15s, box-shadow 0.15s, background-color 0.15s",
             cursor: m.drillType ? "pointer" : "default",
             position: "relative",
-          }} onMouseEnter={e => { if (m.drillType) e.currentTarget.style.backgroundColor = "#111820" }} onMouseLeave={e => { e.currentTarget.style.backgroundColor = "#0d1117" }}>
+          }} onMouseEnter={e => { if (m.drillType) e.currentTarget.style.backgroundColor = "#F4F5F7" }} onMouseLeave={e => { e.currentTarget.style.backgroundColor = "#FBFBFB" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
               <span style={{
                 fontSize: "9px",
@@ -541,21 +541,21 @@ export default function DashboardPage() {
               }}>
                 {m.label}
               </span>
-              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: m.alert ? "#EF4444" : "rgba(205,201,192,0.25)" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "18px", color: m.alert ? "#EF4444" : "rgba(26,19,19,0.25)" }}>
                 {m.icon}
               </span>
             </div>
             <div style={{
               fontSize: "32px",
               fontWeight: 800,
-              color: "#FBFBFB",
+              color: "#1A1313",
               lineHeight: 1,
               marginBottom: "6px",
               letterSpacing: "-0.02em",
             }}>
               {m.value === null ? <Skeleton /> : m.value}
             </div>
-            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
+            <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.45)", fontWeight: 500 }}>
               {m.sub}
             </div>
             {m.alert && (
@@ -583,8 +583,8 @@ export default function DashboardPage() {
         {/* Cancellations */}
         <div onClick={() => openDrillDown("cancellations")} style={{ cursor: "pointer" }}>
           <div style={{
-            backgroundColor: "#0d1117",
-            border: "1px solid rgba(205,201,192,0.1)",
+            backgroundColor: "#FBFBFB",
+            border: "1px solid rgba(26,19,19,0.06)",
             borderRadius: "10px",
             padding: "20px",
             cursor: "pointer",
@@ -594,10 +594,10 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>event_busy</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Cancellations</span>
             </div>
-            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#1A1313", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
               {cancellations?.totalCancellations ?? 0}
             </div>
-            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
+            <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.45)", fontWeight: 500 }}>
               {cancellations ? `${cancellations.noShows} no-shows \u00b7 ${cancellations.cancelledByCustomer} client cancelled` : "Loading..."}
             </div>
           </div>
@@ -606,8 +606,8 @@ export default function DashboardPage() {
         {/* Top Stylist */}
         <Link href="/metrics" style={{ textDecoration: "none" }}>
           <div style={{
-            backgroundColor: "#0d1117",
-            border: "1px solid rgba(205,201,192,0.1)",
+            backgroundColor: "#FBFBFB",
+            border: "1px solid rgba(26,19,19,0.06)",
             borderRadius: "10px",
             padding: "20px",
             cursor: "pointer",
@@ -617,10 +617,10 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>star</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Top Stylist</span>
             </div>
-            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#1A1313", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
               {topStylist ? topStylist.name.split(" ")[0] : "\u2014"}
             </div>
-            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
+            <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.45)", fontWeight: 500 }}>
               {topStylist ? `${topStylist.homeLocation === "Corpus Christi" ? "CC" : "SA"} \u00b7 ${topStylist.checkoutCount} checkouts \u00b7 ${fmt(topStylist.revenue)}` : "No checkouts yet"}
             </div>
           </div>
@@ -629,8 +629,8 @@ export default function DashboardPage() {
         {/* Retention */}
         <Link href="/retention" style={{ textDecoration: "none" }}>
           <div style={{
-            backgroundColor: "#0d1117",
-            border: "1px solid rgba(205,201,192,0.1)",
+            backgroundColor: "#FBFBFB",
+            border: "1px solid rgba(26,19,19,0.06)",
             borderRadius: "10px",
             padding: "20px",
             cursor: "pointer",
@@ -640,10 +640,10 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0" }}>favorite</span>
               <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>Retention</span>
             </div>
-            <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "32px", fontWeight: 800, color: "#1A1313", lineHeight: 1, marginBottom: "6px", letterSpacing: "-0.02em" }}>
               {retentionLoading ? <Skeleton /> : retention ? `${retention.retentionRate}%` : "\u2014"}
             </div>
-            <div style={{ fontSize: "11px", color: "#94A3B8", fontWeight: 500 }}>
+            <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.45)", fontWeight: 500 }}>
               {retentionLoading ? "Loading retention..." : retention ? `${retention.retentionGrade} · Active clients returning` : "Retention unavailable"}
             </div>
           </div>
@@ -652,8 +652,8 @@ export default function DashboardPage() {
 
       {/* QUICK ACTIONS */}
       <div style={{
-        backgroundColor: "#0d1117",
-        border: "1px solid rgba(205,201,192,0.1)",
+        backgroundColor: "#FBFBFB",
+        border: "1px solid rgba(26,19,19,0.06)",
         borderRadius: "10px",
         padding: "16px 20px",
         display: "flex",
@@ -666,7 +666,7 @@ export default function DashboardPage() {
         <span style={{
           fontSize: "9px",
           fontWeight: 700,
-          color: "rgba(205,201,192,0.35)",
+          color: "rgba(26,19,19,0.35)",
           letterSpacing: "0.15em",
           textTransform: "uppercase" as const,
           marginRight: "6px",
@@ -681,7 +681,7 @@ export default function DashboardPage() {
             gap: "6px",
             padding: "9px 16px",
             backgroundColor: "transparent",
-            border: "1px solid rgba(205,201,192,0.25)",
+            border: "1px solid rgba(26,19,19,0.25)",
             borderRadius: "7px",
             color: "#CDC9C0",
             textDecoration: "none",
@@ -708,7 +708,7 @@ export default function DashboardPage() {
           letterSpacing: "0.1em",
           textTransform: "uppercase" as const,
           marginLeft: "auto",
-          boxShadow: "0 2px 8px rgba(205,201,192,0.15)",
+          boxShadow: "0 2px 8px rgba(26,19,19,0.15)",
         }}>
           <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>auto_awesome</span>
           Ask Reyna AI
@@ -723,8 +723,8 @@ export default function DashboardPage() {
       }}>
         {/* Recent Activity / Stylist Leaderboard */}
         <div style={{
-          backgroundColor: "#0d1117",
-          border: "1px solid rgba(205,201,192,0.1)",
+          backgroundColor: "#FBFBFB",
+          border: "1px solid rgba(26,19,19,0.06)",
           borderRadius: "10px",
           padding: "24px",
           minHeight: "340px",
@@ -732,10 +732,10 @@ export default function DashboardPage() {
           flexDirection: "column",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-            <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FBFBFB", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
+            <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#1A1313", textTransform: "uppercase" as const, letterSpacing: "0.08em", margin: 0 }}>
               {allStylists.length > 0 ? "Stylist Leaderboard" : "Recent Activity"}
             </h3>
-            <span className="material-symbols-outlined" style={{ color: "rgba(205,201,192,0.25)", fontSize: "18px" }}>
+            <span className="material-symbols-outlined" style={{ color: "rgba(26,19,19,0.25)", fontSize: "18px" }}>
               {allStylists.length > 0 ? "leaderboard" : "history"}
             </span>
           </div>
@@ -748,8 +748,8 @@ export default function DashboardPage() {
                   gap: "12px",
                   padding: "10px 14px",
                   borderRadius: "8px",
-                  backgroundColor: i === 0 ? "rgba(255,255,255,0.04)" : "transparent",
-                  border: i === 0 ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+                  backgroundColor: i === 0 ? "rgba(26,19,19,0.04)" : "transparent",
+                  border: i === 0 ? "1px solid rgba(26,19,19,0.06)" : "1px solid transparent",
                 }}>
                   <div style={{
                     width: "28px",
@@ -760,15 +760,15 @@ export default function DashboardPage() {
                     justifyContent: "center",
                     fontSize: "12px",
                     fontWeight: 800,
-                    backgroundColor: i === 0 ? "rgba(234,179,8,0.15)" : "rgba(255,255,255,0.04)",
-                    color: i === 0 ? "#EAB308" : "rgba(205,201,192,0.5)",
-                    border: i === 0 ? "1px solid rgba(234,179,8,0.3)" : "1px solid rgba(205,201,192,0.1)",
+                    backgroundColor: i === 0 ? "rgba(234,179,8,0.15)" : "rgba(26,19,19,0.04)",
+                    color: i === 0 ? "#EAB308" : "rgba(26,19,19,0.5)",
+                    border: i === 0 ? "1px solid rgba(234,179,8,0.3)" : "1px solid rgba(26,19,19,0.1)",
                   }}>
                     {i + 1}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <span style={{ color: i === 0 ? "#FBFBFB" : "rgba(205,201,192,0.8)", fontSize: "13px", fontWeight: 600 }}>{s.name}</span>
+                      <span style={{ color: i === 0 ? "#1A1313" : "rgba(26,19,19,0.8)", fontSize: "13px", fontWeight: 600 }}>{s.name}</span>
                       <span style={{
                         fontSize: "9px",
                         fontWeight: 700,
@@ -780,12 +780,12 @@ export default function DashboardPage() {
                         {s.homeLocation === "Corpus Christi" ? "CC" : "SA"}
                       </span>
                     </div>
-                    <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.4)", marginTop: "2px" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.4)", marginTop: "2px" }}>
                       {s.checkoutCount} checkouts
                     </div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: "14px", fontWeight: 800, color: i === 0 ? "#FBFBFB" : "rgba(205,201,192,0.7)" }}>
+                    <div style={{ fontSize: "14px", fontWeight: 800, color: i === 0 ? "#1A1313" : "rgba(26,19,19,0.7)" }}>
                       {fmt(s.revenue)}
                     </div>
                   </div>
@@ -798,7 +798,7 @@ export default function DashboardPage() {
                 width: "48px",
                 height: "48px",
                 borderRadius: "50%",
-                border: "1.5px dashed rgba(205,201,192,0.35)",
+                border: "1.5px dashed rgba(26,19,19,0.35)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -806,8 +806,8 @@ export default function DashboardPage() {
               }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "24px", color: "#CDC9C0" }}>sync</span>
               </div>
-              <p style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 3px" }}>Awaiting Activity</p>
-              <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>The portal is synchronized.</p>
+              <p style={{ fontSize: "13px", fontWeight: 700, color: "#1A1313", margin: "0 0 3px" }}>Awaiting Activity</p>
+              <p style={{ fontSize: "11px", color: "rgba(26,19,19,0.45)", margin: 0 }}>The portal is synchronized.</p>
             </div>
           )}
         </div>
@@ -819,20 +819,20 @@ export default function DashboardPage() {
           </h3>
           {generateAlerts(metricsData, cancellations, activePeriod)}
           <div style={{
-            backgroundColor: "#0a151b",
-            border: "1px solid rgba(255,255,255,0.06)",
+            backgroundColor: "#F4F5F7",
+            border: "1px solid rgba(26,19,19,0.06)",
             borderRadius: "8px",
             padding: "20px",
             textAlign: "center" as const,
           }}>
-            <div style={{ fontSize: "8px", fontWeight: 700, color: "rgba(205,201,192,0.3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, marginBottom: "6px" }}>
+            <div style={{ fontSize: "8px", fontWeight: 700, color: "rgba(26,19,19,0.3)", letterSpacing: "0.25em", textTransform: "uppercase" as const, marginBottom: "6px" }}>
               System Health
             </div>
-            <div style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", marginBottom: "10px" }}>Optimal</div>
+            <div style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", marginBottom: "10px" }}>Optimal</div>
             <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
               <div style={{ height: "2px", width: "28px", backgroundColor: "#CDC9C0", borderRadius: "4px" }} />
-              <div style={{ height: "2px", width: "28px", backgroundColor: "rgba(205,201,192,0.15)", borderRadius: "4px" }} />
-              <div style={{ height: "2px", width: "28px", backgroundColor: "rgba(205,201,192,0.15)", borderRadius: "4px" }} />
+              <div style={{ height: "2px", width: "28px", backgroundColor: "rgba(26,19,19,0.15)", borderRadius: "4px" }} />
+              <div style={{ height: "2px", width: "28px", backgroundColor: "rgba(26,19,19,0.15)", borderRadius: "4px" }} />
             </div>
           </div>
         </div>
@@ -844,20 +844,20 @@ export default function DashboardPage() {
           <div onClick={closeDrill} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 200 }} />
           <div style={{
             position: "fixed", top: 0, right: 0, bottom: 0, width: "min(520px, 95vw)",
-            backgroundColor: "#0d1117", borderLeft: "1px solid rgba(255,255,255,0.08)",
+            backgroundColor: "#FBFBFB", borderLeft: "1px solid rgba(26,19,19,0.08)",
             zIndex: 201, display: "flex", flexDirection: "column", overflow: "hidden",
           }}>
             {/* Header */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 24px", borderBottom: "1px solid rgba(26,19,19,0.06)", flexShrink: 0 }}>
               <div>
-                <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 2px" }}>{drillDown.title}</h3>
-                <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>{pLabel} {activeLocation === "Both" ? "· Both locations" : `· ${activeLocation}`}</p>
+                <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#1A1313", margin: "0 0 2px" }}>{drillDown.title}</h3>
+                <p style={{ fontSize: "11px", color: "rgba(26,19,19,0.45)", margin: 0 }}>{pLabel} {activeLocation === "Both" ? "· Both locations" : `· ${activeLocation}`}</p>
               </div>
               <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                 {drillDown.data.length > 0 && (
-                  <button onClick={exportCSV} style={{ padding: "5px 12px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "6px", color: "#7a8f96", fontSize: "10px", fontWeight: 700, cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase" }}>CSV</button>
+                  <button onClick={exportCSV} style={{ padding: "5px 12px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.2)", borderRadius: "6px", color: "#7a8f96", fontSize: "10px", fontWeight: 700, cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase" }}>CSV</button>
                 )}
-                <button onClick={closeDrill} style={{ background: "none", border: "none", color: "#94A3B8", cursor: "pointer", fontSize: "24px", padding: "4px", lineHeight: 1 }}>&times;</button>
+                <button onClick={closeDrill} style={{ background: "none", border: "none", color: "rgba(26,19,19,0.45)", cursor: "pointer", fontSize: "24px", padding: "4px", lineHeight: 1 }}>&times;</button>
               </div>
             </div>
 
@@ -865,7 +865,7 @@ export default function DashboardPage() {
             <div style={{ flex: 1, overflowY: "auto", padding: "0" }}>
               {drillDown.loading ? (
                 <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {[1,2,3,4,5,6].map(i => <div key={i} style={{ height: "72px", backgroundColor: "rgba(205,201,192,0.04)", borderRadius: "8px", animation: "pulse 1.5s ease-in-out infinite" }} />)}
+                  {[1,2,3,4,5,6].map(i => <div key={i} style={{ height: "72px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "8px", animation: "pulse 1.5s ease-in-out infinite" }} />)}
                 </div>
               ) : drillDown.error ? (
                 <div style={{ padding: "40px 24px", textAlign: "center", color: "#ef4444", fontSize: "13px" }}>{drillDown.error}</div>
@@ -876,12 +876,12 @@ export default function DashboardPage() {
                   <div>
                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {drillDown.data.map((c: any, i: number) => (
-                      <div key={i} style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                      <div key={i} style={{ padding: "16px 24px", borderBottom: "1px solid rgba(26,19,19,0.04)" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                             <div style={{ width: "36px", height: "36px", borderRadius: "50%", backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 700, color: "#ef4444", flexShrink: 0 }}>{c.clientInitials || "?"}</div>
                             <div>
-                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB" }}>{c.clientName || "Client"}</div>
+                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#1A1313" }}>{c.clientName || "Client"}</div>
                               {c.clientPhone && <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#7a8f96", marginTop: "1px" }}>{c.clientPhone}</div>}
                             </div>
                           </div>
@@ -893,8 +893,8 @@ export default function DashboardPage() {
                           <span style={{ fontSize: "9px", padding: "2px 6px", borderRadius: "4px", backgroundColor: c.stylist?.location === "CC" ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)", color: c.stylist?.location === "CC" ? "#818CF8" : "#10B981", fontWeight: 700 }}>{c.stylist?.location}</span>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: "12px", padding: "3px 10px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#7a8f96" }}>{c.service}</span>
-                          <button onClick={(e) => { e.stopPropagation(); window.open(`https://squareup.com/appointments/buyer/widget/${c.locationId === "LTJSA6QR1HGW6" ? "LTJSA6QR1HGW6" : "LXJYXDXWR0XZF"}`, "_blank") }} style={{ padding: "5px 14px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "6px", color: "#7a8f96", fontSize: "10px", fontWeight: 700, cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px" }}>
+                          <span style={{ fontSize: "12px", padding: "3px 10px", borderRadius: "6px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.06)", color: "#7a8f96" }}>{c.service}</span>
+                          <button onClick={(e) => { e.stopPropagation(); window.open(`https://squareup.com/appointments/buyer/widget/${c.locationId === "LTJSA6QR1HGW6" ? "LTJSA6QR1HGW6" : "LXJYXDXWR0XZF"}`, "_blank") }} style={{ padding: "5px 14px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.2)", borderRadius: "6px", color: "#7a8f96", fontSize: "10px", fontWeight: 700, cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "4px" }}>
                             <span className="material-symbols-outlined" style={{ fontSize: "12px" }}>event_repeat</span>
                             Rebook
                           </button>
@@ -912,18 +912,18 @@ export default function DashboardPage() {
                   <>
                     {/* Summary strip */}
                     {drillDown.summary && (
-                      <div style={{ display: "flex", overflowX: "auto", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
+                      <div style={{ display: "flex", overflowX: "auto", borderBottom: "1px solid rgba(26,19,19,0.06)", flexShrink: 0 }}>
                         {[
-                          { label: "Total", value: fmt(drillDown.summary.totalRevenue), color: "#FBFBFB" },
+                          { label: "Total", value: fmt(drillDown.summary.totalRevenue), color: "#1A1313" },
                           { label: "Tips", value: fmt(drillDown.summary.totalTips), color: "#22c55e" },
                           { label: "Tax", value: fmt(drillDown.summary.totalTax), color: "#606E74" },
                           { label: "Fees", value: `~${fmt(drillDown.summary.totalProcessingFees)}`, color: "#fb923c" },
-                          { label: "Net", value: fmt(drillDown.summary.netAfterFees), color: "#FBFBFB" },
+                          { label: "Net", value: fmt(drillDown.summary.netAfterFees), color: "#1A1313" },
                           { label: "Count", value: String(drillDown.summary.transactionCount), color: "#7a8f96" },
                         ].map(s => (
                           <div key={s.label} style={{ flex: "1 0 auto", padding: "14px 16px", textAlign: "center", minWidth: "70px" }}>
                             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 700, color: s.color, marginBottom: "2px" }}>{s.value}</div>
-                            <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.35)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{s.label}</div>
+                            <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.35)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{s.label}</div>
                           </div>
                         ))}
                       </div>
@@ -936,11 +936,11 @@ export default function DashboardPage() {
                         const ps = payStyle(t.payment?.method || "OTHER")
                         const isExpanded = expandedTxn === t.id
                         return (
-                          <div key={t.id} onClick={() => setExpandedTxn(isExpanded ? null : t.id)} style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer", backgroundColor: isExpanded ? "rgba(255,255,255,0.02)" : "transparent", transition: "background-color 0.1s" }}>
+                          <div key={t.id} onClick={() => setExpandedTxn(isExpanded ? null : t.id)} style={{ padding: "14px 24px", borderBottom: "1px solid rgba(26,19,19,0.04)", cursor: "pointer", backgroundColor: isExpanded ? "rgba(26,19,19,0.02)" : "transparent", transition: "background-color 0.1s" }}>
                             <div style={{ display: "flex", alignItems: "flex-start", gap: "14px" }}>
                               {/* Avatar for checkouts */}
                               {drillDown.type === "checkouts" && (
-                                <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.08)", border: "1px solid rgba(205,201,192,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", fontWeight: 700, color: "#CDC9C0", flexShrink: 0 }}>{t.client?.initials || "W"}</div>
+                                <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.08)", border: "1px solid rgba(26,19,19,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", fontWeight: 700, color: "#CDC9C0", flexShrink: 0 }}>{t.client?.initials || "W"}</div>
                               )}
                               {/* Left: time + client + services */}
                               <div style={{ flex: 1, minWidth: 0 }}>
@@ -950,7 +950,7 @@ export default function DashboardPage() {
                                   ) : (
                                     <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "12px", color: "#7a8f96", flexShrink: 0 }}>{t.time}</span>
                                   )}
-                                  <span style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.client?.name}</span>
+                                  <span style={{ fontSize: "14px", fontWeight: 600, color: "#1A1313", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.client?.name}</span>
                                 </div>
                                 <div style={{ fontSize: "12px", color: "#606E74", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                   {t.services?.map((s: { name: string }) => s.name).join(", ").slice(0, 45) || "Services"}
@@ -966,23 +966,23 @@ export default function DashboardPage() {
                                 <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end" }}>
                                   <span style={{ fontSize: "11px", color: "#7a8f96" }}>{t.stylist?.name?.split(" ")[0]}</span>
                                   <span style={{ fontSize: "8px", padding: "1px 5px", borderRadius: "3px", backgroundColor: t.stylist?.location === "CC" ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)", color: t.stylist?.location === "CC" ? "#818CF8" : "#10B981", fontWeight: 700 }}>{t.stylist?.location}</span>
-                                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginLeft: "4px" }}>{fmt(t.amounts?.total)}</span>
+                                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 700, color: "#1A1313", marginLeft: "4px" }}>{fmt(t.amounts?.total)}</span>
                                 </div>
                               </div>
                             </div>
 
                             {/* Expanded breakdown */}
                             {isExpanded && (
-                              <div style={{ marginTop: "12px", padding: "12px 16px", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.04)" }}>
+                              <div style={{ marginTop: "12px", padding: "12px 16px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.04)" }}>
                                 {[
-                                  { label: "Subtotal", value: fmt(t.amounts?.subtotal), color: "#FBFBFB" },
+                                  { label: "Subtotal", value: fmt(t.amounts?.subtotal), color: "#1A1313" },
                                   { label: "Tip", value: fmt(t.amounts?.tip), color: "#22c55e" },
                                   { label: "Tax", value: fmt(t.amounts?.tax), color: "#606E74" },
                                   { label: "Proc. Fee", value: `~${fmt(t.amounts?.processingFee)}`, color: "#fb923c", note: "estimated" },
                                   null,
-                                  { label: "Total", value: fmt(t.amounts?.total), color: "#FBFBFB", bold: true },
+                                  { label: "Total", value: fmt(t.amounts?.total), color: "#1A1313", bold: true },
                                 ].map((row, ri) => row === null ? (
-                                  <div key={ri} style={{ borderTop: "1px solid rgba(255,255,255,0.06)", margin: "6px 0" }} />
+                                  <div key={ri} style={{ borderTop: "1px solid rgba(26,19,19,0.06)", margin: "6px 0" }} />
                                 ) : (
                                   <div key={ri} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "3px 0" }}>
                                     <span style={{ fontSize: "12px", color: "#7a8f96" }}>{row.label}{row.note ? <span style={{ fontSize: "10px", color: "#606E74", fontStyle: "italic", marginLeft: "4px" }}>{row.note}</span> : ""}</span>
@@ -992,7 +992,7 @@ export default function DashboardPage() {
                                 {/* Services list */}
                                 <div style={{ marginTop: "10px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
                                   {t.services?.map((s: { name: string; price: number }, si: number) => (
-                                    <span key={si} style={{ fontSize: "11px", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: "#7a8f96" }}>{s.name} <span style={{ fontFamily: "'Inter', sans-serif", color: "#FBFBFB" }}>{fmt(s.price)}</span></span>
+                                    <span key={si} style={{ fontSize: "11px", padding: "4px 10px", borderRadius: "6px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.06)", color: "#7a8f96" }}>{s.name} <span style={{ fontFamily: "'Inter', sans-serif", color: "#1A1313" }}>{fmt(s.price)}</span></span>
                                   ))}
                                 </div>
                               </div>

@@ -2,14 +2,14 @@
 import { useState, useEffect, useCallback } from "react"
 import { useUserRole } from "@/hooks/useUserRole"
 
-const BG = "#06080d"
-const CARD = "#0d1117"
-const BORDER = "rgba(255,255,255,0.06)"
-const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), 0 0 0 1px rgba(0,0,0,0.25)"
+const BG = "#F4F5F7"
+const CARD = "#FBFBFB"
+const BORDER = "rgba(26,19,19,0.06)"
+const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
 const ACC = "#606E74"
 const ACC_B = "#7a8f96"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#22c55e"
 const GOLD = "#C9A84C"
 const jakarta: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
@@ -196,15 +196,15 @@ export default function PermissionsPage() {
   const isOwnerRole = activeRole === "OWNER" && !selectedStaff
 
   return (
-    <div style={{ ...jakarta, height: "100%", backgroundColor: BG, color: "#fff", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={{ ...jakarta, height: "100%", backgroundColor: BG, color: "#1A1313", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <style>{`@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}} @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}`}</style>
       <div style={{ flex: 1, display: "flex", overflow: "hidden", maxWidth: "1400px", width: "100%", margin: "0 auto" }}>
 
         {/* ═══ LEFT PANEL ═══ */}
-        <div style={{ width: "280px", minWidth: "280px", backgroundColor: "#080c10", borderRight: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ width: "280px", minWidth: "280px", backgroundColor: "#F0F1F3", borderRight: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {/* Header */}
           <div style={{ padding: "24px 20px 16px" }}>
-            <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff", marginBottom: "2px" }}>Access Control</div>
+            <div style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", marginBottom: "2px" }}>Access Control</div>
             <div style={{ ...mono, fontSize: "10px", color: MUTED }}>Manage role permissions</div>
           </div>
 
@@ -224,9 +224,9 @@ export default function PermissionsPage() {
                   <button key={r.role} onClick={() => { setActiveRole(r.role); setSelectedStaff(null) }} style={{
                     display: "flex", alignItems: "center", gap: "12px", width: "100%", padding: "12px 14px",
                     marginBottom: "4px", borderRadius: "10px", border: "none", cursor: "pointer", textAlign: "left",
-                    backgroundColor: isActive ? (r.role === "OWNER" ? "rgba(201,168,76,0.05)" : "rgba(255,255,255,0.04)") : "transparent",
+                    backgroundColor: isActive ? (r.role === "OWNER" ? "rgba(201,168,76,0.05)" : "rgba(26,19,19,0.04)") : "transparent",
                     borderLeft: "none",
-                    outline: isActive ? `1px solid ${r.role === "OWNER" ? "rgba(201,168,76,0.25)" : "rgba(255,255,255,0.08)"}` : "1px solid transparent",
+                    outline: isActive ? `1px solid ${r.role === "OWNER" ? "rgba(201,168,76,0.25)" : "rgba(26,19,19,0.08)"}` : "1px solid transparent",
                     transition: "all 0.15s",
                   }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "20px", color: isActive ? (r.role === "OWNER" ? GOLD : "#fff") : ACC }}>{r.icon}</span>
@@ -253,7 +253,7 @@ export default function PermissionsPage() {
                 <input
                   type="text" placeholder="Search staff..." value={staffSearch}
                   onChange={e => setStaffSearch(e.target.value)}
-                  style={{ width: "100%", padding: "8px 10px 8px 30px", backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}`, borderRadius: "8px", color: "#fff", fontSize: "12px", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "8px 10px 8px 30px", backgroundColor: "rgba(26,19,19,0.03)", border: `1px solid ${BORDER}`, borderRadius: "8px", color: "#1A1313", fontSize: "12px", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
               <div style={{ maxHeight: "240px", overflowY: "auto" }}>
@@ -264,11 +264,11 @@ export default function PermissionsPage() {
                     <button key={s.id} onClick={() => { setSelectedStaff(s); setActiveRole((s.role as "OWNER" | "MANAGER" | "STYLIST") || "STYLIST") }} style={{
                       display: "flex", alignItems: "center", gap: "10px", width: "100%", padding: "8px 10px",
                       marginBottom: "2px", borderRadius: "8px", border: "none", cursor: "pointer", textAlign: "left",
-                      backgroundColor: isActive ? "rgba(255,255,255,0.04)" : "transparent",
+                      backgroundColor: isActive ? "rgba(26,19,19,0.04)" : "transparent",
                       borderLeft: isActive ? `2px solid ${GOLD}` : "2px solid transparent",
                       color: isActive ? "#fff" : MID,
                     }}>
-                      <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: ACC, flexShrink: 0 }}>
+                      <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.06)", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: ACC, flexShrink: 0 }}>
                         {initials}
                       </div>
                       <div style={{ flex: 1, overflow: "hidden" }}>
@@ -286,9 +286,9 @@ export default function PermissionsPage() {
         {/* ═══ RIGHT PANEL ═══ */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {/* Right header */}
-          <div style={{ padding: "20px 28px", borderBottom: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, backgroundColor: "rgba(0,0,0,0.15)" }}>
+          <div style={{ padding: "20px 28px", borderBottom: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0, backgroundColor: "rgba(0,0,0,0.02)" }}>
             <div>
-              <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>
+              <div style={{ fontSize: "18px", fontWeight: 700, color: "#1A1313" }}>
                 {selectedStaff ? selectedStaff.fullName : activeRole} Permissions
               </div>
               <div style={{ fontSize: "12px", color: MUTED, marginTop: "2px" }}>
@@ -323,7 +323,7 @@ export default function PermissionsPage() {
           <div style={{ flex: 1, overflowY: "auto", padding: "16px 28px 80px" }}>
             {loading ? (
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {[1,2,3,4,5].map(i => <div key={i} style={{ height: "56px", backgroundColor: "rgba(255,255,255,0.02)", borderRadius: "10px", animation: "pulse 1.5s infinite", opacity: 1 - i * 0.15 }} />)}
+                {[1,2,3,4,5].map(i => <div key={i} style={{ height: "56px", backgroundColor: "rgba(26,19,19,0.02)", borderRadius: "10px", animation: "pulse 1.5s infinite", opacity: 1 - i * 0.15 }} />)}
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -335,11 +335,11 @@ export default function PermissionsPage() {
                       {/* Section header */}
                       <button onClick={() => toggleSection(section.key)} style={{
                         display: "flex", alignItems: "center", gap: "12px", width: "100%", padding: "14px 18px",
-                        backgroundColor: "rgba(255,255,255,0.02)", border: "none", cursor: "pointer", textAlign: "left",
+                        backgroundColor: "rgba(26,19,19,0.02)", border: "none", cursor: "pointer", textAlign: "left",
                         borderBottom: isCollapsed ? "none" : `1px solid ${BORDER}`,
                       }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "18px", color: ACC_B }}>{section.icon}</span>
-                        <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff", flex: 1 }}>{section.label}</span>
+                        <span style={{ fontSize: "13px", fontWeight: 600, color: "#1A1313", flex: 1 }}>{section.label}</span>
                         <span style={{ ...mono, fontSize: "10px", color: enabled === total ? GREEN : MUTED }}>
                           {enabled}/{total}
                         </span>
@@ -348,13 +348,13 @@ export default function PermissionsPage() {
 
                       {/* Section rows */}
                       {!isCollapsed && section.rows.map(row => (
-                        <div key={row.key} style={{ padding: "12px 18px 12px 48px", borderBottom: `1px solid rgba(255,255,255,0.03)`, display: "flex", alignItems: "center", gap: "16px", transition: "background 0.1s" }}
-                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.015)" }}
+                        <div key={row.key} style={{ padding: "12px 18px 12px 48px", borderBottom: `1px solid rgba(26,19,19,0.03)`, display: "flex", alignItems: "center", gap: "16px", transition: "background 0.1s" }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(26,19,19,0.015)" }}
                           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent" }}
                         >
                           {/* Left: feature info */}
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: "13px", fontWeight: 500, color: "#fff" }}>{row.label}</div>
+                            <div style={{ fontSize: "13px", fontWeight: 500, color: "#1A1313" }}>{row.label}</div>
                             <div style={{ fontSize: "11px", color: MUTED, marginTop: "1px" }}>{row.description}</div>
                           </div>
                           {/* Right: action toggles */}
@@ -371,7 +371,7 @@ export default function PermissionsPage() {
                                     title={disabled ? "Owner permissions cannot be modified" : `Toggle ${act.label}`}
                                     style={{
                                       width: "36px", height: "20px", borderRadius: "10px", border: "none", cursor: disabled ? "not-allowed" : "pointer",
-                                      backgroundColor: val ? GREEN : "rgba(255,255,255,0.1)",
+                                      backgroundColor: val ? GREEN : "rgba(26,19,19,0.1)",
                                       position: "relative", transition: "background-color 0.2s ease",
                                       opacity: disabled ? 0.35 : isToggling ? 0.6 : 1,
                                     }}

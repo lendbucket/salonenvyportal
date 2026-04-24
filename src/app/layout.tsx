@@ -53,7 +53,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body
         className={notoSerif.variable}
-        style={{ backgroundColor: "#0f1d24", margin: 0 }}
+        style={{ backgroundColor: "#F4F5F7", margin: 0 }}
       >
         <Providers>
           {children}

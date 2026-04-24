@@ -47,7 +47,7 @@ function LoginForm() {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#0f1d24",
+      backgroundColor: "#F4F5F7",
       padding: "20px",
     }}>
       <div style={{
@@ -64,7 +64,7 @@ function LoginForm() {
           <div style={{
             fontSize: "10px",
             fontWeight: 700,
-            color: "rgba(205,201,192,0.5)",
+            color: "rgba(26,19,19,0.5)",
             letterSpacing: "0.15em",
             textTransform: "uppercase",
             marginTop: "10px",
@@ -75,7 +75,7 @@ function LoginForm() {
 
         {/* Card */}
         <div style={{
-          backgroundColor: "#1a2a32",
+          backgroundColor: "#FBFBFB",
           borderRadius: "16px",
           padding: "32px",
           border: "1px solid rgba(205,201,192,0.12)",
@@ -83,7 +83,7 @@ function LoginForm() {
           <h2 style={{
             fontSize: "24px",
             fontWeight: 800,
-            color: "#FBFBFB",
+            color: "#1A1313",
             margin: "0 0 6px",
             letterSpacing: "-0.02em",
           }}>
@@ -134,10 +134,10 @@ function LoginForm() {
                 style={{
                   width: "100%",
                   padding: "11px 14px",
-                  backgroundColor: "#0f1d24",
+                  backgroundColor: "#F4F5F7",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "10px",
-                  color: "#FBFBFB",
+                  color: "#1A1313",
                   fontSize: "16px",
                   fontWeight: 500,
                   boxSizing: "border-box",
@@ -165,10 +165,10 @@ function LoginForm() {
                 style={{
                   width: "100%",
                   padding: "11px 14px",
-                  backgroundColor: "#0f1d24",
+                  backgroundColor: "#F4F5F7",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "10px",
-                  color: "#FBFBFB",
+                  color: "#1A1313",
                   fontSize: "16px",
                   fontWeight: 500,
                   boxSizing: "border-box",
@@ -183,8 +183,8 @@ function LoginForm() {
               style={{
                 width: "100%",
                 padding: "13px",
-                backgroundColor: loading ? "rgba(205,201,192,0.5)" : "#CDC9C0",
-                color: "#0f1d24",
+                backgroundColor: loading ? "rgba(26,19,19,0.5)" : "#CDC9C0",
+                color: "#1A1313",
                 fontSize: "11px",
                 fontWeight: 800,
                 letterSpacing: "0.12em",
@@ -252,10 +252,10 @@ function LoginForm() {
                     style={{
                       width: "100%",
                       padding: "11px 14px",
-                      backgroundColor: "#0f1d24",
+                      backgroundColor: "#F4F5F7",
                       border: "1px solid rgba(205,201,192,0.15)",
                       borderRadius: "10px",
-                      color: "#FBFBFB",
+                      color: "#1A1313",
                       fontSize: "16px",
                       boxSizing: "border-box",
                       outline: "none",
@@ -305,7 +305,7 @@ function LoginForm() {
                   <button
                     type="button"
                     onClick={() => { setMagicLinkSent(false); setMagicEmail("") }}
-                    style={{ marginTop: "12px", fontSize: "11px", color: "rgba(205,201,192,0.5)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+                    style={{ marginTop: "12px", fontSize: "11px", color: "rgba(26,19,19,0.5)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
                   >
                     Use a different email
                   </button>
@@ -329,7 +329,7 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div style={{ minHeight: "100vh", backgroundColor: "#0f1d24", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100vh", backgroundColor: "#F4F5F7", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ color: "#CDC9C0", fontSize: "14px" }}>Loading...</div>
       </div>
     }>

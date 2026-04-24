@@ -18,7 +18,7 @@ const inputStyle: React.CSSProperties = {
   backgroundColor: "rgba(205,201,192,0.06)",
   border: "1px solid rgba(205,201,192,0.15)",
   borderRadius: "8px",
-  color: "#FBFBFB",
+  color: "#1A1313",
   fontSize: "14px",
   fontWeight: 500,
   outline: "none",
@@ -26,16 +26,16 @@ const inputStyle: React.CSSProperties = {
 
 const disabledInputStyle: React.CSSProperties = {
   ...inputStyle,
-  color: "rgba(205,201,192,0.4)",
+  color: "rgba(26,19,19,0.4)",
   cursor: "not-allowed",
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#0d1117",
-  border: "1px solid rgba(255,255,255,0.06)",
+  backgroundColor: "#FBFBFB",
+  border: "1px solid rgba(26,19,19,0.06)",
   borderRadius: "10px",
   padding: "28px",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)",
+  boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)",
 }
 
 export default function ProfilePage() {
@@ -125,7 +125,7 @@ export default function ProfilePage() {
       <h1 style={{
         fontSize: "32px",
         fontWeight: 800,
-        color: "#FBFBFB",
+        color: "#1A1313",
         marginBottom: "28px",
         letterSpacing: "-0.02em",
       }}>
@@ -151,10 +151,10 @@ export default function ProfilePage() {
           {initials}
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>
+          <div style={{ fontSize: "20px", fontWeight: 700, color: "#1A1313", marginBottom: "4px" }}>
             {user?.name || "User"}
           </div>
-          <div style={{ fontSize: "13px", color: "rgba(205,201,192,0.5)", marginBottom: "8px" }}>
+          <div style={{ fontSize: "13px", color: "rgba(26,19,19,0.5)", marginBottom: "8px" }}>
             {user?.email || ""}
           </div>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -254,7 +254,7 @@ export default function ProfilePage() {
             marginTop: "20px",
             padding: "12px 28px",
             backgroundColor: "#CDC9C0",
-            color: "#0f1d24",
+            color: "#1A1313",
             border: "none",
             borderRadius: "8px",
             fontSize: "11px",

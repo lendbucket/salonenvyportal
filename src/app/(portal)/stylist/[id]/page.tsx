@@ -124,7 +124,7 @@ export default function StylistProfilePage() {
       <button onClick={() => router.push("/metrics")} style={{
         display: "flex", alignItems: "center", gap: "6px", padding: "8px 16px",
         backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.2)",
-        borderRadius: "8px", color: "rgba(205,201,192,0.6)", fontSize: "11px",
+        borderRadius: "8px", color: "rgba(26,19,19,0.6)", fontSize: "11px",
         fontWeight: 700, cursor: "pointer", letterSpacing: "0.08em",
         textTransform: "uppercase", marginBottom: "24px",
       }}>
@@ -136,14 +136,14 @@ export default function StylistProfilePage() {
       <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "28px" }}>
         <div style={{
           width: "72px", height: "72px", borderRadius: "50%",
-          backgroundColor: "#1a2a32", border: "2px solid #CDC9C0",
+          backgroundColor: "#FBFBFB", border: "2px solid #CDC9C0",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: "24px", fontWeight: 800, color: "#CDC9C0",
         }}>
           {initials}
         </div>
         <div>
-          <h1 style={{ fontSize: "28px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontSize: "28px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
             {name}
           </h1>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -160,7 +160,7 @@ export default function StylistProfilePage() {
 
       {/* Period selector */}
       <div style={{
-        display: "inline-flex", gap: "2px", backgroundColor: "#1a2a32",
+        display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB",
         padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.08)",
         marginBottom: "24px",
       }}>
@@ -170,7 +170,7 @@ export default function StylistProfilePage() {
             letterSpacing: "0.08em", textTransform: "uppercase",
             borderRadius: "6px", border: "none", cursor: "pointer",
             backgroundColor: activePeriod === p.value ? "#CDC9C0" : "transparent",
-            color: activePeriod === p.value ? "#0f1d24" : "rgba(205,201,192,0.45)",
+            color: activePeriod === p.value ? "#1A1313" : "rgba(26,19,19,0.45)",
             transition: "all 0.15s",
           }}>
             {p.label}
@@ -181,7 +181,7 @@ export default function StylistProfilePage() {
       {loading ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px", marginBottom: "24px" }}>
           {[1, 2, 3].map(i => (
-            <div key={i} style={{ backgroundColor: "#1a2a32", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
           ))}
         </div>
       ) : (
@@ -194,14 +194,14 @@ export default function StylistProfilePage() {
               { label: "Avg Ticket", value: fmt(active?.avgTicket || 0), icon: "receipt_long" },
             ].map(card => (
               <div key={card.label} style={{
-                backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.1)",
+                backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.1)",
                 borderRadius: "10px", padding: "20px",
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
                   <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>{card.label}</span>
                   <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "rgba(205,201,192,0.25)" }}>{card.icon}</span>
                 </div>
-                <div style={{ fontSize: "32px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1, letterSpacing: "-0.02em" }}>
+                <div style={{ fontSize: "32px", fontWeight: 800, color: "#1A1313", lineHeight: 1, letterSpacing: "-0.02em" }}>
                   {card.value}
                 </div>
               </div>
@@ -209,9 +209,9 @@ export default function StylistProfilePage() {
           </div>
 
           {/* Performance comparison table */}
-          <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", marginBottom: "24px", overflow: "hidden" }}>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", marginBottom: "24px", overflow: "hidden" }}>
             <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(205,201,192,0.08)" }}>
-              <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FBFBFB", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#1A1313", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Performance Across Periods
               </h3>
             </div>
@@ -220,7 +220,7 @@ export default function StylistProfilePage() {
                 <thead>
                   <tr style={{ backgroundColor: "rgba(205,201,192,0.04)" }}>
                     {["Period", "Net Sales", "Checkouts", "Avg Ticket"].map(h => (
-                      <th key={h} style={{ padding: "10px 14px", fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", textAlign: h === "Period" ? "left" : "right", whiteSpace: "nowrap" }}>{h}</th>
+                      <th key={h} style={{ padding: "10px 14px", fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", textAlign: h === "Period" ? "left" : "right", whiteSpace: "nowrap" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -230,10 +230,10 @@ export default function StylistProfilePage() {
                       borderBottom: "1px solid rgba(205,201,192,0.06)",
                       backgroundColor: p.period === activePeriod ? "rgba(205,201,192,0.04)" : "transparent",
                     }}>
-                      <td style={{ padding: "12px 14px", fontSize: "13px", fontWeight: 600, color: "#FBFBFB" }}>{p.label}</td>
+                      <td style={{ padding: "12px 14px", fontSize: "13px", fontWeight: 600, color: "#1A1313" }}>{p.label}</td>
                       <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 800, color: "#CDC9C0" }}>{p.metrics ? fmt(p.metrics.revenue) : "\u2014"}</td>
-                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{p.metrics?.checkoutCount ?? "\u2014"}</td>
-                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>{p.metrics && p.metrics.avgTicket > 0 ? fmt(p.metrics.avgTicket) : "\u2014"}</td>
+                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: "#1A1313" }}>{p.metrics?.checkoutCount ?? "\u2014"}</td>
+                      <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "13px", fontWeight: 700, color: "#1A1313" }}>{p.metrics && p.metrics.avgTicket > 0 ? fmt(p.metrics.avgTicket) : "\u2014"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -243,7 +243,7 @@ export default function StylistProfilePage() {
 
           {/* Revenue Goal */}
           {revenueGoal > 0 && (
-            <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "20px", marginBottom: "24px" }}>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "20px", marginBottom: "24px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                 <div>
                   <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "4px" }}>Revenue Goal — 10% Above Best Period</div>
@@ -270,18 +270,18 @@ export default function StylistProfilePage() {
           )}
 
           {/* AI Coaching */}
-          <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "24px" }}>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: "10px", padding: "24px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
               <div style={{ width: "36px", height: "36px", borderRadius: "8px", backgroundColor: "rgba(205,201,192,0.1)", border: "1px solid rgba(205,201,192,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#CDC9C0" }}>psychology</span>
               </div>
               <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 2px", textTransform: "uppercase", letterSpacing: "0.08em" }}>AI Coaching</h3>
+                <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#1A1313", margin: "0 0 2px", textTransform: "uppercase", letterSpacing: "0.08em" }}>AI Coaching</h3>
                 <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>Personalized performance insights for {name.split(" ")[0]}</p>
               </div>
               <button onClick={getCoaching} disabled={aiLoading} style={{
                 padding: "8px 16px", backgroundColor: "#CDC9C0", border: "none",
-                borderRadius: "7px", color: "#0f1d24", fontSize: "10px", fontWeight: 800,
+                borderRadius: "7px", color: "#1A1313", fontSize: "10px", fontWeight: 800,
                 letterSpacing: "0.1em", textTransform: "uppercase",
                 cursor: aiLoading ? "not-allowed" : "pointer", opacity: aiLoading ? 0.7 : 1,
                 display: "flex", alignItems: "center", gap: "6px",
@@ -292,13 +292,13 @@ export default function StylistProfilePage() {
             </div>
 
             {aiLoading && (
-              <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
+              <div style={{ backgroundColor: "#F4F5F7", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#CDC9C0", animation: "spin 1s linear infinite" }}>sync</span>
                 <span style={{ fontSize: "13px", color: "#94A3B8" }}>Reyna AI is analyzing {name.split(" ")[0]}&apos;s performance data...</span>
               </div>
             )}
             {aiInsight && !aiLoading && (
-              <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px" }}>
+              <div style={{ backgroundColor: "#F4F5F7", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px" }}>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
                   <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>auto_awesome</span>
                   Reyna AI Coaching

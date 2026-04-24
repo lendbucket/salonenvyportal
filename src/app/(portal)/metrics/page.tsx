@@ -174,8 +174,8 @@ export default function MetricsPage() {
     borderRadius: "6px",
     border: "none",
     cursor: "pointer" as const,
-    backgroundColor: active ? "#CDC9C0" : "transparent",
-    color: active ? "#0f1d24" : "rgba(205,201,192,0.5)",
+    backgroundColor: active ? "#7a8f96" : "transparent",
+    color: active ? "#FBFBFB" : "rgba(26,19,19,0.5)",
     transition: "all 0.15s",
     whiteSpace: "nowrap" as const,
   })
@@ -191,7 +191,7 @@ export default function MetricsPage() {
       {/* Header */}
       <div style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
             Business Intelligence
           </h1>
           <p style={{ fontSize: "12px", color: "#94A3B8", margin: "0 0 4px" }}>
@@ -201,7 +201,7 @@ export default function MetricsPage() {
             Net sales (excluding tax and tips) estimated via booking-to-order time-proximity matching. Walk-ins not booked through Kasse Scheduling may not be attributed to individual stylists.
           </p>
         </div>
-        <button onClick={fetchData} style={{ padding: "8px 16px", fontSize: "10px", fontWeight: 700, borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+        <button onClick={fetchData} style={{ padding: "8px 16px", fontSize: "10px", fontWeight: 700, borderRadius: "8px", border: "1px solid rgba(205,201,192,0.2)", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>refresh</span>
           Refresh
         </button>
@@ -209,12 +209,12 @@ export default function MetricsPage() {
 
       {/* Selectors */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "24px", flexWrap: "nowrap" as const, overflowX: "auto" }}>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
           {PERIOD_DEFS.map(p => (
             <button key={p.value} onClick={() => setPeriod(p.value)} style={pill(period === p.value)}>{p.label}</button>
           ))}
         </div>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
           {(isOwner ? ["Both", "Corpus Christi", "San Antonio"] : [userLocation || "Both"]).map(loc => (
             <button key={loc} onClick={() => setLocation(loc)} style={pill(location === loc)}>
               {loc === "Corpus Christi" ? "CC" : loc === "San Antonio" ? "SA" : loc}
@@ -228,11 +228,11 @@ export default function MetricsPage() {
         <div style={{ display: "flex", gap: "10px", marginBottom: "16px", alignItems: "flex-end" }}>
           <div>
             <div style={{ fontSize: "12px", fontWeight: 600, color: "#606E74", marginBottom: "4px" }}>From</div>
-            <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
+            <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", colorScheme: "light" }} />
           </div>
           <div>
             <div style={{ fontSize: "12px", fontWeight: 600, color: "#606E74", marginBottom: "4px" }}>To</div>
-            <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", colorScheme: "dark" }} />
+            <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", colorScheme: "light" }} />
           </div>
           <button onClick={() => fetchData()} disabled={!customStart || !customEnd} style={{ padding: "6px 14px", border: "1px solid #606E74", borderRadius: "8px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "13px", cursor: "pointer", opacity: (!customStart || !customEnd) ? 0.5 : 1 }}>Apply</button>
         </div>
@@ -249,7 +249,7 @@ export default function MetricsPage() {
       {loading ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "14px", marginBottom: "24px" }}>
           {[1, 2, 3, 4].map(i => (
-            <div key={i} style={{ backgroundColor: "#0d1117", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
           ))}
         </div>
       ) : (
@@ -262,13 +262,13 @@ export default function MetricsPage() {
               { label: "Avg Ticket", current: fmt(currentTotal.avgTicket), change: ticketChange, prev: fmt(prevTotal.avgTicket), icon: "receipt" },
               { label: "Locations Active", current: String(data?.currentMetrics.filter(m => m.checkoutCount > 0).length || 0), change: null, prev: "2 total", icon: "location_on" },
             ].map(card => (
-              <div key={card.label} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px" }}>
+              <div key={card.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "20px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
                   <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>{card.label}</span>
-                  <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.3)" }}>{card.icon}</span>
+                  <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(26,19,19,0.3)" }}>{card.icon}</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: "6px", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "28px", fontWeight: 800, color: "#FBFBFB", letterSpacing: "-0.02em" }}>{card.current}</span>
+                  <span style={{ fontSize: "28px", fontWeight: 800, color: "#1A1313", letterSpacing: "-0.02em" }}>{card.current}</span>
                   <ChangeIndicator change={card.change} />
                 </div>
                 <div style={{ fontSize: "11px", color: "#94A3B8" }}>Prev: {card.prev} · {compareLabel}</div>
@@ -278,7 +278,7 @@ export default function MetricsPage() {
 
           {/* Annual Goal */}
           {annualGoalProgress !== null && (
-            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px", marginBottom: "24px" }}>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "20px", marginBottom: "24px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                 <div>
                   <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "4px" }}>Annual Net Sales Goal — +10% vs Last Year</div>
@@ -303,9 +303,9 @@ export default function MetricsPage() {
                 const prevLoc = data.previousMetrics.find(p => p.location === loc.location)
                 const revChange = prevLoc ? getChange(loc.revenue, prevLoc.revenue) : null
                 return (
-                  <div key={loc.location} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px" }}>
+                  <div key={loc.location} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "20px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                      <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#FBFBFB", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>{loc.location}</h3>
+                      <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#1A1313", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>{loc.location}</h3>
                       <ChangeIndicator change={revChange} />
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "16px" }}>
@@ -315,17 +315,17 @@ export default function MetricsPage() {
                         { label: "Avg Ticket", value: fmt(loc.avgTicket) },
                       ].map(stat => (
                         <div key={stat.label}>
-                          <div style={{ fontSize: "9px", color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "3px" }}>{stat.label}</div>
+                          <div style={{ fontSize: "9px", color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "3px" }}>{stat.label}</div>
                           <div style={{ fontSize: "18px", fontWeight: 800, color: "#CDC9C0" }}>{stat.value}</div>
                         </div>
                       ))}
                     </div>
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "12px" }}>
+                    <div style={{ borderTop: "1px solid rgba(26,19,19,0.06)", paddingTop: "12px" }}>
                       {loc.stylistBreakdown.slice(0, 3).map((s, i) => (
                         <div key={s.teamMemberId} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <span style={{ fontSize: "9px", fontWeight: 800, color: i === 0 ? "#CDC9C0" : "rgba(205,201,192,0.3)", width: "14px" }}>#{i + 1}</span>
-                            <span style={{ fontSize: "12px", color: "#FBFBFB", fontWeight: 600 }}>{s.name.split(" ")[0]}</span>
+                            <span style={{ fontSize: "9px", fontWeight: 800, color: i === 0 ? "#1A1313" : "rgba(26,19,19,0.3)", width: "14px" }}>#{i + 1}</span>
+                            <span style={{ fontSize: "12px", color: "#1A1313", fontWeight: 600 }}>{s.name.split(" ")[0]}</span>
                           </div>
                           <div style={{ textAlign: "right" }}>
                             <span style={{ fontSize: "12px", fontWeight: 700, color: "#CDC9C0" }}>{fmt(s.revenue)}</span>
@@ -341,18 +341,18 @@ export default function MetricsPage() {
           )}
 
           {/* Stylist Comparison Table */}
-          <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", marginBottom: "24px", overflow: "hidden" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-              <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#FBFBFB", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", marginBottom: "24px", overflow: "hidden" }}>
+            <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
+              <h3 style={{ fontSize: "12px", fontWeight: 800, color: "#1A1313", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 Stylist Performance — Current vs Previous Period
               </h3>
             </div>
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
-                  <tr style={{ backgroundColor: "rgba(205,201,192,0.04)" }}>
+                  <tr style={{ backgroundColor: "rgba(26,19,19,0.04)" }}>
                     {["Stylist", "Loc", "Checkouts", "vs Prev", "Net Sales", "vs Prev", "Avg Ticket", "vs Prev"].map(h => (
-                      <th key={h} style={{ padding: "10px 14px", fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", textAlign: h === "Stylist" || h === "Loc" ? "left" : "right", whiteSpace: "nowrap" }}>{h}</th>
+                      <th key={h} style={{ padding: "10px 14px", fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", textAlign: h === "Stylist" || h === "Loc" ? "left" : "right", whiteSpace: "nowrap" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -369,22 +369,22 @@ export default function MetricsPage() {
                         <tr key={stylist.teamMemberId} onClick={() => router.push(`/stylist/${stylist.teamMemberId}`)} style={{ borderBottom: "1px solid rgba(205,201,192,0.06)", cursor: "pointer" }}>
                           <td style={{ padding: "12px 14px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                              <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
+                              <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
                                 {stylist.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                               </div>
-                              <span style={{ fontSize: "13px", fontWeight: 600, color: "#FBFBFB" }}>{stylist.name}</span>
+                              <span style={{ fontSize: "13px", fontWeight: 600, color: "#1A1313" }}>{stylist.name}</span>
                             </div>
                           </td>
                           <td style={{ padding: "12px 14px" }}>
-                            <span style={{ fontSize: "10px", fontWeight: 600, color: "#94A3B8", backgroundColor: "rgba(205,201,192,0.06)", padding: "2px 8px", borderRadius: "4px" }}>
+                            <span style={{ fontSize: "10px", fontWeight: 600, color: "#94A3B8", backgroundColor: "rgba(26,19,19,0.06)", padding: "2px 8px", borderRadius: "4px" }}>
                               {stylist.homeLocation === "Corpus Christi" ? "CC" : "SA"}
                             </span>
                           </td>
-                          <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{stylist.checkoutCount}</td>
+                          <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 700, color: "#1A1313" }}>{stylist.checkoutCount}</td>
                           <td style={{ padding: "12px 14px", textAlign: "right" }}><ChangeIndicator change={svcCh} /></td>
                           <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "14px", fontWeight: 800, color: "#CDC9C0" }}>{stylist.revenue > 0 ? fmt(stylist.revenue) : "\u2014"}</td>
                           <td style={{ padding: "12px 14px", textAlign: "right" }}><ChangeIndicator change={revCh} /></td>
-                          <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>{stylist.avgTicket > 0 ? fmt(stylist.avgTicket) : "\u2014"}</td>
+                          <td style={{ padding: "12px 14px", textAlign: "right", fontSize: "13px", fontWeight: 700, color: "#1A1313" }}>{stylist.avgTicket > 0 ? fmt(stylist.avgTicket) : "\u2014"}</td>
                           <td style={{ padding: "12px 14px", textAlign: "right" }}><ChangeIndicator change={tktCh} /></td>
                         </tr>
                       )
@@ -396,13 +396,13 @@ export default function MetricsPage() {
           </div>
 
           {/* AI Business Coach */}
-          <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "24px" }}>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "24px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
               <div style={{ width: "36px", height: "36px", borderRadius: "8px", backgroundColor: "rgba(205,201,192,0.1)", border: "1px solid rgba(205,201,192,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#CDC9C0" }}>auto_awesome</span>
               </div>
               <div>
-                <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 2px", textTransform: "uppercase", letterSpacing: "0.08em" }}>AI Business Coach</h3>
+                <h3 style={{ fontSize: "13px", fontWeight: 800, color: "#1A1313", margin: "0 0 2px", textTransform: "uppercase", letterSpacing: "0.08em" }}>AI Business Coach</h3>
                 <p style={{ fontSize: "11px", color: "#94A3B8", margin: 0 }}>Powered by Reyna AI — analyzing your current vs previous period data</p>
               </div>
               <button onClick={() => getAiInsights()} disabled={aiLoading} style={{ marginLeft: "auto", padding: "8px 16px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "7px", color: "#0f1d24", fontSize: "10px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: aiLoading ? "not-allowed" : "pointer", opacity: aiLoading ? 0.7 : 1, display: "flex", alignItems: "center", gap: "6px" }}>
@@ -414,7 +414,7 @@ export default function MetricsPage() {
             {/* Suggested questions */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px" }}>
               {SUGGESTED_QUESTIONS.map(q => (
-                <button key={q} onClick={() => { setAiQuestion(q); getAiInsights(q) }} disabled={aiLoading} style={{ padding: "6px 12px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "20px", color: "#CBD5E1", fontSize: "11px", cursor: aiLoading ? "not-allowed" : "pointer", textAlign: "left" }}>
+                <button key={q} onClick={() => { setAiQuestion(q); getAiInsights(q) }} disabled={aiLoading} style={{ padding: "6px 12px", backgroundColor: "rgba(26,19,19,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "20px", color: "#CBD5E1", fontSize: "11px", cursor: aiLoading ? "not-allowed" : "pointer", textAlign: "left" }}>
                   {q}
                 </button>
               ))}
@@ -427,7 +427,7 @@ export default function MetricsPage() {
                 onChange={e => setAiQuestion(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && aiQuestion && getAiInsights(aiQuestion)}
                 placeholder="Ask a custom question about your business data..."
-                style={{ flex: 1, padding: "10px 14px", backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "7px", color: "#FBFBFB", fontSize: "13px", outline: "none" }}
+                style={{ flex: 1, padding: "10px 14px", backgroundColor: "#F4F5F7", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "7px", color: "#1A1313", fontSize: "13px", outline: "none" }}
               />
               <button onClick={() => getAiInsights(aiQuestion)} disabled={aiLoading || !aiQuestion} style={{ padding: "10px 16px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.25)", borderRadius: "7px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.08em", opacity: (!aiQuestion || aiLoading) ? 0.5 : 1 }}>
                 Ask
@@ -436,13 +436,13 @@ export default function MetricsPage() {
 
             {/* AI Response */}
             {aiLoading && (
-              <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
+              <div style={{ backgroundColor: "#F4F5F7", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#CDC9C0", animation: "spin 1s linear infinite" }}>sync</span>
                 <span style={{ fontSize: "13px", color: "#94A3B8" }}>Reyna AI is analyzing your salon data...</span>
               </div>
             )}
             {aiInsight && !aiLoading && (
-              <div style={{ backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px" }}>
+              <div style={{ backgroundColor: "#F4F5F7", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px 20px" }}>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
                   <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>auto_awesome</span>
                   Reyna AI Analysis

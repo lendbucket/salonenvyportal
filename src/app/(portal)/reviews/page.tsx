@@ -25,7 +25,7 @@ type LocationData = {
 
 /* ── Constants ── */
 const STAR_COLOR = "#F59E0B";
-const CARD_BG = "#0d1117";
+const CARD_BG = "#FBFBFB";
 const ACCENT = "#CDC9C0";
 const TIPS = [
   { icon: "qr_code_2", title: "Table Cards", desc: "Place QR codes at each station linking to your Google review page." },
@@ -73,7 +73,7 @@ function RatingBars({ reviews }: { reviews: Review[] }) {
     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
       {[5, 4, 3, 2, 1].map((r, i) => (
         <div key={r} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "11px" }}>
-          <span style={{ width: "12px", textAlign: "right", color: "rgba(205,201,192,0.6)" }}>{r}</span>
+          <span style={{ width: "12px", textAlign: "right", color: "rgba(26,19,19,0.6)" }}>{r}</span>
           <div style={{ flex: 1, height: "6px", borderRadius: "3px", backgroundColor: "rgba(205,201,192,0.1)" }}>
             <div
               style={{
@@ -85,7 +85,7 @@ function RatingBars({ reviews }: { reviews: Review[] }) {
               }}
             />
           </div>
-          <span style={{ width: "20px", color: "rgba(205,201,192,0.4)", fontSize: "10px" }}>{counts[i]}</span>
+          <span style={{ width: "20px", color: "rgba(26,19,19,0.4)", fontSize: "10px" }}>{counts[i]}</span>
         </div>
       ))}
     </div>
@@ -167,11 +167,11 @@ export default function ReviewsPage() {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px", marginBottom: "24px" }}>
         <div>
-          <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#FBFBFB", margin: 0, display: "flex", alignItems: "center", gap: "10px" }}>
+          <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#1A1313", margin: 0, display: "flex", alignItems: "center", gap: "10px" }}>
             <GoogleLogo size={24} />
             Reviews
           </h1>
-          <p style={{ fontSize: "13px", color: "rgba(205,201,192,0.5)", margin: "4px 0 0" }}>Google Places ratings and customer feedback</p>
+          <p style={{ fontSize: "13px", color: "rgba(26,19,19,0.5)", margin: "4px 0 0" }}>Google Places ratings and customer feedback</p>
         </div>
         {isOwner && (
           <div style={{ display: "flex", gap: "6px" }}>
@@ -184,7 +184,7 @@ export default function ReviewsPage() {
                   borderRadius: "6px",
                   border: `1px solid ${selectedLocation === loc ? ACCENT : "rgba(205,201,192,0.15)"}`,
                   backgroundColor: selectedLocation === loc ? "rgba(205,201,192,0.1)" : "transparent",
-                  color: selectedLocation === loc ? ACCENT : "rgba(205,201,192,0.5)",
+                  color: selectedLocation === loc ? ACCENT : "rgba(26,19,19,0.5)",
                   fontSize: "11px",
                   fontWeight: 700,
                   letterSpacing: "0.08em",
@@ -200,7 +200,7 @@ export default function ReviewsPage() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(205,201,192,0.4)" }}>
+        <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(26,19,19,0.4)" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "32px", animation: "spin 1s linear infinite" }}>progress_activity</span>
           <p style={{ marginTop: "8px", fontSize: "13px" }}>Loading reviews...</p>
         </div>
@@ -216,16 +216,16 @@ export default function ReviewsPage() {
                 padding: "16px 20px",
                 backgroundColor: CARD_BG,
                 borderRadius: "10px",
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid rgba(26,19,19,0.06)",
                 marginBottom: "20px",
                 flexWrap: "wrap",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <span style={{ fontSize: "28px", fontWeight: 800, color: "#FBFBFB" }}>{overallRating}</span>
+                <span style={{ fontSize: "28px", fontWeight: 800, color: "#1A1313" }}>{overallRating}</span>
                 <Stars rating={overallRating} size={18} />
               </div>
-              <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.5)" }}>
+              <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.5)" }}>
                 <span style={{ fontWeight: 700, color: ACCENT }}>{overallCount.toLocaleString()}</span> total reviews across all locations
               </div>
             </div>
@@ -239,7 +239,7 @@ export default function ReviewsPage() {
                 style={{
                   backgroundColor: CARD_BG,
                   borderRadius: "12px",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(26,19,19,0.06)",
                   padding: "20px",
                 }}
               >
@@ -249,13 +249,13 @@ export default function ReviewsPage() {
                       {loc.label}
                     </div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                      <span style={{ fontSize: "36px", fontWeight: 800, color: "#FBFBFB", lineHeight: 1 }}>{loc.rating}</span>
-                      <span style={{ fontSize: "12px", color: "rgba(205,201,192,0.4)" }}>/ 5</span>
+                      <span style={{ fontSize: "36px", fontWeight: 800, color: "#1A1313", lineHeight: 1 }}>{loc.rating}</span>
+                      <span style={{ fontSize: "12px", color: "rgba(26,19,19,0.4)" }}>/ 5</span>
                     </div>
                     <div style={{ marginTop: "4px" }}>
                       <Stars rating={loc.rating} size={16} />
                     </div>
-                    <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.45)", marginTop: "4px" }}>
+                    <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.45)", marginTop: "4px" }}>
                       {loc.totalReviews.toLocaleString()} reviews
                     </div>
                   </div>
@@ -274,9 +274,9 @@ export default function ReviewsPage() {
                       minWidth: "100px",
                       padding: "8px 10px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(26,19,19,0.06)",
                       backgroundColor: "rgba(205,201,192,0.06)",
-                      color: copiedId === `link-${loc.location}` ? "#22c55e" : "rgba(205,201,192,0.6)",
+                      color: copiedId === `link-${loc.location}` ? "#22c55e" : "rgba(26,19,19,0.6)",
                       fontSize: "10px",
                       fontWeight: 700,
                       cursor: "pointer",
@@ -300,9 +300,9 @@ export default function ReviewsPage() {
                       minWidth: "80px",
                       padding: "8px 10px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(26,19,19,0.06)",
                       backgroundColor: "rgba(205,201,192,0.06)",
-                      color: "rgba(205,201,192,0.6)",
+                      color: "rgba(26,19,19,0.6)",
                       fontSize: "10px",
                       fontWeight: 700,
                       textDecoration: "none",
@@ -326,9 +326,9 @@ export default function ReviewsPage() {
                       minWidth: "80px",
                       padding: "8px 10px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(26,19,19,0.06)",
                       backgroundColor: "rgba(205,201,192,0.06)",
-                      color: "rgba(205,201,192,0.6)",
+                      color: "rgba(26,19,19,0.6)",
                       fontSize: "10px",
                       fontWeight: 700,
                       textDecoration: "none",
@@ -357,9 +357,9 @@ export default function ReviewsPage() {
                 style={{
                   padding: "6px 14px",
                   borderRadius: "20px",
-                  border: `1px solid ${ratingFilter === r ? STAR_COLOR : "rgba(255,255,255,0.06)"}`,
+                  border: `1px solid ${ratingFilter === r ? STAR_COLOR : "rgba(26,19,19,0.06)"}`,
                   backgroundColor: ratingFilter === r ? "rgba(245,158,11,0.12)" : "transparent",
-                  color: ratingFilter === r ? STAR_COLOR : "rgba(205,201,192,0.5)",
+                  color: ratingFilter === r ? STAR_COLOR : "rgba(26,19,19,0.5)",
                   fontSize: "11px",
                   fontWeight: 700,
                   cursor: "pointer",
@@ -383,7 +383,7 @@ export default function ReviewsPage() {
           {/* Reviews feed */}
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "32px" }}>
             {allReviews.length === 0 && (
-              <div style={{ textAlign: "center", padding: "40px 0", color: "rgba(205,201,192,0.35)", fontSize: "13px" }}>
+              <div style={{ textAlign: "center", padding: "40px 0", color: "rgba(26,19,19,0.35)", fontSize: "13px" }}>
                 No reviews found{ratingFilter !== null ? ` with ${ratingFilter}-star rating` : ""}.
               </div>
             )}
@@ -393,7 +393,7 @@ export default function ReviewsPage() {
                 style={{
                   backgroundColor: CARD_BG,
                   borderRadius: "10px",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(26,19,19,0.06)",
                   padding: "16px 20px",
                 }}
               >
@@ -427,7 +427,7 @@ export default function ReviewsPage() {
                   )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>{review.authorName}</span>
+                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#1A1313" }}>{review.authorName}</span>
                       {locations.length > 1 && (
                         <span
                           style={{
@@ -437,8 +437,8 @@ export default function ReviewsPage() {
                             textTransform: "uppercase",
                             padding: "2px 8px",
                             borderRadius: "4px",
-                            backgroundColor: "rgba(255,255,255,0.06)",
-                            color: "rgba(205,201,192,0.5)",
+                            backgroundColor: "rgba(26,19,19,0.06)",
+                            color: "rgba(26,19,19,0.5)",
                           }}
                         >
                           {review.locationLabel}
@@ -463,12 +463,12 @@ export default function ReviewsPage() {
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "2px" }}>
                       <Stars rating={review.rating} size={13} />
-                      <span style={{ fontSize: "11px", color: "rgba(205,201,192,0.35)" }}>{review.relativeTime}</span>
+                      <span style={{ fontSize: "11px", color: "rgba(26,19,19,0.35)" }}>{review.relativeTime}</span>
                     </div>
                   </div>
                 </div>
                 {review.text && (
-                  <p style={{ fontSize: "13px", lineHeight: "1.6", color: "rgba(205,201,192,0.7)", margin: 0 }}>{review.text}</p>
+                  <p style={{ fontSize: "13px", lineHeight: "1.6", color: "rgba(26,19,19,0.7)", margin: 0 }}>{review.text}</p>
                 )}
               </div>
             ))}
@@ -476,7 +476,7 @@ export default function ReviewsPage() {
 
           {/* Tips section */}
           <div style={{ marginBottom: "40px" }}>
-            <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <h2 style={{ fontSize: "15px", fontWeight: 700, color: "#1A1313", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "18px", color: STAR_COLOR }}>lightbulb</span>
               How to Get More Reviews
             </h2>
@@ -487,7 +487,7 @@ export default function ReviewsPage() {
                   style={{
                     backgroundColor: CARD_BG,
                     borderRadius: "10px",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(26,19,19,0.06)",
                     padding: "16px",
                     display: "flex",
                     gap: "12px",
@@ -501,8 +501,8 @@ export default function ReviewsPage() {
                     {tip.icon}
                   </span>
                   <div>
-                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>{tip.title}</div>
-                    <div style={{ fontSize: "12px", lineHeight: "1.5", color: "rgba(205,201,192,0.5)" }}>{tip.desc}</div>
+                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#1A1313", marginBottom: "4px" }}>{tip.title}</div>
+                    <div style={{ fontSize: "12px", lineHeight: "1.5", color: "rgba(26,19,19,0.5)" }}>{tip.desc}</div>
                   </div>
                 </div>
               ))}

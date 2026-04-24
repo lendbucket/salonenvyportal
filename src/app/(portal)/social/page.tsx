@@ -11,14 +11,14 @@ type Toast = { message: string; type: "success" | "error" } | null
 type CanvaDesign = { id: string; title: string; thumbnail?: { url: string }; created_at?: number; urls?: { edit_url?: string } }
 
 const ACC = "#606E74", ACC_B = "#7a8f96", ACC_DIM = "rgba(96,110,116,0.08)", ACC_BDR = "rgba(96,110,116,0.2)"
-const BORDER = "rgba(255,255,255,0.06)", BORDER2 = "rgba(255,255,255,0.08)", S1 = "rgba(255,255,255,0.03)", S2 = "rgba(255,255,255,0.05)"
-const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
-const MUTED = "rgba(255,255,255,0.3)", MID = "rgba(255,255,255,0.6)", GREEN = "#10B981", AMBER = "#ffb347"
+const BORDER = "rgba(26,19,19,0.06)", BORDER2 = "rgba(26,19,19,0.08)", S1 = "rgba(26,19,19,0.03)", S2 = "rgba(26,19,19,0.05)"
+const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const MUTED = "rgba(26,19,19,0.3)", MID = "rgba(26,19,19,0.6)", GREEN = "#10B981", AMBER = "#ffb347"
 const FB = "#1877F2", IG = "#bc1888", CANVA = "#00C4CC"
 const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
 const cs: React.CSSProperties = { backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "14px", padding: "20px", boxShadow: CARD_SHADOW }
-const inp: React.CSSProperties = { width: "100%", padding: "10px 14px", borderRadius: "8px", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER2}`, color: "#fff", fontSize: "16px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
+const inp: React.CSSProperties = { width: "100%", padding: "10px 14px", borderRadius: "8px", backgroundColor: "rgba(26,19,19,0.06)", border: `1px solid ${BORDER2}`, color: "#1A1313", fontSize: "16px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
 const lblS: React.CSSProperties = { ...mono, display: "block", fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: MUTED, marginBottom: "8px" }
 
 const TABS: { id: Tab; label: string }[] = [
@@ -148,12 +148,12 @@ export default function SocialPage() {
   const td = new Date(); const isToday = (d: number) => d === td.getDate() && cMo - 1 === td.getMonth() && cYr === td.getFullYear()
   const onDay = (d: number) => posts.filter(p => { const x = new Date(p.scheduledAt || p.publishedAt || p.createdAt); return x.getDate() === d && x.getMonth() === cMo - 1 && x.getFullYear() === cYr })
   const fbP = analytics?.fbPosts?.data || []; const igP = analytics?.igProfile || null
-  const Sk = ({ h = "34px" }: { h?: string }) => <div style={{ height: h, backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "6px", animation: "pulse 1.5s ease-in-out infinite" }} />
+  const Sk = ({ h = "34px" }: { h?: string }) => <div style={{ height: h, backgroundColor: "rgba(26,19,19,0.03)", borderRadius: "6px", animation: "pulse 1.5s ease-in-out infinite" }} />
 
   if (isStylist) return <div style={{ padding: "40px", textAlign: "center", color: MUTED }}><div style={{ fontSize: "16px", fontWeight: 700 }}>Owner / Manager Access Only</div></div>
 
   return (
-    <div style={{ ...jakarta, backgroundColor: "#06080d", minHeight: "100%", color: "#fff", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
+    <div style={{ ...jakarta, backgroundColor: "#F4F5F7", minHeight: "100%", color: "#1A1313", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       <style>{`@media(max-width:767px){.sg4{grid-template-columns:1fr 1fr !important}.sg2c{grid-template-columns:1fr !important}.comp-grid{grid-template-columns:1fr !important}.comp-prev{display:none !important}} @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}}`}</style>
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         {/* Header */}
@@ -181,8 +181,8 @@ export default function SocialPage() {
             {isOwner && <button onClick={() => window.location.href = "/api/social/oauth/facebook"} style={{ ...mono, fontSize: "10px", padding: "5px 10px", border: `1px dashed ${BORDER2}`, borderRadius: "8px", background: "none", color: MUTED, cursor: "pointer" }}>+ Add</button>}
           </div>
         ) : (
-          <div style={{ background: `linear-gradient(135deg, rgba(24,119,242,0.08) 0%, rgba(131,58,180,0.08) 100%)`, border: `1px solid rgba(255,255,255,0.08)`, borderRadius: "16px", padding: "40px 24px", textAlign: "center", marginBottom: "20px" }}>
-            <div style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB", marginBottom: "8px", ...jakarta }}>Connect Your Social Accounts</div>
+          <div style={{ background: `linear-gradient(135deg, rgba(24,119,242,0.08) 0%, rgba(131,58,180,0.08) 100%)`, border: `1px solid rgba(26,19,19,0.08)`, borderRadius: "16px", padding: "40px 24px", textAlign: "center", marginBottom: "20px" }}>
+            <div style={{ fontSize: "20px", fontWeight: 700, color: "#1A1313", marginBottom: "8px", ...jakarta }}>Connect Your Social Accounts</div>
             <div style={{ fontSize: "13px", color: ACC_B, marginBottom: "24px", maxWidth: "420px", margin: "0 auto 24px", lineHeight: 1.6, ...jakarta }}>
               Connect your Facebook and Instagram accounts to manage posts, view analytics, and engage with clients from one place.
             </div>
@@ -213,8 +213,8 @@ export default function SocialPage() {
             <button onClick={() => { if (cMo === 12) { setCMo(1); setCYr(y => y + 1) } else setCMo(m => m + 1) }} style={{ background: "none", border: `1px solid ${BORDER2}`, borderRadius: "6px", padding: "5px 8px", color: ACC_B, cursor: "pointer" }}><span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span></button>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "1px", background: BORDER }}>
-            {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => <div key={d} style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.1em", color: MUTED, padding: "8px", background: "#06080d", textAlign: "center" }}>{d}</div>)}
-            {cells.map((d, i) => (<div key={i} onClick={() => d && openComp(undefined, `${cYr}-${String(cMo).padStart(2, "0")}-${String(d).padStart(2, "0")}T10:00`)} style={{ minHeight: "90px", background: d ? isToday(d) ? ACC_DIM : S1 : "#06080d", padding: "6px", cursor: d ? "pointer" : "default", border: d && isToday(d) ? `1px solid ${ACC_BDR}` : "none" }}>
+            {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => <div key={d} style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.1em", color: MUTED, padding: "8px", background: "#F4F5F7", textAlign: "center" }}>{d}</div>)}
+            {cells.map((d, i) => (<div key={i} onClick={() => d && openComp(undefined, `${cYr}-${String(cMo).padStart(2, "0")}-${String(d).padStart(2, "0")}T10:00`)} style={{ minHeight: "90px", background: d ? isToday(d) ? ACC_DIM : S1 : "#F4F5F7", padding: "6px", cursor: d ? "pointer" : "default", border: d && isToday(d) ? `1px solid ${ACC_BDR}` : "none" }}>
               {d && <><div style={{ ...mono, fontSize: "11px", color: isToday(d) ? ACC_B : MUTED, fontWeight: isToday(d) ? 500 : 400 }}>{d}</div>
                 {onDay(d).slice(0, 3).map(p => <div key={p.id} onClick={e => { e.stopPropagation(); openComp(p) }} style={{ fontSize: "10px", padding: "2px 6px", borderRadius: "4px", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "pointer", background: p.platform === "facebook" ? "rgba(24,119,242,0.15)" : p.platform === "instagram" ? "rgba(188,24,136,0.15)" : ACC_DIM, color: p.platform === "facebook" ? FB : p.platform === "instagram" ? IG : ACC_B, border: `1px solid ${p.platform === "facebook" ? "rgba(24,119,242,0.25)" : p.platform === "instagram" ? "rgba(188,24,136,0.25)" : ACC_BDR}` }}>{p.content.slice(0, 18)}</div>)}
                 {onDay(d).length > 3 && <div style={{ ...mono, fontSize: "8px", color: MUTED, marginTop: "2px" }}>+{onDay(d).length - 3}</div>}</>}
@@ -378,7 +378,7 @@ export default function SocialPage() {
       {/* ═══ COMPOSER ═══ */}
       {showComp && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.9)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div className="comp-grid" style={{ display: "grid", gridTemplateColumns: "1fr 380px", width: "100%", maxWidth: "960px", maxHeight: "90vh", background: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "16px", overflow: "hidden" }}>
+          <div className="comp-grid" style={{ display: "grid", gridTemplateColumns: "1fr 380px", width: "100%", maxWidth: "960px", maxHeight: "90vh", background: "#FBFBFB", border: `1px solid ${BORDER2}`, borderRadius: "16px", overflow: "hidden" }}>
             {/* LEFT: Editor */}
             <div style={{ padding: "28px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "18px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -435,7 +435,7 @@ export default function SocialPage() {
                 {/* Status bar */}
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 20px 4px", fontSize: "11px", color: "#fff", fontWeight: 600 }}><span>9:41</span><span style={{ display: "flex", gap: "4px" }}><span style={{ fontSize: "9px" }}>5G</span></span></div>
                 {/* App header */}
-                <div style={{ padding: "8px 14px", borderBottom: `1px solid rgba(255,255,255,0.1)` }}><span style={{ fontSize: "16px", fontWeight: 700 }}>{prevMode === "instagram" ? "Instagram" : "Facebook"}</span></div>
+                <div style={{ padding: "8px 14px", borderBottom: `1px solid rgba(26,19,19,0.1)` }}><span style={{ fontSize: "16px", fontWeight: 700 }}>{prevMode === "instagram" ? "Instagram" : "Facebook"}</span></div>
                 {/* Post */}
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px" }}>
@@ -445,7 +445,7 @@ export default function SocialPage() {
                   {cImages.length > 0 ? <img src={cImages[0]} alt="" style={{ width: "100%", aspectRatio: prevMode === "instagram" ? "1" : "1.91", objectFit: "cover" }} /> : <div style={{ width: "100%", aspectRatio: prevMode === "instagram" ? "1" : "1.91", background: "#111", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={MUTED} strokeWidth="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="13" r="4" /></svg></div>}
                   {prevMode === "instagram" && <div style={{ display: "flex", gap: "14px", padding: "10px 12px" }}>{["favorite_border", "chat_bubble_outline", "send"].map(ic => <span key={ic} className="material-symbols-outlined" style={{ fontSize: "22px", color: "#fff" }}>{ic}</span>)}</div>}
                   <div style={{ padding: prevMode === "instagram" ? "0 12px 12px" : "8px 12px 12px" }}>
-                    {prevMode === "facebook" && <div style={{ display: "flex", gap: "12px", padding: "8px 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: "8px" }}>{["Like", "Comment", "Share"].map(a => <span key={a} style={{ fontSize: "11px", color: "#B0B3B8" }}>{a}</span>)}</div>}
+                    {prevMode === "facebook" && <div style={{ display: "flex", gap: "12px", padding: "8px 0", borderTop: "1px solid rgba(26,19,19,0.1)", borderBottom: "1px solid rgba(26,19,19,0.1)", marginBottom: "8px" }}>{["Like", "Comment", "Share"].map(a => <span key={a} style={{ fontSize: "11px", color: "#B0B3B8" }}>{a}</span>)}</div>}
                     <div style={{ fontSize: "12px", color: cContent ? "#E4E6EB" : MUTED, lineHeight: 1.5, maxHeight: "80px", overflow: "hidden" }}>
                       {prevMode === "instagram" && <span style={{ fontWeight: 600, marginRight: "4px" }}>{cLoc === "SA" ? "salonenvysa" : "salonenvyusa"}</span>}
                       {cContent || "Your caption here..."}
@@ -459,7 +459,7 @@ export default function SocialPage() {
       )}
 
       {/* Toast */}
-      {toast && <div style={{ position: "fixed", bottom: "100px", right: "20px", background: toast.type === "success" ? "rgba(16,185,129,0.15)" : "rgba(255,107,107,0.15)", border: `1px solid ${toast.type === "success" ? "rgba(16,185,129,0.3)" : "rgba(255,107,107,0.3)"}`, borderRadius: "10px", padding: "12px 20px", color: "#fff", fontSize: "13px", fontWeight: 500, zIndex: 999, backdropFilter: "blur(8px)", ...jakarta }}>{toast.message}</div>}
+      {toast && <div style={{ position: "fixed", bottom: "100px", right: "20px", background: toast.type === "success" ? "rgba(16,185,129,0.15)" : "rgba(255,107,107,0.15)", border: `1px solid ${toast.type === "success" ? "rgba(16,185,129,0.3)" : "rgba(255,107,107,0.3)"}`, borderRadius: "10px", padding: "12px 20px", color: "#1A1313", fontSize: "13px", fontWeight: 500, zIndex: 999, backdropFilter: "blur(8px)", ...jakarta }}>{toast.message}</div>}
 
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" />
     </div>

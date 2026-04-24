@@ -31,7 +31,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
         height: "24px",
         borderRadius: "12px",
         border: "none",
-        backgroundColor: checked ? "#7a8f96" : "rgba(255,255,255,0.1)",
+        backgroundColor: checked ? "#7a8f96" : "rgba(26,19,19,0.1)",
         position: "relative",
         cursor: "pointer",
         transition: "background-color 0.2s",
@@ -42,7 +42,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
         width: "18px",
         height: "18px",
         borderRadius: "50%",
-        backgroundColor: checked ? "#0f1d24" : "rgba(205,201,192,0.4)",
+        backgroundColor: checked ? "#1A1313" : "rgba(26,19,19,0.4)",
         position: "absolute",
         top: "3px",
         left: checked ? "23px" : "3px",
@@ -53,11 +53,11 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#0d1117",
-  border: "1px solid rgba(255,255,255,0.06)",
+  backgroundColor: "#FBFBFB",
+  border: "1px solid rgba(26,19,19,0.06)",
   borderRadius: "10px",
   padding: "28px",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)",
+  boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)",
 }
 
 export default function PreferencesPage() {
@@ -118,7 +118,7 @@ export default function PreferencesPage() {
       <h1 style={{
         fontSize: "32px",
         fontWeight: 800,
-        color: "#FBFBFB",
+        color: "#1A1313",
         marginBottom: "28px",
         letterSpacing: "-0.02em",
       }}>
@@ -146,13 +146,13 @@ export default function PreferencesPage() {
               alignItems: "center",
               justifyContent: "space-between",
               padding: "14px 0",
-              borderBottom: "1px solid rgba(255,255,255,0.04)",
+              borderBottom: "1px solid rgba(26,19,19,0.04)",
             }}>
               <div>
-                <div style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB", marginBottom: "3px" }}>
+                <div style={{ fontSize: "14px", fontWeight: 600, color: "#1A1313", marginBottom: "3px" }}>
                   {row.label}
                 </div>
-                <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.45)" }}>
+                <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.45)" }}>
                   {row.desc}
                 </div>
               </div>
@@ -213,7 +213,7 @@ export default function PreferencesPage() {
                   border: "none",
                   cursor: "pointer",
                   backgroundColor: prefs.defaultPeriod === key ? "#CDC9C0" : "transparent",
-                  color: prefs.defaultPeriod === key ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                  color: prefs.defaultPeriod === key ? "#1A1313" : "rgba(26,19,19,0.45)",
                   transition: "all 0.15s",
                 }}
               >
@@ -258,7 +258,7 @@ export default function PreferencesPage() {
                     border: "none",
                     cursor: "pointer",
                     backgroundColor: prefs.defaultLocation === key ? "#CDC9C0" : "transparent",
-                    color: prefs.defaultLocation === key ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                    color: prefs.defaultLocation === key ? "#1A1313" : "rgba(26,19,19,0.45)",
                     transition: "all 0.15s",
                   }}
                 >
@@ -277,7 +277,7 @@ export default function PreferencesPage() {
           style={{
             padding: "12px 28px",
             backgroundColor: "#CDC9C0",
-            color: "#0f1d24",
+            color: "#1A1313",
             border: "none",
             borderRadius: "8px",
             fontSize: "11px",

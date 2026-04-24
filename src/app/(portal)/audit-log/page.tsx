@@ -15,12 +15,12 @@ const ACC = "#606E74"
 const ACC_BRIGHT = "#7a8f96"
 const ACC_DIM = "rgba(96,110,116,0.08)"
 const ACC_BORDER = "rgba(96,110,116,0.2)"
-const BORDER = "rgba(255,255,255,0.06)"
-const BORDER2 = "rgba(255,255,255,0.08)"
-const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
-const S1 = "rgba(255,255,255,0.03)"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const BORDER = "rgba(26,19,19,0.06)"
+const BORDER2 = "rgba(26,19,19,0.08)"
+const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const S1 = "rgba(26,19,19,0.03)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#10B981"
 const AMBER = "#f59e0b"
 
@@ -129,7 +129,7 @@ export default function AuditLogPage() {
     } catch { /* noop */ }
   }
 
-  const inputStyle: React.CSSProperties = { padding: "8px 12px", fontSize: "16px", borderRadius: "8px", border: `1px solid ${BORDER2}`, backgroundColor: "rgba(255,255,255,0.06)", color: "#fff", outline: "none", width: "100%", boxSizing: "border-box" as const, ...jakarta }
+  const inputStyle: React.CSSProperties = { padding: "8px 12px", fontSize: "16px", borderRadius: "8px", border: `1px solid ${BORDER2}`, backgroundColor: "rgba(26,19,19,0.06)", color: "#1A1313", outline: "none", width: "100%", boxSizing: "border-box" as const, ...jakarta }
 
   const startIdx = (page - 1) * limit + 1
   const endIdx = Math.min(page * limit, total)
@@ -148,7 +148,7 @@ export default function AuditLogPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}>
         <div>
-          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>Audit Log</h1>
+          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: 0, letterSpacing: "-0.02em" }}>Audit Log</h1>
           <p style={{ ...mono, fontSize: "11px", color: MUTED, margin: "4px 0 0" }}>{total.toLocaleString()} entries</p>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
@@ -156,7 +156,7 @@ export default function AuditLogPage() {
             <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>filter_list</span>
             Filters{hasFilters ? " *" : ""}
           </button>
-          <button onClick={handleExport} style={{ padding: "8px 14px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", border: `1px solid ${BORDER2}`, borderRadius: "8px", backgroundColor: "rgba(255,255,255,0.04)", color: ACC_BRIGHT, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", ...jakarta }}>
+          <button onClick={handleExport} style={{ padding: "8px 14px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", border: `1px solid ${BORDER2}`, borderRadius: "8px", backgroundColor: "rgba(26,19,19,0.04)", color: ACC_BRIGHT, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", ...jakarta }}>
             <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>download</span>
             Export CSV
           </button>
@@ -165,7 +165,7 @@ export default function AuditLogPage() {
 
       {/* Filters */}
       {showFilters && (
-        <div style={{ backgroundColor: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "16px", marginBottom: "16px", boxShadow: CARD_SHADOW }}>
+        <div style={{ backgroundColor: "#FBFBFB", border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "16px", marginBottom: "16px", boxShadow: CARD_SHADOW }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px", marginBottom: "12px" }}>
             <div>
               <label style={{ ...mono, display: "block", fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "6px" }}>Action</label>
@@ -234,7 +234,7 @@ export default function AuditLogPage() {
 
       {/* Log entries */}
       {!loading && !error && logs.length > 0 && (
-        <div style={{ backgroundColor: "#0d1117", border: `1px solid rgba(26,35,50,0.8)`, borderRadius: "12px", overflow: "hidden", boxShadow: CARD_SHADOW }}>
+        <div style={{ backgroundColor: "#FBFBFB", border: `1px solid rgba(26,35,50,0.8)`, borderRadius: "12px", overflow: "hidden", boxShadow: CARD_SHADOW }}>
           {logs.map((log, i) => {
             const ac = getActionColor(log.action)
             const hasMeta = log.metadata && Object.keys(log.metadata).length > 0
@@ -249,7 +249,7 @@ export default function AuditLogPage() {
                   <span style={{ ...mono, fontSize: "9px", padding: "2px 8px", borderRadius: "4px", backgroundColor: ac.bg, color: ac.text, textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>{log.action.replace(/_/g, " ")}</span>
 
                   {/* Entity */}
-                  <span style={{ fontSize: "13px", color: "#fff", ...jakarta }}>
+                  <span style={{ fontSize: "13px", color: "#1A1313", ...jakarta }}>
                     {log.entity}
                     {log.entityId && <span style={{ ...mono, fontSize: "11px", color: MUTED, marginLeft: "4px" }}>#{log.entityId.slice(-8)}</span>}
                   </span>

@@ -24,9 +24,9 @@ export default function AddInventoryPage() {
       </p>
       <div className="mt-8">
         {loading ? (
-          <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>Loading locations...</div>
+          <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "13px" }}>Loading locations...</div>
         ) : locations.length === 0 ? (
-          <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>No locations found.</div>
+          <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "13px" }}>No locations found.</div>
         ) : (
           <AddInventoryForm locations={locations} />
         )}

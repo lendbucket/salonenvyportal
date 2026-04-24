@@ -97,19 +97,19 @@ export default function MySchedulePage() {
         </div>
       )}
 
-      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>My Schedule</h1>
+      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>My Schedule</h1>
       <p style={{ fontSize: "12px", color: "#94A3B8", margin: "0 0 24px" }}>Your upcoming shifts</p>
 
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : shifts.length === 0 ? (
-        <div style={{ backgroundColor: "#1a2a32", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
+        <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "16px" }}>event_busy</span>
-          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 8px" }}>No shifts scheduled</p>
+          <p style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", margin: "0 0 8px" }}>No shifts scheduled</p>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>Your upcoming shifts will appear here once assigned.</p>
         </div>
       ) : (
@@ -118,14 +118,14 @@ export default function MySchedulePage() {
             const badge = dayLabel(sh.date)
             return (
               <div key={sh.id} style={{
-                backgroundColor: sh.isTimeOff ? "rgba(239,68,68,0.06)" : "#1a2a32",
-                border: `1px solid ${sh.isTimeOff ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.06)"}`,
+                backgroundColor: sh.isTimeOff ? "rgba(239,68,68,0.06)" : "#FBFBFB",
+                border: `1px solid ${sh.isTimeOff ? "rgba(239,68,68,0.2)" : "rgba(26,19,19,0.06)"}`,
                 borderRadius: "12px",
                 padding: "16px 20px",
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{formatDay(sh.date)}</span>
+                    <span style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313" }}>{formatDay(sh.date)}</span>
                     {badge && (
                       <span style={{
                         padding: "2px 8px",

@@ -8,12 +8,12 @@ const ACC = "#606E74"
 const ACC_BRIGHT = "#7a8f96"
 const ACC_DIM = "rgba(96,110,116,0.08)"
 const ACC_BORDER = "rgba(96,110,116,0.2)"
-const BORDER = "rgba(255,255,255,0.07)"
-const BORDER2 = "rgba(255,255,255,0.12)"
-const S1 = "rgba(255,255,255,0.03)"
-const S2 = "rgba(255,255,255,0.05)"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const BORDER = "rgba(26,19,19,0.07)"
+const BORDER2 = "rgba(26,19,19,0.12)"
+const S1 = "rgba(26,19,19,0.03)"
+const S2 = "rgba(26,19,19,0.05)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#10B981"
 const BLUE = "#4da6ff"
 const AMBER = "#ffb347"
@@ -218,10 +218,10 @@ export default function StyleCreditPage() {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "10px 12px",
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: "rgba(26,19,19,0.06)",
     border: `1px solid ${BORDER2}`,
     borderRadius: "8px",
-    color: "#FBFBFB",
+    color: "#1A1313",
     fontSize: "14px",
     outline: "none",
     boxSizing: "border-box" as const,
@@ -243,7 +243,7 @@ export default function StyleCreditPage() {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 500 }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 60, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 60, background: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       </div>
@@ -253,7 +253,7 @@ export default function StyleCreditPage() {
   if (!hasAccess) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>StyleCredit</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#1A1313", marginBottom: 8 }}>StyleCredit</div>
         <div style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
         <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Inter, sans-serif" }}>View Plans</button>
       </div>
@@ -265,8 +265,8 @@ export default function StyleCreditPage() {
       style={{
         ...jakarta,
         minHeight: "100vh",
-        backgroundColor: "#06080d",
-        color: "#fff",
+        backgroundColor: "#F4F5F7",
+        color: "#1A1313",
         position: "relative",
       }}
     >
@@ -401,7 +401,7 @@ export default function StyleCreditPage() {
               style={{
                 fontSize: "13px",
                 fontWeight: 700,
-                color: "#fff",
+                color: "#1A1313",
                 marginBottom: "4px",
               }}
             >
@@ -638,7 +638,7 @@ export default function StyleCreditPage() {
                               background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`,
                               border: "none",
                               borderRadius: "7px",
-                              color: "#fff",
+                              color: "#1A1313",
                               fontSize: "11px",
                               fontWeight: 700,
                               cursor: "pointer",
@@ -681,7 +681,7 @@ export default function StyleCreditPage() {
                               background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`,
                               border: "none",
                               borderRadius: "7px",
-                              color: "#fff",
+                              color: "#1A1313",
                               fontSize: "11px",
                               fontWeight: 700,
                               cursor: "pointer",
@@ -866,7 +866,7 @@ export default function StyleCreditPage() {
                           style={{
                             padding: "10px",
                             background: isActive
-                              ? "rgba(255,255,255,0.05)"
+                              ? "rgba(26,19,19,0.05)"
                               : S2,
                             border: `1px solid ${isActive ? tier.color + "40" : BORDER}`,
                             borderRadius: "7px",
@@ -1164,7 +1164,7 @@ export default function StyleCreditPage() {
                         key={t.period}
                         style={{
                           padding: "12px",
-                          background: "rgba(255,255,255,0.02)",
+                          background: "rgba(26,19,19,0.02)",
                           border: `1px solid ${BORDER}`,
                           borderRadius: "8px",
                           textAlign: "center",
@@ -1404,7 +1404,7 @@ export default function StyleCreditPage() {
                         background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`,
                         border: "none",
                         borderRadius: "8px",
-                        color: "#fff",
+                        color: "#1A1313",
                         fontSize: "12px",
                         fontWeight: 700,
                         cursor: "pointer",
@@ -1542,7 +1542,7 @@ export default function StyleCreditPage() {
                   >
                     <div
                       style={{
-                        background: "#0d1117",
+                        background: "#FBFBFB",
                         border: `1px solid ${BORDER2}`,
                         borderRadius: "14px",
                         padding: "24px",
@@ -1589,7 +1589,7 @@ export default function StyleCreditPage() {
                         style={{
                           flex: 1,
                           overflow: "auto",
-                          background: "rgba(255,255,255,0.02)",
+                          background: "rgba(26,19,19,0.02)",
                           border: `1px solid ${BORDER}`,
                           borderRadius: "8px",
                           padding: "16px",
@@ -1623,7 +1623,7 @@ export default function StyleCreditPage() {
                             background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`,
                             border: "none",
                             borderRadius: "8px",
-                            color: "#fff",
+                            color: "#1A1313",
                             fontSize: "12px",
                             fontWeight: 700,
                             cursor: "pointer",
@@ -1895,7 +1895,7 @@ export default function StyleCreditPage() {
                       background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`,
                       border: "none",
                       borderRadius: "7px",
-                      color: "#fff",
+                      color: "#1A1313",
                       fontSize: "11px",
                       fontWeight: 700,
                       cursor: "pointer",
@@ -2098,7 +2098,7 @@ export default function StyleCreditPage() {
                   >
                     <div
                       style={{
-                        background: "#0d1117",
+                        background: "#FBFBFB",
                         border: `1px solid ${BORDER2}`,
                         borderRadius: "14px",
                         padding: "28px",
@@ -2247,7 +2247,7 @@ export default function StyleCreditPage() {
                             background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`,
                             border: "none",
                             borderRadius: "7px",
-                            color: "#fff",
+                            color: "#1A1313",
                             fontSize: "12px",
                             fontWeight: 700,
                             cursor: "pointer",

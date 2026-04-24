@@ -44,7 +44,7 @@ function badgeFor(status: string) {
   if (s === "active" || s === "accepted")
     return "bg-emerald-500/15 text-emerald-400 ring-emerald-500/30";
   if (s === "invited") return "bg-amber-500/15 text-amber-300 ring-amber-500/35";
-  return "bg-neutral-600/30 text-neutral-400 ring-neutral-500/30";
+  return "bg-neutral-600/30 text-[rgba(26,19,19,0.55)] ring-neutral-500/30";
 }
 
 function labelFor(status: string) {
@@ -389,11 +389,11 @@ export default function StaffPage() {
     return (
       <li
         key={m.id}
-        className="rounded-2xl border border-[#1a2332] bg-[#0d1117] p-5 transition hover:border-[#7a8f96]/25"
-        style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)" }}
+        className="rounded-2xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] p-5 transition hover:border-[#7a8f96]/25"
+        style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)" }}
       >
         <div className="flex items-start gap-3">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#0d1117] text-sm font-semibold text-[#7a8f96] ring-1 ring-[#7a8f96]/30">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#F4F5F7] text-sm font-semibold text-[#7a8f96] ring-1 ring-[#7a8f96]/30">
             {initials(m.fullName)}
           </div>
           <div className="min-w-0 flex-1">
@@ -454,13 +454,13 @@ export default function StaffPage() {
               </Link>
             )}
             {m.phone && (
-              <p className="text-xs text-neutral-500">{m.phone}</p>
+              <p className="text-xs text-[rgba(26,19,19,0.45)]">{m.phone}</p>
             )}
-            <p className="mt-1 text-xs text-neutral-600">{m.location.name}</p>
+            <p className="mt-1 text-xs text-[rgba(26,19,19,0.35)]">{m.location.name}</p>
 
             {/* TDLR details */}
             {m.tdlrLicenseNumber && (
-              <p className="mt-1 text-[11px] text-neutral-500">
+              <p className="mt-1 text-[11px] text-[rgba(26,19,19,0.45)]">
                 License: {m.tdlrLicenseNumber}
                 {m.tdlrExpirationDate && (
                   <> &middot; Exp: {new Date(m.tdlrExpirationDate).toLocaleDateString()}</>
@@ -469,7 +469,7 @@ export default function StaffPage() {
             )}
 
             {m.createdAt && (
-              <p className="text-[10px] text-neutral-600">
+              <p className="text-[10px] text-[rgba(26,19,19,0.35)]">
                 Joined {new Date(m.createdAt).toLocaleDateString()}
               </p>
             )}
@@ -517,7 +517,7 @@ export default function StaffPage() {
     <div className="p-4 md:p-8">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-semibold text-neutral-100">Staff</h1>
+        <h1 className="text-2xl font-semibold text-[#1A1313]">Staff</h1>
         <button
           type="button"
           onClick={() => setShowInviteModal(true)}
@@ -549,7 +549,7 @@ export default function StaffPage() {
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
                 locationTab === "all"
                   ? "bg-[#7a8f96] text-[#06080d]"
-                  : "bg-[#0d1117] text-neutral-400 hover:bg-[#1a2332]"
+                  : "bg-[#FBFBFB] text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
               }`}
             >
               All
@@ -562,7 +562,7 @@ export default function StaffPage() {
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
                   locationTab === loc.id
                     ? "bg-[#7a8f96] text-[#06080d]"
-                    : "bg-[#0d1117] text-neutral-400 hover:bg-[#1a2332]"
+                    : "bg-[#FBFBFB] text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
                 }`}
               >
                 {loc.name}
@@ -581,7 +581,7 @@ export default function StaffPage() {
               className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition ${
                 roleFilter === r
                   ? "bg-[#7a8f96] text-[#06080d]"
-                  : "bg-[#0d1117] text-neutral-400 hover:bg-[#1a2332]"
+                  : "bg-[#FBFBFB] text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
               }`}
             >
               {r === "all" ? "All Roles" : r}
@@ -591,12 +591,12 @@ export default function StaffPage() {
 
         {/* Search */}
         <div className="relative flex-1 sm:max-w-xs">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-500" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[rgba(26,19,19,0.45)]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search name or email..."
-            className="w-full rounded-xl border border-[#1a2332] bg-[#0d1117] py-2 pl-9 pr-3 text-sm text-neutral-200 placeholder-neutral-600 outline-none focus:border-[#7a8f96]/40"
+            className="w-full rounded-xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] py-2 pl-9 pr-3 text-sm text-[rgba(26,19,19,0.85)] placeholder-[rgba(26,19,19,0.35)] outline-none focus:border-[#7a8f96]/40"
           />
         </div>
 
@@ -609,7 +609,7 @@ export default function StaffPage() {
               onChange={(e) => setShowInactive(e.target.checked)}
               className="size-4 accent-[#7a8f96]"
             />
-            <span className="text-xs text-neutral-400">Show Inactive</span>
+            <span className="text-xs text-[rgba(26,19,19,0.55)]">Show Inactive</span>
           </label>
         )}
       </div>
@@ -617,18 +617,18 @@ export default function StaffPage() {
       {err && <p className="mt-4 text-sm text-red-400">{err}</p>}
 
       {loading ? (
-        <p className="mt-8 text-sm text-neutral-500">Loading team...</p>
+        <p className="mt-8 text-sm text-[rgba(26,19,19,0.45)]">Loading team...</p>
       ) : filtered.length === 0 ? (
-        <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-[#1a2332] bg-[#0d1117] px-6 py-16 text-center">
-          <Users className="size-12 text-neutral-600" />
-          <p className="mt-4 text-neutral-400">No staff found for this filter.</p>
+        <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-6 py-16 text-center">
+          <Users className="size-12 text-[rgba(26,19,19,0.35)]" />
+          <p className="mt-4 text-[rgba(26,19,19,0.55)]">No staff found for this filter.</p>
         </div>
       ) : grouped ? (
         // Grouped by location
         <div className="mt-8 space-y-8">
           {grouped.map((g) => (
             <div key={g.name}>
-              <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-neutral-500">
+              <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-[rgba(26,19,19,0.45)]">
                 {g.name} ({g.members.length})
               </h2>
               <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -644,34 +644,34 @@ export default function StaffPage() {
       )}
 
       {/* Last refresh indicator */}
-      <p className="mt-4 text-[10px] text-neutral-600" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <p className="mt-4 text-[10px] text-[rgba(26,19,19,0.35)]" style={{ fontFamily: "'Inter', sans-serif" }}>
         Last refreshed {lastRefresh.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" })}
       </p>
 
       {/* ---- Invite Staff Modal ---- */}
       {showInviteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-[#1a2332] bg-[#0d1117] p-6" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)" }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] p-6" style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)" }}>
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-neutral-100">Invite Staff Member</h2>
+              <h2 className="text-lg font-bold text-[#1A1313]">Invite Staff Member</h2>
               <button type="button" onClick={() => setShowInviteModal(false)}>
-                <X className="size-5 text-neutral-500 hover:text-neutral-300" />
+                <X className="size-5 text-[rgba(26,19,19,0.45)] hover:text-[rgba(26,19,19,0.7)]" />
               </button>
             </div>
             <div className="flex flex-col gap-4">
               <div>
-                <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">
                   Full Name *
                 </label>
                 <input
                   value={inviteForm.fullName}
                   onChange={(e) => setInviteForm({ ...inviteForm, fullName: e.target.value })}
                   placeholder="Jane Doe"
-                  className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#7a8f96]/40"
+                  className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">
                   Email *
                 </label>
                 <input
@@ -679,11 +679,11 @@ export default function StaffPage() {
                   value={inviteForm.email}
                   onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
                   placeholder="jane@example.com"
-                  className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#7a8f96]/40"
+                  className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">
                   Phone
                 </label>
                 <input
@@ -691,31 +691,31 @@ export default function StaffPage() {
                   value={inviteForm.phone}
                   onChange={(e) => setInviteForm({ ...inviteForm, phone: e.target.value })}
                   placeholder="(xxx) xxx-xxxx"
-                  className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-[#7a8f96]/40"
+                  className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none focus:border-[#7a8f96]/40"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                  <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">
                     Role
                   </label>
                   <select
                     value={inviteForm.role}
                     onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
-                    className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none"
+                    className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none"
                   >
                     <option value="stylist">Stylist</option>
                     <option value="manager">Manager</option>
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                  <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">
                     Location *
                   </label>
                   <select
                     value={inviteForm.locationId}
                     onChange={(e) => setInviteForm({ ...inviteForm, locationId: e.target.value })}
-                    className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none"
+                    className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none"
                   >
                     {locations.map((loc) => (
                       <option key={loc.id} value={loc.id}>
@@ -732,14 +732,14 @@ export default function StaffPage() {
                   onChange={(e) => setInviteForm({ ...inviteForm, sendOnboarding: e.target.checked })}
                   className="size-4 accent-[#7a8f96]"
                 />
-                <span className="text-sm text-neutral-300">Send onboarding enrollment link</span>
+                <span className="text-sm text-[rgba(26,19,19,0.7)]">Send onboarding enrollment link</span>
               </label>
             </div>
             <div className="mt-6 flex gap-3">
               <button
                 type="button"
                 onClick={() => setShowInviteModal(false)}
-                className="flex-1 rounded-xl border border-[#1a2332] py-2.5 text-sm font-medium text-neutral-400 hover:bg-[#0d1117]"
+                className="flex-1 rounded-xl border border-[rgba(26,19,19,0.08)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
               >
                 Cancel
               </button>
@@ -762,14 +762,14 @@ export default function StaffPage() {
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} onClick={closeLicenseModal} />
           <div style={{
             position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-            width: "min(520px, calc(100vw - 32px))", background: "#0d1117",
-            border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28,
-            boxShadow: "0 20px 60px rgba(0,0,0,0.8)", maxHeight: "90vh", overflowY: "auto" as const, zIndex: 301,
+            width: "min(520px, calc(100vw - 32px))", background: "#FBFBFB",
+            border: "1px solid rgba(26,19,19,0.1)", borderRadius: 16, padding: 28,
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)", maxHeight: "90vh", overflowY: "auto" as const, zIndex: 301,
           }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
               <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: "#FBFBFB", margin: 0 }}>{licenseModal.staffName}</h2>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: "#1A1313", margin: 0 }}>{licenseModal.staffName}</h2>
                 {licenseModal.currentStatus && (() => {
                   const tb2 = tdlrBadge({ tdlrStatus: licenseModal.currentStatus, tdlrExpirationDate: null } as StaffRow)
                   return (
@@ -795,7 +795,7 @@ export default function StaffPage() {
                 value={licenseInput}
                 onChange={(e) => setLicenseInput(e.target.value)}
                 placeholder="e.g. 123456 or COST123456"
-                style={{ width: "100%", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", padding: "14px 16px", fontFamily: "'Inter', sans-serif", fontSize: 16, color: "#FBFBFB", outline: "none", boxSizing: "border-box" as const }}
+                style={{ width: "100%", borderRadius: 12, border: "1px solid rgba(26,19,19,0.12)", background: "#FBFBFB", padding: "14px 16px", fontFamily: "'Inter', sans-serif", fontSize: 16, color: "#1A1313", outline: "none", boxSizing: "border-box" as const }}
               />
             </div>
 
@@ -807,7 +807,7 @@ export default function StaffPage() {
               style={{
                 display: "flex", width: "100%", alignItems: "center", justifyContent: "center", gap: 8,
                 marginTop: 12, borderRadius: 12, border: "1px solid #7a8f96", padding: "12px 0",
-                fontSize: 15, fontWeight: 600, color: "#FBFBFB", cursor: "pointer", transition: "all 0.15s",
+                fontSize: 15, fontWeight: 600, color: "#1A1313", cursor: "pointer", transition: "all 0.15s",
                 background: licenseVerifying ? "rgba(96,110,116,0.2)" : "rgba(122,143,150,0.15)",
                 opacity: (licenseVerifying || !licenseInput.trim()) ? 0.4 : 1,
               }}
@@ -834,7 +834,7 @@ export default function StaffPage() {
                     { label: "CITY", value: licenseResult.city || "" },
                     { label: "ISSUED STATE", value: "TEXAS" },
                   ].filter(r => !!r.value).map((r, idx, arr) => (
-                    <div key={r.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: idx < arr.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+                    <div key={r.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: idx < arr.length - 1 ? "1px solid rgba(26,19,19,0.05)" : "none" }}>
                       <span style={{ fontSize: 11, fontWeight: 600, color: "#606E74", letterSpacing: "0.04em" }}>{r.label}</span>
                       {r.label === "LICENSE STATUS" ? (
                         <span style={{
@@ -843,7 +843,7 @@ export default function StaffPage() {
                           color: r.value === "ACTIVE" ? "#34d399" : r.value === "EXPIRED" ? "#f87171" : "#fbbf24",
                         }}>{r.value}</span>
                       ) : (
-                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500, color: "#FBFBFB" }}>{r.value}</span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500, color: "#1A1313" }}>{r.value}</span>
                       )}
                     </div>
                   ))}
@@ -872,10 +872,10 @@ export default function StaffPage() {
 
                 {showOverride && (
                   <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 10 }}>
-                    <input value={overrideForm.holderName} onChange={e => setOverrideForm(f => ({ ...f, holderName: e.target.value }))} placeholder="Holder Name (e.g. ESPINOSA, CLARISSA)" style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", boxSizing: "border-box" as const }} />
-                    <input value={overrideForm.licenseType} onChange={e => setOverrideForm(f => ({ ...f, licenseType: e.target.value }))} placeholder="License Type" style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", boxSizing: "border-box" as const }} />
-                    <input type="date" value={overrideForm.expirationDate} onChange={e => setOverrideForm(f => ({ ...f, expirationDate: e.target.value }))} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", colorScheme: "dark", boxSizing: "border-box" as const }} />
-                    <select value={overrideForm.status} onChange={e => setOverrideForm(f => ({ ...f, status: e.target.value }))} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 14, outline: "none", boxSizing: "border-box" as const }}>
+                    <input value={overrideForm.holderName} onChange={e => setOverrideForm(f => ({ ...f, holderName: e.target.value }))} placeholder="Holder Name (e.g. ESPINOSA, CLARISSA)" style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(26,19,19,0.12)", background: "#FBFBFB", color: "#1A1313", fontSize: 14, outline: "none", boxSizing: "border-box" as const }} />
+                    <input value={overrideForm.licenseType} onChange={e => setOverrideForm(f => ({ ...f, licenseType: e.target.value }))} placeholder="License Type" style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(26,19,19,0.12)", background: "#FBFBFB", color: "#1A1313", fontSize: 14, outline: "none", boxSizing: "border-box" as const }} />
+                    <input type="date" value={overrideForm.expirationDate} onChange={e => setOverrideForm(f => ({ ...f, expirationDate: e.target.value }))} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(26,19,19,0.12)", background: "#FBFBFB", color: "#1A1313", fontSize: 14, outline: "none", colorScheme: "light", boxSizing: "border-box" as const }} />
+                    <select value={overrideForm.status} onChange={e => setOverrideForm(f => ({ ...f, status: e.target.value }))} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(26,19,19,0.12)", background: "#FBFBFB", color: "#1A1313", fontSize: 14, outline: "none", boxSizing: "border-box" as const }}>
                       <option value="ACTIVE">ACTIVE</option>
                       <option value="EXPIRED">EXPIRED</option>
                       <option value="INACTIVE">INACTIVE</option>
@@ -894,7 +894,7 @@ export default function StaffPage() {
             )}
 
             {/* Send verification link */}
-            <div style={{ marginTop: 20, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
+            <div style={{ marginTop: 20, borderTop: "1px solid rgba(26,19,19,0.06)", paddingTop: 16 }}>
               <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", color: "#606E74", marginBottom: 10 }}>Send Verification Link</p>
               {licenseSendStatus && (
                 <p style={{ fontSize: 12, fontWeight: 600, color: "#7a8f96", marginBottom: 8 }}>{licenseSendStatus}</p>
@@ -904,7 +904,7 @@ export default function StaffPage() {
                   type="button"
                   onClick={() => handleSendVerification("sms")}
                   disabled={!licenseModal.phone}
-                  style={{ flex: 1, borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "transparent", padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#7a8f96", cursor: licenseModal.phone ? "pointer" : "not-allowed", opacity: licenseModal.phone ? 1 : 0.3 }}
+                  style={{ flex: 1, borderRadius: 8, border: "1px solid rgba(26,19,19,0.1)", background: "transparent", padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#7a8f96", cursor: licenseModal.phone ? "pointer" : "not-allowed", opacity: licenseModal.phone ? 1 : 0.3 }}
                 >
                   Send via SMS
                 </button>
@@ -912,7 +912,7 @@ export default function StaffPage() {
                   type="button"
                   onClick={() => handleSendVerification("email")}
                   disabled={!licenseModal.email}
-                  style={{ flex: 1, borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "transparent", padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#7a8f96", cursor: licenseModal.email ? "pointer" : "not-allowed", opacity: licenseModal.email ? 1 : 0.3 }}
+                  style={{ flex: 1, borderRadius: 8, border: "1px solid rgba(26,19,19,0.1)", background: "transparent", padding: "10px 12px", fontSize: 13, fontWeight: 500, color: "#7a8f96", cursor: licenseModal.email ? "pointer" : "not-allowed", opacity: licenseModal.email ? 1 : 0.3 }}
                 >
                   Send via Email
                 </button>
@@ -924,8 +924,8 @@ export default function StaffPage() {
 
       {/* ---- Offboarding Modal ---- */}
       {offboardTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-lg rounded-2xl border border-red-500/20 bg-[#0d1117] p-6" style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.8)", maxHeight: "90vh", overflowY: "auto" }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+          <div className="w-full max-w-lg rounded-2xl border border-red-500/20 bg-[#FBFBFB] p-6" style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)", maxHeight: "90vh", overflowY: "auto" }}>
             {offboardResult ? (
               /* Success state */
               <div>
@@ -933,13 +933,13 @@ export default function StaffPage() {
                   <div className="flex size-10 items-center justify-center rounded-full bg-emerald-500/15">
                     <span className="text-lg text-emerald-400">&#10003;</span>
                   </div>
-                  <h2 className="text-lg font-bold text-neutral-100">Offboarding Complete</h2>
+                  <h2 className="text-lg font-bold text-[#1A1313]">Offboarding Complete</h2>
                 </div>
-                <div className="flex flex-col gap-2 rounded-xl border border-[#1a2332] bg-[#0a0e14] p-4">
-                  <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-neutral-300">{offboardResult.squareDeactivated ? "Square account deactivated" : "No Square account to deactivate"}</span></div>
-                  <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-neutral-300">{offboardResult.appointmentsCancelled} future appointment{offboardResult.appointmentsCancelled !== 1 ? "s" : ""} cancelled</span></div>
-                  {offboardForm.sendNotice && <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-neutral-300">Termination notice sent</span></div>}
-                  <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-neutral-300">Offboarding record created</span></div>
+                <div className="flex flex-col gap-2 rounded-xl border border-[rgba(26,19,19,0.08)] bg-[#F4F5F7] p-4">
+                  <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-[rgba(26,19,19,0.7)]">{offboardResult.squareDeactivated ? "Square account deactivated" : "No Square account to deactivate"}</span></div>
+                  <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-[rgba(26,19,19,0.7)]">{offboardResult.appointmentsCancelled} future appointment{offboardResult.appointmentsCancelled !== 1 ? "s" : ""} cancelled</span></div>
+                  {offboardForm.sendNotice && <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-[rgba(26,19,19,0.7)]">Termination notice sent</span></div>}
+                  <div className="flex items-center gap-2 text-sm"><span className="text-emerald-400">&#10003;</span><span className="text-[rgba(26,19,19,0.7)]">Offboarding record created</span></div>
                 </div>
                 <button type="button" onClick={() => { setOffboardTarget(null); void load(); }} className="mt-5 w-full rounded-xl bg-[#7a8f96] py-2.5 text-sm font-bold text-[#06080d]">Done</button>
               </div>
@@ -948,7 +948,7 @@ export default function StaffPage() {
               <div>
                 <div className="mb-2 flex items-center justify-between">
                   <h2 className="text-lg font-bold text-red-400">Offboard {offboardTarget.fullName}</h2>
-                  <button type="button" onClick={() => setOffboardTarget(null)}><X className="size-5 text-neutral-500 hover:text-neutral-300" /></button>
+                  <button type="button" onClick={() => setOffboardTarget(null)}><X className="size-5 text-[rgba(26,19,19,0.45)] hover:text-[rgba(26,19,19,0.7)]" /></button>
                 </div>
                 {/* Warning banner */}
                 <div className="mb-5 rounded-xl border border-red-500/20 bg-red-500/5 p-3">
@@ -956,8 +956,8 @@ export default function StaffPage() {
                 </div>
                 <div className="flex flex-col gap-4">
                   <div>
-                    <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">Termination Type</label>
-                    <select value={offboardForm.terminationType} onChange={(e) => setOffboardForm({ ...offboardForm, terminationType: e.target.value })} className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none">
+                    <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Termination Type</label>
+                    <select value={offboardForm.terminationType} onChange={(e) => setOffboardForm({ ...offboardForm, terminationType: e.target.value })} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none">
                       <option value="voluntary">Voluntary Resignation</option>
                       <option value="involuntary">Involuntary Termination</option>
                       <option value="mutual">Mutual Agreement</option>
@@ -966,22 +966,22 @@ export default function StaffPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">Termination Date</label>
-                      <input type="date" value={offboardForm.terminationDate} onChange={(e) => setOffboardForm({ ...offboardForm, terminationDate: e.target.value })} className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none" style={{ colorScheme: "dark" }} />
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Termination Date</label>
+                      <input type="date" value={offboardForm.terminationDate} onChange={(e) => setOffboardForm({ ...offboardForm, terminationDate: e.target.value })} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none" style={{ colorScheme: "light" }} />
                     </div>
                     <div>
-                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">Last Working Day</label>
-                      <input type="date" value={offboardForm.lastWorkingDay} onChange={(e) => setOffboardForm({ ...offboardForm, lastWorkingDay: e.target.value })} className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none" style={{ colorScheme: "dark" }} />
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Last Working Day</label>
+                      <input type="date" value={offboardForm.lastWorkingDay} onChange={(e) => setOffboardForm({ ...offboardForm, lastWorkingDay: e.target.value })} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none" style={{ colorScheme: "light" }} />
                     </div>
                   </div>
                   <div>
-                    <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-neutral-400">Reason *</label>
-                    <textarea value={offboardForm.reason} onChange={(e) => setOffboardForm({ ...offboardForm, reason: e.target.value })} placeholder="Describe the reason for termination (min 20 chars)..." rows={3} className="w-full rounded-lg border border-[#1a2332] bg-[#0d1117] px-3 py-2.5 text-sm text-neutral-100 outline-none resize-none" />
+                    <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-[rgba(26,19,19,0.55)]">Reason *</label>
+                    <textarea value={offboardForm.reason} onChange={(e) => setOffboardForm({ ...offboardForm, reason: e.target.value })} placeholder="Describe the reason for termination (min 20 chars)..." rows={3} className="w-full rounded-lg border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] px-3 py-2.5 text-sm text-[#1A1313] outline-none resize-none" />
                     {offboardForm.reason.length > 0 && offboardForm.reason.length < 20 && <p className="mt-1 text-[11px] text-red-400">{20 - offboardForm.reason.length} more characters needed</p>}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" checked={offboardForm.cancelAppointments} onChange={(e) => setOffboardForm({ ...offboardForm, cancelAppointments: e.target.checked })} className="size-4 accent-[#7a8f96]" /><span className="text-sm text-neutral-300">Cancel all future appointments and notify clients</span></label>
-                    <label className="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" checked={offboardForm.sendNotice} onChange={(e) => setOffboardForm({ ...offboardForm, sendNotice: e.target.checked })} className="size-4 accent-[#7a8f96]" /><span className="text-sm text-neutral-300">Send termination notice to contractor</span></label>
+                    <label className="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" checked={offboardForm.cancelAppointments} onChange={(e) => setOffboardForm({ ...offboardForm, cancelAppointments: e.target.checked })} className="size-4 accent-[#7a8f96]" /><span className="text-sm text-[rgba(26,19,19,0.7)]">Cancel all future appointments and notify clients</span></label>
+                    <label className="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" checked={offboardForm.sendNotice} onChange={(e) => setOffboardForm({ ...offboardForm, sendNotice: e.target.checked })} className="size-4 accent-[#7a8f96]" /><span className="text-sm text-[rgba(26,19,19,0.7)]">Send termination notice to contractor</span></label>
                   </div>
                   <label className="flex items-start gap-2.5 cursor-pointer rounded-xl border border-red-500/20 bg-red-500/5 p-3">
                     <input type="checkbox" checked={offboardForm.confirmed} onChange={(e) => setOffboardForm({ ...offboardForm, confirmed: e.target.checked })} className="size-4 accent-red-500 mt-0.5" />
@@ -989,7 +989,7 @@ export default function StaffPage() {
                   </label>
                 </div>
                 <div className="mt-5 flex gap-3">
-                  <button type="button" onClick={() => setOffboardTarget(null)} className="flex-1 rounded-xl border border-[#1a2332] py-2.5 text-sm font-medium text-neutral-400 hover:bg-[#0d1117]">Cancel</button>
+                  <button type="button" onClick={() => setOffboardTarget(null)} className="flex-1 rounded-xl border border-[rgba(26,19,19,0.08)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]">Cancel</button>
                   <button
                     type="button"
                     disabled={offboarding || !offboardForm.confirmed || offboardForm.reason.length < 20}
@@ -1035,27 +1035,27 @@ export default function StaffPage() {
 
       {/* ---- Send Enrollment Modal ---- */}
       {enrollTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-sm rounded-2xl border border-[#1a2332] bg-[#0d1117] p-6" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)" }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+          <div className="w-full max-w-sm rounded-2xl border border-[rgba(26,19,19,0.08)] bg-[#FBFBFB] p-6" style={{ boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)" }}>
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-neutral-100">Send Enrollment</h2>
+              <h2 className="text-lg font-bold text-[#1A1313]">Send Enrollment</h2>
               <button type="button" onClick={() => setEnrollTarget(null)}>
-                <X className="size-5 text-neutral-500 hover:text-neutral-300" />
+                <X className="size-5 text-[rgba(26,19,19,0.45)] hover:text-[rgba(26,19,19,0.7)]" />
               </button>
             </div>
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-[rgba(26,19,19,0.55)]">
               Send an onboarding enrollment link to{" "}
-              <strong className="text-neutral-200">{enrollTarget.fullName}</strong> at{" "}
-              <strong className="text-neutral-200">{enrollTarget.email}</strong>?
+              <strong className="text-[rgba(26,19,19,0.85)]">{enrollTarget.fullName}</strong> at{" "}
+              <strong className="text-[rgba(26,19,19,0.85)]">{enrollTarget.email}</strong>?
             </p>
-            <p className="mt-2 text-xs text-neutral-500">
+            <p className="mt-2 text-xs text-[rgba(26,19,19,0.45)]">
               They will receive an email with a link to complete their enrollment (personal info, license, W-9, direct deposit, etc).
             </p>
             <div className="mt-6 flex gap-3">
               <button
                 type="button"
                 onClick={() => setEnrollTarget(null)}
-                className="flex-1 rounded-xl border border-[#1a2332] py-2.5 text-sm font-medium text-neutral-400 hover:bg-[#0d1117]"
+                className="flex-1 rounded-xl border border-[rgba(26,19,19,0.08)] py-2.5 text-sm font-medium text-[rgba(26,19,19,0.55)] hover:bg-[rgba(26,19,19,0.04)]"
               >
                 Cancel
               </button>

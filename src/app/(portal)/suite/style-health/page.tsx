@@ -8,12 +8,12 @@ const ACC_BRIGHT = "#7a8f96"
 const ACC_DIM = "rgba(96,110,116,0.08)"
 const ACC_BORDER = "rgba(96,110,116,0.2)"
 const AMBER = "#ffb347"
-const BORDER = "rgba(255,255,255,0.07)"
-const BORDER2 = "rgba(255,255,255,0.12)"
-const S1 = "rgba(255,255,255,0.03)"
-const S2 = "rgba(255,255,255,0.05)"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const BORDER = "rgba(26,19,19,0.07)"
+const BORDER2 = "rgba(26,19,19,0.12)"
+const S1 = "rgba(26,19,19,0.03)"
+const S2 = "rgba(26,19,19,0.05)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#10B981"
 const RED = "#ff6b6b"
 const BLUE = "#4da6ff"
@@ -109,7 +109,7 @@ export default function StyleHealthPage() {
 
   const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
   const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
-  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
+  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(26,19,19,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
   const labelStyle: React.CSSProperties = { display: "block", fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "6px", ...mono }
 
   if (loading) {
@@ -117,7 +117,7 @@ export default function StyleHealthPage() {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 500 }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 60, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 60, background: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function StyleHealthPage() {
   if (!hasAccess) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>StyleHealth</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#1A1313", marginBottom: 8 }}>StyleHealth</div>
         <div style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
         <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Inter, sans-serif" }}>View Plans</button>
       </div>
@@ -135,7 +135,7 @@ export default function StyleHealthPage() {
   }
 
   return (
-    <div style={{ ...jakarta, minHeight: "100vh", backgroundColor: "#06080d", color: "#fff", position: "relative" }}>
+    <div style={{ ...jakarta, minHeight: "100vh", backgroundColor: "#F4F5F7", color: "#1A1313", position: "relative" }}>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "400px", background: `radial-gradient(ellipse at 50% 0%, ${ACC_DIM} 0%, transparent 65%)`, pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "1000px", margin: "0 auto", padding: "clamp(24px,4vw,48px) clamp(16px,4vw,32px)" }}>
@@ -171,7 +171,7 @@ export default function StyleHealthPage() {
                 <div style={{ padding: "16px 20px", background: ACC_DIM, border: `1px solid ${ACC_BORDER}`, borderRadius: "10px", marginBottom: "24px", display: "flex", alignItems: "flex-start", gap: "12px" }}>
                   <span className="material-symbols-outlined" style={{ fontSize: "20px", color: ACC_BRIGHT, flexShrink: 0 }}>sync</span>
                   <div>
-                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>Group health access launching soon</div>
+                    <div style={{ fontSize: "13px", fontWeight: 700, color: "#1A1313", marginBottom: "4px" }}>Group health access launching soon</div>
                     <div style={{ fontSize: "12px", color: MID, lineHeight: 1.6 }}>
                       We&apos;re negotiating group rates with carriers specifically for <strong style={{ color: ACC_BRIGHT }}>1099 beauty professionals</strong>. Sign up below to be notified when enrollment opens. In the meantime, use the Get Covered tab to explore your options.
                     </div>
@@ -225,7 +225,7 @@ export default function StyleHealthPage() {
                     <div>
                       <div style={{ fontSize: "15px", fontWeight: 700, marginBottom: "8px" }}>Be the first to know when StyleHealth launches</div>
                       <div style={{ fontSize: "12px", color: MID, marginBottom: "16px" }}>We&apos;ll email you when group enrollment opens.</div>
-                      <button onClick={markInterested} disabled={saving} style={{ padding: "11px 28px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: saving ? 0.7 : 1 }}>
+                      <button onClick={markInterested} disabled={saving} style={{ padding: "11px 28px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#1A1313", fontSize: "13px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: saving ? 0.7 : 1 }}>
                         {saving ? "Saving..." : "Notify Me When It Launches"}
                       </button>
                     </div>
@@ -245,7 +245,7 @@ export default function StyleHealthPage() {
                     { name: "Premium", price: "$400", features: ["Everything in Standard", "$1,000 deductible", "Dental included", "Vision included", "HSA eligible"], badge: null, color: PURPLE },
                   ].map(tier => (
                     <div key={tier.name} style={{ background: S1, border: `1px solid ${tier.badge ? ACC_BORDER : BORDER}`, borderRadius: "12px", padding: "22px", position: "relative", boxShadow: tier.badge ? "0 0 30px rgba(96,110,116,0.08)" : "none" }}>
-                      {tier.badge && <div style={{ position: "absolute", top: "-10px", left: "50%", transform: "translateX(-50%)", ...mono, fontSize: "9px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 12px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, color: "#fff", borderRadius: "100px", whiteSpace: "nowrap" }}>{tier.badge}</div>}
+                      {tier.badge && <div style={{ position: "absolute", top: "-10px", left: "50%", transform: "translateX(-50%)", ...mono, fontSize: "9px", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 12px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, color: "#1A1313", borderRadius: "100px", whiteSpace: "nowrap" }}>{tier.badge}</div>}
                       <div style={{ ...mono, fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.12em", color: MUTED, marginBottom: "10px" }}>{tier.name}</div>
                       <div style={{ display: "flex", alignItems: "flex-end", gap: "4px", marginBottom: "4px" }}>
                         <span style={{ fontSize: "32px", fontWeight: 800, letterSpacing: "-0.04em", color: tier.color, ...mono }}>{tier.price}</span>
@@ -295,7 +295,7 @@ export default function StyleHealthPage() {
                       <a key={p.label} href={p.href} target="_blank" rel="noopener noreferrer" style={{ flex: 1, minWidth: "180px", padding: "14px", background: S2, border: `1px solid ${BORDER}`, borderRadius: "8px", textDecoration: "none", display: "flex", alignItems: "center", gap: "10px" }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "18px", color: BLUE }}>open_in_new</span>
                         <div>
-                          <div style={{ fontSize: "12px", fontWeight: 700, color: "#fff" }}>{p.label}</div>
+                          <div style={{ fontSize: "12px", fontWeight: 700, color: "#1A1313" }}>{p.label}</div>
                           <div style={{ fontSize: "10px", color: MUTED }}>{p.desc}</div>
                         </div>
                       </a>
@@ -353,7 +353,7 @@ export default function StyleHealthPage() {
                       ].map((item, i) => (
                         <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 0", borderBottom: `1px solid ${BORDER}` }}>
                           <div style={{ width: "18px", height: "18px", borderRadius: "4px", background: item.done ? GREEN : "transparent", border: `2px solid ${item.done ? GREEN : BORDER2}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                            {item.done && <span className="material-symbols-outlined" style={{ fontSize: "12px", color: "#fff" }}>check</span>}
+                            {item.done && <span className="material-symbols-outlined" style={{ fontSize: "12px", color: "#1A1313" }}>check</span>}
                           </div>
                           <span style={{ fontSize: "12px", color: item.done ? MID : "#fff" }}>{item.text}</span>
                         </div>
@@ -400,7 +400,7 @@ export default function StyleHealthPage() {
                         </div>
                       </div>
                     </div>
-                    <button onClick={saveCoverage} disabled={saving} style={{ padding: "11px 24px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: saving ? 0.7 : 1 }}>
+                    <button onClick={saveCoverage} disabled={saving} style={{ padding: "11px 24px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#1A1313", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: saving ? 0.7 : 1 }}>
                       {saving ? "Saving..." : "Save Coverage Info"}
                     </button>
 
@@ -457,7 +457,7 @@ export default function StyleHealthPage() {
                       </div>
                     </div>
                   ))}
-                  <div style={{ marginTop: "12px", padding: "10px 14px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", fontSize: "12px", color: AMBER, fontStyle: "italic" }}>
+                  <div style={{ marginTop: "12px", padding: "10px 14px", background: "rgba(26,19,19,0.03)", borderRadius: "8px", fontSize: "12px", color: AMBER, fontStyle: "italic" }}>
                     No other account gives you this. Not a 401(k), not an IRA, not a Roth.
                   </div>
                 </div>
@@ -514,7 +514,7 @@ export default function StyleHealthPage() {
                       <a key={p.name} href={p.href} target="_blank" rel="noopener noreferrer" style={{ flex: 1, minWidth: "150px", padding: "12px", background: S2, border: `1px solid ${BORDER}`, borderRadius: "8px", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "16px", color: BLUE }}>open_in_new</span>
                         <div>
-                          <div style={{ fontSize: "12px", fontWeight: 700, color: "#fff" }}>{p.name}</div>
+                          <div style={{ fontSize: "12px", fontWeight: 700, color: "#1A1313" }}>{p.name}</div>
                           <div style={{ fontSize: "9px", color: MUTED }}>{p.note}</div>
                         </div>
                       </a>
@@ -530,7 +530,7 @@ export default function StyleHealthPage() {
                   </div>
                   <div style={{ display: "flex", gap: "8px" }}>
                     <button onClick={() => saveHsaInterest(true)} style={{ padding: "8px 16px", borderRadius: "7px", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta, background: hsaInterest ? GREEN : "transparent", border: `1px solid ${hsaInterest ? GREEN : BORDER2}`, color: hsaInterest ? "#fff" : MID }}>Yes</button>
-                    <button onClick={() => saveHsaInterest(false)} style={{ padding: "8px 16px", borderRadius: "7px", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta, background: !hsaInterest ? "rgba(255,255,255,0.05)" : "transparent", border: `1px solid ${BORDER2}`, color: MID }}>No</button>
+                    <button onClick={() => saveHsaInterest(false)} style={{ padding: "8px 16px", borderRadius: "7px", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta, background: !hsaInterest ? "rgba(26,19,19,0.05)" : "transparent", border: `1px solid ${BORDER2}`, color: MID }}>No</button>
                   </div>
                 </div>
               </div>

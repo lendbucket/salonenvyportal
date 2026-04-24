@@ -99,7 +99,7 @@ function BarChart({ data, color }: { data: Record<string, number>; color: string
   const max = Math.max(...entries.map(([, v]) => v), 1)
   if (entries.length === 0)
     return (
-      <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "12px", padding: "20px 0" }}>
+      <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "12px", padding: "20px 0" }}>
         No data
       </div>
     )
@@ -111,7 +111,7 @@ function BarChart({ data, color }: { data: Record<string, number>; color: string
             style={{
               width: "90px",
               fontSize: "11px",
-              color: "rgba(205,201,192,0.7)",
+              color: "rgba(26,19,19,0.7)",
               textAlign: "right",
               flexShrink: 0,
               overflow: "hidden",
@@ -122,7 +122,7 @@ function BarChart({ data, color }: { data: Record<string, number>; color: string
           >
             {label}
           </div>
-          <div style={{ flex: 1, height: "18px", backgroundColor: "rgba(255,255,255,0.04)", borderRadius: "4px", overflow: "hidden" }}>
+          <div style={{ flex: 1, height: "18px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "4px", overflow: "hidden" }}>
             <div
               style={{
                 height: "100%",
@@ -134,7 +134,7 @@ function BarChart({ data, color }: { data: Record<string, number>; color: string
               }}
             />
           </div>
-          <div style={{ width: "28px", fontSize: "11px", fontWeight: 700, color: "rgba(205,201,192,0.8)", textAlign: "right" }}>
+          <div style={{ width: "28px", fontSize: "11px", fontWeight: 700, color: "rgba(26,19,19,0.8)", textAlign: "right" }}>
             {count}
           </div>
         </div>
@@ -168,9 +168,9 @@ function CustomerModal({
     >
       <div
         style={{
-          backgroundColor: "#0d1117",
+          backgroundColor: "#FBFBFB",
           borderRadius: "12px",
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: "1px solid rgba(26,19,19,0.06)",
           maxWidth: "480px",
           width: "100%",
           maxHeight: "80vh",
@@ -181,13 +181,13 @@ function CustomerModal({
         <div
           style={{
             padding: "20px",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
+            borderBottom: "1px solid rgba(26,19,19,0.06)",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <h3 style={{ margin: 0, color: "#fff", fontSize: "16px", fontWeight: 700 }}>
+          <h3 style={{ margin: 0, color: "#1A1313", fontSize: "16px", fontWeight: 700 }}>
             Customer Profile
           </h3>
           <button
@@ -195,7 +195,7 @@ function CustomerModal({
             style={{
               background: "none",
               border: "none",
-              color: "rgba(205,201,192,0.5)",
+              color: "rgba(26,19,19,0.5)",
               cursor: "pointer",
               fontSize: "20px",
               lineHeight: 1,
@@ -207,33 +207,33 @@ function CustomerModal({
         <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Contact info */}
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(205,201,192,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
               Contact Info
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Name</span>
-                <span style={{ color: "#fff", fontSize: "12px", fontWeight: 600 }}>{entry.customerName}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Name</span>
+                <span style={{ color: "#1A1313", fontSize: "12px", fontWeight: 600 }}>{entry.customerName}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Phone</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>{entry.customerPhone || "N/A"}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Phone</span>
+                <span style={{ color: "#1A1313", fontSize: "12px" }}>{entry.customerPhone || "N/A"}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Email</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>{entry.customerEmail || "N/A"}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Email</span>
+                <span style={{ color: "#1A1313", fontSize: "12px" }}>{entry.customerEmail || "N/A"}</span>
               </div>
             </div>
           </div>
 
           {/* Appointment details */}
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(205,201,192,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
               Appointment Details
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Status</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Status</span>
                 <span
                   style={{
                     fontSize: "11px",
@@ -245,32 +245,32 @@ function CustomerModal({
                 </span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Scheduled</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>{formatDateTime(entry.scheduledAt)}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Scheduled</span>
+                <span style={{ color: "#1A1313", fontSize: "12px" }}>{formatDateTime(entry.scheduledAt)}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Stylist</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>{entry.stylistName}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Stylist</span>
+                <span style={{ color: "#1A1313", fontSize: "12px" }}>{entry.stylistName}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Location</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>{entry.location}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Location</span>
+                <span style={{ color: "#1A1313", fontSize: "12px" }}>{entry.location}</span>
               </div>
             </div>
           </div>
 
           {/* Client history */}
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(205,201,192,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(26,19,19,0.4)", marginBottom: "8px", textTransform: "uppercase" }}>
               Client History
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Total Visits</span>
-                <span style={{ color: "#fff", fontSize: "12px", fontWeight: 600 }}>{entry.visitCount ?? entry.totalPastVisits}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Total Visits</span>
+                <span style={{ color: "#1A1313", fontSize: "12px", fontWeight: 600 }}>{entry.visitCount ?? entry.totalPastVisits}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Repeat Client</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Repeat Client</span>
                 <span
                   style={{
                     fontSize: "11px",
@@ -282,12 +282,12 @@ function CustomerModal({
                 </span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Lost Revenue</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>${(entry.lostRevenue ?? (entry.totalPastVisits * avgTicket)).toLocaleString()}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Lost Revenue</span>
+                <span style={{ color: "#1A1313", fontSize: "12px" }}>${(entry.lostRevenue ?? (entry.totalPastVisits * avgTicket)).toLocaleString()}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px" }}>Last Visit</span>
-                <span style={{ color: "#fff", fontSize: "12px" }}>{entry.lastVisitDate ? formatDate(entry.lastVisitDate) : "N/A"}</span>
+                <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px" }}>Last Visit</span>
+                <span style={{ color: "#1A1313", fontSize: "12px" }}>{entry.lastVisitDate ? formatDate(entry.lastVisitDate) : "N/A"}</span>
               </div>
             </div>
           </div>
@@ -300,7 +300,7 @@ function CustomerModal({
                 style={{
                   flex: 1,
                   padding: "10px",
-                  backgroundColor: "rgba(255,255,255,0.06)",
+                  backgroundColor: "rgba(26,19,19,0.06)",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "8px",
                   color: "#CDC9C0",
@@ -321,7 +321,7 @@ function CustomerModal({
                 style={{
                   flex: 1,
                   padding: "10px",
-                  backgroundColor: "rgba(255,255,255,0.06)",
+                  backgroundColor: "rgba(26,19,19,0.06)",
                   border: "1px solid rgba(205,201,192,0.15)",
                   borderRadius: "8px",
                   color: "#CDC9C0",
@@ -391,9 +391,9 @@ export default function CancellationsPage() {
   }, [data, statusFilter, search])
 
   const cardStyle: React.CSSProperties = {
-    backgroundColor: "#0d1117",
+    backgroundColor: "#FBFBFB",
     borderRadius: "10px",
-    border: "1px solid rgba(255,255,255,0.06)",
+    border: "1px solid rgba(26,19,19,0.06)",
     padding: "16px",
   }
 
@@ -404,7 +404,7 @@ export default function CancellationsPage() {
     fontWeight: 700,
     letterSpacing: "0.06em",
     cursor: "pointer",
-    border: "1px solid rgba(255,255,255,0.06)",
+    border: "1px solid rgba(26,19,19,0.06)",
     transition: "all 0.15s ease",
     textTransform: "uppercase",
   }
@@ -419,12 +419,12 @@ export default function CancellationsPage() {
             fontSize: "22px",
             fontWeight: 800,
             letterSpacing: "0.02em",
-            color: "#FBFBFB",
+            color: "#1A1313",
           }}
         >
           Cancellations
         </h1>
-        <p style={{ margin: "4px 0 0", color: "rgba(205,201,192,0.5)", fontSize: "13px" }}>
+        <p style={{ margin: "4px 0 0", color: "rgba(26,19,19,0.5)", fontSize: "13px" }}>
           Track cancellations, no-shows, and client recovery opportunities
         </p>
       </div>
@@ -447,15 +447,15 @@ export default function CancellationsPage() {
               onClick={() => setPeriod(p.value)}
               style={{
                 ...pillBase,
-                backgroundColor: period === p.value ? "#CDC9C0" : "rgba(255,255,255,0.04)",
-                color: period === p.value ? "#0f1d24" : "rgba(205,201,192,0.6)",
+                backgroundColor: period === p.value ? "#CDC9C0" : "rgba(26,19,19,0.04)",
+                color: period === p.value ? "#1A1313" : "rgba(26,19,19,0.6)",
               }}
             >
               {p.label}
             </button>
           ))}
         </div>
-        <div style={{ width: "1px", height: "24px", backgroundColor: "rgba(255,255,255,0.06)" }} />
+        <div style={{ width: "1px", height: "24px", backgroundColor: "rgba(26,19,19,0.06)" }} />
         <div style={{ display: "flex", gap: "4px" }}>
           {LOCATIONS.map((l) => (
             <button
@@ -463,8 +463,8 @@ export default function CancellationsPage() {
               onClick={() => setLocation(l.value)}
               style={{
                 ...pillBase,
-                backgroundColor: location === l.value ? "#CDC9C0" : "rgba(255,255,255,0.04)",
-                color: location === l.value ? "#0f1d24" : "rgba(205,201,192,0.6)",
+                backgroundColor: location === l.value ? "#CDC9C0" : "rgba(26,19,19,0.04)",
+                color: location === l.value ? "#1A1313" : "rgba(26,19,19,0.6)",
               }}
             >
               {l.label}
@@ -478,7 +478,7 @@ export default function CancellationsPage() {
             ...pillBase,
             marginLeft: "auto",
             backgroundColor: loading ? "rgba(205,201,192,0.1)" : "#CDC9C0",
-            color: loading ? "rgba(205,201,192,0.4)" : "#0f1d24",
+            color: loading ? "rgba(26,19,19,0.4)" : "#1A1313",
             padding: "8px 24px",
             fontSize: "12px",
             cursor: loading ? "not-allowed" : "pointer",
@@ -505,14 +505,14 @@ export default function CancellationsPage() {
 
       {/* Loading state */}
       {loading && (
-        <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(205,201,192,0.4)", fontSize: "14px" }}>
+        <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(26,19,19,0.4)", fontSize: "14px" }}>
           Analyzing cancellations... This may take up to 60 seconds.
         </div>
       )}
 
       {/* Empty state */}
       {!loading && !error && !data && (
-        <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(205,201,192,0.3)", fontSize: "14px" }}>
+        <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(26,19,19,0.3)", fontSize: "14px" }}>
           Select a period and click <strong>Load Data</strong> to view cancellation analytics.
         </div>
       )}
@@ -530,7 +530,7 @@ export default function CancellationsPage() {
             }}
           >
             {[
-              { label: "Total Cancellations", value: data.stats.totalCancellations, color: "#FBFBFB" },
+              { label: "Total Cancellations", value: data.stats.totalCancellations, color: "#1A1313" },
               { label: "Client Cancelled", value: data.stats.cancelledByCustomer, color: "#F59E0B" },
               { label: "No Shows", value: data.stats.noShows, color: "#EF4444" },
               { label: "Salon Cancelled", value: data.stats.cancelledBySeller, color: "#94A3B8" },
@@ -548,7 +548,7 @@ export default function CancellationsPage() {
                     fontSize: "9px",
                     fontWeight: 700,
                     letterSpacing: "0.15em",
-                    color: "rgba(205,201,192,0.4)",
+                    color: "rgba(26,19,19,0.4)",
                     textTransform: "uppercase",
                     marginBottom: "8px",
                   }}
@@ -573,7 +573,7 @@ export default function CancellationsPage() {
                   fontSize: "10px",
                   fontWeight: 700,
                   letterSpacing: "0.15em",
-                  color: "rgba(205,201,192,0.4)",
+                  color: "rgba(26,19,19,0.4)",
                   textTransform: "uppercase",
                   marginBottom: "14px",
                 }}
@@ -588,7 +588,7 @@ export default function CancellationsPage() {
                   fontSize: "10px",
                   fontWeight: 700,
                   letterSpacing: "0.15em",
-                  color: "rgba(205,201,192,0.4)",
+                  color: "rgba(26,19,19,0.4)",
                   textTransform: "uppercase",
                   marginBottom: "14px",
                 }}
@@ -615,7 +615,7 @@ export default function CancellationsPage() {
                       padding: "5px 12px",
                       fontSize: "10px",
                       backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.15)" : "transparent",
-                      color: statusFilter === sf.value ? "#FBFBFB" : "rgba(205,201,192,0.5)",
+                      color: statusFilter === sf.value ? "#FBFBFB" : "rgba(26,19,19,0.5)",
                       border: statusFilter === sf.value ? "1px solid rgba(205,201,192,0.2)" : "1px solid transparent",
                       display: "flex",
                       alignItems: "center",
@@ -628,8 +628,8 @@ export default function CancellationsPage() {
                       fontWeight: 700,
                       padding: "1px 5px",
                       borderRadius: "8px",
-                      backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.2)" : "rgba(255,255,255,0.06)",
-                      color: statusFilter === sf.value ? "#fff" : "rgba(205,201,192,0.4)",
+                      backgroundColor: statusFilter === sf.value ? "rgba(205,201,192,0.2)" : "rgba(26,19,19,0.06)",
+                      color: statusFilter === sf.value ? "#fff" : "rgba(26,19,19,0.4)",
                     }}>
                       {count}
                     </span>
@@ -646,9 +646,9 @@ export default function CancellationsPage() {
                 marginLeft: "auto",
                 padding: "7px 12px",
                 borderRadius: "6px",
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid rgba(26,19,19,0.06)",
                 backgroundColor: "rgba(205,201,192,0.04)",
-                color: "#fff",
+                color: "#1A1313",
                 fontSize: "12px",
                 outline: "none",
                 width: "220px",
@@ -659,7 +659,7 @@ export default function CancellationsPage() {
           {/* Mobile Cancellation Cards */}
           <div className="mobile-only" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "12px" }}>
             {filteredCancellations.length === 0 && (
-              <div style={{ ...cardStyle, textAlign: "center", color: "rgba(205,201,192,0.3)", padding: "40px" }}>No cancellations found.</div>
+              <div style={{ ...cardStyle, textAlign: "center", color: "rgba(26,19,19,0.3)", padding: "40px" }}>No cancellations found.</div>
             )}
             {filteredCancellations.map((c) => (
               <div key={c.bookingId} onClick={() => setSelectedEntry(c)} style={{ ...cardStyle, cursor: "pointer" }}>
@@ -672,10 +672,10 @@ export default function CancellationsPage() {
                     <span style={{ padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(16,185,129,0.15)", color: "#10B981" }}>REPEAT</span>
                   )}
                 </div>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "6px" }}>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313", marginBottom: "6px" }}>
                   {c.customerName}
                   {(c.visitCount ?? c.totalPastVisits) > 1 && (
-                    <span style={{ marginLeft: "6px", padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.5)" }}>
+                    <span style={{ marginLeft: "6px", padding: "2px 6px", borderRadius: "3px", fontSize: "8px", fontWeight: 700, backgroundColor: "rgba(26,19,19,0.06)", color: "rgba(26,19,19,0.5)" }}>
                       {c.visitCount ?? c.totalPastVisits} visits
                     </span>
                   )}
@@ -688,18 +688,18 @@ export default function CancellationsPage() {
                 {c.customerPhone && (
                   <a href={`tel:${c.customerPhone}`} onClick={e => e.stopPropagation()} style={{ fontSize: "12px", color: "#CDC9C0", textDecoration: "none", display: "block", marginBottom: "4px" }}>{c.customerPhone}</a>
                 )}
-                <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.6)", marginBottom: "4px" }}>{formatDateTime(c.scheduledAt)}</div>
-                <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)", marginBottom: "10px" }}>Stylist: {c.stylistName}</div>
+                <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.6)", marginBottom: "4px" }}>{formatDateTime(c.scheduledAt)}</div>
+                <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.5)", marginBottom: "10px" }}>Stylist: {c.stylistName}</div>
                 <div style={{ display: "flex", gap: "6px" }} onClick={e => e.stopPropagation()}>
                   {c.customerPhone && (
                     <a href={`sms:${c.customerPhone}`} style={{
-                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)",
+                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(26,19,19,0.06)", border: "1px solid rgba(26,19,19,0.06)",
                       color: "#CDC9C0", textDecoration: "none", textAlign: "center", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
                     }}>SMS</a>
                   )}
                   {c.customerEmail && (
                     <a href={`mailto:${c.customerEmail}`} style={{
-                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)",
+                      flex: 1, padding: "8px", borderRadius: "6px", backgroundColor: "rgba(26,19,19,0.06)", border: "1px solid rgba(26,19,19,0.06)",
                       color: "#CDC9C0", textDecoration: "none", textAlign: "center", fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
                     }}>Email</a>
                   )}
@@ -722,7 +722,7 @@ export default function CancellationsPage() {
               <thead>
                 <tr
                   style={{
-                    borderBottom: "1px solid rgba(255,255,255,0.06)",
+                    borderBottom: "1px solid rgba(26,19,19,0.06)",
                   }}
                 >
                   {["Status", "Client", "Phone", "Email", "Scheduled", "Stylist", "Location", "Visits", "Lost $", "Last Visit", "Actions"].map(
@@ -735,7 +735,7 @@ export default function CancellationsPage() {
                           fontSize: "9px",
                           fontWeight: 700,
                           letterSpacing: "0.15em",
-                          color: "rgba(205,201,192,0.35)",
+                          color: "rgba(26,19,19,0.35)",
                           textTransform: "uppercase",
                           whiteSpace: "nowrap",
                         }}
@@ -754,7 +754,7 @@ export default function CancellationsPage() {
                       style={{
                         padding: "40px",
                         textAlign: "center",
-                        color: "rgba(205,201,192,0.3)",
+                        color: "rgba(26,19,19,0.3)",
                       }}
                     >
                       No cancellations found.
@@ -790,7 +790,7 @@ export default function CancellationsPage() {
                         {STATUS_LABELS[c.status]}
                       </span>
                     </td>
-                    <td style={{ padding: "10px 12px", color: "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "#1A1313", fontWeight: 600, whiteSpace: "nowrap" }}>
                       {c.customerName}
                       {(c.visitCount ?? c.totalPastVisits) > 1 && (
                         <span
@@ -800,8 +800,8 @@ export default function CancellationsPage() {
                             borderRadius: "3px",
                             fontSize: "8px",
                             fontWeight: 700,
-                            backgroundColor: "rgba(255,255,255,0.06)",
-                            color: "rgba(205,201,192,0.5)",
+                            backgroundColor: "rgba(26,19,19,0.06)",
+                            color: "rgba(26,19,19,0.5)",
                             letterSpacing: "0.06em",
                           }}
                         >
@@ -825,13 +825,13 @@ export default function CancellationsPage() {
                         </span>
                       )}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.6)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "rgba(26,19,19,0.6)", whiteSpace: "nowrap" }}>
                       {c.customerPhone || "---"}
                     </td>
                     <td
                       style={{
                         padding: "10px 12px",
-                        color: "rgba(205,201,192,0.6)",
+                        color: "rgba(26,19,19,0.6)",
                         maxWidth: "160px",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -840,22 +840,22 @@ export default function CancellationsPage() {
                     >
                       {c.customerEmail || "---"}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.7)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "rgba(26,19,19,0.7)", whiteSpace: "nowrap" }}>
                       {formatDateTime(c.scheduledAt)}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.7)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "rgba(26,19,19,0.7)", whiteSpace: "nowrap" }}>
                       {c.stylistName}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.5)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "rgba(26,19,19,0.5)", whiteSpace: "nowrap" }}>
                       {c.location === "Corpus Christi" ? "CC" : c.location === "San Antonio" ? "SA" : c.location}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.6)", textAlign: "center" }}>
+                    <td style={{ padding: "10px 12px", color: "rgba(26,19,19,0.6)", textAlign: "center" }}>
                       {c.totalPastVisits}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.6)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "rgba(26,19,19,0.6)", whiteSpace: "nowrap" }}>
                       ${(c.lostRevenue ?? (c.totalPastVisits * (data?.stats.avgTicket || 75))).toLocaleString()}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "rgba(205,201,192,0.5)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "rgba(26,19,19,0.5)", whiteSpace: "nowrap" }}>
                       {c.lastVisitDate ? formatDate(c.lastVisitDate) : "---"}
                     </td>
                     <td style={{ padding: "10px 12px", whiteSpace: "nowrap" }} onClick={(e) => e.stopPropagation()}>
@@ -868,12 +868,12 @@ export default function CancellationsPage() {
                               width: "26px",
                               height: "26px",
                               borderRadius: "5px",
-                              backgroundColor: "rgba(255,255,255,0.06)",
-                              border: "1px solid rgba(255,255,255,0.06)",
+                              backgroundColor: "rgba(26,19,19,0.06)",
+                              border: "1px solid rgba(26,19,19,0.06)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
-                              color: "rgba(205,201,192,0.5)",
+                              color: "rgba(26,19,19,0.5)",
                               textDecoration: "none",
                               fontSize: "13px",
                             }}
@@ -891,12 +891,12 @@ export default function CancellationsPage() {
                               width: "26px",
                               height: "26px",
                               borderRadius: "5px",
-                              backgroundColor: "rgba(255,255,255,0.06)",
-                              border: "1px solid rgba(255,255,255,0.06)",
+                              backgroundColor: "rgba(26,19,19,0.06)",
+                              border: "1px solid rgba(26,19,19,0.06)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
-                              color: "rgba(205,201,192,0.5)",
+                              color: "rgba(26,19,19,0.5)",
                               textDecoration: "none",
                               fontSize: "13px",
                             }}

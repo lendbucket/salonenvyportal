@@ -8,10 +8,10 @@ const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans
 
 const ACC = "#606E74"
 const ACC_BRIGHT = "#7a8f96"
-const BORDER2 = "rgba(255,255,255,0.08)"
-const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const BORDER2 = "rgba(26,19,19,0.08)"
+const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#22c55e"
 
 const APPS = [
@@ -54,27 +54,27 @@ export default function SuitePage() {
   const canAccess = hasAccess || isOwner
 
   return (
-    <div style={{ ...jakarta, backgroundColor: "#06080d", minHeight: "100%", color: "#fff", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
+    <div style={{ ...jakarta, backgroundColor: "#F4F5F7", minHeight: "100%", color: "#1A1313", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       <style>{`@media(max-width:767px){.suite-grid-2{grid-template-columns:1fr !important}} @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}}`}</style>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
 
         {/* Header */}
         <div style={{ marginBottom: "24px" }}>
-          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Envy Suite</h1>
+          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Envy Suite</h1>
           <p style={{ fontSize: "14px", color: ACC_BRIGHT, margin: 0 }}>Professional tools built for independent stylists</p>
         </div>
 
         {/* Subscription status */}
         {loading ? (
-          <div style={{ height: "52px", backgroundColor: "#0d1117", border: "1px solid #1a2332", borderRadius: "12px", marginBottom: "24px", animation: "pulse 1.5s ease-in-out infinite" }} />
+          <div style={{ height: "52px", backgroundColor: "#FBFBFB", border: "1px solid #1a2332", borderRadius: "12px", marginBottom: "24px", animation: "pulse 1.5s ease-in-out infinite" }} />
         ) : canAccess ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px 18px", backgroundColor: "#0d1117", border: "1px solid #1a2332", borderRadius: "12px", marginBottom: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px 18px", backgroundColor: "#FBFBFB", border: "1px solid #1a2332", borderRadius: "12px", marginBottom: "24px" }}>
             <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: GREEN }} />
             <span style={{ fontSize: "13px", fontWeight: 600, color: GREEN }}>Active Subscriber</span>
             <span style={{ fontSize: "12px", color: MID, marginLeft: "auto" }}>All apps unlocked</span>
           </div>
         ) : (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", backgroundColor: "#0d1117", border: "1px solid #1a2332", borderRadius: "12px", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", backgroundColor: "#FBFBFB", border: "1px solid #1a2332", borderRadius: "12px", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
             <div>
               <div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "2px" }}>Unlock all 5 apps</div>
               <div style={{ fontSize: "12px", color: MUTED }}>Subscribe to access the full Envy Suite</div>
@@ -92,7 +92,7 @@ export default function SuitePage() {
               key={app.id}
               onClick={() => canAccess ? router.push(`/suite/${app.id}`) : undefined}
               style={{
-                backgroundColor: "#0d1117",
+                backgroundColor: "#FBFBFB",
                 border: "1px solid #1a2332",
                 borderLeft: `3px solid ${app.accent}`,
                 borderRadius: "0 12px 12px 0",
@@ -106,7 +106,7 @@ export default function SuitePage() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <span className="material-symbols-outlined" style={{ fontSize: "20px", color: app.accent }}>{app.icon}</span>
-                  <span style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{app.name}</span>
+                  <span style={{ fontSize: "15px", fontWeight: 700, color: "#1A1313" }}>{app.name}</span>
                 </div>
                 <span style={{ ...mono, fontSize: "8px", padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", color: GREEN, textTransform: "uppercase", letterSpacing: "0.06em" }}>Live</span>
               </div>
@@ -116,7 +116,7 @@ export default function SuitePage() {
 
               {/* Price + Open */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ ...mono, fontSize: "14px", fontWeight: 500, color: "#fff" }}>{app.price}<span style={{ fontSize: "10px", color: MUTED }}>/mo</span></span>
+                <span style={{ ...mono, fontSize: "14px", fontWeight: 500, color: "#1A1313" }}>{app.price}<span style={{ fontSize: "10px", color: MUTED }}>/mo</span></span>
                 {canAccess && (
                   <button style={{ padding: "5px 14px", border: `1px solid ${ACC}`, borderRadius: "6px", backgroundColor: "transparent", color: ACC_BRIGHT, fontSize: "11px", fontWeight: 700, cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.04em", display: "flex", alignItems: "center", gap: "4px", ...jakarta }}>
                     Open <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>arrow_forward</span>
@@ -128,7 +128,7 @@ export default function SuitePage() {
         </div>
 
         {/* Combined value footer */}
-        <div style={{ backgroundColor: "#0d1117", border: "1px solid #1a2332", borderRadius: "12px", padding: "18px 22px" }}>
+        <div style={{ backgroundColor: "#FBFBFB", border: "1px solid #1a2332", borderRadius: "12px", padding: "18px 22px" }}>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "14px" }}>
             {APPS.map(app => (
               <span key={app.id} style={{ ...mono, fontSize: "10px", padding: "3px 10px", borderRadius: "6px", backgroundColor: `${app.accent}10`, border: `1px solid ${app.accent}25`, color: app.accent }}>
@@ -138,7 +138,7 @@ export default function SuitePage() {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${BORDER2}`, paddingTop: "14px" }}>
             <span style={{ fontSize: "13px", fontWeight: 600, color: MID }}>All 5 apps</span>
-            <span style={{ ...mono, fontSize: "20px", fontWeight: 500, color: "#fff" }}>$93<span style={{ fontSize: "11px", color: MUTED }}>/mo for all 5 apps</span></span>
+            <span style={{ ...mono, fontSize: "20px", fontWeight: 500, color: "#1A1313" }}>$93<span style={{ fontSize: "11px", color: MUTED }}>/mo for all 5 apps</span></span>
           </div>
         </div>
       </div>

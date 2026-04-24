@@ -12,12 +12,12 @@ const ACC_DIM = "rgba(96,110,116,0.08)"
 const ACC_BORDER = "rgba(96,110,116,0.2)"
 const AMBER = "#ffb347"
 const PURPLE = "#a78bfa"
-const BORDER = "rgba(255,255,255,0.07)"
-const BORDER2 = "rgba(255,255,255,0.12)"
-const S1 = "rgba(255,255,255,0.03)"
-const S2 = "rgba(255,255,255,0.05)"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const BORDER = "rgba(26,19,19,0.07)"
+const BORDER2 = "rgba(26,19,19,0.12)"
+const S1 = "rgba(26,19,19,0.03)"
+const S2 = "rgba(26,19,19,0.05)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#10B981"
 const BLUE = "#4da6ff"
 const RED = "#ff6b6b"
@@ -277,7 +277,7 @@ export default function StyleEduPage() {
 
   const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
   const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
-  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
+  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(26,19,19,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
   const labelStyle: React.CSSProperties = { display: "block", fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "6px", ...mono }
 
   if (loading) {
@@ -285,7 +285,7 @@ export default function StyleEduPage() {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 500 }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 60, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 60, background: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       </div>
@@ -295,7 +295,7 @@ export default function StyleEduPage() {
   if (!hasAccess) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>StyleEdu</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#1A1313", marginBottom: 8 }}>StyleEdu</div>
         <div style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
         <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Inter, sans-serif" }}>View Plans</button>
       </div>
@@ -303,7 +303,7 @@ export default function StyleEduPage() {
   }
 
   return (
-    <div style={{ ...jakarta, minHeight: "100vh", backgroundColor: "#06080d", color: "#fff", position: "relative" }}>
+    <div style={{ ...jakarta, minHeight: "100vh", backgroundColor: "#F4F5F7", color: "#1A1313", position: "relative" }}>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "400px", background: `radial-gradient(ellipse at 50% 0%, ${ACC_DIM} 0%, transparent 65%)`, pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "1000px", margin: "0 auto", padding: "clamp(24px,4vw,48px) clamp(16px,4vw,32px)" }}>
@@ -370,10 +370,10 @@ export default function StyleEduPage() {
                       <div style={{ height: "80px", background: getCategoryGradient(course.category), display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                         {course.isCompleted && (
                           <div style={{ position: "absolute", top: "8px", right: "8px", zIndex: 2, width: "24px", height: "24px", borderRadius: "50%", background: GREEN, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#fff" }}>check</span>
+                            <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#1A1313" }}>check</span>
                           </div>
                         )}
-                        <span className="material-symbols-outlined" style={{ fontSize: "28px", color: "rgba(255,255,255,0.5)" }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "28px", color: "rgba(26,19,19,0.5)" }}>
                           {course.category === "color" ? "palette" : course.category === "cutting" ? "content_cut" : course.category === "business" ? "trending_up" : course.category === "tdlr_ce" ? "verified" : "auto_awesome"}
                         </span>
                         {course.videoUrl && !course.isCompleted && (
@@ -404,7 +404,7 @@ export default function StyleEduPage() {
                       <div style={{ fontSize: "13px", fontWeight: 700, marginBottom: "2px" }}>Complete your CE hours</div>
                       <div style={{ fontSize: "11px", color: MID }}>You need {8 - completedCeHours} more CE hours for TDLR renewal.</div>
                     </div>
-                    <button onClick={() => setActiveTab("ce")} style={{ padding: "8px 14px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Start CE</button>
+                    <button onClick={() => setActiveTab("ce")} style={{ padding: "8px 14px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Start CE</button>
                   </div>
                 )}
               </div>
@@ -429,7 +429,7 @@ export default function StyleEduPage() {
                     </div>
                   )}
                   {completedCeHours >= 8 && (
-                    <button onClick={downloadCertificate} style={{ marginTop: "14px", padding: "10px 20px", background: `linear-gradient(135deg, ${GREEN}, #059669)`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta }}>
+                    <button onClick={downloadCertificate} style={{ marginTop: "14px", padding: "10px 20px", background: `linear-gradient(135deg, ${GREEN}, #059669)`, border: "none", borderRadius: "8px", color: "#1A1313", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta }}>
                       Download CE Certificate
                     </button>
                   )}
@@ -445,7 +445,7 @@ export default function StyleEduPage() {
                   {ceCourses.map(course => (
                     <div key={course.id} style={{ display: "flex", alignItems: "center", gap: "14px", padding: "14px 18px", background: course.isCompleted ? "rgba(16,185,129,0.03)" : S1, border: `1px solid ${course.isCompleted ? "rgba(16,185,129,0.15)" : BORDER}`, borderRadius: "10px" }}>
                       <div style={{ width: "24px", height: "24px", borderRadius: "6px", background: course.isCompleted ? GREEN : "transparent", border: `2px solid ${course.isCompleted ? GREEN : BORDER2}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        {course.isCompleted && <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#fff" }}>check</span>}
+                        {course.isCompleted && <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#1A1313" }}>check</span>}
                       </div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: "13px", fontWeight: 700, color: course.isCompleted ? MID : "#fff" }}>{course.title}</div>
@@ -457,7 +457,7 @@ export default function StyleEduPage() {
                         </div>
                       </div>
                       {!course.isCompleted ? (
-                        <button onClick={() => setSelectedCourse(course)} style={{ padding: "7px 14px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "10px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Start</button>
+                        <button onClick={() => setSelectedCourse(course)} style={{ padding: "7px 14px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "10px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Start</button>
                       ) : (
                         <span style={{ ...mono, fontSize: "9px", color: GREEN }}>&#10003; Done</span>
                       )}
@@ -485,11 +485,11 @@ export default function StyleEduPage() {
                     <div key={course.id} onClick={() => setSelectedCourse(course)} style={{ background: S1, border: `1px solid ${BORDER}`, borderRadius: "12px", overflow: "hidden", cursor: "pointer", position: "relative" }}>
                       {course.isCompleted && (
                         <div style={{ position: "absolute", top: "8px", right: "8px", zIndex: 2, width: "24px", height: "24px", borderRadius: "50%", background: GREEN, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#fff" }}>check</span>
+                          <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#1A1313" }}>check</span>
                         </div>
                       )}
                       <div style={{ height: "70px", background: getCategoryGradient(course.category), display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: "24px", color: "rgba(255,255,255,0.4)" }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "24px", color: "rgba(26,19,19,0.4)" }}>
                           {course.category === "color" ? "palette" : course.category === "cutting" ? "content_cut" : course.category === "texture" ? "auto_awesome" : course.category === "business" ? "trending_up" : "verified"}
                         </span>
                         {course.isCompleted && <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)" }} />}
@@ -533,7 +533,7 @@ export default function StyleEduPage() {
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                    <button onClick={saveRenewal} disabled={savingRenewal} style={{ padding: "9px 18px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta }}>{savingRenewal ? "Saving..." : "Save License Info"}</button>
+                    <button onClick={saveRenewal} disabled={savingRenewal} style={{ padding: "9px 18px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta }}>{savingRenewal ? "Saving..." : "Save License Info"}</button>
                     {daysUntilExpiry !== null && (
                       <span style={{ ...mono, fontSize: "11px", padding: "4px 10px", borderRadius: "4px", background: expiryStatus === "expired" ? `${RED}12` : expiryStatus === "expiring" ? `${AMBER}12` : `${GREEN}12`, color: expiryStatus === "expired" ? RED : expiryStatus === "expiring" ? AMBER : GREEN, textTransform: "uppercase" }}>
                         {expiryStatus === "expired" ? "Expired" : expiryStatus === "expiring" ? `${daysUntilExpiry} days left` : `Active — ${daysUntilExpiry} days`}
@@ -553,7 +553,7 @@ export default function StyleEduPage() {
                   ].map((req, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 0", borderBottom: `1px solid ${BORDER}` }}>
                       <div style={{ width: "20px", height: "20px", borderRadius: "5px", background: req.done ? GREEN : "transparent", border: `2px solid ${req.done ? GREEN : BORDER2}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        {req.done && <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#fff" }}>check</span>}
+                        {req.done && <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#1A1313" }}>check</span>}
                       </div>
                       <span style={{ fontSize: "12px", color: req.done ? MID : "#fff" }}>{req.text}</span>
                     </div>
@@ -616,7 +616,7 @@ export default function StyleEduPage() {
                     <span className="material-symbols-outlined" style={{ fontSize: "36px", color: GREEN, display: "block", marginBottom: "10px" }}>check_circle</span>
                     <div style={{ fontSize: "15px", fontWeight: 700, marginBottom: "6px" }}>Video Submitted!</div>
                     <div style={{ fontSize: "12px", color: MID }}>The owner will review your video and add it to the course library.</div>
-                    <button onClick={() => setSubmitSuccess(false)} style={{ marginTop: "14px", padding: "8px 16px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Submit Another</button>
+                    <button onClick={() => setSubmitSuccess(false)} style={{ marginTop: "14px", padding: "8px 16px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Submit Another</button>
                   </div>
                 ) : (
                   <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "24px", marginBottom: "20px" }}>
@@ -671,7 +671,7 @@ export default function StyleEduPage() {
                           <input type="checkbox" checked={submitForm.isTdlrCe} onChange={e => setSubmitForm(p => ({ ...p, isTdlrCe: e.target.checked }))} style={{ accentColor: ACC }} />
                           <label style={{ fontSize: "12px", color: MID }}>TDLR CE eligible</label>
                         </div>
-                        <button onClick={handleSubmitVideo} disabled={submitting || !submitForm.title} style={{ padding: "12px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", opacity: (!submitForm.title || submitting) ? 0.5 : 1 }}>
+                        <button onClick={handleSubmitVideo} disabled={submitting || !submitForm.title} style={{ padding: "12px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#1A1313", fontSize: "13px", fontWeight: 700, cursor: "pointer", opacity: (!submitForm.title || submitting) ? 0.5 : 1 }}>
                           {submitting ? "Submitting..." : "Submit for Owner Review"}
                         </button>
                       </div>
@@ -750,7 +750,7 @@ export default function StyleEduPage() {
 
                             {sub.status === "pending" && (
                               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                                <button onClick={() => handleReview(sub.id, "approve")} disabled={reviewing} style={{ padding: "9px 20px", background: `linear-gradient(135deg, ${GREEN}, #059669)`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer", opacity: reviewing ? 0.6 : 1 }}>
+                                <button onClick={() => handleReview(sub.id, "approve")} disabled={reviewing} style={{ padding: "9px 20px", background: `linear-gradient(135deg, ${GREEN}, #059669)`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "11px", fontWeight: 700, cursor: "pointer", opacity: reviewing ? 0.6 : 1 }}>
                                   {reviewing ? "..." : "Approve"}
                                 </button>
                                 <div style={{ display: "flex", gap: "6px", flex: 1 }}>
@@ -778,9 +778,9 @@ export default function StyleEduPage() {
         {/* ═══ Course Detail Modal ═══ */}
         {selectedCourse && (
           <div onClick={() => setSelectedCourse(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: "20px", overflowY: "auto" }}>
-            <div onClick={e => e.stopPropagation()} style={{ background: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "14px", width: "100%", maxWidth: "680px", overflow: "hidden", position: "relative", margin: "auto" }}>
+            <div onClick={e => e.stopPropagation()} style={{ background: "#FBFBFB", border: `1px solid ${BORDER2}`, borderRadius: "14px", width: "100%", maxWidth: "680px", overflow: "hidden", position: "relative", margin: "auto" }}>
               {/* Close button */}
-              <button onClick={() => setSelectedCourse(null)} style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, width: "32px", height: "32px", borderRadius: "50%", background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(4px)" }}>
+              <button onClick={() => setSelectedCourse(null)} style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10, width: "32px", height: "32px", borderRadius: "50%", background: "rgba(0,0,0,0.6)", border: "1px solid rgba(26,19,19,0.15)", color: "rgba(26,19,19,0.7)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", backdropFilter: "blur(4px)" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>close</span>
               </button>
 
@@ -797,11 +797,11 @@ export default function StyleEduPage() {
                   />
                 </div>
               ) : (
-                <div style={{ height: "220px", backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px", background: getCategoryGradient(selectedCourse.category) }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(255,255,255,0.3)" }}>
+                <div style={{ height: "220px", backgroundColor: "rgba(26,19,19,0.03)", border: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px", background: getCategoryGradient(selectedCourse.category) }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(26,19,19,0.3)" }}>
                     {selectedCourse.category === "color" ? "palette" : selectedCourse.category === "cutting" ? "content_cut" : selectedCourse.category === "texture" ? "auto_awesome" : selectedCourse.category === "business" ? "trending_up" : "verified"}
                   </span>
-                  <div style={{ ...mono, fontSize: "11px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em" }}>Video content coming soon</div>
+                  <div style={{ ...mono, fontSize: "11px", color: "rgba(26,19,19,0.25)", letterSpacing: "0.08em" }}>Video content coming soon</div>
                 </div>
               )}
 
@@ -832,7 +832,7 @@ export default function StyleEduPage() {
                       <span className="material-symbols-outlined" style={{ fontSize: "14px", color: ACC_BRIGHT }}>person</span>
                     </div>
                     <div>
-                      <div style={{ fontSize: "12px", fontWeight: 600, color: "#fff" }}>{selectedCourse.instructor}</div>
+                      <div style={{ fontSize: "12px", fontWeight: 600, color: "#1A1313" }}>{selectedCourse.instructor}</div>
                       <div style={{ fontSize: "9px", color: MUTED }}>Instructor</div>
                     </div>
                   </div>
@@ -845,7 +845,7 @@ export default function StyleEduPage() {
                     <span style={{ fontSize: "13px", color: GREEN, fontWeight: 600 }}>Completed{selectedCourse.completedAt ? ` on ${new Date(selectedCourse.completedAt).toLocaleDateString()}` : ""}</span>
                   </div>
                 ) : (
-                  <button onClick={() => markComplete(selectedCourse.id)} disabled={completing} style={{ width: "100%", padding: "13px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: completing ? 0.7 : 1, boxShadow: `0 2px 16px rgba(96,110,116,0.25)` }}>
+                  <button onClick={() => markComplete(selectedCourse.id)} disabled={completing} style={{ width: "100%", padding: "13px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#1A1313", fontSize: "13px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: completing ? 0.7 : 1, boxShadow: `0 2px 16px rgba(96,110,116,0.25)` }}>
                     {completing ? "Marking Complete..." : "Mark as Complete"}
                   </button>
                 )}

@@ -123,16 +123,16 @@ function SettingsInner() {
     setTimeout(() => setMsg(""), 3000)
   }
 
-  const cardStyle: React.CSSProperties = { backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "28px", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), 0 0 0 1px rgba(0,0,0,0.25)" }
-  const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" }
+  const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "28px", boxShadow: "inset 0 1px 0 rgba(26,19,19,0.02), 0 0 0 1px rgba(0,0,0,0.25)" }
+  const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }
   const labelStyle: React.CSSProperties = { fontSize: "10px", fontWeight: 700, color: "#7a8f96", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "6px", display: "block" }
 
   return (
     <div style={{ maxWidth: "700px", margin: "0 auto", padding: "28px 20px" }}>
-      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 20px" }}>Settings</h1>
+      <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 20px" }}>Settings</h1>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: "0", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: "24px", overflowX: "auto" }}>
+      <div style={{ display: "flex", gap: "0", borderBottom: "1px solid rgba(26,19,19,0.06)", marginBottom: "24px", overflowX: "auto" }}>
         {tabs.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
             padding: "10px 18px", fontSize: "13px", fontWeight: 600, color: activeTab === t.key ? "#FBFBFB" : "#606E74",
@@ -149,9 +149,9 @@ function SettingsInner() {
         <div style={cardStyle}>
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div><label style={labelStyle}>Full Name</label><input value={name} onChange={e => setName(e.target.value)} style={inputStyle} /></div>
-            <div><label style={labelStyle}>Email</label><input value={user?.email || ""} disabled style={{ ...inputStyle, color: "rgba(205,201,192,0.4)", cursor: "not-allowed" }} /></div>
+            <div><label style={labelStyle}>Email</label><input value={user?.email || ""} disabled style={{ ...inputStyle, color: "rgba(26,19,19,0.4)", cursor: "not-allowed" }} /></div>
             <div><label style={labelStyle}>Phone</label><input value={phone} onChange={e => setPhone(e.target.value)} placeholder="(361) 555-0123" style={inputStyle} /></div>
-            <button onClick={saveProfile} disabled={saving} style={{ padding: "12px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "14px", cursor: "pointer", opacity: saving ? 0.6 : 1 }}>{saving ? "Saving..." : "Save Profile"}</button>
+            <button onClick={saveProfile} disabled={saving} style={{ padding: "12px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "14px", cursor: "pointer", opacity: saving ? 0.6 : 1 }}>{saving ? "Saving..." : "Save Profile"}</button>
           </div>
         </div>
       )}
@@ -178,7 +178,7 @@ function SettingsInner() {
 
           <div style={{ display: "flex", gap: "8px" }}>
             <input value={licenseNumber} onChange={e => setLicenseNumber(e.target.value)} placeholder="TX license number" style={{ ...inputStyle, flex: 1 }} />
-            <button onClick={verifyLicense} disabled={verifying || !licenseNumber.trim()} style={{ padding: "12px 20px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: "pointer", opacity: verifying ? 0.6 : 1, whiteSpace: "nowrap" }}>{verifying ? "Verifying..." : "Verify"}</button>
+            <button onClick={verifyLicense} disabled={verifying || !licenseNumber.trim()} style={{ padding: "12px 20px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: "pointer", opacity: verifying ? 0.6 : 1, whiteSpace: "nowrap" }}>{verifying ? "Verifying..." : "Verify"}</button>
           </div>
           <div style={{ fontSize: "12px", color: "#606E74", marginTop: "12px" }}>Your license number can be found on your TDLR certificate or at tdlr.texas.gov</div>
         </div>
@@ -205,10 +205,10 @@ function SettingsInner() {
           <div style={cardStyle}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>API Keys</div>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", marginBottom: "4px" }}>API Keys</div>
                 <div style={{ fontSize: "12px", color: "#606E74" }}>Generate keys for Kasse and RunMySalon integrations</div>
               </div>
-              <button onClick={() => { setShowKeyModal(true); setGeneratedKey("") }} style={{ padding: "8px 16px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Generate New Key</button>
+              <button onClick={() => { setShowKeyModal(true); setGeneratedKey("") }} style={{ padding: "8px 16px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Generate New Key</button>
             </div>
 
             {apiKeysLoading ? (
@@ -218,9 +218,9 @@ function SettingsInner() {
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 {apiKeys.map((k: any) => (
-                  <div key={k.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div key={k.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", backgroundColor: "rgba(26,19,19,0.03)", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.06)" }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#FBFBFB" }}>{k.name}</div>
+                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#1A1313" }}>{k.name}</div>
                       <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: "2px" }}>{k.keyId}</div>
                     </div>
                     <div style={{ fontSize: "10px", color: "#606E74" }}>
@@ -240,7 +240,7 @@ function SettingsInner() {
 
           {/* Quick start docs */}
           <div style={{ ...cardStyle, marginTop: "16px" }}>
-            <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "12px" }}>Quick Start</div>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313", marginBottom: "12px" }}>Quick Start</div>
             <div style={{ fontSize: "12px", color: "#606E74", marginBottom: "8px" }}>Base URL: <span style={{ color: "#7a8f96", fontFamily: "'Inter', sans-serif" }}>https://portal.salonenvyusa.com/api/v1</span></div>
             <div style={{ backgroundColor: "rgba(0,0,0,0.3)", borderRadius: "8px", padding: "16px", fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#7a8f96", lineHeight: 1.8, overflow: "auto" }}>
               <div style={{ color: "#606E74" }}>{"// Fetch today's appointments"}</div>
@@ -261,22 +261,22 @@ function SettingsInner() {
       {showKeyModal && (
         <>
           <div onClick={() => { setShowKeyModal(false); setGeneratedKey("") }} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }} />
-          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "480px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "90%", maxWidth: "480px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.1)", borderRadius: "14px", padding: "28px", zIndex: 101 }}>
             {generatedKey ? (
               <div>
                 <div style={{ fontSize: "16px", fontWeight: 700, color: "#10B981", marginBottom: "12px" }}>API Key Generated</div>
                 <div style={{ fontSize: "12px", color: "#f59e0b", marginBottom: "16px" }}>This key will only be shown once. Copy it now.</div>
-                <div style={{ backgroundColor: "rgba(0,0,0,0.4)", borderRadius: "8px", padding: "14px", fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#FBFBFB", wordBreak: "break-all", marginBottom: "16px", border: "1px solid rgba(16,185,129,0.3)" }}>
+                <div style={{ backgroundColor: "rgba(0,0,0,0.4)", borderRadius: "8px", padding: "14px", fontFamily: "'Inter', sans-serif", fontSize: "11px", color: "#1A1313", wordBreak: "break-all", marginBottom: "16px", border: "1px solid rgba(16,185,129,0.3)" }}>
                   {generatedKey}
                 </div>
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => { navigator.clipboard.writeText(generatedKey); setMsg("Copied!"); setTimeout(() => setMsg(""), 2000) }} style={{ flex: 1, padding: "10px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Copy Key</button>
-                  <button onClick={() => { setShowKeyModal(false); setGeneratedKey("") }} style={{ flex: 1, padding: "10px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#7a8f96", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Done</button>
+                  <button onClick={() => { navigator.clipboard.writeText(generatedKey); setMsg("Copied!"); setTimeout(() => setMsg(""), 2000) }} style={{ flex: 1, padding: "10px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Copy Key</button>
+                  <button onClick={() => { setShowKeyModal(false); setGeneratedKey("") }} style={{ flex: 1, padding: "10px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.1)", color: "#7a8f96", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Done</button>
                 </div>
               </div>
             ) : (
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", marginBottom: "20px" }}>Generate API Key</div>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", marginBottom: "20px" }}>Generate API Key</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                   <div><label style={labelStyle}>Key Name</label><input value={newKey.name} onChange={e => setNewKey({ ...newKey, name: e.target.value })} placeholder="e.g. Kasse Production" style={inputStyle} /></div>
                   <div><label style={labelStyle}>Location</label>
@@ -307,8 +307,8 @@ function SettingsInner() {
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
-                  <button onClick={() => setShowKeyModal(false)} style={{ flex: 1, padding: "10px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#7a8f96", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Cancel</button>
-                  <button onClick={generateApiKey} disabled={generatingKey || !newKey.name} style={{ flex: 1, padding: "10px", backgroundColor: "#7a8f96", color: "#06080d", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer", opacity: generatingKey || !newKey.name ? 0.5 : 1 }}>{generatingKey ? "Generating..." : "Generate Key"}</button>
+                  <button onClick={() => setShowKeyModal(false)} style={{ flex: 1, padding: "10px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.1)", color: "#7a8f96", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer" }}>Cancel</button>
+                  <button onClick={generateApiKey} disabled={generatingKey || !newKey.name} style={{ flex: 1, padding: "10px", backgroundColor: "#7a8f96", color: "#F4F5F7", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "12px", cursor: "pointer", opacity: generatingKey || !newKey.name ? 0.5 : 1 }}>{generatingKey ? "Generating..." : "Generate Key"}</button>
                 </div>
               </div>
             )}

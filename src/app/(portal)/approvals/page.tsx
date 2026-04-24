@@ -55,7 +55,7 @@ export default function ApprovalsPage() {
           style={{
             fontSize: "24px",
             fontWeight: 800,
-            color: "#FBFBFB",
+            color: "#1A1313",
             margin: "0 0 6px",
             letterSpacing: "-0.02em",
           }}
@@ -68,14 +68,14 @@ export default function ApprovalsPage() {
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#1a2a32", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : pending.length === 0 ? (
         <div
           style={{
-            backgroundColor: "#1a2a32",
-            border: "1px solid rgba(255,255,255,0.06)",
+            backgroundColor: "#FBFBFB",
+            border: "1px solid rgba(26,19,19,0.06)",
             borderRadius: "12px",
             padding: "60px",
             textAlign: "center",
@@ -87,7 +87,7 @@ export default function ApprovalsPage() {
           >
             task_alt
           </span>
-          <p style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 8px" }}>All caught up!</p>
+          <p style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", margin: "0 0 8px" }}>All caught up!</p>
           <p style={{ fontSize: "13px", color: "#94A3B8", margin: 0 }}>No pending approval requests.</p>
         </div>
       ) : (
@@ -96,8 +96,8 @@ export default function ApprovalsPage() {
             <div
               key={user.id}
               style={{
-                backgroundColor: "#1a2a32",
-                border: "1px solid rgba(255,255,255,0.06)",
+                backgroundColor: "#FBFBFB",
+                border: "1px solid rgba(26,19,19,0.06)",
                 borderRadius: "10px",
                 padding: "20px 24px",
                 display: "flex",
@@ -124,7 +124,7 @@ export default function ApprovalsPage() {
                 {user.name?.split(" ").map((n: string) => n[0]).join("").slice(0, 2) ?? "?"}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "15px", fontWeight: 700, color: "#FBFBFB", marginBottom: "4px" }}>{user.name ?? user.email}</div>
+                <div style={{ fontSize: "15px", fontWeight: 700, color: "#1A1313", marginBottom: "4px" }}>{user.name ?? user.email}</div>
                 <div style={{ fontSize: "12px", color: "#94A3B8", marginBottom: "6px" }}>{user.email}</div>
                 <div style={{ display: "flex", gap: "8px" }}>
                   <span
@@ -170,7 +170,7 @@ export default function ApprovalsPage() {
                     backgroundColor: "#CDC9C0",
                     border: "none",
                     borderRadius: "7px",
-                    color: "#0f1d24",
+                    color: "#1A1313",
                     fontSize: "11px",
                     fontWeight: 800,
                     letterSpacing: "0.08em",

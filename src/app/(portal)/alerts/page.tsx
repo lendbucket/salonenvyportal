@@ -15,12 +15,12 @@ const ACC = "#606E74"
 const ACC_BRIGHT = "#7a8f96"
 const ACC_DIM = "rgba(96,110,116,0.08)"
 const ACC_BORDER = "rgba(96,110,116,0.2)"
-const BORDER = "rgba(255,255,255,0.06)"
-const BORDER2 = "rgba(255,255,255,0.08)"
-const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
-const S1 = "rgba(255,255,255,0.03)"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const BORDER = "rgba(26,19,19,0.06)"
+const BORDER2 = "rgba(26,19,19,0.08)"
+const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const S1 = "rgba(26,19,19,0.03)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#10B981"
 
 const SEV_COLORS: Record<string, string> = { info: ACC, warning: "#f59e0b", critical: "#ef4444" }
@@ -114,7 +114,7 @@ export default function AlertsPage() {
     return true
   })
 
-  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#fff", fontSize: "16px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
+  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(26,19,19,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#1A1313", fontSize: "16px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
   const labelStyle: React.CSSProperties = { display: "block", fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "6px", ...mono }
 
   const ownerFilters: { id: Filter; label: string }[] = [
@@ -131,7 +131,7 @@ export default function AlertsPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", margin: 0, letterSpacing: "-0.02em" }}>Alerts</h1>
+          <h1 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: 0, letterSpacing: "-0.02em" }}>Alerts</h1>
           {unreadCount > 0 && (
             <span style={{ ...mono, fontSize: "10px", padding: "3px 10px", borderRadius: "100px", backgroundColor: ACC_DIM, border: `1px solid ${ACC_BORDER}`, color: ACC_BRIGHT }}>{unreadCount} unread</span>
           )}
@@ -228,7 +228,7 @@ export default function AlertsPage() {
             const sevColor = SEV_COLORS[a.severity] || ACC
             return (
               <div key={a.id} style={{
-                backgroundColor: a.isRead ? "#0d1117" : "rgba(96,110,116,0.08)",
+                backgroundColor: a.isRead ? "#FBFBFB" : "rgba(96,110,116,0.08)",
                 boxShadow: CARD_SHADOW,
                 border: `1px solid ${a.isRead ? "rgba(26,35,50,0.8)" : BORDER2}`,
                 borderLeft: `3px solid ${sevColor}`,
@@ -238,7 +238,7 @@ export default function AlertsPage() {
                 {/* Top row */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px", marginBottom: "8px", flexWrap: "wrap" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                    <span style={{ fontSize: "15px", fontWeight: 700, color: "#fff", ...jakarta }}>{a.title}</span>
+                    <span style={{ fontSize: "15px", fontWeight: 700, color: "#1A1313", ...jakarta }}>{a.title}</span>
                     <span style={{ ...mono, fontSize: "8px", padding: "2px 7px", borderRadius: "4px", backgroundColor: `${sevColor}15`, border: `1px solid ${sevColor}30`, color: sevColor, textTransform: "uppercase", letterSpacing: "0.08em" }}>{SEV_LABELS[a.severity] || a.severity}</span>
                     {a.locationName && (
                       <span style={{ ...mono, fontSize: "8px", padding: "2px 7px", borderRadius: "4px", backgroundColor: ACC_DIM, border: `1px solid ${ACC_BORDER}`, color: ACC_BRIGHT }}>{a.locationName}</span>

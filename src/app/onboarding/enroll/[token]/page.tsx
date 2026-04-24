@@ -61,11 +61,11 @@ function isKnownBank(name: string): boolean {
 
 const STEPS = ["Welcome", "Personal Info", "Verify Contact", "License", "W-9", "Consents", "Direct Deposit", "Emergency Contact", "Agreement", "Complete"];
 
-const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#FBFBFB", fontSize: "16px", boxSizing: "border-box", outline: "none" };
+const inputStyle: React.CSSProperties = { width: "100%", padding: "12px 14px", backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.15)", borderRadius: "8px", color: "#1A1313", fontSize: "16px", boxSizing: "border-box", outline: "none" };
 const inputErrorStyle: React.CSSProperties = { ...inputStyle, border: "1px solid rgba(239,68,68,0.6)" };
 const labelStyle: React.CSSProperties = { display: "block", fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" };
 const selectStyle: React.CSSProperties = { ...inputStyle, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23CDC9C0' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", paddingRight: "32px" };
-const btnPrimary: React.CSSProperties = { width: "100%", padding: "14px", backgroundColor: "#CDC9C0", color: "#0f1d24", fontSize: "12px", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", borderRadius: "8px", border: "none", cursor: "pointer" };
+const btnPrimary: React.CSSProperties = { width: "100%", padding: "14px", backgroundColor: "#CDC9C0", color: "#1A1313", fontSize: "12px", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", borderRadius: "8px", border: "none", cursor: "pointer" };
 const btnSecondary: React.CSSProperties = { padding: "14px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "8px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" };
 const errText: React.CSSProperties = { color: "#f87171", fontSize: "11px", marginTop: "4px" };
 const warnText: React.CSSProperties = { color: "#eab308", fontSize: "11px", marginTop: "4px" };
@@ -344,8 +344,8 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
     }
   };
 
-  if (loading) return (<div style={{ minHeight: "100vh", backgroundColor: "#0f1d24", display: "flex", alignItems: "center", justifyContent: "center" }}><div style={{ color: "#CDC9C0", fontSize: "14px", fontWeight: 600 }}>Loading...</div></div>);
-  if (error && !enrollment) return (<div style={{ minHeight: "100vh", backgroundColor: "#0f1d24", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}><div style={{ textAlign: "center" }}><span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#94A3B8", display: "block", marginBottom: "16px" }}>lock</span><h2 style={{ color: "#FBFBFB", fontSize: "22px", fontWeight: 800, margin: "0 0 8px" }}>Link Unavailable</h2><p style={{ color: "#94A3B8", fontSize: "14px" }}>{error}</p></div></div>);
+  if (loading) return (<div style={{ minHeight: "100vh", backgroundColor: "#F4F5F7", display: "flex", alignItems: "center", justifyContent: "center" }}><div style={{ color: "#CDC9C0", fontSize: "14px", fontWeight: 600 }}>Loading...</div></div>);
+  if (error && !enrollment) return (<div style={{ minHeight: "100vh", backgroundColor: "#F4F5F7", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}><div style={{ textAlign: "center" }}><span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#94A3B8", display: "block", marginBottom: "16px" }}>lock</span><h2 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 800, margin: "0 0 8px" }}>Link Unavailable</h2><p style={{ color: "#94A3B8", fontSize: "14px" }}>{error}</p></div></div>);
 
   const allAcked = agreement.ackPolicies && agreement.ackConfidentiality && agreement.ackAtWill && agreement.ackSafetyProtocol && agreement.ackTechPolicy;
   const resolvedSignedName = agreement.agreementSignedName || agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "");
@@ -360,11 +360,11 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
   );
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#0f1d24" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#F4F5F7" }}>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
       <div style={{ backgroundColor: "#0a1520", borderBottom: "1px solid rgba(205,201,192,0.08)", padding: "8px 16px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
         <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#22c55e" }}>lock</span>
-        <span style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.5)", letterSpacing: "0.1em", textTransform: "uppercase" }}>256-bit SSL encrypted</span>
+        <span style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.5)", letterSpacing: "0.1em", textTransform: "uppercase" }}>256-bit SSL encrypted</span>
       </div>
       <div style={{ maxWidth: "560px", margin: "0 auto", padding: "24px 16px 48px" }}>
         <div style={{ textAlign: "center", marginBottom: "24px", paddingTop: "8px" }}>
@@ -374,7 +374,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           <div style={{ marginBottom: "28px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
               <span style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.08em", textTransform: "uppercase" }}>Step {step + 1} of {totalSteps}</span>
-              <span style={{ fontSize: "10px", fontWeight: 600, color: "rgba(205,201,192,0.4)", letterSpacing: "0.05em" }}>{STEPS[step]}</span>
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "rgba(26,19,19,0.4)", letterSpacing: "0.05em" }}>{STEPS[step]}</span>
             </div>
             <div style={{ height: "3px", backgroundColor: "rgba(205,201,192,0.1)", borderRadius: "4px" }}>
               <div style={{ height: "100%", width: `${((step + 1) / totalSteps) * 100}%`, backgroundColor: "#CDC9C0", borderRadius: "4px", transition: "width 0.4s ease" }} />
@@ -388,11 +388,11 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 0: Welcome */}
           {step === 0 && enrollment && (
             <div>
-              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Welcome, {enrollment.firstName}!</h2>
+              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Welcome, {enrollment.firstName}!</h2>
               <p style={{ fontSize: "14px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 24px" }}>You have been invited to join <strong style={{ color: "#CDC9C0" }}>Salon Envy - {enrollment.locationName}</strong> as a <strong style={{ color: "#CDC9C0" }}>{enrollment.role === "MANAGER" ? "Manager" : "Stylist"}</strong>.</p>
               <p style={{ fontSize: "13px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 24px" }}>This enrollment process will collect your personal information, licensing details, tax information, and direct deposit setup. All data is transmitted securely.</p>
-              <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", marginBottom: "24px", border: "1px solid rgba(205,201,192,0.08)" }}>
-                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "12px" }}>What you will need</div>
+              <div style={{ backgroundColor: "#FBFBFB", borderRadius: "8px", padding: "16px", marginBottom: "24px", border: "1px solid rgba(205,201,192,0.08)" }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "12px" }}>What you will need</div>
                 {["Government-issued photo ID", "Cosmetology license number", "Social Security Number (XXX-XX-XXXX)", "Bank account details (routing + account number)", "Emergency contact information"].map((item) => (
                   <div key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#CDC9C0" }}>check_circle</span>
@@ -407,7 +407,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 1: Personal Info + Emergency + SSN */}
           {step === 1 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Personal Information</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Personal Information</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>All fields are required.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
@@ -469,17 +469,17 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 2: Verify Contact */}
           {step === 2 && enrollment && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Verify Your Contact Info</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Verify Your Contact Info</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>We need to verify your email and phone number before proceeding.</p>
               {verifyError && <div style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "10px 14px", marginBottom: "16px", color: "#f87171", fontSize: "12px" }}>{verifyError}</div>}
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 {/* Email verification */}
-                <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", border: `1px solid ${emailVerified ? "rgba(34,197,94,0.3)" : "rgba(205,201,192,0.08)"}` }}>
+                <div style={{ backgroundColor: "#FBFBFB", borderRadius: "8px", padding: "16px", border: `1px solid ${emailVerified ? "rgba(34,197,94,0.3)" : "rgba(205,201,192,0.08)"}` }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase" }}>Email</div>
                     {emailVerified && <span style={{ fontSize: "10px", fontWeight: 700, color: "#22c55e", letterSpacing: "0.08em", textTransform: "uppercase" }}>Verified</span>}
                   </div>
-                  <p style={{ fontSize: "14px", color: "#FBFBFB", margin: "0 0 12px" }}>{enrollment.email}</p>
+                  <p style={{ fontSize: "14px", color: "#1A1313", margin: "0 0 12px" }}>{enrollment.email}</p>
                   {!emailVerified && (
                     <>
                       {!emailOtpSent ? (
@@ -499,12 +499,12 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
                   )}
                 </div>
                 {/* Phone verification */}
-                <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", border: `1px solid ${phoneVerified ? "rgba(34,197,94,0.3)" : "rgba(205,201,192,0.08)"}` }}>
+                <div style={{ backgroundColor: "#FBFBFB", borderRadius: "8px", padding: "16px", border: `1px solid ${phoneVerified ? "rgba(34,197,94,0.3)" : "rgba(205,201,192,0.08)"}` }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase" }}>Phone</div>
                     {phoneVerified && <span style={{ fontSize: "10px", fontWeight: 700, color: "#22c55e", letterSpacing: "0.08em", textTransform: "uppercase" }}>Verified</span>}
                   </div>
-                  <p style={{ fontSize: "14px", color: "#FBFBFB", margin: "0 0 12px" }}>{personal.phone}</p>
+                  <p style={{ fontSize: "14px", color: "#1A1313", margin: "0 0 12px" }}>{personal.phone}</p>
                   {phoneVerified && phoneSkipReason && (
                     <p style={{ fontSize: "11px", color: "#94A3B8", margin: "0", fontStyle: "italic" }}>{phoneSkipReason}</p>
                   )}
@@ -537,15 +537,15 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 3: License */}
           {step === 3 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>License Information</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>License Information</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Your professional cosmetology license details.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div><label style={labelStyle}>License Type</label><select value={license.licenseType} onChange={(e) => setLicense({ ...license, licenseType: e.target.value })} style={selectStyle}><option value="cosmetology">Cosmetology</option><option value="barber">Barber</option><option value="esthetician">Esthetician</option><option value="nail_tech">Nail Technician</option><option value="other">Other</option></select></div>
                 <div><label style={labelStyle}>License Number *</label><input value={license.licenseNumber} onChange={(e) => setLicense({ ...license, licenseNumber: e.target.value })} onBlur={() => { if (license.licenseNumber && license.licenseState?.toUpperCase() === "TX") verifyTdlr(license.licenseNumber); }} placeholder="License number" style={inputStyle} />{license.licenseState?.toUpperCase() === "TX" && <p style={{ fontSize: "10px", color: "#94A3B8", marginTop: "4px" }}>Texas licenses are auto-verified via TDLR.</p>}</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}><div><label style={labelStyle}>State Issued</label><input value={license.licenseState} onChange={(e) => setLicense({ ...license, licenseState: e.target.value })} placeholder="TX" maxLength={2} style={inputStyle} /></div><div><label style={labelStyle}>Expiration Date</label><input type="date" value={license.licenseExpiration} onChange={(e) => setLicense({ ...license, licenseExpiration: e.target.value })} style={inputStyle} /></div></div>
                 <div><label style={labelStyle}>Years of Experience</label><input type="number" min="0" max="50" value={license.yearsOfExperience} onChange={(e) => setLicense({ ...license, yearsOfExperience: e.target.value })} placeholder="0" style={inputStyle} /></div>
-                <div><label style={labelStyle}>Specialties</label><div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>{["Color", "Cuts", "Extensions", "Highlights", "Balayage", "Brazilian Blowout", "Keratin", "Updos", "Men's Cuts"].map((s) => (<label key={s} style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", backgroundColor: license.specialties.includes(s) ? "rgba(205,201,192,0.12)" : "#1a2a32", border: `1px solid ${license.specialties.includes(s) ? "rgba(205,201,192,0.3)" : "rgba(205,201,192,0.1)"}`, borderRadius: "6px", padding: "6px 10px" }}><input type="checkbox" checked={license.specialties.includes(s)} onChange={(e) => { if (e.target.checked) setLicense({ ...license, specialties: [...license.specialties, s] }); else setLicense({ ...license, specialties: license.specialties.filter((x) => x !== s) }); }} style={{ accentColor: "#CDC9C0", width: "14px", height: "14px" }} /><span style={{ fontSize: "12px", color: "#CDC9C0" }}>{s}</span></label>))}</div></div>
-                {tdlrChecking && (<div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#1a2a32", borderRadius: "8px", padding: "12px 16px", border: "1px solid rgba(205,201,192,0.08)" }}><svg style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#CDC9C0" strokeWidth="2" opacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="#CDC9C0" strokeWidth="2" strokeLinecap="round" /></svg><style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style><span style={{ fontSize: "12px", color: "#CDC9C0" }}>Verifying with TDLR...</span></div>)}
+                <div><label style={labelStyle}>Specialties</label><div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>{["Color", "Cuts", "Extensions", "Highlights", "Balayage", "Brazilian Blowout", "Keratin", "Updos", "Men's Cuts"].map((s) => (<label key={s} style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", backgroundColor: license.specialties.includes(s) ? "rgba(205,201,192,0.12)" : "#FBFBFB", border: `1px solid ${license.specialties.includes(s) ? "rgba(26,19,19,0.3)" : "rgba(205,201,192,0.1)"}`, borderRadius: "6px", padding: "6px 10px" }}><input type="checkbox" checked={license.specialties.includes(s)} onChange={(e) => { if (e.target.checked) setLicense({ ...license, specialties: [...license.specialties, s] }); else setLicense({ ...license, specialties: license.specialties.filter((x) => x !== s) }); }} style={{ accentColor: "#CDC9C0", width: "14px", height: "14px" }} /><span style={{ fontSize: "12px", color: "#CDC9C0" }}>{s}</span></label>))}</div></div>
+                {tdlrChecking && (<div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#FBFBFB", borderRadius: "8px", padding: "12px 16px", border: "1px solid rgba(205,201,192,0.08)" }}><svg style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#CDC9C0" strokeWidth="2" opacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" stroke="#CDC9C0" strokeWidth="2" strokeLinecap="round" /></svg><style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style><span style={{ fontSize: "12px", color: "#CDC9C0" }}>Verifying with TDLR...</span></div>)}
                 {tdlrResult && !tdlrChecking && (<div style={{ backgroundColor: tdlrResult.statusColor === "green" ? "rgba(16,185,129,0.08)" : tdlrResult.statusColor === "red" ? "rgba(239,68,68,0.08)" : "rgba(234,179,8,0.08)", border: `1px solid ${tdlrResult.statusColor === "green" ? "rgba(16,185,129,0.25)" : tdlrResult.statusColor === "red" ? "rgba(239,68,68,0.25)" : "rgba(234,179,8,0.25)"}`, borderRadius: "8px", padding: "12px 16px" }}>{tdlrResult.found ? (<div><span style={{ display: "inline-block", padding: "2px 8px", borderRadius: "10px", fontSize: "10px", fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", backgroundColor: tdlrResult.statusColor === "green" ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)", color: tdlrResult.statusColor === "green" ? "#10B981" : "#EF4444" }}>{tdlrResult.statusColor === "green" ? "TDLR Verified" : "TDLR " + tdlrResult.status}</span>{tdlrResult.holderName && <p style={{ fontSize: "12px", color: "#94A3B8", margin: "6px 0 0" }}>Holder: <strong style={{ color: "#CDC9C0" }}>{tdlrResult.holderName}</strong></p>}{tdlrResult.expirationDate && <p style={{ fontSize: "12px", color: "#94A3B8", margin: "2px 0 0" }}>Expires: {new Date(tdlrResult.expirationDate).toLocaleDateString()}</p>}</div>) : (<p style={{ fontSize: "12px", color: "#EAB308", margin: 0 }}>License not found in TDLR database.</p>)}</div>)}
               </div>
               <div style={{ display: "flex", gap: "12px", marginTop: "24px" }}><button type="button" onClick={() => setStep(2)} style={{ ...btnSecondary, flex: 1 }}>Back</button><button type="button" onClick={handleNext} disabled={saving || !license.licenseNumber} style={{ ...btnPrimary, flex: 2, opacity: saving || !license.licenseNumber ? 0.5 : 1 }}>{saving ? "Saving..." : "Continue"}</button></div>
@@ -555,7 +555,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 4: W-9 */}
           {step === 4 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>W-9 Tax Information</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>W-9 Tax Information</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Required for tax reporting. This information is encrypted and secure.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div><label style={labelStyle}>Legal Name (as shown on tax return) *</label><input value={w9.w9LegalName} onChange={(e) => setW9({ ...w9, w9LegalName: e.target.value })} placeholder="Full legal name" style={inputStyle} /></div>
@@ -572,7 +572,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 5: Fortune 500 Consents */}
           {step === 5 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Acknowledgments &amp; Consents</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Acknowledgments &amp; Consents</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Please review and acknowledge each item below.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                 <CheckboxRow checked={consents.ackBackgroundCheck} onChange={(v) => setConsents({ ...consents, ackBackgroundCheck: v })} text="I consent to Salon Envy conducting a background check as a condition of engagement. I understand this may include criminal history, identity verification, and professional license verification." />
@@ -599,7 +599,7 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 6: Direct Deposit with validation */}
           {step === 6 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Direct Deposit</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Direct Deposit</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Banking info is used for direct deposit only and is stored securely.</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
@@ -622,11 +622,11 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 7: Emergency Contact Confirm */}
           {step === 7 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Confirm Emergency Contact</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Confirm Emergency Contact</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Please confirm the emergency contact you entered earlier.</p>
-              <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", border: "1px solid rgba(205,201,192,0.08)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Name</span><span style={{ fontSize: "13px", color: "#FBFBFB", fontWeight: 600 }}>{personal.emergencyName}</span></div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Phone</span><span style={{ fontSize: "13px", color: "#FBFBFB", fontWeight: 600 }}>{personal.emergencyPhone}</span></div>
+              <div style={{ backgroundColor: "#FBFBFB", borderRadius: "8px", padding: "16px", border: "1px solid rgba(205,201,192,0.08)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Name</span><span style={{ fontSize: "13px", color: "#1A1313", fontWeight: 600 }}>{personal.emergencyName}</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: "13px", color: "#94A3B8" }}>Phone</span><span style={{ fontSize: "13px", color: "#1A1313", fontWeight: 600 }}>{personal.emergencyPhone}</span></div>
               </div>
               <div style={{ display: "flex", gap: "12px", marginTop: "24px" }}><button type="button" onClick={() => setStep(6)} style={{ ...btnSecondary, flex: 1 }}>Back</button><button type="button" onClick={handleNext} disabled={saving} style={{ ...btnPrimary, flex: 2, opacity: saving ? 0.5 : 1 }}>{saving ? "Saving..." : "Continue"}</button></div>
             </div>
@@ -635,13 +635,13 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {/* Step 8: Agreement */}
           {step === 8 && (
             <div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>{enrollment?.role === "MANAGER" ? "Manager Contractor Agreement" : "Hair Stylist Agreement"}</h2>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>{enrollment?.role === "MANAGER" ? "Manager Contractor Agreement" : "Hair Stylist Agreement"}</h2>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 20px" }}>Please review the agreement below and sign.</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
                 <div><label style={labelStyle}>Agreement Date</label><input type="date" value={agreement.agreementTopDate} onChange={(e) => setAgreement({ ...agreement, agreementTopDate: e.target.value })} style={inputStyle} /></div>
                 <div><label style={labelStyle}>Full Legal Name</label><input value={agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "")} onChange={(e) => setAgreement({ ...agreement, agreementContractorName: e.target.value })} placeholder="Full legal name" style={inputStyle} /></div>
               </div>
-              <div style={{ maxHeight: "260px", overflowY: "auto", backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px", marginBottom: "20px", fontSize: "12px", color: "#94A3B8", lineHeight: 1.7, whiteSpace: "pre-wrap", fontFamily: "monospace" }}>
+              <div style={{ maxHeight: "260px", overflowY: "auto", backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "8px", padding: "16px", marginBottom: "20px", fontSize: "12px", color: "#94A3B8", lineHeight: 1.7, whiteSpace: "pre-wrap", fontFamily: "monospace" }}>
                 {enrollment?.role === "MANAGER"
                   ? getManagerAgreement({ name: agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : ""), location: enrollment?.locationName || "", startDate: agreement.agreementTopDate ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "___________", commissionRate: 40, managementFee: 200 })
                   : getStylistAgreement({ name: agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : ""), location: enrollment?.locationName || "", startDate: agreement.agreementTopDate ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "___________", commissionRate: 40 })}
@@ -657,15 +657,15 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
                   <CheckboxRow key={item.key} checked={agreement[item.key]} onChange={(v) => setAgreement({ ...agreement, [item.key]: v })} text={item.text} />
                 ))}
               </div>
-              <div style={{ marginBottom: "16px" }}><label style={labelStyle}>Signature</label><div style={{ position: "relative", backgroundColor: "#1a2a32", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.15)" }}><canvas ref={canvasRef} width={500} height={150} style={{ width: "100%", height: "120px", borderRadius: "8px", touchAction: "none", cursor: "crosshair" }} onMouseDown={startDraw} onMouseMove={draw} onMouseUp={endDraw} onMouseLeave={endDraw} onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={endDraw} />{!hasSigned && <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", color: "rgba(205,201,192,0.25)", fontSize: "13px", pointerEvents: "none" }}>Sign here</div>}<button type="button" onClick={clearSignature} style={{ position: "absolute", top: "6px", right: "6px", background: "rgba(0,0,0,0.4)", border: "none", color: "#94A3B8", fontSize: "10px", padding: "4px 8px", borderRadius: "4px", cursor: "pointer" }}>Clear</button></div></div>
+              <div style={{ marginBottom: "16px" }}><label style={labelStyle}>Signature</label><div style={{ position: "relative", backgroundColor: "#FBFBFB", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.15)" }}><canvas ref={canvasRef} width={500} height={150} style={{ width: "100%", height: "120px", borderRadius: "8px", touchAction: "none", cursor: "crosshair" }} onMouseDown={startDraw} onMouseMove={draw} onMouseUp={endDraw} onMouseLeave={endDraw} onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={endDraw} />{!hasSigned && <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", color: "rgba(205,201,192,0.25)", fontSize: "13px", pointerEvents: "none" }}>Sign here</div>}<button type="button" onClick={clearSignature} style={{ position: "absolute", top: "6px", right: "6px", background: "rgba(0,0,0,0.4)", border: "none", color: "#94A3B8", fontSize: "10px", padding: "4px 8px", borderRadius: "4px", cursor: "pointer" }}>Clear</button></div></div>
               <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "12px", marginBottom: "20px" }}>
                 <div><label style={labelStyle}>Full Legal Name</label><input value={agreement.agreementSignedName || agreement.agreementContractorName || (enrollment ? `${enrollment.firstName} ${enrollment.lastName}`.trim() : "")} onChange={(e) => setAgreement({ ...agreement, agreementSignedName: e.target.value })} placeholder="Full legal name" style={inputStyle} /></div>
                 <div><label style={labelStyle}>SSN Last 4</label><input type="password" value={agreement.signedSsnLast4} onChange={(e) => setAgreement({ ...agreement, signedSsnLast4: e.target.value.replace(/\D/g, "").slice(0, 4) })} placeholder="XXXX" maxLength={4} style={fieldErrors.signedSsnLast4 ? inputErrorStyle : inputStyle} />{fieldErrors.signedSsnLast4 && <p style={errText}>{fieldErrors.signedSsnLast4}</p>}</div>
                 <div><label style={labelStyle}>Date</label><input type="date" value={agreement.signedDate} onChange={(e) => setAgreement({ ...agreement, signedDate: e.target.value })} style={inputStyle} /></div>
               </div>
-              <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)", padding: "16px", marginBottom: "20px" }}>
-                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "10px" }}>Salon Envy USA LLC (Pre-Executed)</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}><div><div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)", marginBottom: "2px" }}>Authorized Signor</div><div style={{ fontSize: "14px", fontWeight: 700, color: "#CDC9C0", fontStyle: "italic" }}>Robert R. Reyna</div></div><div><div style={{ fontSize: "10px", color: "rgba(205,201,192,0.4)", marginBottom: "2px" }}>Date</div><div style={{ fontSize: "14px", color: "#CDC9C0" }}>{agreement.agreementTopDate ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : ""}</div></div></div>
+              <div style={{ backgroundColor: "#FBFBFB", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)", padding: "16px", marginBottom: "20px" }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "10px" }}>Salon Envy USA LLC (Pre-Executed)</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}><div><div style={{ fontSize: "10px", color: "rgba(26,19,19,0.4)", marginBottom: "2px" }}>Authorized Signor</div><div style={{ fontSize: "14px", fontWeight: 700, color: "#CDC9C0", fontStyle: "italic" }}>Robert R. Reyna</div></div><div><div style={{ fontSize: "10px", color: "rgba(26,19,19,0.4)", marginBottom: "2px" }}>Date</div><div style={{ fontSize: "14px", color: "#CDC9C0" }}>{agreement.agreementTopDate ? new Date(agreement.agreementTopDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : ""}</div></div></div>
               </div>
               <div style={{ display: "flex", gap: "12px" }}><button type="button" onClick={() => setStep(7)} style={{ ...btnSecondary, flex: 1 }}>Back</button><button type="button" onClick={handleNext} disabled={saving || !agreementValid} style={{ ...btnPrimary, flex: 2, opacity: saving || !agreementValid ? 0.5 : 1 }}>{saving ? "Submitting..." : "Sign & Complete"}</button></div>
             </div>
@@ -675,11 +675,11 @@ export default function EnrollmentPage({ params }: { params: Promise<{ token: st
           {step === 9 && enrollment && (
             <div style={{ textAlign: "center", padding: "16px 0" }}>
               <div style={{ width: "64px", height: "64px", borderRadius: "50%", backgroundColor: "rgba(34,197,94,0.1)", border: "2px solid #22c55e", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}><span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#22c55e" }}>check_circle</span></div>
-              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 12px" }}>Enrollment Complete!</h2>
+              <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 12px" }}>Enrollment Complete!</h2>
               <p style={{ fontSize: "14px", color: "#94A3B8", lineHeight: 1.6, margin: "0 0 24px" }}>Thank you, {enrollment.firstName}. Your enrollment has been submitted successfully.</p>
-              {verificationCode && (<div style={{ backgroundColor: "#1a2a32", borderRadius: "12px", padding: "24px", marginBottom: "24px", border: "1px solid rgba(205,201,192,0.15)" }}><div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "8px" }}>Your Verification Code</div><div style={{ fontSize: "36px", fontWeight: 900, color: "#CDC9C0", letterSpacing: "0.15em", fontFamily: "monospace" }}>{verificationCode}</div><p style={{ fontSize: "12px", color: "#94A3B8", margin: "12px 0 0" }}>Save this code. You may be asked for it on your first day.</p></div>)}
-              <div style={{ backgroundColor: "#1a2a32", borderRadius: "8px", padding: "16px", textAlign: "left", border: "1px solid rgba(205,201,192,0.08)" }}>
-                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "12px" }}>What happens next</div>
+              {verificationCode && (<div style={{ backgroundColor: "#FBFBFB", borderRadius: "12px", padding: "24px", marginBottom: "24px", border: "1px solid rgba(205,201,192,0.15)" }}><div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "8px" }}>Your Verification Code</div><div style={{ fontSize: "36px", fontWeight: 900, color: "#CDC9C0", letterSpacing: "0.15em", fontFamily: "monospace" }}>{verificationCode}</div><p style={{ fontSize: "12px", color: "#94A3B8", margin: "12px 0 0" }}>Save this code. You may be asked for it on your first day.</p></div>)}
+              <div style={{ backgroundColor: "#FBFBFB", borderRadius: "8px", padding: "16px", textAlign: "left", border: "1px solid rgba(205,201,192,0.08)" }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "12px" }}>What happens next</div>
                 {["Your information will be reviewed by management", "You will receive an email with your login credentials", "On your first day, bring your ID and license for verification"].map((item, i) => (<div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "8px" }}><span style={{ color: "#CDC9C0", fontSize: "13px", fontWeight: 700, minWidth: "18px" }}>{i + 1}.</span><span style={{ fontSize: "13px", color: "#94A3B8" }}>{item}</span></div>))}
               </div>
             </div>

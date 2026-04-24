@@ -9,13 +9,13 @@ type Complaint = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)",
   borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
 }
 
 const btnPrimary: React.CSSProperties = {
   padding: "8px 16px", borderRadius: "8px", border: "none", cursor: "pointer",
-  backgroundColor: "#CDC9C0", color: "#0f1d24", fontSize: "12px", fontWeight: 700,
+  backgroundColor: "#CDC9C0", color: "#1A1313", fontSize: "12px", fontWeight: 700,
 }
 
 const btnSecondary: React.CSSProperties = {
@@ -25,8 +25,8 @@ const btnSecondary: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
-  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "8px", color: "#FBFBFB", fontSize: "13px", outline: "none",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)",
+  borderRadius: "8px", color: "#1A1313", fontSize: "13px", outline: "none",
 }
 
 export default function ComplaintsPage() {
@@ -70,7 +70,7 @@ export default function ComplaintsPage() {
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {[1,2,3].map(i => (
-          <div key={i} style={{ height: 80, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+          <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
         ))}
       </div>
     </div>
@@ -78,15 +78,15 @@ export default function ComplaintsPage() {
 
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
-      <h1 style={{ color: "#FBFBFB", fontSize: "22px", fontWeight: 700, margin: "0 0 20px" }}>Anonymous Complaints</h1>
+      <h1 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 700, margin: "0 0 20px" }}>Anonymous Complaints</h1>
 
       {/* Filter tabs */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
         {(["all", "new", "reviewed"] as const).map(s => (
           <button key={s} onClick={() => setFilter(s)} style={{
-            padding: "6px 14px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.08)",
-            backgroundColor: filter === s ? "rgba(255,255,255,0.06)" : "transparent",
-            color: filter === s ? "#CDC9C0" : "rgba(205,201,192,0.5)", cursor: "pointer",
+            padding: "6px 14px", borderRadius: "6px", border: "1px solid rgba(26,19,19,0.08)",
+            backgroundColor: filter === s ? "rgba(26,19,19,0.06)" : "transparent",
+            color: filter === s ? "#CDC9C0" : "rgba(26,19,19,0.5)", cursor: "pointer",
             fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
           }}>
             {s} ({s === "all" ? complaints.length : s === "new" ? complaints.filter(c => !c.isReviewed).length : complaints.filter(c => c.isReviewed).length})
@@ -116,14 +116,14 @@ export default function ComplaintsPage() {
                   {c.message.length > 150 ? c.message.slice(0, 150) + "..." : c.message}
                 </p>
               </div>
-              <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "11px", whiteSpace: "nowrap" }}>
+              <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "11px", whiteSpace: "nowrap" }}>
                 {new Date(c.createdAt).toLocaleDateString()}
               </div>
             </div>
           </div>
         ))}
         {filtered.length === 0 && (
-          <div style={{ ...cardStyle, textAlign: "center", color: "rgba(205,201,192,0.4)" }}>No complaints found</div>
+          <div style={{ ...cardStyle, textAlign: "center", color: "rgba(26,19,19,0.4)" }}>No complaints found</div>
         )}
       </div>
 
@@ -137,7 +137,7 @@ export default function ComplaintsPage() {
                 padding: "4px 12px", borderRadius: "6px", fontSize: "11px", fontWeight: 700,
                 textTransform: "uppercase", backgroundColor: "rgba(205,201,192,0.1)", color: "#CDC9C0",
               }}>{selected.category}</span>
-              <span style={{ color: "rgba(205,201,192,0.4)", fontSize: "11px" }}>
+              <span style={{ color: "rgba(26,19,19,0.4)", fontSize: "11px" }}>
                 {new Date(selected.createdAt).toLocaleString()}
               </span>
             </div>
@@ -153,7 +153,7 @@ export default function ComplaintsPage() {
               </div>
             ) : (
               <div>
-                <label style={{ fontSize: "11px", fontWeight: 600, color: "rgba(205,201,192,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: "6px" }}>Review Note</label>
+                <label style={{ fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: "6px" }}>Review Note</label>
                 <textarea style={{ ...inputStyle, minHeight: "80px", resize: "vertical", marginBottom: "12px" }}
                   value={reviewNote} onChange={e => setReviewNote(e.target.value)} placeholder="Add a note about this complaint..." />
                 <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>

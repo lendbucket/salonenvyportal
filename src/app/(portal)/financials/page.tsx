@@ -4,9 +4,9 @@ import { useUserRole } from "@/hooks/useUserRole"
 import { EXPENSE_CATEGORIES, BUSINESS_MODELS, TEXAS_SALES_TAX_RATE } from "@/lib/financial-constants"
 
 const ACC = "#606E74", ACC_B = "#7a8f96", ACC_DIM = "rgba(96,110,116,0.08)", ACC_BDR = "rgba(96,110,116,0.2)"
-const BORDER = "rgba(255,255,255,0.06)", S1 = "rgba(255,255,255,0.03)", S2 = "rgba(255,255,255,0.05)"
-const CARD_SHADOW = "inset 0 1px 0 rgba(255,255,255,0.02), inset 1px 0 0 rgba(255,255,255,0.01), 0 0 0 1px rgba(0,0,0,0.25)"
-const MUTED = "rgba(255,255,255,0.3)", MID = "rgba(255,255,255,0.6)", GREEN = "#10B981", AMBER = "#ffb347", BLUE = "#4da6ff", RED = "#ff6b6b"
+const BORDER = "rgba(26,19,19,0.06)", S1 = "rgba(26,19,19,0.03)", S2 = "rgba(26,19,19,0.05)"
+const CARD_SHADOW = "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)"
+const MUTED = "rgba(26,19,19,0.3)", MID = "rgba(26,19,19,0.6)", GREEN = "#10B981", AMBER = "#ffb347", BLUE = "#4da6ff", RED = "#ff6b6b"
 const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 const jakarta: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
 
@@ -57,7 +57,7 @@ export default function FinancialsPage() {
     <div style={{ padding: isMobile ? "16px" : "24px 32px", maxWidth: "1200px", margin: "0 auto", ...jakarta }}>
       {/* Header */}
       <div style={{ marginBottom: "24px" }}>
-        <h1 style={{ color: "#fff", fontSize: "22px", fontWeight: 700, margin: 0, letterSpacing: "-0.01em" }}>Financials</h1>
+        <h1 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 700, margin: 0, letterSpacing: "-0.01em" }}>Financials</h1>
         <p style={{ color: MUTED, fontSize: "12px", marginTop: "4px" }}>Expense tracking, invoicing, and tax estimates</p>
       </div>
 
@@ -86,7 +86,7 @@ export default function FinancialsPage() {
             cursor: "pointer", border: "1px solid", whiteSpace: "nowrap",
             backgroundColor: tab === t.key ? ACC_DIM : "transparent",
             borderColor: tab === t.key ? ACC_BDR : "transparent",
-            color: tab === t.key ? "#fff" : MUTED,
+            color: tab === t.key ? "#1A1313" : MUTED,
             transition: "all 0.15s ease",
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>{t.icon}</span>
@@ -176,7 +176,7 @@ function OverviewTab({ locationId, isMobile }: { locationId: string; isMobile: b
                 <span className="material-symbols-outlined" style={{ fontSize: "16px", color: k.color }}>{k.icon}</span>
                 <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED }}>{k.label}</span>
               </div>
-              <div style={{ fontSize: "20px", fontWeight: 700, color: "#fff", ...mono }}>{k.value}</div>
+              <div style={{ fontSize: "20px", fontWeight: 700, color: "#1A1313", ...mono }}>{k.value}</div>
             </div>
           ))}
         </div>
@@ -185,7 +185,7 @@ function OverviewTab({ locationId, isMobile }: { locationId: string; isMobile: b
       {/* Expense breakdown */}
       {summary?.expensesByCategory && Object.keys(summary.expensesByCategory).length > 0 && (
         <div style={{ backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "12px", padding: "20px", boxShadow: CARD_SHADOW }}>
-          <h3 style={{ color: "#fff", fontSize: "13px", fontWeight: 700, margin: "0 0 16px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Expenses by Category</h3>
+          <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 16px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Expenses by Category</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {Object.entries(summary.expensesByCategory as Record<string, number>)
               .sort(([, a], [, b]) => b - a)
@@ -197,7 +197,7 @@ function OverviewTab({ locationId, isMobile }: { locationId: string; isMobile: b
                     <div style={{ width: "120px", height: "6px", backgroundColor: S2, borderRadius: "3px", overflow: "hidden" }}>
                       <div style={{ width: `${pct}%`, height: "100%", backgroundColor: ACC_B, borderRadius: "3px" }} />
                     </div>
-                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#fff", minWidth: "80px", textAlign: "right", ...mono }}>{fmtCurrency(amt)}</span>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#1A1313", minWidth: "80px", textAlign: "right", ...mono }}>{fmtCurrency(amt)}</span>
                   </div>
                 )
               })}
@@ -252,7 +252,7 @@ function ExpensesTab({ locationId, isMobile }: { locationId: string; isMobile: b
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "8px 12px", backgroundColor: S2, border: `1px solid ${BORDER}`, borderRadius: "8px",
-    color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box",
+    color: "#1A1313", fontSize: "13px", outline: "none", boxSizing: "border-box",
   }
   const labelStyle: React.CSSProperties = { display: "block", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED, marginBottom: "4px" }
 
@@ -292,7 +292,7 @@ function ExpensesTab({ locationId, isMobile }: { locationId: string; isMobile: b
               {expenses.map((e: AnyObj) => (
                 <tr key={e.id} style={{ borderBottom: `1px solid ${BORDER}` }}>
                   <td style={{ padding: "10px", fontSize: "12px", color: MID, whiteSpace: "nowrap" }}>{fmtDate(e.date)}</td>
-                  <td style={{ padding: "10px", fontSize: "12px", color: "#fff", fontWeight: 600 }}>{e.vendor}</td>
+                  <td style={{ padding: "10px", fontSize: "12px", color: "#1A1313", fontWeight: 600 }}>{e.vendor}</td>
                   <td style={{ padding: "10px", fontSize: "12px", color: MID, maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.description}</td>
                   <td style={{ padding: "10px" }}>
                     <span style={{ padding: "2px 8px", borderRadius: "4px", fontSize: "10px", fontWeight: 700, backgroundColor: ACC_DIM, color: ACC_B }}>{e.category}</span>
@@ -319,8 +319,8 @@ function ExpensesTab({ locationId, isMobile }: { locationId: string; isMobile: b
       {/* Add Expense Modal */}
       {showModal && (
         <div onClick={() => setShowModal(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div onClick={e => e.stopPropagation()} style={{ backgroundColor: "#1a2a32", borderRadius: "16px", padding: "24px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflowY: "auto", border: `1px solid ${BORDER}`, boxShadow: CARD_SHADOW }}>
-            <h2 style={{ color: "#fff", fontSize: "16px", fontWeight: 700, margin: "0 0 20px" }}>Add Expense</h2>
+          <div onClick={e => e.stopPropagation()} style={{ backgroundColor: "#FBFBFB", borderRadius: "16px", padding: "24px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflowY: "auto", border: `1px solid ${BORDER}`, boxShadow: CARD_SHADOW }}>
+            <h2 style={{ color: "#1A1313", fontSize: "16px", fontWeight: 700, margin: "0 0 20px" }}>Add Expense</h2>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "12px" }}>
               <div>
                 <label style={labelStyle}>Date *</label>
@@ -426,7 +426,7 @@ function InvoicesTab({ locationId, isMobile }: { locationId: string; isMobile: b
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "8px 12px", backgroundColor: S2, border: `1px solid ${BORDER}`, borderRadius: "8px",
-    color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box",
+    color: "#1A1313", fontSize: "13px", outline: "none", boxSizing: "border-box",
   }
   const labelStyle: React.CSSProperties = { display: "block", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED, marginBottom: "4px" }
 
@@ -453,12 +453,12 @@ function InvoicesTab({ locationId, isMobile }: { locationId: string; isMobile: b
             <div key={inv.id} style={{ backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "10px", padding: "14px 16px", boxShadow: CARD_SHADOW, display: "flex", alignItems: isMobile ? "flex-start" : "center", gap: "12px", flexDirection: isMobile ? "column" : "row" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                  <span style={{ fontSize: "13px", fontWeight: 700, color: "#fff" }}>{inv.invoiceNumber}</span>
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: "#1A1313" }}>{inv.invoiceNumber}</span>
                   <span style={{ padding: "2px 8px", borderRadius: "4px", fontSize: "9px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", backgroundColor: `${statusColors[inv.status] || MUTED}22`, color: statusColors[inv.status] || MUTED }}>{inv.status}</span>
                 </div>
                 <div style={{ fontSize: "12px", color: MID }}>{inv.clientName}{inv.dueDate ? ` \u2022 Due ${fmtDate(inv.dueDate)}` : ""}</div>
               </div>
-              <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff", ...mono }}>{fmtCurrency(inv.total)}</div>
+              <div style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", ...mono }}>{fmtCurrency(inv.total)}</div>
             </div>
           ))}
         </div>
@@ -467,8 +467,8 @@ function InvoicesTab({ locationId, isMobile }: { locationId: string; isMobile: b
       {/* Create Invoice Modal */}
       {showCreate && (
         <div onClick={() => setShowCreate(false)} style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div onClick={e => e.stopPropagation()} style={{ backgroundColor: "#1a2a32", borderRadius: "16px", padding: "24px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflowY: "auto", border: `1px solid ${BORDER}`, boxShadow: CARD_SHADOW }}>
-            <h2 style={{ color: "#fff", fontSize: "16px", fontWeight: 700, margin: "0 0 20px" }}>Create Invoice</h2>
+          <div onClick={e => e.stopPropagation()} style={{ backgroundColor: "#FBFBFB", borderRadius: "16px", padding: "24px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflowY: "auto", border: `1px solid ${BORDER}`, boxShadow: CARD_SHADOW }}>
+            <h2 style={{ color: "#1A1313", fontSize: "16px", fontWeight: 700, margin: "0 0 20px" }}>Create Invoice</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div>
                 <label style={labelStyle}>Client Name *</label>
@@ -573,7 +573,7 @@ function TaxCenterTab({ locationId, isMobile }: { locationId: string; isMobile: 
 
           {/* Income summary */}
           <div style={{ backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "12px", padding: "20px", boxShadow: CARD_SHADOW }}>
-            <h3 style={{ color: "#fff", fontSize: "13px", fontWeight: 700, margin: "0 0 12px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Income Summary</h3>
+            <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 12px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Income Summary</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {[
                 { label: "Revenue", value: fmtCurrency(taxData.revenue || 0) },
@@ -583,7 +583,7 @@ function TaxCenterTab({ locationId, isMobile }: { locationId: string; isMobile: 
               ].map(row => (
                 <div key={row.label} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: `1px solid ${BORDER}` }}>
                   <span style={{ fontSize: "12px", color: MID }}>{row.label}</span>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff", ...mono }}>{row.value}</span>
+                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#1A1313", ...mono }}>{row.value}</span>
                 </div>
               ))}
             </div>
@@ -591,13 +591,13 @@ function TaxCenterTab({ locationId, isMobile }: { locationId: string; isMobile: 
 
           {/* IRS Due Dates */}
           <div style={{ backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "12px", padding: "20px", boxShadow: CARD_SHADOW }}>
-            <h3 style={{ color: "#fff", fontSize: "13px", fontWeight: 700, margin: "0 0 12px", letterSpacing: "0.04em", textTransform: "uppercase" }}>IRS Quarterly Due Dates</h3>
+            <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 12px", letterSpacing: "0.04em", textTransform: "uppercase" }}>IRS Quarterly Due Dates</h3>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: "8px" }}>
               {(taxData.irsDueDates || []).map((dd: AnyObj) => {
                 const isPast = new Date(dd.dueDate) < new Date()
                 return (
                   <div key={dd.quarter} style={{ padding: "12px", borderRadius: "8px", backgroundColor: S2, border: `1px solid ${BORDER}`, textAlign: "center" }}>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: isPast ? MUTED : "#fff", marginBottom: "4px" }}>{dd.label}</div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, color: isPast ? MUTED : "#1A1313", marginBottom: "4px" }}>{dd.label}</div>
                     <div style={{ fontSize: "12px", fontWeight: 600, color: isPast ? MUTED : AMBER, ...mono }}>{dd.dueDate}</div>
                     {isPast && <span style={{ fontSize: "9px", color: GREEN, fontWeight: 700, textTransform: "uppercase" }}>Passed</span>}
                   </div>
@@ -652,7 +652,7 @@ function SettingsTab({ locationId }: { locationId: string }) {
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "8px 12px", backgroundColor: S2, border: `1px solid ${BORDER}`, borderRadius: "8px",
-    color: "#fff", fontSize: "13px", outline: "none", boxSizing: "border-box",
+    color: "#1A1313", fontSize: "13px", outline: "none", boxSizing: "border-box",
   }
   const labelStyle: React.CSSProperties = { display: "block", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: MUTED, marginBottom: "4px" }
 
@@ -661,7 +661,7 @@ function SettingsTab({ locationId }: { locationId: string }) {
   return (
     <div style={{ maxWidth: "500px" }}>
       <div style={{ backgroundColor: S1, border: `1px solid ${BORDER}`, borderRadius: "12px", padding: "20px", boxShadow: CARD_SHADOW }}>
-        <h3 style={{ color: "#fff", fontSize: "13px", fontWeight: 700, margin: "0 0 16px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Business Model</h3>
+        <h3 style={{ color: "#1A1313", fontSize: "13px", fontWeight: 700, margin: "0 0 16px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Business Model</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div>
             <label style={labelStyle}>Business Model</label>

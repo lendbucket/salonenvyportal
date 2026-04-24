@@ -10,20 +10,20 @@ function getLocationStylists(loc: string) {
 const LOCATIONS = ["Corpus Christi", "San Antonio"]
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  CHECKED_OUT: { bg: "rgba(34, 197, 94, 0.12)", text: "#16a34a", border: "rgba(34, 197, 94, 0.35)", label: "Checked Out" },
-  IN_PROGRESS: { bg: "rgba(234, 179, 8, 0.12)", text: "#ca8a04", border: "rgba(234, 179, 8, 0.35)", label: "In Progress" },
-  UPCOMING: { bg: "rgba(59, 130, 246, 0.12)", text: "#2563eb", border: "rgba(59, 130, 246, 0.35)", label: "Upcoming" },
-  ACCEPTED: { bg: "rgba(59, 130, 246, 0.12)", text: "#2563eb", border: "rgba(59, 130, 246, 0.35)", label: "Confirmed" },
-  PENDING: { bg: "rgba(234, 179, 8, 0.12)", text: "#ca8a04", border: "rgba(234, 179, 8, 0.35)", label: "Pending" },
-  CANCELLED: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
-  CANCELLED_BY_SELLER: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
-  CANCELLED_BY_CUSTOMER: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
-  CANCELLED_BY_BUYER: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Cancelled" },
-  DECLINED: { bg: "rgba(239, 68, 68, 0.12)", text: "#dc2626", border: "rgba(239, 68, 68, 0.35)", label: "Declined" },
-  NO_SHOW: { bg: "rgba(249, 115, 22, 0.12)", text: "#ea580c", border: "rgba(249, 115, 22, 0.35)", label: "No Show" },
+  CHECKED_OUT: { bg: "rgba(34, 197, 94, 0.1)", text: "#15803d", border: "rgba(34, 197, 94, 0.25)", label: "Checked Out" },
+  IN_PROGRESS: { bg: "rgba(234, 179, 8, 0.1)", text: "#a16207", border: "rgba(234, 179, 8, 0.25)", label: "In Progress" },
+  UPCOMING: { bg: "rgba(59, 130, 246, 0.1)", text: "#1d4ed8", border: "rgba(59, 130, 246, 0.25)", label: "Upcoming" },
+  ACCEPTED: { bg: "rgba(59, 130, 246, 0.1)", text: "#1d4ed8", border: "rgba(59, 130, 246, 0.25)", label: "Confirmed" },
+  PENDING: { bg: "rgba(234, 179, 8, 0.1)", text: "#a16207", border: "rgba(234, 179, 8, 0.25)", label: "Pending" },
+  CANCELLED: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
+  CANCELLED_BY_SELLER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
+  CANCELLED_BY_CUSTOMER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
+  CANCELLED_BY_BUYER: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Cancelled" },
+  DECLINED: { bg: "rgba(239, 68, 68, 0.1)", text: "#b91c1c", border: "rgba(239, 68, 68, 0.25)", label: "Declined" },
+  NO_SHOW: { bg: "rgba(249, 115, 22, 0.1)", text: "#c2410c", border: "rgba(249, 115, 22, 0.25)", label: "No Show" },
 }
 
-const DEFAULT_STATUS = { bg: "rgba(205,201,192,0.06)", text: "rgba(205,201,192,0.5)", border: "rgba(205,201,192,0.3)", label: "Unknown" }
+const DEFAULT_STATUS = { bg: "rgba(26,19,19,0.06)", text: "rgba(26,19,19,0.45)", border: "rgba(26,19,19,0.3)", label: "Unknown" }
 
 const PALETTE = ['#7a8f96', '#f59e0b', '#22c55e', '#3b82f6', '#e1306c', '#a78bfa', '#fb923c', '#34d399', '#60a5fa', '#f472b6', '#facc15', '#4ade80']
 
@@ -704,7 +704,7 @@ export default function AppointmentsPage() {
   function paymentBadge(method: string) {
     const badgeBase = { fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "4px", whiteSpace: "nowrap" as const }
     if (method === "Cash") return <span style={{ ...badgeBase, backgroundColor: "rgba(34,197,94,0.1)", color: "#22c55e" }}>CASH</span>
-    if (method === "Apple Pay") return <span style={{ ...badgeBase, backgroundColor: "rgba(255,255,255,0.08)", color: "#fff" }}>Apple Pay</span>
+    if (method === "Apple Pay") return <span style={{ ...badgeBase, backgroundColor: "rgba(26,19,19,0.08)", color: "#1A1313" }}>Apple Pay</span>
     const parts = method.split(" ")
     const brand = parts[0]?.toUpperCase().replace(/ /g, "_") || ""
     const last4 = parts.slice(1).join(" ")
@@ -816,16 +816,16 @@ export default function AppointmentsPage() {
       <div style={{ marginBottom: "20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "10px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <h1 style={{ fontSize: isMobile ? "22px" : "24px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>
+            <h1 style={{ fontSize: isMobile ? "22px" : "24px", fontWeight: 800, color: "#1A1313", margin: 0 }}>
               {activeTab === "appointments" ? "Appointments" : activeTab === "transactions" ? "Transactions" : "Clients"}
             </h1>
-            <div style={{ display: "flex", gap: "2px", backgroundColor: "rgba(205,201,192,0.06)", borderRadius: "8px", padding: "3px" }}>
+            <div style={{ display: "flex", gap: "2px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "8px", padding: "3px" }}>
               {(["appointments", "transactions", "clients"] as const).map(tab => (
                 <button key={tab} onClick={() => setActiveTab(tab)} style={{
                   padding: "6px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
                   borderRadius: "6px", border: "none", cursor: "pointer",
                   backgroundColor: activeTab === tab ? "#CDC9C0" : "transparent",
-                  color: activeTab === tab ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                  color: activeTab === tab ? "#0f1d24" : "rgba(26,19,19,0.45)",
                   transition: "all 0.15s",
                 }}>{tab === "appointments" ? "Appts" : tab === "transactions" ? "Transactions" : "Clients"}</button>
               ))}
@@ -846,8 +846,8 @@ export default function AppointmentsPage() {
                     borderRadius: "6px",
                     border: "none",
                     cursor: "pointer",
-                    backgroundColor: location === l ? "#CDC9C0" : "rgba(205,201,192,0.06)",
-                    color: location === l ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                    backgroundColor: location === l ? "#CDC9C0" : "rgba(26,19,19,0.04)",
+                    color: location === l ? "#0f1d24" : "rgba(26,19,19,0.45)",
                   }}
                 >
                   {l === "Corpus Christi" ? "CC" : "SA"}
@@ -863,14 +863,14 @@ export default function AppointmentsPage() {
             }}><span className="material-symbols-outlined" style={{ fontSize: "14px" }}>add</span>{!isMobile && "New Appointment"}</button>
             {!isMobile && <button onClick={openBlockModal} style={{
               padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-              borderRadius: "6px", border: "1px solid rgba(255,255,255,0.08)", cursor: "pointer",
-              backgroundColor: "transparent", color: "rgba(205,201,192,0.6)",
+              borderRadius: "6px", border: "1px solid rgba(26,19,19,0.08)", cursor: "pointer",
+              backgroundColor: "transparent", color: "rgba(26,19,19,0.6)",
             }}>Block Time</button>}
             <button onClick={() => setShowWaitlist(!showWaitlist)} style={{
               padding: "7px 14px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-              borderRadius: "6px", border: showWaitlist ? "1px solid #CDC9C0" : "1px solid rgba(255,255,255,0.08)",
-              backgroundColor: showWaitlist ? "rgba(255,255,255,0.06)" : "transparent",
-              color: showWaitlist ? "#CDC9C0" : "rgba(205,201,192,0.45)", cursor: "pointer",
+              borderRadius: "6px", border: showWaitlist ? "1px solid #CDC9C0" : "1px solid rgba(26,19,19,0.08)",
+              backgroundColor: showWaitlist ? "rgba(26,19,19,0.06)" : "transparent",
+              color: showWaitlist ? "#CDC9C0" : "rgba(26,19,19,0.45)", cursor: "pointer",
             }}>{isMobile ? `WL${waitlist.length > 0 ? ` (${waitlist.length})` : ""}` : `Waitlist${waitlist.length > 0 ? ` (${waitlist.length})` : ""}`}</button>
           </>}
         </div>
@@ -885,8 +885,8 @@ export default function AppointmentsPage() {
         }}>
           <button onClick={() => navigateDate(-1)} style={{
             width: "36px", height: "36px", borderRadius: "8px",
-            backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.06)",
-            color: "rgba(205,201,192,0.6)", cursor: "pointer",
+            backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.06)",
+            color: "rgba(26,19,19,0.6)", cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>chevron_left</span>
@@ -899,14 +899,14 @@ export default function AppointmentsPage() {
               onChange={(e) => setDate(e.target.value)}
               style={{
                 padding: "8px 12px",
-                backgroundColor: "#0d1117",
-                border: "1px solid rgba(255,255,255,0.08)",
+                backgroundColor: "#FBFBFB",
+                border: "1px solid rgba(26,19,19,0.08)",
                 borderRadius: "8px",
-                color: "#FBFBFB",
+                color: "#1A1313",
                 fontSize: "13px",
                 fontWeight: 600,
                 outline: "none",
-                colorScheme: "dark",
+                colorScheme: "light",
               }}
             />
             {!isToday && (
@@ -917,7 +917,7 @@ export default function AppointmentsPage() {
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 borderRadius: "6px",
-                border: "1px solid rgba(255,255,255,0.08)",
+                border: "1px solid rgba(26,19,19,0.08)",
                 backgroundColor: "transparent",
                 color: "#CDC9C0",
                 cursor: "pointer",
@@ -929,14 +929,14 @@ export default function AppointmentsPage() {
 
           <button onClick={() => navigateDate(1)} style={{
             width: "36px", height: "36px", borderRadius: "8px",
-            backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.06)",
-            color: "rgba(205,201,192,0.6)", cursor: "pointer",
+            backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.06)",
+            color: "rgba(26,19,19,0.6)", cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>chevron_right</span>
           </button>
 
-          <span style={{ fontSize: "13px", fontWeight: 600, color: "rgba(205,201,192,0.55)", marginLeft: "4px" }}>
+          <span style={{ fontSize: "13px", fontWeight: 600, color: "rgba(26,19,19,0.55)", marginLeft: "4px" }}>
             {isMobile && (viewMode === "list" || viewMode === "day") ? new Date(date + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) : displayDate}
           </span>
         </div>
@@ -953,10 +953,10 @@ export default function AppointmentsPage() {
                 fontWeight: 600,
                 letterSpacing: "0.04em",
                 borderRadius: "8px",
-                border: viewMode === v ? "1px solid #7a8f96" : "1px solid rgba(255,255,255,0.06)",
+                border: viewMode === v ? "1px solid #7a8f96" : "1px solid rgba(26,19,19,0.06)",
                 cursor: "pointer",
                 backgroundColor: viewMode === v ? "rgba(122,143,150,0.15)" : "transparent",
-                color: viewMode === v ? "#FBFBFB" : "#606E74",
+                color: viewMode === v ? "#1A1313" : "#606E74",
                 transition: "all 0.15s",
               }}
             >
@@ -990,9 +990,9 @@ export default function AppointmentsPage() {
                   style={{
                     padding: "6px 12px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.06em",
                     borderRadius: "20px", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
-                    border: stylistFilter === "all" ? "1px solid rgba(122,143,150,0.3)" : "1px solid rgba(255,255,255,0.06)",
+                    border: stylistFilter === "all" ? "1px solid rgba(122,143,150,0.3)" : "1px solid rgba(26,19,19,0.06)",
                     backgroundColor: stylistFilter === "all" ? "rgba(122,143,150,0.1)" : "transparent",
-                    color: stylistFilter === "all" ? "#FBFBFB" : "rgba(205,201,192,0.45)",
+                    color: stylistFilter === "all" ? "#1A1313" : "rgba(26,19,19,0.45)",
                   }}
                 >
                   All ({allCount})
@@ -1008,9 +1008,9 @@ export default function AppointmentsPage() {
                         padding: "6px 12px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.06em",
                         borderRadius: "20px", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
                         display: "flex", alignItems: "center", gap: "5px",
-                        border: stylistFilter === s.id ? `1px solid ${clr}50` : "1px solid rgba(255,255,255,0.06)",
+                        border: stylistFilter === s.id ? `1px solid ${clr}50` : "1px solid rgba(26,19,19,0.06)",
                         backgroundColor: stylistFilter === s.id ? `${clr}1A` : "transparent",
-                        color: stylistFilter === s.id ? "#FBFBFB" : "rgba(205,201,192,0.45)",
+                        color: stylistFilter === s.id ? "#1A1313" : "rgba(26,19,19,0.45)",
                       }}
                     >
                       <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: clr, flexShrink: 0 }} />
@@ -1031,21 +1031,21 @@ export default function AppointmentsPage() {
             gap: isMobile ? "1px" : "32px",
             padding: isMobile ? "0" : "10px 0",
             marginTop: "12px",
-            borderTop: isMobile ? "none" : "1px solid rgba(255,255,255,0.06)",
-            borderBottom: isMobile ? "none" : "1px solid rgba(255,255,255,0.06)",
-            backgroundColor: isMobile ? "rgba(255,255,255,0.04)" : "transparent",
+            borderTop: isMobile ? "none" : "1px solid rgba(26,19,19,0.06)",
+            borderBottom: isMobile ? "none" : "1px solid rgba(26,19,19,0.06)",
+            backgroundColor: isMobile ? "rgba(26,19,19,0.04)" : "transparent",
             borderRadius: isMobile ? "8px" : "0",
             overflow: "hidden",
           }}>
             {[
-              { label: "Total", value: String(appointments.filter(a => !isBlockedTime(a)).length), color: "#FBFBFB" },
+              { label: "Total", value: String(appointments.filter(a => !isBlockedTime(a)).length), color: "#1A1313" },
               { label: "Checked", value: String(appointments.filter(a => a.resolvedStatus === "CHECKED_OUT" || a.isCheckedOut).length), color: "#22c55e" },
               { label: "Confirmed", value: String(appointments.filter(a => (a.resolvedStatus === "ACCEPTED" || a.resolvedStatus === "UPCOMING" || a.resolvedStatus === "IN_PROGRESS") && !a.isCheckedOut).length), color: "#60a5fa" },
               { label: "Pending", value: String(appointments.filter(a => a.status === "PENDING").length), color: "#FBBF24" },
               { label: "Cancel", value: String(appointments.filter(a => a.resolvedStatus === "CANCELLED" || a.status?.startsWith("CANCELLED")).length), color: "#EF4444" },
-              { label: "Revenue", value: fmtCurrency(appointments.filter(a => a.isCheckedOut && a.checkoutDetails?.total).reduce((s, a) => s + (a.checkoutDetails?.total || 0), 0)), color: "#FBFBFB" },
+              { label: "Revenue", value: fmtCurrency(appointments.filter(a => a.isCheckedOut && a.checkoutDetails?.total).reduce((s, a) => s + (a.checkoutDetails?.total || 0), 0)), color: "#1A1313" },
             ].map(stat => (
-              <div key={stat.label} style={{ display: "flex", flexDirection: "column", alignItems: isMobile ? "center" : "flex-start", padding: isMobile ? "10px 8px" : "0", backgroundColor: isMobile ? "#0d1117" : "transparent" }}>
+              <div key={stat.label} style={{ display: "flex", flexDirection: "column", alignItems: isMobile ? "center" : "flex-start", padding: isMobile ? "10px 8px" : "0", backgroundColor: isMobile ? "#FBFBFB" : "transparent" }}>
                 <div style={{ fontSize: isMobile ? "20px" : "16px", fontWeight: isMobile ? 700 : 800, color: stat.color, fontFamily: "'Inter', sans-serif" }}>{stat.value}</div>
                 <div style={{ fontSize: "10px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>{stat.label}</div>
               </div>
@@ -1058,11 +1058,11 @@ export default function AppointmentsPage() {
           <div style={{ display: "flex", gap: "6px", marginTop: "12px", flexWrap: "wrap" }}>
             <button onClick={() => setStatusFilter("all")} style={{
               padding: "4px 12px", borderRadius: "20px", border: "none", cursor: "pointer",
-              background: statusFilter === "all" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+              background: statusFilter === "all" ? "rgba(26,19,19,0.08)" : "rgba(26,19,19,0.02)",
               borderWidth: "1px", borderStyle: "solid",
-              borderColor: statusFilter === "all" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)",
+              borderColor: statusFilter === "all" ? "rgba(26,19,19,0.15)" : "rgba(26,19,19,0.06)",
             }}>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: statusFilter === "all" ? "#fff" : "#7a8f96" }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: statusFilter === "all" ? "#1A1313" : "#7a8f96" }}>
                 {appointments.filter(a => !isBlockedTime(a)).length}
               </span>
               <span style={{ fontSize: "11px", color: "#606E74", marginLeft: "4px" }}>all</span>
@@ -1072,11 +1072,11 @@ export default function AppointmentsPage() {
               return (
                 <button key={status} onClick={() => setStatusFilter(statusFilter === status ? "all" : status)} style={{
                   padding: "4px 12px", borderRadius: "20px", border: "none", cursor: "pointer",
-                  background: statusFilter === status ? sc.bg : "rgba(255,255,255,0.02)",
+                  background: statusFilter === status ? sc.bg : "rgba(26,19,19,0.02)",
                   borderWidth: "1px", borderStyle: "solid",
-                  borderColor: statusFilter === status ? sc.border : "rgba(255,255,255,0.06)",
+                  borderColor: statusFilter === status ? sc.border : "rgba(26,19,19,0.06)",
                 }}>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: statusFilter === status ? sc.text : "#fff" }}>
+                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: statusFilter === status ? sc.text : "#1A1313" }}>
                     {count}
                   </span>
                   <span style={{ fontSize: "11px", color: statusFilter === status ? sc.text : "#7a8f96", marginLeft: "4px" }}>
@@ -1093,7 +1093,7 @@ export default function AppointmentsPage() {
       {activeTab === "appointments" && <>
       {/* Error state */}
       {fetchError && !loading && (
-        <div style={{ background: '#0d1117', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: 20, textAlign: 'center', margin: '20px 0' }}>
+        <div style={{ background: '#FBFBFB', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: 20, textAlign: 'center', margin: '20px 0' }}>
           <div style={{ color: '#ef4444', fontSize: 14, fontFamily: 'Inter, sans-serif', marginBottom: 8 }}>{fetchError}</div>
           <button onClick={() => { setFetchError(null); fetchAppointments() }} style={{ background: 'transparent', border: '1px solid #606E74', color: '#7a8f96', borderRadius: 6, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Retry</button>
         </div>
@@ -1102,7 +1102,7 @@ export default function AppointmentsPage() {
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 80, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       ) : viewMode === "week" ? (
@@ -1152,15 +1152,15 @@ export default function AppointmentsPage() {
                     return formatDateStr(new Date(a.startTime)) === dayStr
                   })
                   return (
-                    <div key={di} style={{ flex: 1, minWidth: "100px", borderLeft: "1px solid rgba(255,255,255,0.06)", position: "relative", backgroundColor: isCurrentDay ? "rgba(122,143,150,0.04)" : "transparent" }}>
+                    <div key={di} style={{ flex: 1, minWidth: "100px", borderLeft: "1px solid rgba(26,19,19,0.06)", position: "relative", backgroundColor: isCurrentDay ? "rgba(122,143,150,0.04)" : "transparent" }}>
                       {/* Day header — name + number */}
-                      <div style={{ padding: "6px 4px", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", height: "52px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px" }}>
+                      <div style={{ padding: "6px 4px", textAlign: "center", borderBottom: "1px solid rgba(26,19,19,0.06)", height: "52px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px" }}>
                         <span style={{ fontSize: "11px", fontWeight: 600, color: isCurrentDay ? "#7a8f96" : "#606E74", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                           {day.toLocaleDateString("en-US", { weekday: "short" })}
                         </span>
                         <span style={{
                           fontSize: "18px", fontWeight: 700, fontFamily: "'Inter', sans-serif",
-                          color: isCurrentDay ? "#0d1117" : "#7a8f96",
+                          color: isCurrentDay ? "#fff" : "#7a8f96",
                           ...(isCurrentDay ? { backgroundColor: "#7a8f96", width: "28px", height: "28px", borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center" } : {}),
                         }}>
                           {day.getDate()}
@@ -1169,11 +1169,11 @@ export default function AppointmentsPage() {
                       {/* Hour grid */}
                       <div style={{ position: "relative", height: `${totalHours * WEEK_HOUR_PX}px` }}>
                         {Array.from({ length: totalHours + 1 }, (_, i) => (
-                          <div key={i} style={{ position: "absolute", top: `${i * WEEK_HOUR_PX}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(255,255,255,0.05)" }} />
+                          <div key={i} style={{ position: "absolute", top: `${i * WEEK_HOUR_PX}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(26,19,19,0.05)" }} />
                         ))}
                         {/* Half-hour lines */}
                         {Array.from({ length: totalHours }, (_, i) => (
-                          <div key={`hh${i}`} style={{ position: "absolute", top: `${i * WEEK_HOUR_PX + WEEK_HOUR_PX / 2}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(255,255,255,0.02)" }} />
+                          <div key={`hh${i}`} style={{ position: "absolute", top: `${i * WEEK_HOUR_PX + WEEK_HOUR_PX / 2}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(26,19,19,0.02)" }} />
                         ))}
                         {/* Current time line */}
                         {isCurrentDay && showNowLine && (
@@ -1203,7 +1203,7 @@ export default function AppointmentsPage() {
                                 boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
                               }}
                             >
-                              <div style={{ fontSize: "12px", fontWeight: 600, color: "#FBFBFB", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
+                              <div style={{ fontSize: "12px", fontWeight: 600, color: "#1A1313", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
                                 {appt.customerName}
                               </div>
                               {height >= 60 && appt.services?.[0] && (
@@ -1277,7 +1277,7 @@ export default function AppointmentsPage() {
               {/* Day of week headers */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "1px", marginBottom: "1px" }}>
                 {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(dn => (
-                  <div key={dn} style={{ padding: "8px 0", textAlign: "center", fontSize: "11px", fontWeight: 600, color: "#606E74", letterSpacing: "0.1em", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{dn}</div>
+                  <div key={dn} style={{ padding: "8px 0", textAlign: "center", fontSize: "11px", fontWeight: 600, color: "#606E74", letterSpacing: "0.1em", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>{dn}</div>
                 ))}
               </div>
               {/* Calendar grid */}
@@ -1303,15 +1303,15 @@ export default function AppointmentsPage() {
                       onClick={() => { setDate(dayStr); setViewMode("day") }}
                       style={{
                         minHeight: isMobile ? "80px" : "110px", padding: "6px",
-                        border: isDayToday ? "1px solid #7a8f96" : "1px solid rgba(255,255,255,0.05)",
+                        border: isDayToday ? "1px solid #7a8f96" : "1px solid rgba(26,19,19,0.05)",
                         borderRadius: "4px",
-                        backgroundColor: isDayToday ? "rgba(122,143,150,0.05)" : isCurrentMonth ? "#0d1117" : "rgba(255,255,255,0.01)",
+                        backgroundColor: isDayToday ? "rgba(122,143,150,0.05)" : isCurrentMonth ? "#FBFBFB" : "rgba(26,19,19,0.01)",
                         opacity: isCurrentMonth ? 1 : 0.3,
                         cursor: "pointer",
                         transition: "background 0.15s",
                       }}
-                      onMouseEnter={e => { if (isCurrentMonth) e.currentTarget.style.backgroundColor = isDayToday ? "rgba(122,143,150,0.08)" : "rgba(255,255,255,0.02)" }}
-                      onMouseLeave={e => { e.currentTarget.style.backgroundColor = isDayToday ? "rgba(122,143,150,0.05)" : isCurrentMonth ? "#0d1117" : "rgba(255,255,255,0.01)" }}
+                      onMouseEnter={e => { if (isCurrentMonth) e.currentTarget.style.backgroundColor = isDayToday ? "rgba(122,143,150,0.08)" : "rgba(26,19,19,0.02)" }}
+                      onMouseLeave={e => { e.currentTarget.style.backgroundColor = isDayToday ? "rgba(122,143,150,0.05)" : isCurrentMonth ? "#FBFBFB" : "rgba(26,19,19,0.01)" }}
                     >
                       {/* Day header row */}
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
@@ -1320,8 +1320,8 @@ export default function AppointmentsPage() {
                         ) : <span />}
                         <span style={{
                           fontSize: "13px", fontWeight: isDayToday ? 700 : 600, fontFamily: "'Inter', sans-serif",
-                          color: isDayToday ? "#FBFBFB" : isCurrentMonth ? "#7a8f96" : "rgba(255,255,255,0.2)",
-                          ...(isDayToday ? { backgroundColor: "#7a8f96", width: "22px", height: "22px", borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#0d1117" } : {}),
+                          color: isDayToday ? "#1A1313" : isCurrentMonth ? "#7a8f96" : "rgba(26,19,19,0.2)",
+                          ...(isDayToday ? { backgroundColor: "#7a8f96", width: "22px", height: "22px", borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#fff" } : {}),
                         }}>
                           {day.getDate()}
                         </span>
@@ -1342,7 +1342,7 @@ export default function AppointmentsPage() {
                               opacity: isCancelled ? 0.4 : 1,
                             }}
                           >
-                            <span style={{ fontSize: "11px", color: isCancelled ? "#606E74" : "#FBFBFB", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
+                            <span style={{ fontSize: "11px", color: isCancelled ? "#606E74" : "#1A1313", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textDecoration: isCancelled ? "line-through" : "none" }}>
                               {clientShortName(appt.customerName)}
                             </span>
                             {appt.isCheckedOut && !isCancelled && (
@@ -1366,14 +1366,14 @@ export default function AppointmentsPage() {
       ) : sorted.length === 0 ? (
         <div style={{
           textAlign: "center", padding: "60px 20px",
-          backgroundColor: "#0d1117", borderRadius: "12px",
-          border: "1px solid rgba(255,255,255,0.06)",
+          backgroundColor: "#FBFBFB", borderRadius: "12px",
+          border: "1px solid rgba(26,19,19,0.06)",
         }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(205,201,192,0.2)" }}>event_busy</span>
-          <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "14px", fontWeight: 600 }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(26,19,19,0.2)" }}>event_busy</span>
+          <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "14px", fontWeight: 600 }}>
             No appointments {isToday ? "today" : "on this day"}
           </div>
-          <div style={{ color: "rgba(205,201,192,0.25)", fontSize: "12px", marginTop: "4px" }}>
+          <div style={{ color: "rgba(26,19,19,0.25)", fontSize: "12px", marginTop: "4px" }}>
             {isToday ? "All clear! No bookings scheduled." : "Try selecting a different date."}
           </div>
         </div>
@@ -1398,7 +1398,7 @@ export default function AppointmentsPage() {
 
           return (
             <div ref={dayViewRef} style={{ position: "relative", marginTop: "8px" }}>
-              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>
                 {sorted.length} Appointment{sorted.length !== 1 ? "s" : ""} &middot; Day View
               </div>
               <div style={{ display: "flex", position: "relative", minHeight: `${totalHeight}px` }}
@@ -1422,7 +1422,7 @@ export default function AppointmentsPage() {
                     return (
                       <div key={hour} style={{
                         position: "absolute", top: `${i * HOUR_PX - 7}px`, right: "8px",
-                        fontSize: "10px", fontWeight: 600, color: "rgba(205,201,192,0.4)",
+                        fontSize: "10px", fontWeight: 600, color: "rgba(26,19,19,0.4)",
                         lineHeight: "14px",
                       }}>
                         {hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`}
@@ -1432,14 +1432,14 @@ export default function AppointmentsPage() {
                 </div>
 
                 {/* Grid + appointments */}
-                <div style={{ flex: 1, position: "relative", borderLeft: "1px solid rgba(255,255,255,0.06)" }}>
+                <div style={{ flex: 1, position: "relative", borderLeft: "1px solid rgba(26,19,19,0.06)" }}>
                   {/* Hour grid lines */}
                   {Array.from({ length: totalHours + 1 }, (_, i) => (
-                    <div key={i} style={{ position: "absolute", top: `${i * HOUR_PX}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(205,201,192,0.06)" }} />
+                    <div key={i} style={{ position: "absolute", top: `${i * HOUR_PX}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(26,19,19,0.04)" }} />
                   ))}
                   {/* Half-hour grid lines */}
                   {Array.from({ length: totalHours }, (_, i) => (
-                    <div key={`h${i}`} style={{ position: "absolute", top: `${i * HOUR_PX + HOUR_PX / 2}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(205,201,192,0.03)" }} />
+                    <div key={`h${i}`} style={{ position: "absolute", top: `${i * HOUR_PX + HOUR_PX / 2}px`, left: 0, right: 0, height: "1px", backgroundColor: "rgba(26,19,19,0.02)" }} />
                   ))}
 
                   {/* Current time line */}
@@ -1454,7 +1454,7 @@ export default function AppointmentsPage() {
                   {dragApptId && dragGhostTime !== null && (
                     <div style={{
                       position: "absolute", top: `${dragGhostTime * (HOUR_PX / 60)}px`, left: "4px", right: "4px",
-                      height: "40px", backgroundColor: "rgba(255,255,255,0.06)", border: "2px dashed rgba(205,201,192,0.3)",
+                      height: "40px", backgroundColor: "rgba(26,19,19,0.06)", border: "2px dashed rgba(26,19,19,0.3)",
                       borderRadius: "6px", zIndex: 5, pointerEvents: "none",
                     }} />
                   )}
@@ -1509,17 +1509,17 @@ export default function AppointmentsPage() {
                           overflow: "hidden",
                           zIndex: dragApptId === appt.id ? 20 : 2,
                           opacity: dragApptId === appt.id ? 0.5 : appt.isCheckedOut ? 0.4 : 1,
-                          border: blocked ? "1px dashed rgba(205,201,192,0.2)" : expandedId === appt.id ? "2px solid #fff" : "1px solid rgba(0,0,0,0.2)",
+                          border: blocked ? "1px dashed rgba(26,19,19,0.2)" : expandedId === appt.id ? "2px solid #1A1313" : "1px solid rgba(0,0,0,0.2)",
                           transition: "opacity 0.15s",
                         }}
                       >
                         {blocked ? (
                           <>
-                            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.5)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.5)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                               BLOCKED — {getBlockReason(appt)}
                             </div>
                             {heightPx > 40 && appt.teamMemberId && (
-                              <div style={{ fontSize: "9px", color: "rgba(205,201,192,0.35)", marginTop: "2px" }}>
+                              <div style={{ fontSize: "9px", color: "rgba(26,19,19,0.35)", marginTop: "2px" }}>
                                 {TEAM_NAMES[appt.teamMemberId] || ""}
                               </div>
                             )}
@@ -1569,7 +1569,7 @@ export default function AppointmentsPage() {
             ].filter(g => g.items.length > 0)
             return timeGroups.map(group => (
               <div key={group.label}>
-                <div style={{ fontSize: "11px", fontWeight: 700, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", marginBottom: "8px" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0", borderBottom: "1px solid rgba(26,19,19,0.04)", marginBottom: "8px" }}>
                   {group.label} &middot; {group.items.length} appointment{group.items.length !== 1 ? "s" : ""}
                 </div>
                 {group.items.map((appt) => {
@@ -1581,27 +1581,27 @@ export default function AppointmentsPage() {
               return (
                 <div key={appt.id} style={{
                   padding: "14px 16px",
-                  backgroundColor: "rgba(205,201,192,0.03)",
-                  border: "1px solid rgba(205,201,192,0.06)",
-                  borderLeft: "3px solid rgba(205,201,192,0.25)",
+                  backgroundColor: "rgba(26,19,19,0.02)",
+                  border: "1px solid rgba(26,19,19,0.04)",
+                  borderLeft: "3px solid rgba(26,19,19,0.25)",
                   borderRadius: "10px",
                   display: "flex", justifyContent: "space-between", alignItems: "center",
                 }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.35)" }}>block</span>
-                      <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(205,201,192,0.55)" }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(26,19,19,0.35)" }}>block</span>
+                      <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(26,19,19,0.55)" }}>
                         {appt.teamMemberId ? (TEAM_NAMES[appt.teamMemberId] || "") : ""} — Blocked: {getBlockReason(appt)}
                       </span>
                     </div>
-                    <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.35)", display: "flex", alignItems: "center", gap: "4px" }}>
+                    <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.35)", display: "flex", alignItems: "center", gap: "4px" }}>
                       <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>schedule</span>
                       {fmtTime(appt.startTime)}{appt.endTime ? ` - ${fmtTime(appt.endTime)}` : appt.totalDurationMinutes ? ` (${appt.totalDurationMinutes} min)` : ""}
                     </div>
                   </div>
                   <span style={{
                     fontSize: "8px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px",
-                    backgroundColor: "rgba(205,201,192,0.06)", color: "rgba(205,201,192,0.4)",
+                    backgroundColor: "rgba(26,19,19,0.04)", color: "rgba(26,19,19,0.4)",
                     textTransform: "uppercase", letterSpacing: "0.06em",
                   }}>BLOCKED</span>
                 </div>
@@ -1616,8 +1616,8 @@ export default function AppointmentsPage() {
                     width: "100%",
                     textAlign: "left",
                     padding: "16px",
-                    backgroundColor: "#0d1117",
-                    border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(255,255,255,0.06)",
+                    backgroundColor: "#FBFBFB",
+                    border: appt.isCheckedOut ? "1px solid rgba(16,185,129,0.15)" : "1px solid rgba(26,19,19,0.06)",
                     borderLeft: `3px solid ${(appt.teamMemberId && stylistColorMap[appt.teamMemberId]) || (appt.isCheckedOut ? "rgba(16,185,129,0.3)" : statusStyle.border)}`,
                     borderRadius: "10px",
                     cursor: "pointer",
@@ -1632,7 +1632,7 @@ export default function AppointmentsPage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span
                       onClick={e => { if (appt.customerId) { e.stopPropagation(); openClientHistory(appt.customerId) } }}
-                      style={{ color: "#FBFBFB", fontSize: "15px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(255,255,255,0.2)" }}
+                      style={{ color: "#1A1313", fontSize: "15px", fontWeight: 700, cursor: appt.customerId ? "pointer" : "default", textDecoration: appt.customerId ? "underline" : "none", textDecorationColor: "rgba(26,19,19,0.2)" }}
                     >
                       {appt.customerName}
                     </span>
@@ -1655,10 +1655,10 @@ export default function AppointmentsPage() {
                   </div>
 
                   {/* Time + Stylist row */}
-                  <div style={{ display: "flex", gap: "16px", fontSize: "13px", color: "rgba(205,201,192,0.55)", fontWeight: 500, alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "16px", fontSize: "13px", color: "rgba(26,19,19,0.55)", fontWeight: 500, alignItems: "center" }}>
                     <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                       <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>schedule</span>
-                      <span style={{ fontFamily: "'Inter', sans-serif", color: "#FBFBFB", fontWeight: 600 }}>{fmtTime(appt.startTime)}{appt.endTime ? ` - ${fmtTime(appt.endTime)}` : ""}</span>
+                      <span style={{ fontFamily: "'Inter', sans-serif", color: "#1A1313", fontWeight: 600 }}>{fmtTime(appt.startTime)}{appt.endTime ? ` - ${fmtTime(appt.endTime)}` : ""}</span>
                     </span>
                     {appt.teamMemberId && (
                       <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -1675,14 +1675,14 @@ export default function AppointmentsPage() {
                         appt.services.map((s, i) => (
                           <span key={i} style={{
                             fontSize: "10px", fontWeight: 600, padding: "3px 8px",
-                            borderRadius: "4px", backgroundColor: "rgba(205,201,192,0.06)",
-                            color: "rgba(205,201,192,0.55)",
+                            borderRadius: "4px", backgroundColor: "rgba(26,19,19,0.04)",
+                            color: "rgba(26,19,19,0.55)",
                           }}>
                             {s.serviceName}
                           </span>
                         ))
                       ) : (
-                        <span style={{ fontSize: "10px", color: "rgba(205,201,192,0.3)" }}>No service details</span>
+                        <span style={{ fontSize: "10px", color: "rgba(26,19,19,0.3)" }}>No service details</span>
                       )}
                     </div>
                     {appt.totalPrice != null && appt.totalPrice > 0 && (
@@ -1694,11 +1694,11 @@ export default function AppointmentsPage() {
 
                   {/* Actions based on resolved status */}
                   {appt.isCheckedOut && appt.checkoutDetails && (
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "2px", fontSize: "11px", color: "rgba(205,201,192,0.45)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "2px", fontSize: "11px", color: "rgba(26,19,19,0.45)" }}>
                       <span className="material-symbols-outlined" style={{ fontSize: "13px", color: "#22c55e" }}>check_circle</span>
-                      <span style={{ fontFamily: "'Inter', sans-serif", color: "rgba(205,201,192,0.5)" }}>{appt.checkoutDetails.paymentMethod}</span>
+                      <span style={{ fontFamily: "'Inter', sans-serif", color: "rgba(26,19,19,0.5)" }}>{appt.checkoutDetails.paymentMethod}</span>
                       {appt.checkoutDetails.closedAt && (
-                        <span style={{ fontFamily: "'Inter', sans-serif", color: "rgba(205,201,192,0.35)" }}>
+                        <span style={{ fontFamily: "'Inter', sans-serif", color: "rgba(26,19,19,0.35)" }}>
                           {new Date(appt.checkoutDetails.closedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" })}
                         </span>
                       )}
@@ -1732,8 +1732,8 @@ export default function AppointmentsPage() {
                   <div style={{
                     margin: "-6px 0 0 3px",
                     padding: "14px 16px",
-                    backgroundColor: "rgba(26,42,50,0.7)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    backgroundColor: "rgba(26,19,19,0.03)",
+                    border: "1px solid rgba(26,19,19,0.06)",
                     borderTop: "none",
                     borderRadius: "0 0 10px 10px",
                     display: "flex",
@@ -1743,12 +1743,12 @@ export default function AppointmentsPage() {
                     {/* Service details */}
                     {appt.services && appt.services.length > 0 && (
                       <div>
-                        <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
+                        <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
                           Services
                         </div>
                         {appt.services.map((s, i) => (
                           <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", fontSize: "12px" }}>
-                            <span style={{ color: "rgba(205,201,192,0.7)" }}>
+                            <span style={{ color: "rgba(26,19,19,0.7)" }}>
                               {s.serviceName} ({s.durationMinutes} min)
                             </span>
                             <span style={{ color: "#CDC9C0", fontWeight: 600 }}>
@@ -1761,10 +1761,10 @@ export default function AppointmentsPage() {
 
                     {/* Customer contact */}
                     <div>
-                      <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
+                      <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
                         Contact
                       </div>
-                      <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.6)" }}>
+                      <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)" }}>
                         {appt.customerPhone ? (
                           <div style={{ marginBottom: "2px" }}>
                             <span className="material-symbols-outlined" style={{ fontSize: "12px", verticalAlign: "middle", marginRight: "4px" }}>phone</span>
@@ -1778,7 +1778,7 @@ export default function AppointmentsPage() {
                           </div>
                         ) : null}
                         {!appt.customerPhone && !appt.customerEmail && (
-                          <span style={{ color: "rgba(205,201,192,0.3)" }}>No contact info</span>
+                          <span style={{ color: "rgba(26,19,19,0.3)" }}>No contact info</span>
                         )}
                       </div>
                     </div>
@@ -1786,10 +1786,10 @@ export default function AppointmentsPage() {
                     {/* Notes */}
                     {appt.note && (
                       <div>
-                        <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
+                        <div style={{ fontSize: "9px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>
                           Notes
                         </div>
-                        <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.6)", fontStyle: "italic" }}>
+                        <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)", fontStyle: "italic" }}>
                           {appt.note}
                         </div>
                       </div>
@@ -1829,7 +1829,7 @@ export default function AppointmentsPage() {
       {/* Stylist color legend */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "16px", marginBottom: "12px" }}>
         {getLocationStylists(location).map(s => (
-          <div key={s.id} style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "10px", color: "rgba(205,201,192,0.6)" }}>
+          <div key={s.id} style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "10px", color: "rgba(26,19,19,0.6)" }}>
             <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: stylistColorMap[s.id] || "#666" }} />
             {s.name}
           </div>
@@ -1838,34 +1838,34 @@ export default function AppointmentsPage() {
 
       {/* Waitlist panel */}
       {showWaitlist && (
-        <div style={{ marginTop: "16px", backgroundColor: "#0d1117", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
-          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>Waitlist — {location === "Corpus Christi" ? "CC" : "SA"}</span>
+        <div style={{ marginTop: "16px", backgroundColor: "#FBFBFB", borderRadius: "12px", border: "1px solid rgba(26,19,19,0.06)", overflow: "hidden" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(26,19,19,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313" }}>Waitlist — {location === "Corpus Christi" ? "CC" : "SA"}</span>
           </div>
           {/* Add form */}
-          <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(26,19,19,0.06)", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "flex-end" }}>
             <div style={{ flex: 1, minWidth: "120px" }}>
-              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Name</div>
-              <input value={wlForm.customerName} onChange={e => setWlForm(p => ({ ...p, customerName: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "4px" }}>Name</div>
+              <input value={wlForm.customerName} onChange={e => setWlForm(p => ({ ...p, customerName: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "6px", color: "#1A1313", fontSize: "13px", outline: "none" }} />
             </div>
             <div style={{ flex: 1, minWidth: "120px" }}>
-              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Phone</div>
-              <input value={wlForm.customerPhone} onChange={e => setWlForm(p => ({ ...p, customerPhone: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "4px" }}>Phone</div>
+              <input value={wlForm.customerPhone} onChange={e => setWlForm(p => ({ ...p, customerPhone: e.target.value }))} style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "6px", color: "#1A1313", fontSize: "13px", outline: "none" }} />
             </div>
             <div style={{ flex: 1, minWidth: "100px" }}>
-              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Notes</div>
-              <input value={wlForm.notes} onChange={e => setWlForm(p => ({ ...p, notes: e.target.value }))} placeholder="Service, stylist..." style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "13px", outline: "none" }} />
+              <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "4px" }}>Notes</div>
+              <input value={wlForm.notes} onChange={e => setWlForm(p => ({ ...p, notes: e.target.value }))} placeholder="Service, stylist..." style={{ width: "100%", padding: "7px 10px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "6px", color: "#1A1313", fontSize: "13px", outline: "none" }} />
             </div>
             <button onClick={addToWaitlist} disabled={wlSaving || !wlForm.customerName} style={{ padding: "7px 16px", backgroundColor: "#CDC9C0", color: "#0f1d24", border: "none", borderRadius: "6px", fontSize: "11px", fontWeight: 700, cursor: "pointer", opacity: !wlForm.customerName ? 0.5 : 1 }}>{wlSaving ? "..." : "Add"}</button>
           </div>
           {/* Entries */}
           {waitlist.length === 0 ? (
-            <div style={{ padding: "32px 20px", textAlign: "center", color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>No one on the waitlist</div>
+            <div style={{ padding: "32px 20px", textAlign: "center", color: "rgba(26,19,19,0.4)", fontSize: "13px" }}>No one on the waitlist</div>
           ) : waitlist.map(w => (
-            <div key={w.id} style={{ padding: "12px 20px", borderBottom: "1px solid rgba(205,201,192,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div key={w.id} style={{ padding: "12px 20px", borderBottom: "1px solid rgba(26,19,19,0.03)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>{w.customerName}</div>
-                <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)" }}>{w.customerPhone}{w.notes ? ` — ${w.notes}` : ""}</div>
+                <div style={{ fontSize: "13px", fontWeight: 600, color: "#1A1313" }}>{w.customerName}</div>
+                <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.5)" }}>{w.customerPhone}{w.notes ? ` — ${w.notes}` : ""}</div>
               </div>
               <div style={{ display: "flex", gap: "6px" }}>
                 <button onClick={() => updateWaitlistStatus(w.id, "booked")} style={{ padding: "4px 10px", fontSize: "9px", fontWeight: 700, textTransform: "uppercase", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "4px", backgroundColor: "transparent", color: "#10B981", cursor: "pointer" }}>Booked</button>
@@ -1879,17 +1879,17 @@ export default function AppointmentsPage() {
       {/* Block Time Modal */}
       {showBlock && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "420px" }}>
+          <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "420px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>Block Time</h2>
-              <button onClick={() => setShowBlock(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer", fontSize: "20px" }}>&times;</button>
+              <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#1A1313" }}>Block Time</h2>
+              <button onClick={() => setShowBlock(false)} style={{ background: "none", border: "none", color: "rgba(26,19,19,0.5)", cursor: "pointer", fontSize: "20px" }}>&times;</button>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {/* Stylist */}
               <div>
-                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Stylist</div>
-                <select value={blockStylist} onChange={e => setBlockStylist(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Stylist</div>
+                <select value={blockStylist} onChange={e => setBlockStylist(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                   <option value="">Select stylist...</option>
                   {getLocationStylists(location).map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
@@ -1897,21 +1897,21 @@ export default function AppointmentsPage() {
 
               {/* Date */}
               <div>
-                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Date</div>
-                <input type="date" value={blockDate} onChange={e => setBlockDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Date</div>
+                <input type="date" value={blockDate} onChange={e => setBlockDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", colorScheme: "light", boxSizing: "border-box" }} />
               </div>
 
               {/* Start / End time */}
               <div style={{ display: "flex", gap: "10px" }}>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Start</div>
-                  <select value={blockStart} onChange={e => setBlockStart(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Start</div>
+                  <select value={blockStart} onChange={e => setBlockStart(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                     {Array.from({ length: 53 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 21) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); return <option key={t} value={t}>{label}</option> }).filter(Boolean)}
                   </select>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>End</div>
-                  <select value={blockEnd} onChange={e => setBlockEnd(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>End</div>
+                  <select value={blockEnd} onChange={e => setBlockEnd(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                     {Array.from({ length: 53 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 21) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); return <option key={t} value={t}>{label}</option> }).filter(Boolean)}
                   </select>
                 </div>
@@ -1919,22 +1919,22 @@ export default function AppointmentsPage() {
 
               {/* Reason */}
               <div>
-                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Reason</div>
-                <select value={blockReason} onChange={e => setBlockReason(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Reason</div>
+                <select value={blockReason} onChange={e => setBlockReason(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }}>
                   {["Lunch", "Break", "Personal", "Training", "Other"].map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
 
               {/* Notes */}
               <div>
-                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Notes (optional)</div>
-                <input value={blockNotes} onChange={e => setBlockNotes(e.target.value)} placeholder="Additional details..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Notes (optional)</div>
+                <input value={blockNotes} onChange={e => setBlockNotes(e.target.value)} placeholder="Additional details..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
               </div>
 
               {blockError && <div style={{ fontSize: "12px", color: "#EF4444" }}>{blockError}</div>}
 
               <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
-                <button onClick={() => setShowBlock(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Cancel</button>
+                <button onClick={() => setShowBlock(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Cancel</button>
                 <button onClick={submitBlock} disabled={blockSaving || !blockStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !blockStylist || blockSaving ? 0.5 : 1 }}>{blockSaving ? "Blocking..." : "Block Time"}</button>
               </div>
             </div>
@@ -1945,39 +1945,39 @@ export default function AppointmentsPage() {
       {/* Booking Modal */}
       {showBooking && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
+          <div style={{ background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.12)", borderRadius: "16px", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>New Appointment</h2>
-              <button onClick={() => setShowBooking(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer", fontSize: "20px" }}>&times;</button>
+              <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#1A1313" }}>New Appointment</h2>
+              <button onClick={() => setShowBooking(false)} style={{ background: "none", border: "none", color: "rgba(26,19,19,0.5)", cursor: "pointer", fontSize: "20px" }}>&times;</button>
             </div>
             {/* Step indicator */}
             <div style={{ display: "flex", gap: "4px", marginBottom: "20px" }}>
-              {[1,2,3,4,5].map(s => <div key={s} style={{ flex: 1, height: "3px", borderRadius: "2px", backgroundColor: bookStep >= s ? (s === 5 ? "#22c55e" : "#CDC9C0") : "rgba(255,255,255,0.08)" }} />)}
+              {[1,2,3,4,5].map(s => <div key={s} style={{ flex: 1, height: "3px", borderRadius: "2px", backgroundColor: bookStep >= s ? (s === 5 ? "#22c55e" : "#CDC9C0") : "rgba(26,19,19,0.08)" }} />)}
             </div>
 
             {/* Step 1 — Client */}
             {bookStep === 1 && (
               <div>
-                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 1 — Client</div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "10px" }}>Step 1 — Client</div>
                 {!newClient ? (<>
-                  <input value={clientSearch} onChange={e => searchClients(e.target.value)} placeholder="Search client by name, phone, or email..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", marginBottom: "8px", boxSizing: "border-box" }} />
-                  {clientSearching && <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.4)", padding: "8px 0" }}>Searching...</div>}
+                  <input value={clientSearch} onChange={e => searchClients(e.target.value)} placeholder="Search client by name, phone, or email..." style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", marginBottom: "8px", boxSizing: "border-box" }} />
+                  {clientSearching && <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.4)", padding: "8px 0" }}>Searching...</div>}
                   {clientResults.map(c => (
-                    <div key={c.id} onClick={() => { setBookClient({ id: c.id, name: `${c.givenName} ${c.familyName}`.trim() }); setBookStep(2) }} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: "rgba(205,201,192,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#fff" }}>{c.givenName} {c.familyName}</div>
-                      <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)" }}>{c.phone}{c.email ? ` · ${c.email}` : ""}</div>
+                    <div key={c.id} onClick={() => { setBookClient({ id: c.id, name: `${c.givenName} ${c.familyName}`.trim() }); setBookStep(2) }} style={{ padding: "10px 12px", borderRadius: "8px", cursor: "pointer", marginBottom: "4px", backgroundColor: "rgba(26,19,19,0.03)", border: "1px solid rgba(26,19,19,0.06)" }}>
+                      <div style={{ fontSize: "13px", fontWeight: 600, color: "#1A1313" }}>{c.givenName} {c.familyName}</div>
+                      <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.5)" }}>{c.phone}{c.email ? ` · ${c.email}` : ""}</div>
                     </div>
                   ))}
-                  <button onClick={() => setNewClient(true)} style={{ marginTop: "8px", padding: "8px 14px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", width: "100%" }}>New Client</button>
+                  <button onClick={() => setNewClient(true)} style={{ marginTop: "8px", padding: "8px 14px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "6px", color: "rgba(26,19,19,0.6)", fontSize: "12px", cursor: "pointer", width: "100%" }}>New Client</button>
                 </>) : (<>
                   <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    <input value={newClientForm.givenName} onChange={e => setNewClientForm(p => ({ ...p, givenName: e.target.value }))} placeholder="First name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
-                    <input value={newClientForm.familyName} onChange={e => setNewClientForm(p => ({ ...p, familyName: e.target.value }))} placeholder="Last name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
-                    <input value={newClientForm.phone} onChange={e => setNewClientForm(p => ({ ...p, phone: e.target.value }))} placeholder="Phone" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
-                    <input value={newClientForm.email} onChange={e => setNewClientForm(p => ({ ...p, email: e.target.value }))} placeholder="Email (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.givenName} onChange={e => setNewClientForm(p => ({ ...p, givenName: e.target.value }))} placeholder="First name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.familyName} onChange={e => setNewClientForm(p => ({ ...p, familyName: e.target.value }))} placeholder="Last name" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.phone} onChange={e => setNewClientForm(p => ({ ...p, phone: e.target.value }))} placeholder="Phone" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
+                    <input value={newClientForm.email} onChange={e => setNewClientForm(p => ({ ...p, email: e.target.value }))} placeholder="Email (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }} />
                     <div style={{ display: "flex", gap: "8px" }}>
-                      <button onClick={() => setNewClient(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                      <button onClick={() => setNewClient(false)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
                       <button onClick={createNewClient} disabled={bookSaving || !newClientForm.givenName} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !newClientForm.givenName ? 0.5 : 1 }}>{bookSaving ? "Creating..." : "Create Client"}</button>
                     </div>
                   </div>
@@ -1988,12 +1988,12 @@ export default function AppointmentsPage() {
             {/* Step 2 — Stylist + Date/Time */}
             {bookStep === 2 && (
               <div>
-                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 2 — {bookClient?.name}</div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "10px" }}>Step 2 — {bookClient?.name}</div>
                 <div style={{ marginBottom: "12px" }}>
-                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Stylist</div>
+                  <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Stylist</div>
                   <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                     {getLocationStylists(location).map(s => (
-                      <button key={s.id} onClick={() => setBookStylist(s.id)} style={{ padding: "6px 12px", borderRadius: "6px", border: bookStylist === s.id ? "1px solid #CDC9C0" : "1px solid rgba(255,255,255,0.08)", backgroundColor: bookStylist === s.id ? "rgba(255,255,255,0.06)" : "transparent", color: bookStylist === s.id ? "#fff" : "rgba(205,201,192,0.6)", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <button key={s.id} onClick={() => setBookStylist(s.id)} style={{ padding: "6px 12px", borderRadius: "6px", border: bookStylist === s.id ? "1px solid #CDC9C0" : "1px solid rgba(26,19,19,0.08)", backgroundColor: bookStylist === s.id ? "rgba(26,19,19,0.06)" : "transparent", color: bookStylist === s.id ? "#1A1313" : "rgba(26,19,19,0.6)", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
                         <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: stylistColorMap[s.id] || "#666" }} />{s.name}
                       </button>
                     ))}
@@ -2001,18 +2001,18 @@ export default function AppointmentsPage() {
                 </div>
                 <div style={{ display: "flex", gap: "10px", marginBottom: "12px" }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Date</div>
-                    <input type="date" value={bookDate} onChange={e => setBookDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", colorScheme: "dark", boxSizing: "border-box" }} />
+                    <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Date</div>
+                    <input type="date" value={bookDate} onChange={e => setBookDate(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", colorScheme: "light", boxSizing: "border-box" }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "6px" }}>Time</div>
-                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" as const }}>
-                      {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ backgroundColor: "#0d1117", color: busy ? "#606E74" : "#FBFBFB" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
+                    <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "6px" }}>Time</div>
+                    <select value={bookTime} onChange={e => setBookTime(e.target.value)} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#F4F5F7", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" as const }}>
+                      {Array.from({ length: 52 }, (_, i) => { const h = Math.floor(i / 4) + 8; const m = (i % 4) * 15; if (h > 20) return null; const t = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; const label = new Date(`2026-01-01T${t}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); const busy = bookStylist && appointments.some(a => a.teamMemberId === bookStylist && a.startTime && new Date(a.startTime).toISOString().includes(bookDate) && Math.abs(new Date(a.startTime).getHours() * 60 + new Date(a.startTime).getMinutes() - (h * 60 + m)) < (a.totalDurationMinutes || 60)); return <option key={t} value={t} style={{ backgroundColor: "#FBFBFB", color: busy ? "#606E74" : "#1A1313" }}>{label}{busy ? " (booked)" : ""}</option> }).filter(Boolean)}
                     </select>
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => setBookStep(1)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(1)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={() => setBookStep(3)} disabled={!bookStylist} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: !bookStylist ? 0.5 : 1 }}>Next</button>
                 </div>
               </div>
@@ -2021,16 +2021,16 @@ export default function AppointmentsPage() {
             {/* Step 3 — Services */}
             {bookStep === 3 && (
               <div>
-                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 3 — Select Services</div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "10px" }}>Step 3 — Select Services</div>
                 {/* Service search */}
                 <input
                   placeholder="Search services..."
                   onChange={e => { const q = e.target.value.toLowerCase(); e.currentTarget.dataset.q = q }}
                   onInput={e => { const el = e.currentTarget; el.parentElement?.querySelectorAll("[data-svc]").forEach(d => { const n = d.getAttribute("data-svc") || ""; (d as HTMLElement).style.display = n.toLowerCase().includes(el.value.toLowerCase()) || !el.value ? "" : "none" }) }}
-                  style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", marginBottom: "12px", boxSizing: "border-box" as const }}
+                  style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", marginBottom: "12px", boxSizing: "border-box" as const }}
                 />
                 <div style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "12px" }}>
-                  {bookServices.length === 0 ? <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px", padding: "20px 0", textAlign: "center" }}>Loading services...</div> : (() => {
+                  {bookServices.length === 0 ? <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "13px", padding: "20px 0", textAlign: "center" }}>Loading services...</div> : (() => {
                     const POPULAR = ["Envy Cut", "Full Highlight", "Partial Highlight", "Envy Color", "Color Touch Up", "Full Highlight & Base Color", "Partial Highlight & Base Color", "Envy Dry Cut", "Toner", "Brazilian Blowout", "Blonde Touch Up", "Envy Blonde"]
                     const sorted = [...bookServices].sort((a, b) => {
                       const ai = POPULAR.findIndex(p => a.name.includes(p))
@@ -2043,12 +2043,12 @@ export default function AppointmentsPage() {
                     return sorted.map((s: { id: string; name: string; price: number; durationMinutes: number; version?: number }) => {
                       const sel = bookSelectedSvcs.some(x => x.id === s.id)
                       return (
-                        <div key={s.id} data-svc={s.name} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "14px", borderRadius: "10px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(122,143,150,0.08)" : "#0d1117", border: sel ? "1px solid #7a8f96" : "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div key={s.id} data-svc={s.name} onClick={() => sel ? setBookSelectedSvcs(p => p.filter(x => x.id !== s.id)) : setBookSelectedSvcs(p => [...p, s])} style={{ padding: "14px", borderRadius: "10px", cursor: "pointer", marginBottom: "4px", backgroundColor: sel ? "rgba(122,143,150,0.08)" : "#FBFBFB", border: sel ? "1px solid #7a8f96" : "1px solid rgba(26,19,19,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div>
-                            <div style={{ fontSize: "13px", fontWeight: sel ? 600 : 400, color: sel ? "#fff" : "rgba(205,201,192,0.7)" }}>{s.name}</div>
+                            <div style={{ fontSize: "13px", fontWeight: sel ? 600 : 400, color: sel ? "#1A1313" : "rgba(26,19,19,0.7)" }}>{s.name}</div>
                             <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Inter', sans-serif" }}>{s.durationMinutes} min</div>
                           </div>
-                          <div style={{ fontSize: "14px", fontWeight: 600, color: sel ? "#22c55e" : "rgba(205,201,192,0.5)", fontFamily: "'Inter', sans-serif" }}>${s.price.toFixed(2)}</div>
+                          <div style={{ fontSize: "14px", fontWeight: 600, color: sel ? "#22c55e" : "rgba(26,19,19,0.5)", fontFamily: "'Inter', sans-serif" }}>${s.price.toFixed(2)}</div>
                         </div>
                       )
                     })
@@ -2056,7 +2056,7 @@ export default function AppointmentsPage() {
                 </div>
                 {bookSelectedSvcs.length > 0 && <div style={{ fontSize: "13px", fontWeight: 700, color: "#22c55e", textAlign: "right", marginBottom: "12px", fontFamily: "'Inter', sans-serif" }}>Total: ${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => setBookStep(2)} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={() => setBookStep(4)} disabled={bookSelectedSvcs.length === 0} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSelectedSvcs.length === 0 ? 0.5 : 1 }}>Next</button>
                 </div>
               </div>
@@ -2065,19 +2065,19 @@ export default function AppointmentsPage() {
             {/* Step 4 — Confirm */}
             {bookStep === 4 && (
               <div>
-                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>Step 4 — Confirm</div>
-                <div style={{ backgroundColor: "rgba(205,201,192,0.04)", border: "1px solid rgba(205,201,192,0.1)", borderRadius: "10px", padding: "14px", marginBottom: "14px" }}>
-                  <div style={{ fontSize: "14px", fontWeight: 600, color: "#fff", marginBottom: "6px" }}>{bookClient?.name}</div>
-                  <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.6)", marginBottom: "4px" }}>{TEAM_NAMES[bookStylist] || "Stylist"} · {location === "Corpus Christi" ? "CC" : "SA"}</div>
-                  <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.6)", marginBottom: "8px", fontFamily: "monospace" }}>{new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</div>
+                <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "10px" }}>Step 4 — Confirm</div>
+                <div style={{ backgroundColor: "rgba(26,19,19,0.03)", border: "1px solid rgba(26,19,19,0.1)", borderRadius: "10px", padding: "14px", marginBottom: "14px" }}>
+                  <div style={{ fontSize: "14px", fontWeight: 600, color: "#1A1313", marginBottom: "6px" }}>{bookClient?.name}</div>
+                  <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)", marginBottom: "4px" }}>{TEAM_NAMES[bookStylist] || "Stylist"} · {location === "Corpus Christi" ? "CC" : "SA"}</div>
+                  <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.6)", marginBottom: "8px", fontFamily: "monospace" }}>{new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</div>
                   {bookSelectedSvcs.map((s: { id: string; name: string; price: number }) => (
                     <div key={s.id} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", fontSize: "12px" }}>
-                      <span style={{ color: "rgba(205,201,192,0.7)" }}>{s.name}</span>
+                      <span style={{ color: "rgba(26,19,19,0.7)" }}>{s.name}</span>
                       <span style={{ color: "#CDC9C0", fontFamily: "monospace" }}>${s.price.toFixed(2)}</span>
                     </div>
                   ))}
-                  <div style={{ borderTop: "1px solid rgba(205,201,192,0.1)", marginTop: "8px", paddingTop: "8px", display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: "13px" }}>
-                    <span style={{ color: "#fff" }}>Total</span>
+                  <div style={{ borderTop: "1px solid rgba(26,19,19,0.1)", marginTop: "8px", paddingTop: "8px", display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: "13px" }}>
+                    <span style={{ color: "#1A1313" }}>Total</span>
                     <span style={{ color: "#CDC9C0", fontFamily: "monospace" }}>${bookSelectedSvcs.reduce((s, sv) => s + sv.price, 0).toFixed(2)}</span>
                   </div>
                 </div>
@@ -2086,18 +2086,18 @@ export default function AppointmentsPage() {
                     {TEAM_NAMES[bookStylist] || "Stylist"} already has an appointment at this time. Book anyway?
                   </div>
                 )}
-                <textarea value={bookNotes} onChange={e => setBookNotes(e.target.value)} placeholder="Notes (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", minHeight: "60px", resize: "vertical" as const, marginBottom: "12px", boxSizing: "border-box" as const }} />
+                <textarea value={bookNotes} onChange={e => setBookNotes(e.target.value)} placeholder="Notes (optional)" style={{ width: "100%", padding: "10px 14px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", minHeight: "60px", resize: "vertical" as const, marginBottom: "12px", boxSizing: "border-box" as const }} />
 
                 {/* Card on File */}
                 <div style={{ marginBottom: 12, background: "rgba(122,143,150,0.06)", border: "1px solid rgba(122,143,150,0.2)", borderRadius: 12, padding: 16 }}>
                   <div style={{ fontSize: 11, fontWeight: 600, color: "#7a8f96", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 12 }}>Card on File Request</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
                     <input type="checkbox" id="sendCardSMS" checked={sendCardSMS} onChange={e => setSendCardSMS(e.target.checked)} style={{ width: 16, height: 16, accentColor: "#7a8f96", cursor: "pointer" }} />
-                    <label htmlFor="sendCardSMS" style={{ fontSize: 13, color: "#FBFBFB", cursor: "pointer" }}>Send secure card link to client after booking</label>
+                    <label htmlFor="sendCardSMS" style={{ fontSize: 13, color: "#1A1313", cursor: "pointer" }}>Send secure card link to client after booking</label>
                   </div>
                   {sendCardSMS && (
                     <div>
-                      <input type="tel" placeholder="Client phone number" value={cardPhone} onChange={e => setCardPhone(e.target.value)} style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 14px", color: "#FBFBFB", fontSize: 14, boxSizing: "border-box" as const, outline: "none" }} />
+                      <input type="tel" placeholder="Client phone number" value={cardPhone} onChange={e => setCardPhone(e.target.value)} style={{ width: "100%", background: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 8, padding: "10px 14px", color: "#1A1313", fontSize: 14, boxSizing: "border-box" as const, outline: "none" }} />
                       <div style={{ fontSize: 11, color: "#606E74", marginTop: 6 }}>Client receives: &quot;Add a card to secure your appointment&quot; with a secure link.</div>
                     </div>
                   )}
@@ -2105,7 +2105,7 @@ export default function AppointmentsPage() {
 
                 {bookError && <div style={{ fontSize: "13px", color: "#EF4444", marginBottom: "10px", padding: "10px 14px", backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "8px", lineHeight: 1.5, wordBreak: "break-word" as const }}>{bookError}</div>}
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(205,201,192,0.6)", cursor: "pointer" }}>Back</button>
+                  <button onClick={() => { setBookStep(3); setBookOverlap(false) }} style={{ flex: 1, padding: "10px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", backgroundColor: "transparent", color: "rgba(26,19,19,0.6)", cursor: "pointer" }}>Back</button>
                   <button onClick={submitBooking} disabled={bookSaving} style={{ flex: 2, padding: "10px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "8px", color: "#0f1d24", fontWeight: 700, cursor: "pointer", opacity: bookSaving ? 0.5 : 1 }}>{bookSaving ? "Booking..." : bookOverlap ? "Book Anyway" : "Book Appointment"}</button>
                 </div>
               </div>
@@ -2115,7 +2115,7 @@ export default function AppointmentsPage() {
             {bookStep === 5 && bookSuccess && (
               <div style={{ textAlign: "center", padding: "32px 20px" }}>
                 <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(34,197,94,0.1)", border: "2px solid #22c55e", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontSize: 28, color: "#22c55e" }}>&#10003;</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>Appointment Booked!</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "#1A1313", marginBottom: 8 }}>Appointment Booked!</div>
                 <div style={{ fontSize: 14, color: "#7a8f96", marginBottom: 16 }}>
                   {bookClient?.name} is confirmed for {new Date(`${bookDate}T${bookTime}:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} at {new Date(`2026-01-01T${bookTime}:00`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })} with {TEAM_NAMES[bookStylist] || "stylist"}
                 </div>
@@ -2126,7 +2126,7 @@ export default function AppointmentsPage() {
                 )}
                 <button
                   onClick={() => { setShowBooking(false); resetBooking(); setBookSuccess(false); setSendCardSMS(true); setCardPhone("") }}
-                  style={{ width: "100%", height: 48, background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: 10, color: "#FBFBFB", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
+                  style={{ width: "100%", height: 48, background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: 10, color: "#1A1313", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
                 >
                   Done
                 </button>
@@ -2147,8 +2147,8 @@ export default function AppointmentsPage() {
               <button key={p.key} onClick={() => setTxPeriod(p.key)} style={{
                 padding: "6px 12px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.06em",
                 borderRadius: "20px", border: "none", cursor: "pointer", whiteSpace: "nowrap",
-                backgroundColor: txPeriod === p.key ? "#CDC9C0" : "rgba(205,201,192,0.06)",
-                color: txPeriod === p.key ? "#0f1d24" : "rgba(205,201,192,0.45)",
+                backgroundColor: txPeriod === p.key ? "#CDC9C0" : "rgba(26,19,19,0.04)",
+                color: txPeriod === p.key ? "#0f1d24" : "rgba(26,19,19,0.45)",
               }}>{p.label}</button>
             ))}
           </div>
@@ -2157,12 +2157,12 @@ export default function AppointmentsPage() {
           {txPeriod === "custom" && (
             <div style={{ display: "flex", gap: "10px", marginBottom: "16px", alignItems: "flex-end" }}>
               <div>
-                <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>Start</div>
-                <input type="date" value={txCustomStart} onChange={e => setTxCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "13px", outline: "none", colorScheme: "dark" }} />
+                <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "4px" }}>Start</div>
+                <input type="date" value={txCustomStart} onChange={e => setTxCustomStart(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "13px", outline: "none", colorScheme: "light" }} />
               </div>
               <div>
-                <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "4px" }}>End</div>
-                <input type="date" value={txCustomEnd} onChange={e => setTxCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "13px", outline: "none", colorScheme: "dark" }} />
+                <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "4px" }}>End</div>
+                <input type="date" value={txCustomEnd} onChange={e => setTxCustomEnd(e.target.value)} style={{ padding: "8px 12px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "13px", outline: "none", colorScheme: "light" }} />
               </div>
               <button onClick={fetchTransactions} style={{ padding: "8px 16px", backgroundColor: "#CDC9C0", color: "#0f1d24", border: "none", borderRadius: "8px", fontSize: "11px", fontWeight: 700, cursor: "pointer" }}>Apply</button>
             </div>
@@ -2179,12 +2179,12 @@ export default function AppointmentsPage() {
                 { label: "# Transactions", value: String(txData.summary.count), icon: "receipt" },
                 { label: "Avg Ticket", value: fmtCurrency(txData.summary.avgTicket), icon: "analytics" },
               ].map(c => (
-                <div key={c.label} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), 0 0 0 1px rgba(0,0,0,0.25)" }}>
+                <div key={c.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "12px", padding: "20px", boxShadow: "inset 0 1px 0 rgba(26,19,19,0.02), 0 0 0 1px rgba(0,0,0,0.06)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.35)" }}>{c.icon}</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(26,19,19,0.35)" }}>{c.icon}</span>
                     <span style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#606E74" }}>{c.label}</span>
                   </div>
-                  <div style={{ fontSize: "24px", fontWeight: 600, color: "#FBFBFB", fontFamily: "'Inter', sans-serif" }}>{c.value}</div>
+                  <div style={{ fontSize: "24px", fontWeight: 600, color: "#1A1313", fontFamily: "'Inter', sans-serif" }}>{c.value}</div>
                 </div>
               ))}
             </div>
@@ -2216,7 +2216,7 @@ export default function AppointmentsPage() {
           {txLoading && (
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {Array.from({ length: 8 }, (_, i) => (
-                <div key={i} style={{ height: "48px", backgroundColor: "rgba(205,201,192,0.04)", borderRadius: "8px", animation: "pulse 1.5s ease-in-out infinite", opacity: 1 - i * 0.08 }} />
+                <div key={i} style={{ height: "48px", backgroundColor: "rgba(26,19,19,0.03)", borderRadius: "8px", animation: "pulse 1.5s ease-in-out infinite", opacity: 1 - i * 0.08 }} />
               ))}
               <style>{`@keyframes pulse { 0%, 100% { opacity: 0.4 } 50% { opacity: 0.8 } }`}</style>
             </div>
@@ -2224,51 +2224,51 @@ export default function AppointmentsPage() {
 
           {/* Empty state */}
           {!txLoading && txData && txData.transactions.length === 0 && (
-            <div style={{ textAlign: "center", padding: "60px 20px", backgroundColor: "#0d1117", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(205,201,192,0.2)" }}>receipt_long</span>
-              <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "14px", fontWeight: 600 }}>No transactions found for this period.</div>
+            <div style={{ textAlign: "center", padding: "60px 20px", backgroundColor: "#FBFBFB", borderRadius: "12px", border: "1px solid rgba(26,19,19,0.06)" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "48px", display: "block", marginBottom: "12px", color: "rgba(26,19,19,0.2)" }}>receipt_long</span>
+              <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "14px", fontWeight: 600 }}>No transactions found for this period.</div>
             </div>
           )}
 
           {/* Transaction table */}
           {!txLoading && txData && txData.transactions.length > 0 && (
             <>
-              <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(26,19,19,0.06)" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "700px" }}>
                   <thead>
-                    <tr style={{ backgroundColor: "rgba(205,201,192,0.04)" }}>
+                    <tr style={{ backgroundColor: "rgba(26,19,19,0.03)" }}>
                       {["Time", "Client", "Stylist", "Services", "Payment", "Subtotal", "Tips", "Tax", "Total"].map(h => (
-                        <th key={h} style={{ padding: "12px 14px", textAlign: h === "Subtotal" || h === "Tips" || h === "Tax" || h === "Total" ? "right" : "left", fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#606E74", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>{h}</th>
+                        <th key={h} style={{ padding: "12px 14px", textAlign: h === "Subtotal" || h === "Tips" || h === "Tax" || h === "Total" ? "right" : "left", fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#606E74", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {txPageData.map((tx, idx) => (
-                      <tr key={tx.id} style={{ cursor: "pointer", transition: "background 0.15s", backgroundColor: idx % 2 === 1 ? "rgba(255,255,255,0.01)" : "transparent" }}
-                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.02)")}
-                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = idx % 2 === 1 ? "rgba(255,255,255,0.01)" : "transparent")}
+                      <tr key={tx.id} style={{ cursor: "pointer", transition: "background 0.15s", backgroundColor: idx % 2 === 1 ? "rgba(26,19,19,0.01)" : "transparent" }}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(26,19,19,0.02)")}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = idx % 2 === 1 ? "rgba(26,19,19,0.01)" : "transparent")}
                       >
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontWeight: 600, fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", whiteSpace: "nowrap" }}>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontWeight: 600, fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", whiteSpace: "nowrap" }}>
                           {new Date(tx.closedAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" })}
                         </td>
-                        <td style={{ padding: "14px", fontSize: "14px", color: "#FBFBFB", fontWeight: 600, borderBottom: "1px solid rgba(205,201,192,0.04)" }}>{tx.customerName}</td>
-                        <td style={{ padding: "14px", fontSize: "13px", color: "#7a8f96", borderBottom: "1px solid rgba(205,201,192,0.04)" }}>
+                        <td style={{ padding: "14px", fontSize: "14px", color: "#1A1313", fontWeight: 600, borderBottom: "1px solid rgba(26,19,19,0.03)" }}>{tx.customerName}</td>
+                        <td style={{ padding: "14px", fontSize: "13px", color: "#7a8f96", borderBottom: "1px solid rgba(26,19,19,0.03)" }}>
                           {tx.stylistName}
                           {tx.stylistLocation && (
                             <span style={{ marginLeft: "6px", fontSize: "10px", fontWeight: 700, fontFamily: "'Inter', sans-serif", padding: "1px 6px", borderRadius: "4px", backgroundColor: tx.stylistLocation === "CC" ? "rgba(59,130,246,0.1)" : "rgba(168,85,247,0.1)", color: tx.stylistLocation === "CC" ? "#60a5fa" : "#a78bfa" }}>{tx.stylistLocation}</span>
                           )}
                         </td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", borderBottom: "1px solid rgba(205,201,192,0.04)", maxWidth: "200px" }}>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", borderBottom: "1px solid rgba(26,19,19,0.03)", maxWidth: "200px" }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: "2px", overflow: "hidden", maxHeight: "36px" }}>
                             {tx.services.slice(0, 2).map((s: string, i: number) => <span key={i} style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{s}</span>)}
                             {tx.services.length > 2 && <span style={{ color: "rgba(96,110,116,0.6)" }}>+{tx.services.length - 2} more</span>}
                           </div>
                         </td>
-                        <td style={{ padding: "14px", borderBottom: "1px solid rgba(205,201,192,0.04)" }}>{paymentBadge(tx.paymentMethod)}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#FBFBFB", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.subtotal)}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: tx.tips > 0 ? "#22c55e" : "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{tx.tips > 0 ? fmtCurrency(tx.tips) : "\u2014"}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.tax)}</td>
-                        <td style={{ padding: "14px", fontSize: "12px", color: "#FBFBFB", fontWeight: 700, fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(205,201,192,0.04)", textAlign: "right" }}>{fmtCurrency(tx.total)}</td>
+                        <td style={{ padding: "14px", borderBottom: "1px solid rgba(26,19,19,0.03)" }}>{paymentBadge(tx.paymentMethod)}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#1A1313", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", textAlign: "right" }}>{fmtCurrency(tx.subtotal)}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: tx.tips > 0 ? "#22c55e" : "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", textAlign: "right" }}>{tx.tips > 0 ? fmtCurrency(tx.tips) : "\u2014"}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#606E74", fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", textAlign: "right" }}>{fmtCurrency(tx.tax)}</td>
+                        <td style={{ padding: "14px", fontSize: "12px", color: "#1A1313", fontWeight: 700, fontFamily: "'Inter', sans-serif", borderBottom: "1px solid rgba(26,19,19,0.03)", textAlign: "right" }}>{fmtCurrency(tx.total)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -2277,20 +2277,20 @@ export default function AppointmentsPage() {
 
               {/* Pagination */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", padding: "0 4px" }}>
-                <span style={{ fontSize: "11px", color: "rgba(205,201,192,0.4)" }}>
+                <span style={{ fontSize: "11px", color: "rgba(26,19,19,0.4)" }}>
                   Showing {txPage * TX_PER_PAGE + 1}–{Math.min((txPage + 1) * TX_PER_PAGE, txData.transactions.length)} of {txData.transactions.length}
                 </span>
                 <div style={{ display: "flex", gap: "6px" }}>
                   <button onClick={() => setTxPage(p => Math.max(0, p - 1))} disabled={txPage === 0} style={{
                     padding: "6px 12px", fontSize: "10px", fontWeight: 700, borderRadius: "6px",
-                    border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "transparent",
-                    color: txPage === 0 ? "rgba(205,201,192,0.2)" : "rgba(205,201,192,0.6)",
+                    border: "1px solid rgba(26,19,19,0.08)", backgroundColor: "transparent",
+                    color: txPage === 0 ? "rgba(26,19,19,0.2)" : "rgba(26,19,19,0.6)",
                     cursor: txPage === 0 ? "default" : "pointer",
                   }}>Prev</button>
                   <button onClick={() => setTxPage(p => Math.min(txTotalPages - 1, p + 1))} disabled={txPage >= txTotalPages - 1} style={{
                     padding: "6px 12px", fontSize: "10px", fontWeight: 700, borderRadius: "6px",
-                    border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "transparent",
-                    color: txPage >= txTotalPages - 1 ? "rgba(205,201,192,0.2)" : "rgba(205,201,192,0.6)",
+                    border: "1px solid rgba(26,19,19,0.08)", backgroundColor: "transparent",
+                    color: txPage >= txTotalPages - 1 ? "rgba(26,19,19,0.2)" : "rgba(26,19,19,0.6)",
                     cursor: txPage >= txTotalPages - 1 ? "default" : "pointer",
                   }}>Next</button>
                 </div>
@@ -2311,14 +2311,14 @@ export default function AppointmentsPage() {
                 value={clientsSearch}
                 onChange={e => setClientsSearch(e.target.value)}
                 placeholder="Search by name, phone, or email..."
-                style={{ width: "100%", padding: "10px 12px 10px 36px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#FBFBFB", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}
+                style={{ width: "100%", padding: "10px 12px 10px 36px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "10px", color: "#1A1313", fontSize: "13px", outline: "none", boxSizing: "border-box" as const }}
               />
               {clientsSearch && (
                 <button onClick={() => setClientsSearch("")} style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#606E74", fontSize: "16px", lineHeight: 1 }}>&times;</button>
               )}
             </div>
             {isOwner && (
-              <button onClick={() => { fetch("/api/clients/sync", { method: "POST" }).then(() => fetchClientsPage(0)) }} style={{ padding: "9px 14px", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "11px", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" as const, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
+              <button onClick={() => { fetch("/api/clients/sync", { method: "POST" }).then(() => fetchClientsPage(0)) }} style={{ padding: "9px 14px", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "10px", backgroundColor: "transparent", color: "#7a8f96", fontSize: "11px", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" as const, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
                 Sync
               </button>
             )}
@@ -2327,11 +2327,11 @@ export default function AppointmentsPage() {
           {/* Stats row */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "16px" }}>
             {[
-              { label: "Total Clients", value: clientsTotal.toLocaleString(), color: "#FBFBFB" },
+              { label: "Total Clients", value: clientsTotal.toLocaleString(), color: "#1A1313" },
               { label: "With Formula", value: String(clientsList.filter(c => c.hasFormula).length), color: "#C9A84C" },
               { label: "Showing", value: String(clientsList.length), color: "#7a8f96" },
             ].map(s => (
-              <div key={s.label} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "12px 14px" }}>
+              <div key={s.label} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "12px 14px" }}>
                 <div style={{ fontSize: "20px", fontWeight: 700, color: s.color, fontFamily: "'Inter', sans-serif" }}>{s.value}</div>
                 <div style={{ fontSize: "9px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginTop: "2px" }}>{s.label}</div>
               </div>
@@ -2342,18 +2342,18 @@ export default function AppointmentsPage() {
           {clientsLoading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               {[1,2,3,4,5,6,7,8].map(i => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px", backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px" }}>
-                  <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.04)", animation: "pulse 1.5s infinite" }} />
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px" }}>
+                  <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.04)", animation: "pulse 1.5s infinite" }} />
                   <div style={{ flex: 1 }}>
-                    <div style={{ width: "140px", height: "14px", backgroundColor: "rgba(255,255,255,0.04)", borderRadius: "4px", marginBottom: "6px", animation: "pulse 1.5s infinite" }} />
-                    <div style={{ width: "100px", height: "11px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "4px", animation: "pulse 1.5s infinite" }} />
+                    <div style={{ width: "140px", height: "14px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "4px", marginBottom: "6px", animation: "pulse 1.5s infinite" }} />
+                    <div style={{ width: "100px", height: "11px", backgroundColor: "rgba(26,19,19,0.03)", borderRadius: "4px", animation: "pulse 1.5s infinite" }} />
                   </div>
                 </div>
               ))}
             </div>
           ) : clientsList.length === 0 ? (
             <div style={{ padding: "60px 20px", textAlign: "center" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "10px" }}>group</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "rgba(26,19,19,0.2)", display: "block", marginBottom: "10px" }}>group</span>
               <div style={{ color: "#606E74", fontSize: "14px" }}>{clientsSearch ? `No clients found for "${clientsSearch}"` : "No clients yet"}</div>
             </div>
           ) : (
@@ -2365,17 +2365,17 @@ export default function AppointmentsPage() {
                 return (
                   <div key={c.id} onClick={() => openClientDetail(c)} style={{
                     display: "flex", alignItems: "center", gap: "14px", padding: "12px 16px",
-                    backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", cursor: "pointer",
+                    backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", cursor: "pointer",
                     transition: "all 0.15s",
                   }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#141b22"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)" }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#0d1117"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.06)" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#F4F5F7"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(26,19,19,0.1)" }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "#FBFBFB"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(26,19,19,0.06)" }}
                   >
                     <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: avatarColors[colorIdx], display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                       <span style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{initials}</span>
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: "14px", fontWeight: 600, color: "#FBFBFB", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{c.firstName} {c.lastName}</div>
+                      <div style={{ fontSize: "14px", fontWeight: 600, color: "#1A1313", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{c.firstName} {c.lastName}</div>
                       <div style={{ fontSize: "11px", color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: "2px" }}>
                         {c.phone || c.email || "No contact"}{c.lastVisitAt ? ` · ${new Date(c.lastVisitAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Chicago" })}` : ""}
                       </div>
@@ -2383,7 +2383,7 @@ export default function AppointmentsPage() {
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                       {(c.totalVisits || 0) > 0 && (
                         <div style={{ textAlign: "center" }}>
-                          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700, color: "#fff" }}>{c.totalVisits}</div>
+                          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 700, color: "#1A1313" }}>{c.totalVisits}</div>
                           <div style={{ fontSize: "9px", color: "#606E74", textTransform: "uppercase" as const }}>visits</div>
                         </div>
                       )}
@@ -2398,7 +2398,7 @@ export default function AppointmentsPage() {
               {/* Load more */}
               {clientsHasMore && (
                 <button onClick={() => fetchClientsPage(clientsPage + 1, true)} disabled={clientsLoadingMore} style={{
-                  width: "100%", padding: "14px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", color: "#7a8f96", fontSize: "13px", cursor: "pointer", marginTop: "6px",
+                  width: "100%", padding: "14px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "10px", color: "#7a8f96", fontSize: "13px", cursor: "pointer", marginTop: "6px",
                   opacity: clientsLoadingMore ? 0.5 : 1,
                 }}>
                   {clientsLoadingMore ? "Loading..." : `Load More (${clientsTotal - clientsList.length} remaining)`}
@@ -2413,9 +2413,9 @@ export default function AppointmentsPage() {
       {selectedClient && (
         <>
           <div onClick={() => { setSelectedClient(null); setClientDetail(null); setShowFormulaForm(false) }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 299 }} />
-          <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(480px, 95vw)", backgroundColor: "#0d1117", borderLeft: "1px solid rgba(255,255,255,0.08)", zIndex: 300, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(480px, 95vw)", backgroundColor: "#FBFBFB", borderLeft: "1px solid rgba(26,19,19,0.08)", zIndex: 300, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {/* Header */}
-            <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+            <div style={{ padding: "20px", borderBottom: "1px solid rgba(26,19,19,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 {(() => { const avatarColors = ["#7c3aed", "#2563eb", "#059669", "#d97706", "#dc2626", "#0891b2", "#7c2d12"]; const ci = (`${selectedClient.firstName || ""}${selectedClient.lastName || ""}`).charCodeAt(0) % avatarColors.length; const initials = `${(selectedClient.firstName || "?")[0]}${(selectedClient.lastName || "")[0] || ""}`.toUpperCase(); return (
                   <div style={{ width: "42px", height: "42px", borderRadius: "50%", backgroundColor: avatarColors[ci], display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -2423,7 +2423,7 @@ export default function AppointmentsPage() {
                   </div>
                 ) })()}
                 <div>
-                  <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{selectedClient.firstName} {selectedClient.lastName}</div>
+                  <div style={{ fontSize: "18px", fontWeight: 700, color: "#1A1313" }}>{selectedClient.firstName} {selectedClient.lastName}</div>
                   <div style={{ fontSize: "12px", color: "#7a8f96", marginTop: "1px" }}>Client Profile</div>
                 </div>
               </div>
@@ -2434,18 +2434,18 @@ export default function AppointmentsPage() {
             <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
               {clientDetailLoading ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {[1,2,3,4].map(i => <div key={i} style={{ height: "60px", backgroundColor: "rgba(255,255,255,0.03)", borderRadius: "8px", animation: "pulse 1.5s infinite" }} />)}
+                  {[1,2,3,4].map(i => <div key={i} style={{ height: "60px", backgroundColor: "rgba(26,19,19,0.03)", borderRadius: "8px", animation: "pulse 1.5s infinite" }} />)}
                 </div>
               ) : clientDetail ? (
                 <>
                   {/* Stats */}
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", marginBottom: "20px" }}>
                     {[
-                      { label: "Visits", value: String(clientDetail.stats.totalVisits || 0), color: "#fff" },
+                      { label: "Visits", value: String(clientDetail.stats.totalVisits || 0), color: "#1A1313" },
                       { label: "Total Spend", value: `$${(clientDetail.stats.totalSpend || 0).toFixed(0)}`, color: "#22c55e" },
                       { label: "Avg Ticket", value: `$${(clientDetail.stats.avgTicket || 0).toFixed(0)}`, color: "#C9A84C" },
                     ].map(s => (
-                      <div key={s.label} style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
+                      <div key={s.label} style={{ backgroundColor: "rgba(26,19,19,0.03)", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
                         <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", fontWeight: 700, color: s.color }}>{s.value}</div>
                         <div style={{ fontSize: "9px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.06em", marginTop: "3px" }}>{s.label}</div>
                       </div>
@@ -2453,22 +2453,22 @@ export default function AppointmentsPage() {
                   </div>
 
                   {/* Contact */}
-                  <div style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "14px", marginBottom: "20px" }}>
+                  <div style={{ backgroundColor: "rgba(26,19,19,0.02)", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "14px", marginBottom: "20px" }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: "10px" }}>Contact</div>
                     {clientDetail.client.phone && (
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#7a8f96" }}>phone</span>
-                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#fff" }}>{clientDetail.client.phone}</span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#1A1313" }}>{clientDetail.client.phone}</span>
                       </div>
                     )}
                     {clientDetail.client.email && (
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "14px", color: "#7a8f96" }}>mail</span>
-                        <span style={{ fontSize: "13px", color: "#fff" }}>{clientDetail.client.email}</span>
+                        <span style={{ fontSize: "13px", color: "#1A1313" }}>{clientDetail.client.email}</span>
                       </div>
                     )}
                     {!clientDetail.client.phone && !clientDetail.client.email && (
-                      <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.3)" }}>No contact info</div>
+                      <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.3)" }}>No contact info</div>
                     )}
                   </div>
 
@@ -2476,7 +2476,7 @@ export default function AppointmentsPage() {
                   {clientDetail.stats.lastVisit && (
                     <div style={{ marginBottom: "20px" }}>
                       <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: "6px" }}>Last Visit</div>
-                      <div style={{ fontSize: "13px", color: "#fff" }}>{new Date(clientDetail.stats.lastVisit).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}</div>
+                      <div style={{ fontSize: "13px", color: "#1A1313" }}>{new Date(clientDetail.stats.lastVisit).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}</div>
                     </div>
                   )}
 
@@ -2484,13 +2484,13 @@ export default function AppointmentsPage() {
                   <div style={{ marginBottom: "20px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
                       <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Formula Book ({formulaList.length})</div>
-                      <button onClick={() => setShowFormulaForm(!showFormulaForm)} style={{ fontSize: "11px", color: "#7a8f96", background: "none", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
+                      <button onClick={() => setShowFormulaForm(!showFormulaForm)} style={{ fontSize: "11px", color: "#7a8f96", background: "none", border: "1px solid rgba(26,19,19,0.1)", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
                         {showFormulaForm ? "Cancel" : "+ Add"}
                       </button>
                     </div>
 
                     {showFormulaForm && (
-                      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "14px", marginBottom: "10px" }}>
+                      <div style={{ background: "rgba(26,19,19,0.03)", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "14px", marginBottom: "10px" }}>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                           {[
                             { key: "baseColor", label: "Base Color", type: "input" },
@@ -2503,21 +2503,21 @@ export default function AppointmentsPage() {
                             <div key={field.key}>
                               <label style={{ fontSize: "9px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "3px" }}>{field.label}</label>
                               {field.type === "select" ? (
-                                <select value={formulaForm[field.key as keyof typeof formulaForm]} onChange={e => setFormulaForm(f => ({ ...f, [field.key]: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "12px", outline: "none", boxSizing: "border-box" as const }}>
+                                <select value={formulaForm[field.key as keyof typeof formulaForm]} onChange={e => setFormulaForm(f => ({ ...f, [field.key]: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "6px", color: "#1A1313", fontSize: "12px", outline: "none", boxSizing: "border-box" as const }}>
                                   <option value="">...</option>
                                   {field.options?.map(o => <option key={o} value={o}>{o}{field.key === "developer" ? "%" : ""}</option>)}
                                 </select>
                               ) : (
-                                <input value={formulaForm[field.key as keyof typeof formulaForm]} onChange={e => setFormulaForm(f => ({ ...f, [field.key]: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "12px", outline: "none", boxSizing: "border-box" as const }} />
+                                <input value={formulaForm[field.key as keyof typeof formulaForm]} onChange={e => setFormulaForm(f => ({ ...f, [field.key]: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "6px", color: "#1A1313", fontSize: "12px", outline: "none", boxSizing: "border-box" as const }} />
                               )}
                             </div>
                           ))}
                         </div>
                         <div style={{ marginTop: "8px" }}>
                           <label style={{ fontSize: "9px", fontWeight: 600, color: "#606E74", textTransform: "uppercase" as const, display: "block", marginBottom: "3px" }}>Notes</label>
-                          <textarea value={formulaForm.notes} onChange={e => setFormulaForm(f => ({ ...f, notes: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "#fff", fontSize: "12px", outline: "none", minHeight: "50px", resize: "vertical" as const, boxSizing: "border-box" as const }} />
+                          <textarea value={formulaForm.notes} onChange={e => setFormulaForm(f => ({ ...f, notes: e.target.value }))} style={{ width: "100%", padding: "7px 8px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "6px", color: "#1A1313", fontSize: "12px", outline: "none", minHeight: "50px", resize: "vertical" as const, boxSizing: "border-box" as const }} />
                         </div>
-                        <button onClick={saveFormula} disabled={formulaSaving} style={{ width: "100%", marginTop: "10px", padding: "10px", background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: "8px", color: "#fff", fontSize: "13px", fontWeight: 600, cursor: "pointer", opacity: formulaSaving ? 0.5 : 1 }}>
+                        <button onClick={saveFormula} disabled={formulaSaving} style={{ width: "100%", marginTop: "10px", padding: "10px", background: "rgba(122,143,150,0.15)", border: "1px solid #7a8f96", borderRadius: "8px", color: "#1A1313", fontSize: "13px", fontWeight: 600, cursor: "pointer", opacity: formulaSaving ? 0.5 : 1 }}>
                           {formulaSaving ? "Saving..." : "Save Formula"}
                         </button>
                       </div>
@@ -2526,7 +2526,7 @@ export default function AppointmentsPage() {
                     {formulaList.length === 0 && !showFormulaForm ? (
                       <div style={{ padding: "16px 0", textAlign: "center", color: "#606E74", fontSize: "12px" }}>No formulas saved yet</div>
                     ) : formulaList.map((f, fi) => (
-                      <div key={f.id} style={{ background: fi === 0 ? "rgba(201,168,76,0.04)" : "rgba(255,255,255,0.02)", border: `1px solid ${fi === 0 ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.06)"}`, borderRadius: "8px", padding: "12px", marginBottom: "6px" }}>
+                      <div key={f.id} style={{ background: fi === 0 ? "rgba(201,168,76,0.04)" : "rgba(26,19,19,0.02)", border: `1px solid ${fi === 0 ? "rgba(201,168,76,0.12)" : "rgba(26,19,19,0.06)"}`, borderRadius: "8px", padding: "12px", marginBottom: "6px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
                           <span style={{ fontSize: "11px", color: fi === 0 ? "#C9A84C" : "#7a8f96", fontWeight: 600 }}>{fi === 0 ? "Latest" : new Date(f.createdAt).toLocaleDateString()}</span>
                           {f.technique && <span style={{ fontSize: "9px", fontWeight: 600, padding: "2px 7px", borderRadius: "4px", backgroundColor: "rgba(122,143,150,0.1)", color: "#7a8f96" }}>{f.technique}</span>}
@@ -2540,7 +2540,7 @@ export default function AppointmentsPage() {
                           ].filter(r => r.value).map(r => (
                             <div key={r.label}>
                               <div style={{ fontSize: "9px", color: "#606E74", textTransform: "uppercase" as const }}>{r.label}</div>
-                              <div style={{ fontSize: "12px", color: "#fff", fontFamily: "'Inter', sans-serif" }}>{r.value}</div>
+                              <div style={{ fontSize: "12px", color: "#1A1313", fontFamily: "'Inter', sans-serif" }}>{r.value}</div>
                             </div>
                           ))}
                         </div>
@@ -2555,9 +2555,9 @@ export default function AppointmentsPage() {
                       <div style={{ fontSize: "10px", fontWeight: 700, color: "#606E74", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: "10px" }}>Visit History ({clientDetail.visits.length})</div>
                       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       {clientDetail.visits.map((v: any) => (
-                        <div key={v.orderId} style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px" }}>
+                        <div key={v.orderId} style={{ backgroundColor: "rgba(26,19,19,0.02)", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#fff" }}>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "#1A1313" }}>
                               {new Date(v.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}
                             </span>
                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -2602,42 +2602,42 @@ export default function AppointmentsPage() {
           <div onClick={() => setHistoryClientId(null)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" }} />
           <div style={{
             position: "relative", width: isMobile ? "100%" : "420px", maxWidth: "100%",
-            background: "#0d1117", borderLeft: "1px solid rgba(255,255,255,0.06)",
+            background: "#FBFBFB", borderLeft: "1px solid rgba(26,19,19,0.06)",
             display: "flex", flexDirection: "column", overflow: "hidden",
           }}>
             {/* Close button */}
             <button onClick={() => setHistoryClientId(null)} style={{
               position: "absolute", top: "16px", right: "16px", zIndex: 2,
-              background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer", fontSize: "22px",
+              background: "none", border: "none", color: "rgba(26,19,19,0.5)", cursor: "pointer", fontSize: "22px",
             }}>&times;</button>
 
             {historyLoading ? (
               <div style={{ padding: "60px 20px", textAlign: "center" }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "rgba(205,201,192,0.3)", display: "block", marginBottom: "8px" }}>hourglass_empty</span>
-                <div style={{ color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>Loading client history...</div>
+                <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "rgba(26,19,19,0.3)", display: "block", marginBottom: "8px" }}>hourglass_empty</span>
+                <div style={{ color: "rgba(26,19,19,0.4)", fontSize: "13px" }}>Loading client history...</div>
               </div>
             ) : !historyData ? (
-              <div style={{ padding: "60px 20px", textAlign: "center", color: "rgba(205,201,192,0.4)", fontSize: "13px" }}>Failed to load client data</div>
+              <div style={{ padding: "60px 20px", textAlign: "center", color: "rgba(26,19,19,0.4)", fontSize: "13px" }}>Failed to load client data</div>
             ) : (
               <>
                 {/* Header */}
-                <div style={{ padding: "24px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  <div style={{ fontSize: "20px", fontWeight: 800, color: "#fff", marginBottom: "6px" }}>{historyData.customer.name}</div>
+                <div style={{ padding: "24px 20px 16px", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
+                  <div style={{ fontSize: "20px", fontWeight: 800, color: "#1A1313", marginBottom: "6px" }}>{historyData.customer.name}</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "3px", marginBottom: "10px" }}>
                     {historyData.customer.phone && (
-                      <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.55)", display: "flex", alignItems: "center", gap: "4px" }}>
+                      <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.55)", display: "flex", alignItems: "center", gap: "4px" }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>phone</span>
                         {historyData.customer.phone}
                       </div>
                     )}
                     {historyData.customer.email && (
-                      <div style={{ fontSize: "12px", color: "rgba(205,201,192,0.55)", display: "flex", alignItems: "center", gap: "4px" }}>
+                      <div style={{ fontSize: "12px", color: "rgba(26,19,19,0.55)", display: "flex", alignItems: "center", gap: "4px" }}>
                         <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>mail</span>
                         {historyData.customer.email}
                       </div>
                     )}
                     {historyData.customer.createdAt && (
-                      <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.35)", marginTop: "2px" }}>
+                      <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.35)", marginTop: "2px" }}>
                         Customer since {new Date(historyData.customer.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "America/Chicago" })}
                       </div>
                     )}
@@ -2650,7 +2650,7 @@ export default function AppointmentsPage() {
                     <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(16,185,129,0.12)", color: "#10B981", fontSize: "11px", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>
                       Total {fmtCurrency(historyData.stats.totalSpend)}
                     </span>
-                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.7)", fontSize: "11px", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>
+                    <span style={{ padding: "5px 12px", borderRadius: "20px", backgroundColor: "rgba(26,19,19,0.06)", color: "rgba(26,19,19,0.7)", fontSize: "11px", fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>
                       Avg {fmtCurrency(historyData.stats.avgTicket)}
                     </span>
                   </div>
@@ -2658,21 +2658,21 @@ export default function AppointmentsPage() {
 
                 {/* Visit history */}
                 <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
-                  <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(205,201,192,0.4)", marginBottom: "10px" }}>
+                  <div style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(26,19,19,0.4)", marginBottom: "10px" }}>
                     Visit History
                   </div>
                   {historyData.visits.length === 0 ? (
-                    <div style={{ padding: "30px 0", textAlign: "center", color: "rgba(205,201,192,0.3)", fontSize: "13px" }}>No visit history</div>
+                    <div style={{ padding: "30px 0", textAlign: "center", color: "rgba(26,19,19,0.3)", fontSize: "13px" }}>No visit history</div>
                   ) : (
                     <>
                       {historyData.visits.slice(0, historyLimit).map((v: { date: string; stylist: string; services: string[]; amount: number; tips: number; status: string }, i: number) => (
                         <div key={i} style={{
                           padding: "12px 14px", marginBottom: "6px",
-                          backgroundColor: "rgba(205,201,192,0.03)", border: "1px solid rgba(205,201,192,0.06)",
+                          backgroundColor: "rgba(26,19,19,0.02)", border: "1px solid rgba(26,19,19,0.04)",
                           borderRadius: "8px",
                         }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                            <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(205,201,192,0.7)" }}>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(26,19,19,0.7)" }}>
                               {new Date(v.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" })}
                             </span>
                             <span style={{
@@ -2684,15 +2684,15 @@ export default function AppointmentsPage() {
                               {(STATUS_COLORS[v.status] || DEFAULT_STATUS).label}
                             </span>
                           </div>
-                          <div style={{ fontSize: "11px", color: "rgba(205,201,192,0.5)", marginBottom: "4px" }}>
+                          <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.5)", marginBottom: "4px" }}>
                             {v.stylist}
                           </div>
                           <div style={{ display: "flex", gap: "4px", flexWrap: "wrap", marginBottom: "4px" }}>
                             {v.services.map((s: string, j: number) => (
                               <span key={j} style={{
                                 fontSize: "9px", fontWeight: 600, padding: "2px 6px",
-                                borderRadius: "3px", backgroundColor: "rgba(205,201,192,0.06)",
-                                color: "rgba(205,201,192,0.5)",
+                                borderRadius: "3px", backgroundColor: "rgba(26,19,19,0.04)",
+                                color: "rgba(26,19,19,0.5)",
                               }}>{s}</span>
                             ))}
                           </div>
@@ -2705,8 +2705,8 @@ export default function AppointmentsPage() {
                       {historyData.visits.length > historyLimit && (
                         <button onClick={() => setHistoryLimit(l => l + 20)} style={{
                           width: "100%", padding: "10px", marginTop: "8px",
-                          backgroundColor: "rgba(205,201,192,0.06)", border: "1px solid rgba(255,255,255,0.06)",
-                          borderRadius: "8px", color: "rgba(205,201,192,0.6)", fontSize: "12px", fontWeight: 600, cursor: "pointer",
+                          backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.06)",
+                          borderRadius: "8px", color: "rgba(26,19,19,0.6)", fontSize: "12px", fontWeight: 600, cursor: "pointer",
                         }}>
                           Load more ({historyData.visits.length - historyLimit} remaining)
                         </button>
@@ -2726,16 +2726,16 @@ export default function AppointmentsPage() {
           <div onClick={() => setSelectedAppt(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 199 }} />
           <div style={{
             position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
-            background: "#0d1117", borderTop: "1px solid rgba(255,255,255,0.1)",
+            background: "#FBFBFB", borderTop: "1px solid rgba(26,19,19,0.1)",
             borderRadius: "20px 20px 0 0", maxHeight: "85vh", overflowY: "auto",
             paddingBottom: "env(safe-area-inset-bottom, 0px)",
           }}>
             {/* Handle */}
-            <div style={{ width: "40px", height: "4px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "2px", margin: "12px auto" }} />
+            <div style={{ width: "40px", height: "4px", backgroundColor: "rgba(26,19,19,0.2)", borderRadius: "2px", margin: "12px auto" }} />
             <div style={{ padding: "0 20px 16px" }}>
               {/* Client + status */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                <div style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB" }}>{selectedAppt.customerName}</div>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: "#1A1313" }}>{selectedAppt.customerName}</div>
                 <span style={{ fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "4px", backgroundColor: (STATUS_COLORS[selectedAppt.resolvedStatus || selectedAppt.status] || DEFAULT_STATUS).bg, color: (STATUS_COLORS[selectedAppt.resolvedStatus || selectedAppt.status] || DEFAULT_STATUS).text, textTransform: "uppercase", letterSpacing: "0.06em" }}>{(STATUS_COLORS[selectedAppt.resolvedStatus || selectedAppt.status] || DEFAULT_STATUS).label}</span>
               </div>
               {/* Info */}
@@ -2747,7 +2747,7 @@ export default function AppointmentsPage() {
                 {selectedAppt.teamMemberId && (
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#7a8f96" }}>person</span>
-                    <span style={{ fontSize: "14px", color: "#FBFBFB" }}>{TEAM_NAMES[selectedAppt.teamMemberId] || ""}</span>
+                    <span style={{ fontSize: "14px", color: "#1A1313" }}>{TEAM_NAMES[selectedAppt.teamMemberId] || ""}</span>
                   </div>
                 )}
                 {selectedAppt.totalDurationMinutes && (
@@ -2762,8 +2762,8 @@ export default function AppointmentsPage() {
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}>Services</div>
                   {selectedAppt.services.map((s, i) => (
-                    <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", marginBottom: "8px", backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px" }}>
-                      <span style={{ fontSize: "14px", color: "#FBFBFB" }}>{s.serviceName}</span>
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", marginBottom: "8px", backgroundColor: "rgba(26,19,19,0.04)", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "8px" }}>
+                      <span style={{ fontSize: "14px", color: "#1A1313" }}>{s.serviceName}</span>
                       <span style={{ fontSize: "14px", color: "#7a8f96", fontFamily: "'Inter', sans-serif" }}>{fmtCurrency(s.price)}</span>
                     </div>
                   ))}
@@ -2771,18 +2771,18 @@ export default function AppointmentsPage() {
               )}
               {/* Total */}
               {(selectedAppt.totalPrice ?? 0) > 0 && (
-                <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid rgba(26,19,19,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "11px", fontWeight: 600, color: "#606E74", textTransform: "uppercase", letterSpacing: "0.1em" }}>Total</span>
-                  <span style={{ fontSize: "20px", fontWeight: 700, color: "#FBFBFB", fontFamily: "'Inter', sans-serif" }}>{fmtCurrency(selectedAppt.totalPrice || 0)}</span>
+                  <span style={{ fontSize: "20px", fontWeight: 700, color: "#1A1313", fontFamily: "'Inter', sans-serif" }}>{fmtCurrency(selectedAppt.totalPrice || 0)}</span>
                 </div>
               )}
             </div>
             {/* Action buttons */}
-            <div style={{ padding: "16px 20px", borderTop: "1px solid rgba(255,255,255,0.06)", background: "#0d1117" }}>
+            <div style={{ padding: "16px 20px", borderTop: "1px solid rgba(26,19,19,0.06)", background: "#FBFBFB" }}>
               {!selectedAppt.isCheckedOut && (
                 <Link href={`/pos?appointmentId=${selectedAppt.id}&location=${encodeURIComponent(location)}`} style={{
                   display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "52px",
-                  backgroundColor: "#7a8f96", color: "#06080d", fontWeight: 700, fontSize: "15px", borderRadius: "12px",
+                  backgroundColor: "#7a8f96", color: "#F4F5F7", fontWeight: 700, fontSize: "15px", borderRadius: "12px",
                   textDecoration: "none", cursor: "pointer",
                 }}>Checkout in POS</Link>
               )}
@@ -2792,7 +2792,7 @@ export default function AppointmentsPage() {
                 </div>
               )}
               <button onClick={() => setSelectedAppt(null)} style={{
-                width: "100%", height: "44px", backgroundColor: "transparent", border: "1px solid rgba(255,255,255,0.1)",
+                width: "100%", height: "44px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.1)",
                 color: "#7a8f96", borderRadius: "12px", marginTop: "8px", cursor: "pointer", fontSize: "14px",
               }}>Close</button>
             </div>
@@ -2804,9 +2804,9 @@ export default function AppointmentsPage() {
       {cancelConfirm && (
         <div style={{ position: "fixed", inset: 0, zIndex: 400 }}>
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)" }} onClick={() => setCancelConfirm(null)} />
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#0d1117", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.8)", zIndex: 401 }}>
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(420px, calc(100vw - 32px))", background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 16, padding: 28, boxShadow: "0 20px 60px rgba(0,0,0,0.8)", zIndex: 401 }}>
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 18, color: "#FBFBFB", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>
+              <div style={{ fontSize: 18, color: "#1A1313", fontWeight: 700, marginBottom: 8 }}>Cancel Appointment</div>
               <div style={{ fontSize: 14, color: "#7a8f96" }}>Are you sure you want to cancel {cancelConfirm.clientName}&apos;s appointment?</div>
               <div style={{ fontSize: 12, color: "#606E74", fontFamily: "'Inter', sans-serif", marginTop: 6 }}>{cancelConfirm.time}</div>
             </div>
@@ -2814,7 +2814,7 @@ export default function AppointmentsPage() {
               This will cancel the appointment in Square and notify the client via SMS.
             </div>
             <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={() => setCancelConfirm(null)} style={{ flex: 1, height: 44, background: "transparent", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, color: "#7a8f96", fontSize: 14, cursor: "pointer" }}>Keep</button>
+              <button onClick={() => setCancelConfirm(null)} style={{ flex: 1, height: 44, background: "transparent", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 10, color: "#7a8f96", fontSize: 14, cursor: "pointer" }}>Keep</button>
               <button onClick={() => handleCancelAppointment(cancelConfirm.id)} disabled={cancellingId === cancelConfirm.id} style={{ flex: 1, height: 44, background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.4)", borderRadius: 10, color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: cancellingId === cancelConfirm.id ? 0.5 : 1 }}>
                 {cancellingId === cancelConfirm.id ? "Cancelling..." : "Yes, Cancel"}
               </button>
@@ -2824,7 +2824,7 @@ export default function AppointmentsPage() {
       )}
 
       {/* Toast */}
-      {toast && <div style={{ position: "fixed", bottom: "90px", right: "20px", background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "10px", padding: "12px 20px", color: "#fff", fontSize: "13px", zIndex: 999 }}>{toast}</div>}
+      {toast && <div style={{ position: "fixed", bottom: "90px", right: "20px", background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "10px", padding: "12px 20px", color: "#1A1313", fontSize: "13px", zIndex: 999 }}>{toast}</div>}
 
       {/* Suppress unused vars */}
       {isManager ? null : null}

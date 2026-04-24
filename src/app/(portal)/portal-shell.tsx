@@ -595,7 +595,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
      DESKTOP LAYOUT
      ═══════════════════════════════════════════ */
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#06080d" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#F4F5F7" }}>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
@@ -784,7 +784,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* TOPBAR — 56px fixed */}
+      {/* TOPBAR — 56px fixed, light */}
       <header style={{
         height: 56,
         minHeight: 56,
@@ -792,9 +792,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         top: 0,
         left: 220,
         right: 0,
-        background: "#0d1117",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        boxShadow: "inset 0 -1px 0 rgba(0,0,0,0.25)",
+        background: "#FBFBFB",
+        borderBottom: "1px solid rgba(26,19,19,0.08)",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -806,7 +806,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           fontFamily: "Inter",
           fontSize: 16,
           fontWeight: 600,
-          color: "#ffffff",
+          color: "#1A1313",
           letterSpacing: "-0.31px",
         }}>
           {pageTitle}
@@ -819,8 +819,8 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             padding: "0 14px",
             height: 32,
             borderRadius: 6,
-            background: "rgba(122,143,150,0.1)",
-            border: "1px solid rgba(122,143,150,0.25)",
+            background: "rgba(122,143,150,0.08)",
+            border: "1px solid rgba(122,143,150,0.2)",
             color: "#7a8f96",
             fontFamily: "Inter",
             fontSize: 12,
@@ -832,7 +832,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
             textDecoration: "none",
           }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(122,143,150,0.15)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.4)" }}
-            onMouseLeave={e => { e.currentTarget.style.background = "rgba(122,143,150,0.1)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.25)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(122,143,150,0.08)"; e.currentTarget.style.borderColor = "rgba(122,143,150,0.2)" }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 14 }}>auto_awesome</span>
             Reyna AI
@@ -845,7 +845,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
         marginLeft: 220,
         marginTop: 56,
         minHeight: "calc(100vh - 56px)",
-        background: "#06080d",
+        background: "#F4F5F7",
         overflowX: "hidden",
       }}>
         {children}

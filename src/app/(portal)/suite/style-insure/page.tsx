@@ -8,12 +8,12 @@ const ACC_BRIGHT = "#7a8f96"
 const ACC_DIM = "rgba(96,110,116,0.08)"
 const ACC_BORDER = "rgba(96,110,116,0.2)"
 const AMBER = "#ffb347"
-const BORDER = "rgba(255,255,255,0.07)"
-const BORDER2 = "rgba(255,255,255,0.12)"
-const S1 = "rgba(255,255,255,0.03)"
-const S2 = "rgba(255,255,255,0.05)"
-const MUTED = "rgba(255,255,255,0.3)"
-const MID = "rgba(255,255,255,0.6)"
+const BORDER = "rgba(26,19,19,0.07)"
+const BORDER2 = "rgba(26,19,19,0.12)"
+const S1 = "rgba(26,19,19,0.03)"
+const S2 = "rgba(26,19,19,0.05)"
+const MUTED = "rgba(26,19,19,0.3)"
+const MID = "rgba(26,19,19,0.6)"
 const GREEN = "#10B981"
 const RED = "#ff6b6b"
 
@@ -123,7 +123,7 @@ export default function StyleInsurePage() {
 
   const mono: React.CSSProperties = { fontFamily: "'Inter', sans-serif" }
   const jakarta: React.CSSProperties = { fontFamily: "'Inter', -apple-system, sans-serif" }
-  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(255,255,255,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
+  const inputStyle: React.CSSProperties = { width: "100%", padding: "10px 12px", backgroundColor: "rgba(26,19,19,0.06)", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" as const, ...jakarta }
   const labelStyle: React.CSSProperties = { display: "block", fontSize: "9px", fontWeight: 700, color: MUTED, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "6px", ...mono }
 
   if (loading) {
@@ -131,7 +131,7 @@ export default function StyleInsurePage() {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 500 }}>
           {[1,2,3].map(i => (
-            <div key={i} style={{ height: 60, background: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+            <div key={i} style={{ height: 60, background: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
           ))}
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function StyleInsurePage() {
   if (!hasAccess) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#FBFBFB", marginBottom: 8 }}>StyleInsure</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: 18, fontWeight: 700, color: "#1A1313", marginBottom: 8 }}>StyleInsure</div>
         <div style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#7a8f96", marginBottom: 24, textAlign: "center" }}>Subscribe to Envy Suite to access this feature</div>
         <button onClick={() => router.push("/suite")} style={{ background: "transparent", border: "1px solid #606E74", color: "#7a8f96", borderRadius: 8, padding: "10px 20px", fontSize: 14, cursor: "pointer", fontFamily: "Inter, sans-serif" }}>View Plans</button>
       </div>
@@ -149,7 +149,7 @@ export default function StyleInsurePage() {
   }
 
   return (
-    <div style={{ ...jakarta, minHeight: "100vh", backgroundColor: "#06080d", color: "#fff", position: "relative" }}>
+    <div style={{ ...jakarta, minHeight: "100vh", backgroundColor: "#F4F5F7", color: "#1A1313", position: "relative" }}>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "400px", background: `radial-gradient(ellipse at 50% 0%, ${ACC_DIM} 0%, transparent 65%)`, pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "1000px", margin: "0 auto", padding: "clamp(24px,4vw,48px) clamp(16px,4vw,32px)" }}>
@@ -207,13 +207,13 @@ export default function StyleInsurePage() {
                 <div style={{ background: S1, border: `1px solid ${BORDER2}`, borderRadius: "12px", padding: "24px", marginBottom: "16px" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
                     <div>
-                      <div style={{ ...mono, fontSize: "32px", fontWeight: 500, color: "#fff" }}>$15<span style={{ fontSize: "14px", color: MUTED }}>/month</span></div>
+                      <div style={{ ...mono, fontSize: "32px", fontWeight: 500, color: "#1A1313" }}>$15<span style={{ fontSize: "14px", color: MUTED }}>/month</span></div>
                       <div style={{ fontSize: "11px", color: MUTED }}>Through Next Insurance &mdash; the #1 digital insurer for small business</div>
                     </div>
                     <div style={{ ...mono, fontSize: "9px", padding: "4px 10px", borderRadius: "4px", background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: GREEN, textTransform: "uppercase" }}>100% tax deductible</div>
                   </div>
                   <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                    <a href="https://www.nextinsurance.com/profession/hair-stylist-insurance/" target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "11px 20px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", textDecoration: "none", textAlign: "center", ...jakarta }}>
+                    <a href="https://www.nextinsurance.com/profession/hair-stylist-insurance/" target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "11px 20px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#1A1313", fontSize: "12px", fontWeight: 700, cursor: "pointer", textDecoration: "none", textAlign: "center", ...jakarta }}>
                       Get Quote at Next Insurance &rarr;
                     </a>
                     <button onClick={() => setShowPolicyForm(true)} style={{ flex: 1, padding: "11px 20px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "8px", color: MID, fontSize: "12px", cursor: "pointer", ...jakarta }}>
@@ -234,7 +234,7 @@ export default function StyleInsurePage() {
                     </div>
                     <div style={{ display: "flex", gap: "10px" }}>
                       <button onClick={() => setShowPolicyForm(false)} style={{ flex: 1, padding: "10px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "7px", color: MID, cursor: "pointer", ...jakarta }}>Cancel</button>
-                      <button onClick={savePolicy} disabled={savingPolicy || !policyForm.policyNumber} style={{ flex: 2, padding: "10px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: !policyForm.policyNumber ? 0.5 : 1 }}>{savingPolicy ? "Saving..." : "Save Policy"}</button>
+                      <button onClick={savePolicy} disabled={savingPolicy || !policyForm.policyNumber} style={{ flex: 2, padding: "10px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: !policyForm.policyNumber ? 0.5 : 1 }}>{savingPolicy ? "Saving..." : "Save Policy"}</button>
                     </div>
                   </div>
                 )}
@@ -249,7 +249,7 @@ export default function StyleInsurePage() {
                     <span className="material-symbols-outlined" style={{ fontSize: "40px", color: MUTED, display: "block", marginBottom: "14px" }}>shield</span>
                     <p style={{ fontSize: "15px", fontWeight: 700, marginBottom: "8px" }}>No active coverage</p>
                     <p style={{ fontSize: "12px", color: MUTED, marginBottom: "20px" }}>Get covered for as little as $15/month to protect yourself from liability claims.</p>
-                    <button onClick={() => setActiveTab("get-covered")} style={{ padding: "10px 20px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Get Covered</button>
+                    <button onClick={() => setActiveTab("get-covered")} style={{ padding: "10px 20px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "8px", color: "#1A1313", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Get Covered</button>
                   </div>
                 ) : (
                   <div style={{ background: S1, border: `1px solid ${ACC_BORDER}`, borderRadius: "12px", padding: "24px", marginBottom: "16px" }}>
@@ -362,7 +362,7 @@ export default function StyleInsurePage() {
                     <h3 style={{ fontSize: "16px", fontWeight: 700, margin: "0 0 3px" }}>Incident Documentation</h3>
                     <p style={{ fontSize: "12px", color: MUTED, margin: 0 }}>Document incidents immediately &mdash; then follow the claim guide below</p>
                   </div>
-                  <button onClick={() => setShowIncidentForm(true)} style={{ padding: "9px 16px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Document Incident</button>
+                  <button onClick={() => setShowIncidentForm(true)} style={{ padding: "9px 16px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "11px", fontWeight: 700, cursor: "pointer", ...jakarta }}>Document Incident</button>
                 </div>
 
                 {/* Claim guide */}
@@ -419,7 +419,7 @@ export default function StyleInsurePage() {
                 {/* Incident form modal */}
                 {showIncidentForm && (
                   <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: "20px" }}>
-                    <div style={{ background: "#0d1117", border: `1px solid ${BORDER2}`, borderRadius: "14px", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
+                    <div style={{ background: "#FBFBFB", border: `1px solid ${BORDER2}`, borderRadius: "14px", padding: "28px", width: "100%", maxWidth: "500px", maxHeight: "85vh", overflow: "auto" }}>
                       <h3 style={{ fontSize: "17px", fontWeight: 700, marginBottom: "20px" }}>Document an Incident</h3>
                       <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                         <div><label style={labelStyle}>Incident Date</label><input type="date" value={incidentForm.incidentDate} onChange={e => setIncidentForm(p => ({ ...p, incidentDate: e.target.value }))} style={inputStyle} /></div>
@@ -439,7 +439,7 @@ export default function StyleInsurePage() {
                       </div>
                       <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
                         <button onClick={() => setShowIncidentForm(false)} style={{ flex: 1, padding: "10px", background: "transparent", border: `1px solid ${BORDER2}`, borderRadius: "7px", color: MID, cursor: "pointer", ...jakarta }}>Cancel</button>
-                        <button onClick={saveIncident} disabled={savingIncident || !incidentForm.incidentDate || !incidentForm.description} style={{ flex: 2, padding: "10px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#fff", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: (!incidentForm.incidentDate || !incidentForm.description) ? 0.5 : 1 }}>{savingIncident ? "Saving..." : "Document Incident"}</button>
+                        <button onClick={saveIncident} disabled={savingIncident || !incidentForm.incidentDate || !incidentForm.description} style={{ flex: 2, padding: "10px", background: `linear-gradient(135deg, ${ACC_BRIGHT}, ${ACC})`, border: "none", borderRadius: "7px", color: "#1A1313", fontSize: "12px", fontWeight: 700, cursor: "pointer", ...jakarta, opacity: (!incidentForm.incidentDate || !incidentForm.description) ? 0.5 : 1 }}>{savingIncident ? "Saving..." : "Document Incident"}</button>
                       </div>
                     </div>
                   </div>

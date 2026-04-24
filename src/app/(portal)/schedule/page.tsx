@@ -154,7 +154,7 @@ export default function SchedulePage() {
   const canSubmit = schedule && schedule.status === "draft"
   // isOwner comes from useUserRole hook
 
-  const pill = (active: boolean) => ({ padding: "6px 14px", fontSize: "10px", fontWeight: 700 as const, letterSpacing: "0.08em", textTransform: "uppercase" as const, borderRadius: "6px", border: "none", cursor: "pointer" as const, backgroundColor: active ? "#CDC9C0" : "transparent", color: active ? "#0f1d24" : "rgba(205,201,192,0.5)", transition: "all 0.15s" })
+  const pill = (active: boolean) => ({ padding: "6px 14px", fontSize: "10px", fontWeight: 700 as const, letterSpacing: "0.08em", textTransform: "uppercase" as const, borderRadius: "6px", border: "none", cursor: "pointer" as const, backgroundColor: active ? "#7a8f96" : "transparent", color: active ? "#FBFBFB" : "rgba(26,19,19,0.5)", transition: "all 0.15s" })
 
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px" }}>
@@ -163,10 +163,10 @@ export default function SchedulePage() {
       {/* Header */}
       <div style={{ marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Schedule Builder</h1>
+          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>Schedule Builder</h1>
           <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>Build weekly schedules and submit for owner approval</p>
         </div>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.1)" }}>
           <button onClick={() => setView("builder")} style={pill(view === "builder")}>Builder</button>
           <button onClick={() => setView("list")} style={pill(view === "list")}>History</button>
         </div>
@@ -174,27 +174,27 @@ export default function SchedulePage() {
 
       {/* Controls */}
       <div style={{ display: "flex", gap: "12px", marginBottom: "20px", alignItems: "center", flexWrap: "wrap" }}>
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.1)" }}>
           {(isOwner ? locations : locations.filter(l => l.name === userLocation)).map(loc => (
             <button key={loc.id} onClick={() => setSelLoc(loc)} style={pill(selLoc?.id === loc.id)}>
               {loc.name === "Corpus Christi" ? "CC" : "SA"}
             </button>
           ))}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#0d1117", padding: "6px 12px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#FBFBFB", padding: "6px 12px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.1)" }}>
           <button onClick={() => { const d = new Date(weekStart); d.setDate(d.getDate() - 7); setWeekStart(d) }} style={{ background: "none", border: "none", color: "#CDC9C0", cursor: "pointer", fontSize: "16px", padding: "0 4px" }}>{"\u2039"}</button>
-          <span style={{ fontSize: "12px", fontWeight: 700, color: "#FBFBFB", whiteSpace: "nowrap" }}>Week of {weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+          <span style={{ fontSize: "12px", fontWeight: 700, color: "#1A1313", whiteSpace: "nowrap" }}>Week of {weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
           <button onClick={() => { const d = new Date(weekStart); d.setDate(d.getDate() + 7); setWeekStart(d) }} style={{ background: "none", border: "none", color: "#CDC9C0", cursor: "pointer", fontSize: "16px", padding: "0 4px" }}>{"\u203A"}</button>
         </div>
         {schedule && (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 14px", backgroundColor: "rgba(255,255,255,0.04)", borderRadius: "8px", border: `1px solid ${STATUS_COLOR[schedule.status]}40` }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 14px", backgroundColor: "rgba(26,19,19,0.04)", borderRadius: "8px", border: `1px solid ${STATUS_COLOR[schedule.status]}40` }}>
             <div style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: STATUS_COLOR[schedule.status] }} />
             <span style={{ fontSize: "11px", fontWeight: 700, color: STATUS_COLOR[schedule.status], textTransform: "uppercase", letterSpacing: "0.08em" }}>{STATUS_LABEL[schedule.status]}</span>
           </div>
         )}
         <div style={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
           {!schedule && <button onClick={createSchedule} disabled={saving} style={{ padding: "8px 16px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "7px", color: "#0f1d24", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>+ New Schedule</button>}
-          {schedule && canEdit && <button onClick={saveShifts} disabled={saving} style={{ padding: "8px 16px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.3)", borderRadius: "7px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>{saving ? "Saving..." : "Save Draft"}</button>}
+          {schedule && canEdit && <button onClick={saveShifts} disabled={saving} style={{ padding: "8px 16px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.3)", borderRadius: "7px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>{saving ? "Saving..." : "Save Draft"}</button>}
           {canSubmit && canEdit && <button onClick={submitForApproval} disabled={saving} style={{ padding: "8px 16px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "7px", color: "#0f1d24", fontSize: "11px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Submit for Approval</button>}
           {isOwner && schedule?.status === "pending" && (
             <>
@@ -219,48 +219,48 @@ export default function SchedulePage() {
       {view === "builder" && (
         <>
           {!schedule ? (
-            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(205,201,192,0.2)", display: "block", marginBottom: "16px" }}>calendar_month</span>
-              <p style={{ fontSize: "16px", fontWeight: 700, color: "#FBFBFB", margin: "0 0 8px" }}>No schedule for this week</p>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "rgba(26,19,19,0.2)", display: "block", marginBottom: "16px" }}>calendar_month</span>
+              <p style={{ fontSize: "16px", fontWeight: 700, color: "#1A1313", margin: "0 0 8px" }}>No schedule for this week</p>
               <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 24px" }}>Create a new schedule to start assigning shifts.</p>
               <button onClick={createSchedule} style={{ padding: "10px 24px", backgroundColor: "#CDC9C0", border: "none", borderRadius: "7px", color: "#0f1d24", fontSize: "12px", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}>Create Schedule</button>
             </div>
           ) : loading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "20px 0" }}>
               {[1,2,3,4].map(i => (
-                <div key={i} style={{ height: 60, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+                <div key={i} style={{ height: 60, background: "#0d1117", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
               ))}
             </div>
           ) : (
             !isMobile ? (
-            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", overflow: "auto" }}>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", overflow: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
                 <thead>
-                  <tr style={{ backgroundColor: "#0f1d24" }}>
-                    <th style={{ padding: "12px 16px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", textAlign: "left", width: "160px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>Staff</th>
+                  <tr style={{ backgroundColor: "#F4F5F7" }}>
+                    <th style={{ padding: "12px 16px", fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", textAlign: "left", width: "160px", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>Staff</th>
                     {weekDates.map((date, i) => {
                       const isToday = date.toDateString() === new Date().toDateString()
                       return (
-                        <th key={i} style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: isToday ? "#CDC9C0" : "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
+                        <th key={i} style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: isToday ? "#1A1313" : "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(26,19,19,0.06)", borderLeft: "1px solid rgba(26,19,19,0.04)" }}>
                           <div>{DAYS[date.getDay()]}</div>
-                          <div style={{ fontSize: "11px", fontWeight: 800, color: isToday ? "#CDC9C0" : "#FBFBFB", marginTop: "2px" }}>{date.getDate()}</div>
+                          <div style={{ fontSize: "11px", fontWeight: 800, color: isToday ? "#1A1313" : "#1A1313", marginTop: "2px" }}>{date.getDate()}</div>
                         </th>
                       )
                     })}
-                    <th style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", borderLeft: "1px solid rgba(255,255,255,0.04)", width: "70px" }}>Total</th>
+                    <th style={{ padding: "12px 8px", fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", textAlign: "center", borderBottom: "1px solid rgba(26,19,19,0.06)", borderLeft: "1px solid rgba(26,19,19,0.04)", width: "70px" }}>Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {staff.map((m, ri) => (
-                    <tr key={m.id} style={{ backgroundColor: ri % 2 === 0 ? "transparent" : "rgba(205,201,192,0.02)" }}>
-                      <td style={{ padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)", borderRight: "1px solid rgba(255,255,255,0.04)" }}>
+                    <tr key={m.id} style={{ backgroundColor: ri % 2 === 0 ? "transparent" : "rgba(26,19,19,0.02)" }}>
+                      <td style={{ padding: "10px 16px", borderBottom: "1px solid rgba(26,19,19,0.04)", borderRight: "1px solid rgba(26,19,19,0.04)" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                          <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
+                          <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
                             {m.fullName.split(" ").map(n => n[0]).join("").slice(0, 2)}
                           </div>
                           <div>
-                            <div style={{ fontSize: "12px", fontWeight: 700, color: "#FBFBFB" }}>{m.fullName.split(" ")[0]}</div>
-                            <div style={{ fontSize: "9px", color: "rgba(205,201,192,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{m.position}</div>
+                            <div style={{ fontSize: "12px", fontWeight: 700, color: "#1A1313" }}>{m.fullName.split(" ")[0]}</div>
+                            <div style={{ fontSize: "9px", color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{m.position}</div>
                           </div>
                         </div>
                       </td>
@@ -268,20 +268,20 @@ export default function SchedulePage() {
                         const dk = fmtDate(date)
                         const sh = shifts[m.id]?.[dk]
                         return (
-                          <td key={dk} style={{ padding: "6px", borderBottom: "1px solid rgba(255,255,255,0.04)", borderLeft: "1px solid rgba(205,201,192,0.04)", textAlign: "center", verticalAlign: "middle" }}>
+                          <td key={dk} style={{ padding: "6px", borderBottom: "1px solid rgba(26,19,19,0.04)", borderLeft: "1px solid rgba(26,19,19,0.04)", textAlign: "center", verticalAlign: "middle" }}>
                             {canEdit ? (
                               sh?.isOff ? (
                                 <div style={{ display: "flex", flexDirection: "column", gap: "3px", alignItems: "center" }}>
                                   <span style={{ fontSize: "9px", fontWeight: 700, color: "#EF4444", textTransform: "uppercase" }}>Off</span>
-                                  <button onClick={() => updateShift(m.id, dk, "isOff", false)} style={{ fontSize: "9px", color: "rgba(205,201,192,0.4)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>clear</button>
+                                  <button onClick={() => updateShift(m.id, dk, "isOff", false)} style={{ fontSize: "9px", color: "rgba(26,19,19,0.4)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>clear</button>
                                 </div>
                               ) : (
                                 <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-                                  <select value={sh?.start || ""} onChange={e => updateShift(m.id, dk, "start", e.target.value)} style={{ width: "80px", padding: "3px 4px", backgroundColor: sh?.start ? "#142127" : "rgba(205,201,192,0.04)", border: `1px solid ${sh?.start ? "rgba(205,201,192,0.3)" : "rgba(205,201,192,0.1)"}`, borderRadius: "4px", color: sh?.start ? "#FBFBFB" : "rgba(205,201,192,0.3)", fontSize: "10px", cursor: "pointer" }}>
+                                  <select value={sh?.start || ""} onChange={e => updateShift(m.id, dk, "start", e.target.value)} style={{ width: "80px", padding: "3px 4px", backgroundColor: sh?.start ? "#F4F5F7" : "rgba(26,19,19,0.04)", border: `1px solid ${sh?.start ? "rgba(26,19,19,0.3)" : "rgba(26,19,19,0.1)"}`, borderRadius: "4px", color: sh?.start ? "#1A1313" : "rgba(26,19,19,0.3)", fontSize: "10px", cursor: "pointer" }}>
                                     <option value="">Start</option>
                                     {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
                                   </select>
-                                  <select value={sh?.end || ""} onChange={e => updateShift(m.id, dk, "end", e.target.value)} style={{ width: "80px", padding: "3px 4px", backgroundColor: sh?.end ? "#142127" : "rgba(205,201,192,0.04)", border: `1px solid ${sh?.end ? "rgba(205,201,192,0.3)" : "rgba(205,201,192,0.1)"}`, borderRadius: "4px", color: sh?.end ? "#FBFBFB" : "rgba(205,201,192,0.3)", fontSize: "10px", cursor: "pointer" }}>
+                                  <select value={sh?.end || ""} onChange={e => updateShift(m.id, dk, "end", e.target.value)} style={{ width: "80px", padding: "3px 4px", backgroundColor: sh?.end ? "#F4F5F7" : "rgba(26,19,19,0.04)", border: `1px solid ${sh?.end ? "rgba(26,19,19,0.3)" : "rgba(26,19,19,0.1)"}`, borderRadius: "4px", color: sh?.end ? "#1A1313" : "rgba(26,19,19,0.3)", fontSize: "10px", cursor: "pointer" }}>
                                     <option value="">End</option>
                                     {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
                                   </select>
@@ -294,20 +294,20 @@ export default function SchedulePage() {
                               ) : sh?.start ? (
                                 <div style={{ fontSize: "10px", color: "#CDC9C0", fontWeight: 600 }}>
                                   <div>{sh.start}</div>
-                                  <div style={{ color: "rgba(205,201,192,0.4)" }}>{"\u2013"}</div>
+                                  <div style={{ color: "rgba(26,19,19,0.4)" }}>{"\u2013"}</div>
                                   <div>{sh.end}</div>
                                 </div>
                               ) : (
-                                <span style={{ fontSize: "10px", color: "rgba(205,201,192,0.2)" }}>{"\u2014"}</span>
+                                <span style={{ fontSize: "10px", color: "rgba(26,19,19,0.2)" }}>{"\u2014"}</span>
                               )
                             )}
                           </td>
                         )
                       })}
-                      <td style={{ padding: "6px 8px", borderBottom: "1px solid rgba(255,255,255,0.04)", borderLeft: "1px solid rgba(255,255,255,0.04)", textAlign: "center", verticalAlign: "middle" }}>
+                      <td style={{ padding: "6px 8px", borderBottom: "1px solid rgba(26,19,19,0.04)", borderLeft: "1px solid rgba(26,19,19,0.04)", textAlign: "center", verticalAlign: "middle" }}>
                         {(() => { const hrs = calcTotalHours(shifts[m.id]); return hrs > 0 ? (
-                          <span style={{ display: "inline-block", padding: "3px 8px", borderRadius: "10px", backgroundColor: "rgba(205,201,192,0.1)", fontSize: "10px", fontWeight: 700, color: "#CDC9C0" }}>{hrs % 1 === 0 ? hrs : hrs.toFixed(1)} hrs</span>
-                        ) : <span style={{ fontSize: "10px", color: "rgba(205,201,192,0.2)" }}>{"\u2014"}</span> })()}
+                          <span style={{ display: "inline-block", padding: "3px 8px", borderRadius: "10px", backgroundColor: "rgba(26,19,19,0.1)", fontSize: "10px", fontWeight: 700, color: "#CDC9C0" }}>{hrs % 1 === 0 ? hrs : hrs.toFixed(1)} hrs</span>
+                        ) : <span style={{ fontSize: "10px", color: "rgba(26,19,19,0.2)" }}>{"\u2014"}</span> })()}
                       </td>
                     </tr>
                   ))}
@@ -319,18 +319,18 @@ export default function SchedulePage() {
               {staff.map(m => {
                 const hrs = calcTotalHours(shifts[m.id])
                 return (
-                  <div key={m.id} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "16px" }}>
+                  <div key={m.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "16px" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(205,201,192,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
+                        <div style={{ width: "28px", height: "28px", borderRadius: "50%", backgroundColor: "rgba(26,19,19,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 800, color: "#CDC9C0", flexShrink: 0 }}>
                           {m.fullName.split(" ").map(n => n[0]).join("").slice(0, 2)}
                         </div>
                         <div>
-                          <div style={{ fontSize: "13px", fontWeight: 700, color: "#FBFBFB" }}>{m.fullName}</div>
-                          <div style={{ fontSize: "9px", color: "rgba(205,201,192,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{m.position}</div>
+                          <div style={{ fontSize: "13px", fontWeight: 700, color: "#1A1313" }}>{m.fullName}</div>
+                          <div style={{ fontSize: "9px", color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{m.position}</div>
                         </div>
                       </div>
-                      {hrs > 0 && <span style={{ padding: "3px 8px", borderRadius: "10px", backgroundColor: "rgba(205,201,192,0.1)", fontSize: "10px", fontWeight: 700, color: "#CDC9C0" }}>{hrs % 1 === 0 ? hrs : hrs.toFixed(1)} hrs</span>}
+                      {hrs > 0 && <span style={{ padding: "3px 8px", borderRadius: "10px", backgroundColor: "rgba(26,19,19,0.1)", fontSize: "10px", fontWeight: 700, color: "#CDC9C0" }}>{hrs % 1 === 0 ? hrs : hrs.toFixed(1)} hrs</span>}
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                       {weekDates.map(date => {
@@ -338,22 +338,22 @@ export default function SchedulePage() {
                         const sh = shifts[m.id]?.[dk]
                         const isToday = date.toDateString() === new Date().toDateString()
                         return (
-                          <div key={dk} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                            <span style={{ fontSize: "11px", fontWeight: 700, color: isToday ? "#CDC9C0" : "rgba(205,201,192,0.5)", width: "36px", flexShrink: 0 }}>{DAYS[date.getDay()]}</span>
+                          <div key={dk} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(26,19,19,0.04)" }}>
+                            <span style={{ fontSize: "11px", fontWeight: 700, color: isToday ? "#1A1313" : "rgba(26,19,19,0.5)", width: "36px", flexShrink: 0 }}>{DAYS[date.getDay()]}</span>
                             {canEdit ? (
                               sh?.isOff ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
                                   <span style={{ fontSize: "10px", fontWeight: 700, color: "#EF4444" }}>OFF</span>
-                                  <button onClick={() => updateShift(m.id, dk, "isOff", false)} style={{ fontSize: "9px", color: "rgba(205,201,192,0.4)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>clear</button>
+                                  <button onClick={() => updateShift(m.id, dk, "isOff", false)} style={{ fontSize: "9px", color: "rgba(26,19,19,0.4)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>clear</button>
                                 </div>
                               ) : (
                                 <div style={{ display: "flex", alignItems: "center", gap: "6px", flex: 1 }}>
-                                  <select value={sh?.start || ""} onChange={e => updateShift(m.id, dk, "start", e.target.value)} style={{ flex: 1, padding: "4px 6px", backgroundColor: sh?.start ? "#142127" : "rgba(205,201,192,0.04)", border: `1px solid ${sh?.start ? "rgba(205,201,192,0.3)" : "rgba(205,201,192,0.1)"}`, borderRadius: "4px", color: sh?.start ? "#FBFBFB" : "rgba(205,201,192,0.3)", fontSize: "11px", cursor: "pointer" }}>
+                                  <select value={sh?.start || ""} onChange={e => updateShift(m.id, dk, "start", e.target.value)} style={{ flex: 1, padding: "4px 6px", backgroundColor: sh?.start ? "#F4F5F7" : "rgba(26,19,19,0.04)", border: `1px solid ${sh?.start ? "rgba(26,19,19,0.3)" : "rgba(26,19,19,0.1)"}`, borderRadius: "4px", color: sh?.start ? "#1A1313" : "rgba(26,19,19,0.3)", fontSize: "11px", cursor: "pointer" }}>
                                     <option value="">Start</option>
                                     {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
                                   </select>
-                                  <span style={{ color: "rgba(205,201,192,0.3)", fontSize: "10px" }}>to</span>
-                                  <select value={sh?.end || ""} onChange={e => updateShift(m.id, dk, "end", e.target.value)} style={{ flex: 1, padding: "4px 6px", backgroundColor: sh?.end ? "#142127" : "rgba(205,201,192,0.04)", border: `1px solid ${sh?.end ? "rgba(205,201,192,0.3)" : "rgba(205,201,192,0.1)"}`, borderRadius: "4px", color: sh?.end ? "#FBFBFB" : "rgba(205,201,192,0.3)", fontSize: "11px", cursor: "pointer" }}>
+                                  <span style={{ color: "rgba(26,19,19,0.3)", fontSize: "10px" }}>to</span>
+                                  <select value={sh?.end || ""} onChange={e => updateShift(m.id, dk, "end", e.target.value)} style={{ flex: 1, padding: "4px 6px", backgroundColor: sh?.end ? "#F4F5F7" : "rgba(26,19,19,0.04)", border: `1px solid ${sh?.end ? "rgba(26,19,19,0.3)" : "rgba(26,19,19,0.1)"}`, borderRadius: "4px", color: sh?.end ? "#1A1313" : "rgba(26,19,19,0.3)", fontSize: "11px", cursor: "pointer" }}>
                                     <option value="">End</option>
                                     {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
                                   </select>
@@ -367,7 +367,7 @@ export default function SchedulePage() {
                                 ) : sh?.start ? (
                                   <span style={{ color: "#CDC9C0", fontWeight: 600 }}>{sh.start} - {sh.end}</span>
                                 ) : (
-                                  <span style={{ color: "rgba(205,201,192,0.2)" }}>{"\u2014"}</span>
+                                  <span style={{ color: "rgba(26,19,19,0.2)" }}>{"\u2014"}</span>
                                 )}
                               </div>
                             )}
@@ -385,17 +385,17 @@ export default function SchedulePage() {
           {/* Visual Hour Grid */}
           {schedule && !loading && Object.keys(shifts).length > 0 && (
             <div style={{ marginTop: "24px" }}>
-              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(205,201,192,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "12px" }}>
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(26,19,19,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "12px" }}>
                 Visual Overview
               </div>
-              <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", overflow: "hidden" }}>
                 {/* Day headers */}
-                <div style={{ display: "grid", gridTemplateColumns: "60px repeat(7, 1fr)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  <div style={{ padding: "8px", fontSize: "9px", color: "rgba(205,201,192,0.3)" }} />
+                <div style={{ display: "grid", gridTemplateColumns: "60px repeat(7, 1fr)", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
+                  <div style={{ padding: "8px", fontSize: "9px", color: "rgba(26,19,19,0.3)" }} />
                   {weekDates.map((date, i) => {
                     const today = date.toDateString() === new Date().toDateString()
                     return (
-                      <div key={i} style={{ padding: "8px 4px", textAlign: "center", fontSize: "10px", fontWeight: 700, color: today ? "#CDC9C0" : "rgba(205,201,192,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", backgroundColor: today ? "rgba(122,143,150,0.04)" : "transparent" }}>
+                      <div key={i} style={{ padding: "8px 4px", textAlign: "center", fontSize: "10px", fontWeight: 700, color: today ? "#1A1313" : "rgba(26,19,19,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", backgroundColor: today ? "rgba(122,143,150,0.04)" : "transparent" }}>
                         {DAYS[date.getDay()]} {date.getDate()}
                       </div>
                     )
@@ -404,7 +404,7 @@ export default function SchedulePage() {
                 {/* Hour rows */}
                 <div style={{ position: "relative", overflowY: "auto", maxHeight: "calc(100vh - 200px)" }}>
                   {HOURS.map((hour) => (
-                    <div key={hour} style={{ display: "grid", gridTemplateColumns: "60px repeat(7, 1fr)", height: "60px", borderBottom: "1px solid #1a2332" }}>
+                    <div key={hour} style={{ display: "grid", gridTemplateColumns: "60px repeat(7, 1fr)", height: "60px", borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
                       <div style={{ padding: "4px 8px", fontSize: "11px", fontFamily: "Inter, sans-serif", color: "#606E74", display: "flex", alignItems: "flex-start", justifyContent: "flex-end" }}>
                         {hour}
                       </div>
@@ -420,12 +420,12 @@ export default function SchedulePage() {
                           return hourVal >= start && hourVal < end
                         })
                         return (
-                          <div key={di} style={{ borderLeft: "1px solid rgba(205,201,192,0.04)", padding: "2px", backgroundColor: today ? "rgba(122,143,150,0.04)" : "transparent", display: "flex", flexDirection: "column", gap: "1px", overflow: "hidden" }}>
+                          <div key={di} style={{ borderLeft: "1px solid rgba(26,19,19,0.04)", padding: "2px", backgroundColor: today ? "rgba(122,143,150,0.04)" : "transparent", display: "flex", flexDirection: "column", gap: "1px", overflow: "hidden" }}>
                             {shiftsInHour.map(m => {
                               const sh = shifts[m.id]?.[dk]
                               const isOff = sh?.isOff
                               return (
-                                <div key={m.id} style={{ backgroundColor: isOff ? "rgba(239,68,68,0.1)" : "rgba(96,110,116,0.2)", borderLeft: isOff ? "3px solid #ef4444" : "3px solid #7a8f96", borderRadius: "4px", padding: "2px 6px", fontSize: "9px", color: "#FBFBFB", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: "14px" }}>
+                                <div key={m.id} style={{ backgroundColor: isOff ? "rgba(239,68,68,0.1)" : "rgba(96,110,116,0.2)", borderLeft: isOff ? "3px solid #ef4444" : "3px solid #7a8f96", borderRadius: "4px", padding: "2px 6px", fontSize: "9px", color: "#1A1313", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: "14px" }}>
                                   {m.fullName.split(" ")[0]}
                                 </div>
                               )
@@ -445,15 +445,15 @@ export default function SchedulePage() {
       {view === "list" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {schedules.length === 0 ? (
-            <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
+            <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "60px", textAlign: "center" }}>
               <p style={{ color: "#94A3B8" }}>No schedules found.</p>
             </div>
           ) : schedules.map(s => (
-            <div key={s.id} style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+            <div key={s.id} style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: "10px", padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <div style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: STATUS_COLOR[s.status], flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "3px" }}>
+                  <div style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313", marginBottom: "3px" }}>
                     Week of {new Date(s.weekStart).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                   </div>
                   <div style={{ fontSize: "11px", color: "#94A3B8" }}>
@@ -479,12 +479,12 @@ export default function SchedulePage() {
       {/* Reject Modal */}
       {rejectModal && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
-          <div style={{ backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "28px", width: "100%", maxWidth: "440px", margin: "20px" }}>
-            <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 8px" }}>Reject Schedule</h3>
+          <div style={{ backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "12px", padding: "28px", width: "100%", maxWidth: "440px", margin: "20px" }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#1A1313", margin: "0 0 8px" }}>Reject Schedule</h3>
             <p style={{ fontSize: "13px", color: "#94A3B8", margin: "0 0 16px" }}>Provide a reason so the manager knows what to fix.</p>
-            <textarea value={rejectNote} onChange={e => setRejectNote(e.target.value)} placeholder="e.g. Please add coverage for Saturday afternoon..." rows={3} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#0f1d24", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "7px", color: "#FBFBFB", fontSize: "13px", resize: "none", outline: "none", boxSizing: "border-box", marginBottom: "16px" }} />
+            <textarea value={rejectNote} onChange={e => setRejectNote(e.target.value)} placeholder="e.g. Please add coverage for Saturday afternoon..." rows={3} style={{ width: "100%", padding: "10px 14px", backgroundColor: "#F4F5F7", border: "1px solid rgba(26,19,19,0.2)", borderRadius: "7px", color: "#1A1313", fontSize: "13px", resize: "none", outline: "none", boxSizing: "border-box", marginBottom: "16px" }} />
             <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-              <button onClick={() => { setRejectModal(null); setRejectNote("") }} style={{ padding: "9px 18px", backgroundColor: "transparent", border: "1px solid rgba(205,201,192,0.2)", borderRadius: "7px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.08em" }}>Cancel</button>
+              <button onClick={() => { setRejectModal(null); setRejectNote("") }} style={{ padding: "9px 18px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.2)", borderRadius: "7px", color: "#CDC9C0", fontSize: "11px", fontWeight: 700, cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.08em" }}>Cancel</button>
               <button onClick={() => rejectSchedule(rejectModal)} disabled={!rejectNote} style={{ padding: "9px 18px", backgroundColor: "#EF4444", border: "none", borderRadius: "7px", color: "#FBFBFB", fontSize: "11px", fontWeight: 700, cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.08em", opacity: !rejectNote ? 0.5 : 1 }}>Reject</button>
             </div>
           </div>

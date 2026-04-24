@@ -89,11 +89,11 @@ const GOAL_ICONS: Record<string, string> = {
 
 /* ── Styles ── */
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#0d1117",
-  border: "1px solid rgba(255,255,255,0.06)",
+  backgroundColor: "#FBFBFB",
+  border: "1px solid rgba(26,19,19,0.06)",
   borderRadius: "10px",
   padding: "20px",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), 0 0 0 1px rgba(0,0,0,0.25)",
+  boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04)",
 }
 
 function pill(active: boolean): React.CSSProperties {
@@ -106,8 +106,8 @@ function pill(active: boolean): React.CSSProperties {
     borderRadius: "6px",
     border: "none",
     cursor: "pointer",
-    backgroundColor: active ? "#CDC9C0" : "transparent",
-    color: active ? "#0f1d24" : "rgba(205,201,192,0.5)",
+    backgroundColor: active ? "#7a8f96" : "transparent",
+    color: active ? "#FBFBFB" : "rgba(26,19,19,0.5)",
     transition: "all 0.15s",
     whiteSpace: "nowrap",
   }
@@ -118,10 +118,10 @@ function selectStyle(): React.CSSProperties {
     padding: "6px 12px",
     fontSize: "11px",
     fontWeight: 600,
-    backgroundColor: "#0d1117",
-    border: "1px solid rgba(205,201,192,0.15)",
+    backgroundColor: "#FBFBFB",
+    border: "1px solid rgba(26,19,19,0.15)",
     borderRadius: "6px",
-    color: "#CDC9C0",
+    color: "#1A1313",
     outline: "none",
     cursor: "pointer",
     appearance: "auto" as React.CSSProperties["appearance"],
@@ -134,9 +134,9 @@ function btnStyle(variant: "primary" | "ghost" = "ghost"): React.CSSProperties {
     fontSize: "10px",
     fontWeight: 700,
     borderRadius: "8px",
-    border: variant === "primary" ? "none" : "1px solid rgba(205,201,192,0.2)",
+    border: variant === "primary" ? "none" : "1px solid rgba(26,19,19,0.2)",
     backgroundColor: variant === "primary" ? "#CDC9C0" : "transparent",
-    color: variant === "primary" ? "#0f1d24" : "rgba(205,201,192,0.6)",
+    color: variant === "primary" ? "#0f1d24" : "rgba(26,19,19,0.6)",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -356,7 +356,7 @@ export default function PerformancePage() {
 
       {/* ── Header ── */}
       <div style={{ marginBottom: "24px" }}>
-        <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#FBFBFB", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+        <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#1A1313", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
           Performance
         </h1>
         <p style={{ fontSize: "12px", color: "#94A3B8", margin: 0 }}>
@@ -367,7 +367,7 @@ export default function PerformancePage() {
       {/* ── Controls row ── */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap", alignItems: "center" }}>
         {/* Period selector */}
-        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+        <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.1)" }}>
           {PERIODS.map(p => (
             <button key={p.value} onClick={() => setPeriod(p.value)} style={pill(period === p.value)}>{p.label}</button>
           ))}
@@ -375,7 +375,7 @@ export default function PerformancePage() {
 
         {/* Location selector (owner only) */}
         {isOwner && (
-          <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#0d1117", padding: "3px", borderRadius: "8px", border: "1px solid rgba(205,201,192,0.1)" }}>
+          <div style={{ display: "inline-flex", gap: "2px", backgroundColor: "#FBFBFB", padding: "3px", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.1)" }}>
             {["Both", "Corpus Christi", "San Antonio"].map(loc => (
               <button key={loc} onClick={() => setLocation(loc)} style={pill(location === loc)}>
                 {loc === "Corpus Christi" ? "CC" : loc === "San Antonio" ? "SA" : loc}
@@ -400,7 +400,7 @@ export default function PerformancePage() {
       </div>
 
       {/* ── Tabs ── */}
-      <div style={{ display: "flex", gap: "0", borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: "24px" }}>
+      <div style={{ display: "flex", gap: "0", borderBottom: "1px solid rgba(26,19,19,0.06)", marginBottom: "24px" }}>
         {TABS.map(t => (
           <button
             key={t}
@@ -414,7 +414,7 @@ export default function PerformancePage() {
               border: "none",
               borderBottom: tab === t ? "2px solid #7a8f96" : "2px solid transparent",
               backgroundColor: "transparent",
-              color: tab === t ? "#FBFBFB" : "rgba(205,201,192,0.45)",
+              color: tab === t ? "#1A1313" : "rgba(26,19,19,0.45)",
               cursor: "pointer",
               transition: "all 0.15s",
             }}
@@ -432,7 +432,7 @@ export default function PerformancePage() {
           {loading ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "24px" }}>
               {[1, 2, 3, 4].map(i => (
-                <div key={i} style={{ backgroundColor: "#0d1117", borderRadius: "10px", padding: "20px", height: "120px", animation: "pulse 1.5s ease-in-out infinite" }} />
+                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "120px", animation: "pulse 1.5s ease-in-out infinite" }} />
               ))}
             </div>
           ) : kpi ? (
@@ -448,10 +448,10 @@ export default function PerformancePage() {
                   <div key={card.label} style={cardStyle}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
                       <span style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.12em", textTransform: "uppercase" }}>{card.label}</span>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(205,201,192,0.3)" }}>{card.icon}</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "rgba(26,19,19,0.3)" }}>{card.icon}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: "8px", marginBottom: "4px" }}>
-                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#FBFBFB", letterSpacing: "-0.02em", fontFamily: "Inter, sans-serif" }}>{card.value}</span>
+                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#1A1313", letterSpacing: "-0.02em", fontFamily: "Inter, sans-serif" }}>{card.value}</span>
                       <DeltaBadge delta={card.delta} />
                     </div>
                     <div style={{ fontSize: "11px", color: "#94A3B8", marginBottom: "10px" }}>{card.target}</div>
@@ -468,7 +468,7 @@ export default function PerformancePage() {
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "16px" }}>
                   {[
-                    { label: "Services Subtotal", value: fmt(kpi.commission.servicesSubtotal), color: "#FBFBFB" },
+                    { label: "Services Subtotal", value: fmt(kpi.commission.servicesSubtotal), color: "#1A1313" },
                     { label: `Commission (${(kpi.commission.commissionRate * 100).toFixed(0)}%)`, value: fmt(kpi.commission.commissionAmount), color: "#10B981" },
                     { label: "Tips", value: fmt(kpi.commission.tips), color: "#10B981" },
                     { label: "Total Payout", value: fmt(kpi.commission.totalPayout), color: "#22c55e" },
@@ -497,11 +497,11 @@ export default function PerformancePage() {
                     {activeGoals.map(g => {
                       const pct = g.target > 0 ? (g.current / g.target) * 100 : 0
                       return (
-                        <div key={g.id} style={{ padding: "12px", backgroundColor: "rgba(255,255,255,0.02)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.04)" }}>
+                        <div key={g.id} style={{ padding: "12px", backgroundColor: "rgba(26,19,19,0.02)", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.04)" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                               <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#7a8f96" }}>{GOAL_ICONS[g.type] || "flag"}</span>
-                              <span style={{ fontSize: "12px", fontWeight: 700, color: "#FBFBFB" }}>{g.label}</span>
+                              <span style={{ fontSize: "12px", fontWeight: 700, color: "#1A1313" }}>{g.label}</span>
                             </div>
                             <StatusBadge status={g.status} colors={GOAL_STATUS_COLORS} />
                           </div>
@@ -518,7 +518,7 @@ export default function PerformancePage() {
             </>
           ) : (
             <div style={{ ...cardStyle, textAlign: "center", padding: "40px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(205,201,192,0.2)", marginBottom: "12px", display: "block" }}>trending_up</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(26,19,19,0.2)", marginBottom: "12px", display: "block" }}>trending_up</span>
               <div style={{ fontSize: "13px", color: "#94A3B8" }}>No performance data available for this period.</div>
             </div>
           )}
@@ -542,7 +542,7 @@ export default function PerformancePage() {
           {loading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {[1, 2, 3].map(i => (
-                <div key={i} style={{ backgroundColor: "#0d1117", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
+                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "100px", animation: "pulse 1.5s ease-in-out infinite" }} />
               ))}
             </div>
           ) : goals.length > 0 ? (
@@ -561,7 +561,7 @@ export default function PerformancePage() {
                           <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#7a8f96" }}>{GOAL_ICONS[g.type] || "flag"}</span>
                         </div>
                         <div>
-                          <div style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB", marginBottom: "2px" }}>{g.label}</div>
+                          <div style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313", marginBottom: "2px" }}>{g.label}</div>
                           {g.staffMemberName && <div style={{ fontSize: "11px", color: "#606E74" }}>{g.staffMemberName}</div>}
                         </div>
                       </div>
@@ -595,7 +595,7 @@ export default function PerformancePage() {
             </div>
           ) : (
             <div style={{ ...cardStyle, textAlign: "center", padding: "40px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(205,201,192,0.2)", marginBottom: "12px", display: "block" }}>flag</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(26,19,19,0.2)", marginBottom: "12px", display: "block" }}>flag</span>
               <div style={{ fontSize: "13px", color: "#94A3B8" }}>No goals set for this period.</div>
             </div>
           )}
@@ -610,19 +610,19 @@ export default function PerformancePage() {
           {currentUserEntry && (
             <div style={{ ...cardStyle, marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "22px", color: "#f59e0b" }}>emoji_events</span>
-              <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>
+              <span style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313" }}>
                 You are ranked <span style={{ fontFamily: "Inter, sans-serif", color: "#4da6ff" }}>#{currentUserEntry.rank}</span> of <span style={{ fontFamily: "Inter, sans-serif", color: "#CDC9C0" }}>{leaderboard.length}</span> stylists
               </span>
             </div>
           )}
 
           {loading ? (
-            <div style={{ backgroundColor: "#0d1117", borderRadius: "10px", padding: "20px", height: "300px", animation: "pulse 1.5s ease-in-out infinite" }} />
+            <div style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "300px", animation: "pulse 1.5s ease-in-out infinite" }} />
           ) : leaderboard.length > 0 ? (
             <div style={{ ...cardStyle, padding: 0, overflow: "hidden" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
-                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                  <tr style={{ borderBottom: "1px solid rgba(26,19,19,0.06)" }}>
                     {["Rank", "Name", "Checkouts", "Revenue", "Avg Ticket"].map(h => (
                       <th key={h} style={{
                         padding: "12px 16px", fontSize: "9px", fontWeight: 700, color: "#606E74",
@@ -641,7 +641,7 @@ export default function PerformancePage() {
                       : entry.name
                     return (
                       <tr key={entry.staffMemberId} style={{
-                        borderBottom: "1px solid rgba(255,255,255,0.03)",
+                        borderBottom: "1px solid rgba(26,19,19,0.03)",
                         backgroundColor: isMe ? "rgba(77,166,255,0.06)" : "transparent",
                       }}>
                         <td style={{ padding: "12px 16px", textAlign: "right" }}>
@@ -653,7 +653,7 @@ export default function PerformancePage() {
                           </span>
                         </td>
                         <td style={{ padding: "12px 16px", textAlign: "left" }}>
-                          <span style={{ fontSize: "13px", fontWeight: isMe ? 800 : 600, color: isMe ? "#4da6ff" : "#FBFBFB" }}>
+                          <span style={{ fontSize: "13px", fontWeight: isMe ? 800 : 600, color: isMe ? "#4da6ff" : "#1A1313" }}>
                             {displayName}
                           </span>
                           {isMe && <span style={{ fontSize: "9px", color: "#4da6ff", marginLeft: "6px", fontWeight: 700 }}>(YOU)</span>}
@@ -675,7 +675,7 @@ export default function PerformancePage() {
             </div>
           ) : (
             <div style={{ ...cardStyle, textAlign: "center", padding: "40px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(205,201,192,0.2)", marginBottom: "12px", display: "block" }}>leaderboard</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(26,19,19,0.2)", marginBottom: "12px", display: "block" }}>leaderboard</span>
               <div style={{ fontSize: "13px", color: "#94A3B8" }}>No leaderboard data available for this period.</div>
             </div>
           )}
@@ -699,7 +699,7 @@ export default function PerformancePage() {
           {loading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {[1, 2, 3].map(i => (
-                <div key={i} style={{ backgroundColor: "#0d1117", borderRadius: "10px", padding: "20px", height: "80px", animation: "pulse 1.5s ease-in-out infinite" }} />
+                <div key={i} style={{ backgroundColor: "#FBFBFB", borderRadius: "10px", padding: "20px", height: "80px", animation: "pulse 1.5s ease-in-out infinite" }} />
               ))}
             </div>
           ) : bonuses.length > 0 ? (
@@ -709,7 +709,7 @@ export default function PerformancePage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
                     <div style={{ flex: 1, minWidth: "200px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                        <span style={{ fontSize: "14px", fontWeight: 700, color: "#FBFBFB" }}>{b.staffMemberName}</span>
+                        <span style={{ fontSize: "14px", fontWeight: 700, color: "#1A1313" }}>{b.staffMemberName}</span>
                         <StatusBadge status={b.status} colors={BONUS_STATUS_COLORS} />
                       </div>
                       <div style={{ fontSize: "11px", color: "#94A3B8", marginBottom: "4px" }}>{b.goalLabel}</div>
@@ -752,7 +752,7 @@ export default function PerformancePage() {
             </div>
           ) : (
             <div style={{ ...cardStyle, textAlign: "center", padding: "40px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(205,201,192,0.2)", marginBottom: "12px", display: "block" }}>redeem</span>
+              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: "rgba(26,19,19,0.2)", marginBottom: "12px", display: "block" }}>redeem</span>
               <div style={{ fontSize: "13px", color: "#94A3B8" }}>No bonuses recorded for this period.</div>
             </div>
           )}
@@ -770,8 +770,8 @@ export default function PerformancePage() {
             onClick={e => e.stopPropagation()}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>Create Goal</h2>
-              <button onClick={() => setGoalModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer" }}>
+              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#1A1313", margin: 0 }}>Create Goal</h2>
+              <button onClick={() => setGoalModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(26,19,19,0.5)", cursor: "pointer" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>close</span>
               </button>
             </div>
@@ -809,7 +809,7 @@ export default function PerformancePage() {
                   value={goalForm.target}
                   onChange={e => setGoalForm(f => ({ ...f, target: e.target.value }))}
                   placeholder="e.g. 5000"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 
@@ -821,7 +821,7 @@ export default function PerformancePage() {
                   value={goalForm.bonus}
                   onChange={e => setGoalForm(f => ({ ...f, bonus: e.target.value }))}
                   placeholder="e.g. 100"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 
@@ -863,8 +863,8 @@ export default function PerformancePage() {
             onClick={e => e.stopPropagation()}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#FBFBFB", margin: 0 }}>Create Bonus</h2>
-              <button onClick={() => setBonusModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(205,201,192,0.5)", cursor: "pointer" }}>
+              <h2 style={{ fontSize: "16px", fontWeight: 800, color: "#1A1313", margin: 0 }}>Create Bonus</h2>
+              <button onClick={() => setBonusModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(26,19,19,0.5)", cursor: "pointer" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>close</span>
               </button>
             </div>
@@ -889,7 +889,7 @@ export default function PerformancePage() {
                   value={bonusForm.amount}
                   onChange={e => setBonusForm(f => ({ ...f, amount: e.target.value }))}
                   placeholder="e.g. 150"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 
@@ -901,7 +901,7 @@ export default function PerformancePage() {
                   value={bonusForm.reason}
                   onChange={e => setBonusForm(f => ({ ...f, reason: e.target.value }))}
                   placeholder="e.g. Hit monthly revenue goal"
-                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#06080d", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 12px", backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)", borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none", boxSizing: "border-box" }}
                 />
               </div>
 

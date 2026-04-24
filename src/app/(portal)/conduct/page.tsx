@@ -14,13 +14,13 @@ const SEVERITY_COLORS: Record<string, string> = {
 }
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.06)",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)",
   borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
 }
 
 const btnPrimary: React.CSSProperties = {
   padding: "8px 16px", borderRadius: "8px", border: "none", cursor: "pointer",
-  backgroundColor: "#CDC9C0", color: "#0f1d24", fontSize: "12px", fontWeight: 700,
+  backgroundColor: "#CDC9C0", color: "#1A1313", fontSize: "12px", fontWeight: 700,
 }
 
 const btnSecondary: React.CSSProperties = {
@@ -30,12 +30,12 @@ const btnSecondary: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "8px 12px", boxSizing: "border-box",
-  backgroundColor: "#0d1117", border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "8px", color: "#FBFBFB", fontSize: "13px", outline: "none",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.08)",
+  borderRadius: "8px", color: "#1A1313", fontSize: "13px", outline: "none",
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: "11px", fontWeight: 600, color: "rgba(205,201,192,0.6)",
+  fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.6)",
   textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px", display: "block",
 }
 
@@ -100,7 +100,7 @@ export default function ConductPage() {
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {[1,2,3].map(i => (
-          <div key={i} style={{ height: 80, background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
+          <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
         ))}
       </div>
     </div>
@@ -109,7 +109,7 @@ export default function ConductPage() {
   return (
     <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
-        <h1 style={{ color: "#FBFBFB", fontSize: "22px", fontWeight: 700, margin: 0 }}>
+        <h1 style={{ color: "#1A1313", fontSize: "22px", fontWeight: 700, margin: 0 }}>
           {isStylist ? "My Record" : "Conduct Records"}
         </h1>
         {canWrite && (
@@ -122,8 +122,8 @@ export default function ConductPage() {
           <div key={r.id} style={cardStyle}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
               <div>
-                <span style={{ color: "#FBFBFB", fontSize: "14px", fontWeight: 700 }}>{r.title}</span>
-                {!isStylist && <span style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px", marginLeft: "12px" }}>{r.staffMember.fullName}</span>}
+                <span style={{ color: "#1A1313", fontSize: "14px", fontWeight: 700 }}>{r.title}</span>
+                {!isStylist && <span style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px", marginLeft: "12px" }}>{r.staffMember.fullName}</span>}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <span style={{
@@ -135,21 +135,21 @@ export default function ConductPage() {
                 <span style={{
                   padding: "3px 10px", borderRadius: "6px", fontSize: "10px", fontWeight: 700,
                   textTransform: "uppercase",
-                  backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(205,201,192,0.5)",
+                  backgroundColor: "rgba(26,19,19,0.06)", color: "rgba(26,19,19,0.5)",
                 }}>{r.category}</span>
               </div>
             </div>
 
-            <p style={{ color: "rgba(205,201,192,0.7)", fontSize: "13px", lineHeight: 1.5, margin: "0 0 8px" }}>{r.description}</p>
+            <p style={{ color: "rgba(26,19,19,0.7)", fontSize: "13px", lineHeight: 1.5, margin: "0 0 8px" }}>{r.description}</p>
 
             {r.actionTaken && (
-              <p style={{ color: "rgba(205,201,192,0.5)", fontSize: "12px", margin: "0 0 8px" }}>
-                <strong style={{ color: "rgba(205,201,192,0.6)" }}>Action:</strong> {r.actionTaken}
+              <p style={{ color: "rgba(26,19,19,0.5)", fontSize: "12px", margin: "0 0 8px" }}>
+                <strong style={{ color: "rgba(26,19,19,0.6)" }}>Action:</strong> {r.actionTaken}
               </p>
             )}
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-              <span style={{ color: "rgba(205,201,192,0.4)", fontSize: "11px" }}>
+              <span style={{ color: "rgba(26,19,19,0.4)", fontSize: "11px" }}>
                 {new Date(r.createdAt).toLocaleDateString()}
                 {r.followUpDate && ` | Follow-up: ${new Date(r.followUpDate).toLocaleDateString()}`}
               </span>
@@ -165,7 +165,7 @@ export default function ConductPage() {
           </div>
         ))}
         {records.length === 0 && (
-          <div style={{ ...cardStyle, textAlign: "center", color: "rgba(205,201,192,0.4)" }}>
+          <div style={{ ...cardStyle, textAlign: "center", color: "rgba(26,19,19,0.4)" }}>
             {isStylist ? "No conduct records on file" : "No conduct records found"}
           </div>
         )}
@@ -176,7 +176,7 @@ export default function ConductPage() {
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}
           onClick={() => setShowForm(false)}>
           <div style={{ ...cardStyle, maxWidth: "560px", width: "100%", maxHeight: "85vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ color: "#FBFBFB", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Write-Up</h2>
+            <h2 style={{ color: "#1A1313", fontSize: "18px", fontWeight: 700, margin: "0 0 16px" }}>New Write-Up</h2>
 
             <div style={{ marginBottom: "12px" }}>
               <label style={labelStyle}>Staff Member</label>

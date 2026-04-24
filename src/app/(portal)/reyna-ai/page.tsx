@@ -27,7 +27,7 @@ function ReynaAvatar({ size = 36 }: { size?: number }) {
       height: size,
       borderRadius: size * 0.28,
       background: "linear-gradient(135deg, #0a2a2a 0%, #1a4a4a 50%, #0f3535 100%)",
-      border: "1px solid rgba(205,201,192,0.4)",
+      border: "1px solid rgba(26,19,19,0.4)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -128,7 +128,7 @@ export default function ReynaAIPage() {
         </div>
       }
       if (line.startsWith("**") && line.endsWith("**")) {
-        return <div key={i} style={{ fontWeight: 700, color: "#FBFBFB", marginBottom: "6px", marginTop: "10px" }}>{line.replace(/\*\*/g, "")}</div>
+        return <div key={i} style={{ fontWeight: 700, color: "#1A1313", marginBottom: "6px", marginTop: "10px" }}>{line.replace(/\*\*/g, "")}</div>
       }
       if (line === "") return <div key={i} style={{ height: "8px" }} />
       return <div key={i} style={{ marginBottom: "2px" }}>{line}</div>
@@ -161,7 +161,7 @@ export default function ReynaAIPage() {
         <h2 style={{
           fontSize: isMobile ? "22px" : "28px",
           fontWeight: 800,
-          color: "#FBFBFB",
+          color: "#1A1313",
           margin: "0 0 10px",
           letterSpacing: "-0.03em",
         }}>
@@ -169,7 +169,7 @@ export default function ReynaAIPage() {
         </h2>
         <p style={{
           fontSize: isMobile ? "14px" : "15px",
-          color: "rgba(255,255,255,0.45)",
+          color: "rgba(26,19,19,0.45)",
           margin: "0 0 4px",
           lineHeight: 1.6,
           maxWidth: "400px",
@@ -179,7 +179,7 @@ export default function ReynaAIPage() {
         </p>
         <p style={{
           fontSize: isMobile ? "12px" : "13px",
-          color: "rgba(255,255,255,0.3)",
+          color: "rgba(26,19,19,0.3)",
           margin: 0,
           lineHeight: 1.5,
           maxWidth: "400px",
@@ -200,8 +200,8 @@ export default function ReynaAIPage() {
             onClick={() => sendMessage(prompt.text)}
             style={{
               padding: isMobile ? "12px 14px" : "14px 16px",
-              backgroundColor: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.07)",
+              backgroundColor: "rgba(26,19,19,0.03)",
+              border: "1px solid rgba(26,19,19,0.07)",
               borderRadius: "12px",
               textAlign: "left",
               cursor: "pointer",
@@ -214,7 +214,7 @@ export default function ReynaAIPage() {
             <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#CDC9C0", flexShrink: 0, marginTop: "1px" }}>{prompt.icon}</span>
             <div>
               <div style={{ fontSize: "9px", fontWeight: 700, color: "#CDC9C0", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "4px" }}>{prompt.category}</div>
-              <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", lineHeight: 1.4 }}>{prompt.text}</div>
+              <div style={{ fontSize: "13px", color: "rgba(26,19,19,0.7)", lineHeight: 1.4 }}>{prompt.text}</div>
             </div>
           </button>
         ))}
@@ -238,29 +238,29 @@ export default function ReynaAIPage() {
             width: "32px", height: "32px",
             borderRadius: message.role === "assistant" ? "9px" : "50%",
             overflow: "hidden",
-            background: message.role === "user" ? "rgba(255,255,255,0.1)" : undefined,
-            border: message.role === "user" ? "1px solid rgba(255,255,255,0.15)" : "none",
+            background: message.role === "user" ? "rgba(26,19,19,0.1)" : undefined,
+            border: message.role === "user" ? "1px solid rgba(26,19,19,0.15)" : "none",
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0, marginTop: "2px",
             fontSize: "11px",
-            fontWeight: 800, color: "rgba(255,255,255,0.8)",
+            fontWeight: 800, color: "rgba(26,19,19,0.8)",
           }}>
             {message.role === "assistant" ? <ReynaAvatar size={32} /> : initials}
           </div>
           <div style={{ maxWidth: "85%", flex: 1 }}>
             {message.image && (
-              <img src={message.image} alt="Uploaded" style={{ maxWidth: "240px", borderRadius: "10px", marginBottom: "8px", display: "block", border: "1px solid rgba(255,255,255,0.1)" }} />
+              <img src={message.image} alt="Uploaded" style={{ maxWidth: "240px", borderRadius: "10px", marginBottom: "8px", display: "block", border: "1px solid rgba(26,19,19,0.1)" }} />
             )}
             <div style={{
               padding: "12px 16px",
               borderRadius: message.role === "user" ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
-              backgroundColor: message.role === "user" ? "rgba(96,110,116,0.15)" : "#0d1117",
-              border: message.role === "user" ? "1px solid rgba(205,201,192,0.2)" : "1px solid rgba(255,255,255,0.06)",
-              fontSize: "14px", lineHeight: 1.65, color: "rgba(255,255,255,0.88)",
+              backgroundColor: message.role === "user" ? "rgba(96,110,116,0.15)" : "#FBFBFB",
+              border: message.role === "user" ? "1px solid rgba(205,201,192,0.2)" : "1px solid rgba(26,19,19,0.06)",
+              fontSize: "14px", lineHeight: 1.65, color: "rgba(26,19,19,0.88)",
             }}>
               {message.role === "assistant" ? formatContent(message.content) : message.content}
             </div>
-            <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.2)", marginTop: "4px", textAlign: message.role === "user" ? "right" : "left", paddingInline: "4px" }}>
+            <div style={{ fontSize: "10px", color: "rgba(26,19,19,0.2)", marginTop: "4px", textAlign: message.role === "user" ? "right" : "left", paddingInline: "4px" }}>
               {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </div>
           </div>
@@ -275,8 +275,8 @@ export default function ReynaAIPage() {
           <div style={{
             padding: "14px 18px",
             borderRadius: "4px 16px 16px 16px",
-            backgroundColor: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.06)",
+            backgroundColor: "rgba(26,19,19,0.04)",
+            border: "1px solid rgba(26,19,19,0.06)",
             display: "flex", alignItems: "center", gap: "4px",
           }}>
             {[0, 1, 2].map(j => (
@@ -316,9 +316,9 @@ export default function ReynaAIPage() {
       <img src={uploadedImage} alt="Preview" style={{ height: "48px", width: "auto", borderRadius: "6px" }} />
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: "12px", color: "#CDC9C0", fontWeight: 600 }}>Photo attached</div>
-        <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>{imageFile?.name}</div>
+        <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.4)" }}>{imageFile?.name}</div>
       </div>
-      <button onClick={() => { setUploadedImage(null); setImageFile(null) }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", padding: "4px" }}>
+      <button onClick={() => { setUploadedImage(null); setImageFile(null) }} style={{ background: "none", border: "none", color: "rgba(26,19,19,0.3)", cursor: "pointer", padding: "4px" }}>
         <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>close</span>
       </button>
     </div>
@@ -346,18 +346,18 @@ export default function ReynaAIPage() {
       position: "relative",
       zIndex: 1,
       padding: isMobile ? "10px 14px" : "16px 24px",
-      borderBottom: "1px solid rgba(255,255,255,0.06)",
+      borderBottom: "1px solid rgba(26,19,19,0.06)",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
       backdropFilter: isMobile ? undefined : "blur(12px)",
-      backgroundColor: isMobile ? "#0f1d24" : "rgba(15,29,36,0.8)",
+      backgroundColor: isMobile ? "#F4F5F7" : "rgba(244,245,247,0.9)",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <ReynaAvatar size={isMobile ? 32 : 36} />
         <div>
-          <div style={{ fontSize: isMobile ? "14px" : "15px", fontWeight: 700, color: "#FBFBFB", letterSpacing: "-0.01em" }}>Reyna AI</div>
-          <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: "4px" }}>
+          <div style={{ fontSize: isMobile ? "14px" : "15px", fontWeight: 700, color: "#1A1313", letterSpacing: "-0.01em" }}>Reyna AI</div>
+          <div style={{ fontSize: "11px", color: "rgba(26,19,19,0.4)", display: "flex", alignItems: "center", gap: "4px" }}>
             <div style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "#10B981" }} />
             Salon Envy Intelligence
           </div>
@@ -368,10 +368,10 @@ export default function ReynaAIPage() {
           onClick={clearChat}
           style={{
             padding: "6px 14px",
-            backgroundColor: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            backgroundColor: "rgba(26,19,19,0.04)",
+            border: "1px solid rgba(26,19,19,0.08)",
             borderRadius: "8px",
-            color: "rgba(255,255,255,0.4)",
+            color: "rgba(26,19,19,0.4)",
             fontSize: "11px",
             fontWeight: 600,
             cursor: "pointer",
@@ -397,7 +397,7 @@ export default function ReynaAIPage() {
         bottom: "60px",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#0f1d24",
+        backgroundColor: "#F4F5F7",
         zIndex: 10,
       }}>
         {hiddenFileInput}
@@ -418,8 +418,8 @@ export default function ReynaAIPage() {
         {/* Input Area */}
         <div style={{
           padding: "8px 12px",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
-          backgroundColor: "#0f1d24",
+          borderTop: "1px solid rgba(26,19,19,0.06)",
+          backgroundColor: "#F4F5F7",
           paddingBottom: "calc(8px + env(safe-area-inset-bottom, 0px))",
         }}>
           {imagePreview}
@@ -427,8 +427,8 @@ export default function ReynaAIPage() {
             display: "flex",
             gap: "6px",
             alignItems: "flex-end",
-            backgroundColor: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            backgroundColor: "rgba(26,19,19,0.05)",
+            border: "1px solid rgba(26,19,19,0.1)",
             borderRadius: "24px",
             padding: "6px 8px",
           }}>
@@ -440,7 +440,7 @@ export default function ReynaAIPage() {
                 backgroundColor: uploadedImage ? "rgba(42,90,90,0.3)" : "transparent",
                 border: "none", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0, color: uploadedImage ? "#CDC9C0" : "rgba(255,255,255,0.3)",
+                flexShrink: 0, color: uploadedImage ? "#CDC9C0" : "rgba(26,19,19,0.3)",
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>photo_camera</span>
@@ -455,7 +455,7 @@ export default function ReynaAIPage() {
               rows={1}
               style={{
                 flex: 1, backgroundColor: "transparent", border: "none", outline: "none",
-                color: "rgba(255,255,255,0.9)", fontSize: "16px", lineHeight: 1.4,
+                color: "rgba(26,19,19,0.9)", fontSize: "16px", lineHeight: 1.4,
                 resize: "none", maxHeight: "100px", overflowY: "auto",
                 fontFamily: "inherit", padding: "6px 0",
               }}
@@ -471,7 +471,7 @@ export default function ReynaAIPage() {
               disabled={loading || (!input.trim() && !uploadedImage)}
               style={{
                 width: "34px", height: "34px", borderRadius: "50%",
-                backgroundColor: (input.trim() || uploadedImage) ? "#CDC9C0" : "rgba(255,255,255,0.06)",
+                backgroundColor: (input.trim() || uploadedImage) ? "#CDC9C0" : "rgba(26,19,19,0.06)",
                 border: "none",
                 cursor: (input.trim() || uploadedImage) ? "pointer" : "default",
                 display: "flex", alignItems: "center", justifyContent: "center",
@@ -480,7 +480,7 @@ export default function ReynaAIPage() {
             >
               <span className="material-symbols-outlined" style={{
                 fontSize: "18px",
-                color: (input.trim() || uploadedImage) ? "#0f1d24" : "rgba(255,255,255,0.2)",
+                color: (input.trim() || uploadedImage) ? "#F4F5F7" : "rgba(26,19,19,0.2)",
               }}>arrow_upward</span>
             </button>
           </div>
@@ -491,7 +491,7 @@ export default function ReynaAIPage() {
             0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
             30% { opacity: 1; transform: scale(1); }
           }
-          textarea::placeholder { color: rgba(255,255,255,0.25); }
+          textarea::placeholder { color: rgba(26,19,19,0.25); }
         `}</style>
       </div>
     )
@@ -505,7 +505,7 @@ export default function ReynaAIPage() {
       display: "flex",
       flexDirection: "column",
       height: "calc(100vh - 52px)",
-      backgroundColor: "#0f1d24",
+      backgroundColor: "#F4F5F7",
       position: "relative",
       overflow: "hidden",
     }}>
@@ -537,8 +537,8 @@ export default function ReynaAIPage() {
       <div style={{
         position: "relative", zIndex: 1,
         padding: "16px 24px 20px",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
-        backgroundColor: "rgba(15,29,36,0.95)",
+        borderTop: "1px solid rgba(26,19,19,0.05)",
+        backgroundColor: "rgba(244,245,247,0.98)",
         backdropFilter: "blur(12px)",
       }}>
         <div style={{ maxWidth: "720px", margin: "0 auto" }}>
@@ -546,8 +546,8 @@ export default function ReynaAIPage() {
 
           <div style={{
             display: "flex", gap: "8px", alignItems: "flex-end",
-            backgroundColor: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            backgroundColor: "rgba(26,19,19,0.05)",
+            border: "1px solid rgba(26,19,19,0.1)",
             borderRadius: "14px", padding: "10px 12px",
           }}>
             <button
@@ -558,7 +558,7 @@ export default function ReynaAIPage() {
                 backgroundColor: uploadedImage ? "rgba(42,90,90,0.3)" : "transparent",
                 border: "none", cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0, color: uploadedImage ? "#CDC9C0" : "rgba(255,255,255,0.25)",
+                flexShrink: 0, color: uploadedImage ? "#CDC9C0" : "rgba(26,19,19,0.25)",
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>
@@ -575,7 +575,7 @@ export default function ReynaAIPage() {
               rows={1}
               style={{
                 flex: 1, backgroundColor: "transparent", border: "none", outline: "none",
-                color: "rgba(255,255,255,0.9)", fontSize: "14px", lineHeight: 1.5,
+                color: "rgba(26,19,19,0.9)", fontSize: "14px", lineHeight: 1.5,
                 resize: "none", maxHeight: "120px", overflowY: "auto",
                 fontFamily: "inherit", padding: "4px 0",
               }}
@@ -591,7 +591,7 @@ export default function ReynaAIPage() {
               disabled={loading || (!input.trim() && !uploadedImage)}
               style={{
                 width: "34px", height: "34px", borderRadius: "50%",
-                backgroundColor: (input.trim() || uploadedImage) ? "#CDC9C0" : "rgba(255,255,255,0.06)",
+                backgroundColor: (input.trim() || uploadedImage) ? "#CDC9C0" : "rgba(26,19,19,0.06)",
                 border: "none",
                 cursor: (input.trim() || uploadedImage) ? "pointer" : "not-allowed",
                 display: "flex", alignItems: "center", justifyContent: "center",
@@ -600,12 +600,12 @@ export default function ReynaAIPage() {
             >
               <span className="material-symbols-outlined" style={{
                 fontSize: "16px",
-                color: (input.trim() || uploadedImage) ? "#0f1d24" : "rgba(255,255,255,0.2)",
+                color: (input.trim() || uploadedImage) ? "#F4F5F7" : "rgba(26,19,19,0.2)",
               }}>arrow_upward</span>
             </button>
           </div>
 
-          <div style={{ textAlign: "center", fontSize: "11px", color: "rgba(255,255,255,0.15)", marginTop: "8px", letterSpacing: "0.02em" }}>
+          <div style={{ textAlign: "center", fontSize: "11px", color: "rgba(26,19,19,0.15)", marginTop: "8px", letterSpacing: "0.02em" }}>
             Enter to send · Shift+Enter for new line · Upload photos for color analysis
           </div>
         </div>
@@ -616,7 +616,7 @@ export default function ReynaAIPage() {
           0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
           30% { opacity: 1; transform: scale(1); }
         }
-        textarea::placeholder { color: rgba(255,255,255,0.25); }
+        textarea::placeholder { color: rgba(26,19,19,0.25); }
       `}</style>
     </div>
   )

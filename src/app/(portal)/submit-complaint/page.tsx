@@ -2,24 +2,24 @@
 import { useState, useEffect } from "react"
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.12)",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)",
   borderRadius: "12px", padding: "clamp(16px,4vw,28px)",
 }
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 14px", boxSizing: "border-box",
-  backgroundColor: "#1a2a32", border: "1px solid rgba(205,201,192,0.15)",
-  borderRadius: "8px", color: "#FBFBFB", fontSize: "14px", outline: "none",
+  backgroundColor: "#FBFBFB", border: "1px solid rgba(205,201,192,0.15)",
+  borderRadius: "8px", color: "#1A1313", fontSize: "14px", outline: "none",
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: "11px", fontWeight: 600, color: "rgba(205,201,192,0.6)",
+  fontSize: "11px", fontWeight: 600, color: "rgba(26,19,19,0.6)",
   textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "6px", display: "block",
 }
 
 const btnPrimary: React.CSSProperties = {
   padding: "12px 24px", borderRadius: "8px", border: "none", cursor: "pointer",
-  backgroundColor: "#CDC9C0", color: "#0f1d24", fontSize: "13px", fontWeight: 700,
+  backgroundColor: "#CDC9C0", color: "#1A1313", fontSize: "13px", fontWeight: 700,
   width: "100%",
 }
 
@@ -53,8 +53,8 @@ export default function SubmitComplaintPage() {
       <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "560px", margin: "0 auto" }}>
         <div style={{ ...cardStyle, textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#10B981", display: "block", marginBottom: "12px" }}>check_circle</span>
-          <h2 style={{ color: "#FBFBFB", fontSize: "20px", fontWeight: 700, margin: "0 0 8px" }}>Report Submitted</h2>
-          <p style={{ color: "rgba(205,201,192,0.6)", fontSize: "14px", margin: "0 0 20px", lineHeight: 1.5 }}>
+          <h2 style={{ color: "#1A1313", fontSize: "20px", fontWeight: 700, margin: "0 0 8px" }}>Report Submitted</h2>
+          <p style={{ color: "rgba(26,19,19,0.6)", fontSize: "14px", margin: "0 0 20px", lineHeight: 1.5 }}>
             Your anonymous report has been submitted securely. Management will review it promptly.
           </p>
           <button style={{ ...btnPrimary, width: "auto", display: "inline-block" }} onClick={() => {
@@ -70,9 +70,9 @@ export default function SubmitComplaintPage() {
       <div style={cardStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "22px", color: "#CDC9C0" }}>shield</span>
-          <h1 style={{ color: "#FBFBFB", fontSize: "20px", fontWeight: 700, margin: 0 }}>Report an Issue</h1>
+          <h1 style={{ color: "#1A1313", fontSize: "20px", fontWeight: 700, margin: 0 }}>Report an Issue</h1>
         </div>
-        <p style={{ color: "rgba(205,201,192,0.5)", fontSize: "13px", margin: "0 0 24px", lineHeight: 1.5 }}>
+        <p style={{ color: "rgba(26,19,19,0.5)", fontSize: "13px", margin: "0 0 24px", lineHeight: 1.5 }}>
           This form is completely anonymous. Your identity is not tracked or stored.
         </p>
 
@@ -111,7 +111,7 @@ export default function SubmitComplaintPage() {
           {submitting ? "Submitting..." : "Submit Anonymously"}
         </button>
 
-        <p style={{ color: "rgba(205,201,192,0.3)", fontSize: "11px", textAlign: "center", marginTop: "16px", lineHeight: 1.5 }}>
+        <p style={{ color: "rgba(26,19,19,0.3)", fontSize: "11px", textAlign: "center", marginTop: "16px", lineHeight: 1.5 }}>
           Your submission is encrypted and anonymous. No identifying information is collected.
         </p>
       </div>
