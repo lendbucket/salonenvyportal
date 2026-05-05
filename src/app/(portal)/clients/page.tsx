@@ -41,6 +41,8 @@ export default function ClientsPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [syncing, setSyncing] = useState(false)
+  const [syncProgress, setSyncProgress] = useState<{ totalProcessed: number; status: string; errorMessage?: string | null; isStale?: boolean } | null>(null)
+  const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const [viewMode, setViewMode] = useState<"list" | "alpha">("list")
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -72,14 +74,45 @@ export default function ClientsPage() {
     searchTimeout.current = setTimeout(() => { setPage(0); fetchClients(0, q) }, 300)
   }
 
+  const pollSyncStatus = useCallback(() => {
+    if (syncPollRef.current) return // already polling
+    syncPollRef.current = setInterval(async () => {
+      try {
+        const r = await fetch("/api/clients/sync")
+        const data = await r.json()
+        setSyncProgress(data)
+        if (data.status === "completed") {
+          setSyncing(false)
+          if (syncPollRef.current) { clearInterval(syncPollRef.current); syncPollRef.current = null }
+          setPage(0); fetchClients(0, search)
+        } else if (data.status === "failed" || data.status === "none") {
+          setSyncing(false)
+          if (syncPollRef.current) { clearInterval(syncPollRef.current); syncPollRef.current = null }
+        }
+      } catch { /* ignore */ }
+    }, 3000)
+  }, [fetchClients, search])
+
+  // Check sync status on mount (handles tab-close-and-return)
+  useEffect(() => {
+    fetch("/api/clients/sync").then(r => r.json()).then(data => {
+      if (data.status === "running") { setSyncing(true); setSyncProgress(data); pollSyncStatus() }
+      else setSyncProgress(data)
+    }).catch(() => {})
+    return () => { if (syncPollRef.current) clearInterval(syncPollRef.current) }
+  }, [pollSyncStatus])
+
   const syncFromSquare = async () => {
-    setSyncing(true)
+    setSyncing(true); setSyncProgress(null)
     try {
-      await fetch("/api/clients/sync", { method: "POST" })
-      setPage(0)
-      await fetchClients(0, search)
-    } catch { /* ignore */ }
-    setSyncing(false)
+      const r = await fetch("/api/clients/sync", { method: "POST" })
+      if (r.status === 409) {
+        // Already running — just start polling
+        const data = await r.json()
+        setSyncProgress({ totalProcessed: 0, status: data.status })
+      }
+      pollSyncStatus()
+    } catch { setSyncing(false) }
   }
 
   const loadMore = () => {
@@ -192,11 +225,18 @@ export default function ClientsPage() {
           <p style={{ fontFamily: "Inter", fontSize: 13, fontWeight: 400, color: "rgba(26,19,19,0.4)", marginTop: 3 }}>{total.toLocaleString()} total clients</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {(isOwner || isManager) && (
-            <button onClick={syncFromSquare} disabled={syncing} style={{ ...btnGhost, opacity: syncing ? 0.6 : 1 }}>
-              <RefreshCw size={14} style={syncing ? { animation: "spin 1s linear infinite" } : undefined} />{syncing ? "Syncing..." : "Sync from Square"}
+          {(isOwner || isManager) && (<>
+            <button onClick={syncFromSquare} disabled={syncing} style={{ ...btnGhost, opacity: syncing ? 0.6 : 1, gap: 6 }}>
+              <RefreshCw size={14} style={syncing ? { animation: "spin 1s linear infinite" } : undefined} />
+              {syncing ? (syncProgress?.totalProcessed ? `Syncing ${syncProgress.totalProcessed.toLocaleString()} clients...` : "Starting sync...") : "Sync from Square"}
             </button>
-          )}
+            {syncProgress?.status === "failed" && syncProgress.errorMessage && (
+              <span style={{ fontSize: 11, color: "#dc2626" }}>{syncProgress.errorMessage}</span>
+            )}
+            {syncProgress?.isStale && (
+              <span style={{ fontSize: 11, color: "#a16207" }}>Sync appears stuck</span>
+            )}
+          </>)}
           <button onClick={() => fileInputRef.current?.click()} style={btnGhost}><Upload size={14} />Import CSV</button>
           <button onClick={() => window.open("/api/clients?limit=10000&format=csv", "_blank")} style={btnGhost}><Download size={14} />Export</button>
           {/* View toggle */}
