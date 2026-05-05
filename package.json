@@ -19,6 +19,7 @@
     "@fontsource/inter": "^5.2.8",
     "@prisma/client": "^5.22.0",
     "@react-pdf/renderer": "^4.5.1",
+    "@supabase/supabase-js": "^2.105.3",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/nodemailer": "^8.0.0",
     "bcryptjs": "^2.4.3",

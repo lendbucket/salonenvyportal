@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useUserRole } from "@/hooks/useUserRole"
+import { uploadSocialImage } from "@/lib/supabase/upload-social-image"
 
 type SPost = { id: string; locationId: string; platform: string; content: string; imageUrls: string[] | null; status: string; scheduledAt: string | null; publishedAt: string | null; fbPostId: string | null; igPostId: string | null; errorMessage: string | null; likes: number | null; comments: number | null; shares: number | null; createdAt: string }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,6 +63,7 @@ export default function SocialPage() {
   const [sMode, setSMode] = useState<"now" | "later" | "draft">("draft")
   const [cDate, setCDate] = useState("")
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [prevMode, setPrevMode] = useState<"instagram" | "facebook">("instagram")
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -140,7 +142,19 @@ export default function SocialPage() {
     } catch { showT("Network error", "error") }; setSaving(false)
   }
   async function delPost(id: string) { await fetch(`/api/social/posts/${id}`, { method: "DELETE" }); loadPosts(); showT("Deleted") }
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) { Array.from(e.target.files || []).forEach(f => { const r = new FileReader(); r.onload = () => { if (r.result) setCImages(p => [...p, r.result as string]) }; r.readAsDataURL(f) }); if (fileRef.current) fileRef.current.value = "" }
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || [])
+    if (files.length === 0) return
+    if (fileRef.current) fileRef.current.value = ""
+    setUploading(true)
+    try {
+      const urls = await Promise.all(files.map(f => uploadSocialImage(f, cLoc)))
+      setCImages(p => [...p, ...urls])
+    } catch (err: unknown) {
+      showT(err instanceof Error ? err.message : "Image upload failed", "error")
+    }
+    setUploading(false)
+  }
 
   // Calendar
   const fd = new Date(cYr, cMo - 1, 1).getDay(), dim = new Date(cYr, cMo, 0).getDate()
@@ -398,15 +412,15 @@ export default function SocialPage() {
               <div><div style={lblS}>Photos</div>
                 <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: "none" }} onChange={handleFile} />
                 {cImages.length === 0 ? (
-                  <div onClick={() => fileRef.current?.click()} style={{ border: `2px dashed ${BORDER2}`, borderRadius: "12px", padding: "40px 20px", textAlign: "center", cursor: "pointer", background: S1 }}>
+                  <div onClick={() => !uploading && fileRef.current?.click()} style={{ border: `2px dashed ${BORDER2}`, borderRadius: "12px", padding: "40px 20px", textAlign: "center", cursor: uploading ? "wait" : "pointer", background: S1, opacity: uploading ? 0.6 : 1 }}>
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={ACC_B} strokeWidth="1.5" style={{ margin: "0 auto 10px", display: "block" }}><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="13" r="4" /></svg>
-                    <div style={{ fontSize: "14px", color: MID, fontWeight: 500 }}>Add photos</div>
-                    <div style={{ fontSize: "12px", color: MUTED, marginTop: "4px" }}>or drag and drop here</div>
+                    <div style={{ fontSize: "14px", color: MID, fontWeight: 500 }}>{uploading ? "Uploading..." : "Add photos"}</div>
+                    <div style={{ fontSize: "12px", color: MUTED, marginTop: "4px" }}>{uploading ? "Please wait" : "or drag and drop here"}</div>
                   </div>
                 ) : (
                   <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px" }}>
                     {cImages.map((img, i) => <div key={i} style={{ position: "relative", flexShrink: 0 }}><img src={img} alt="" style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px", border: `1px solid ${BORDER2}` }} /><button onClick={() => setCImages(p => p.filter((_, j) => j !== i))} style={{ position: "absolute", top: "-4px", right: "-4px", width: "18px", height: "18px", borderRadius: "50%", backgroundColor: "rgba(0,0,0,0.7)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: "10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>&times;</button>{i === 0 && <div style={{ position: "absolute", bottom: "4px", left: "4px", ...mono, fontSize: "8px", padding: "1px 4px", borderRadius: "3px", background: "rgba(0,0,0,0.6)", color: "#fff" }}>Cover</div>}</div>)}
-                    <div onClick={() => fileRef.current?.click()} style={{ width: "80px", height: "80px", flexShrink: 0, border: `2px dashed ${BORDER2}`, borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: "24px", color: MUTED }}>+</div>
+                    <div onClick={() => !uploading && fileRef.current?.click()} style={{ width: "80px", height: "80px", flexShrink: 0, border: `2px dashed ${BORDER2}`, borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", cursor: uploading ? "wait" : "pointer", fontSize: uploading ? "11px" : "24px", color: MUTED, opacity: uploading ? 0.6 : 1 }}>{uploading ? "..." : "+"}</div>
                   </div>
                 )}
               </div>
