@@ -72,6 +72,7 @@ const STYLIST_NAV: NavItem[] = [
   { href: "/submit-complaint", icon: "report", label: "Report Issue" },
   { href: "/conduct", icon: "gavel", label: "My Record" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
+  { href: "/my-profile", icon: "person", label: "My Profile" },
   { href: "/settings", icon: "settings", label: "Settings" },
   { href: "/suite", icon: "", label: "Envy Suite®" },
 ]
