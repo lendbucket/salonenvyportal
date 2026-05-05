@@ -23,6 +23,10 @@
     {
       "path": "/api/cron/churn-analysis",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/clients-sync",
+      "schedule": "* * * * *"
     }
   ]
 }

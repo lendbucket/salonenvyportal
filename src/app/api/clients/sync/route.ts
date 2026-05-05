@@ -1,14 +1,6 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
-import { SquareClient, SquareEnvironment } from "square"
-
-export const maxDuration = 60
-
-function getSquare() {
-  return new SquareClient({ token: process.env.SQUARE_ACCESS_TOKEN!, environment: SquareEnvironment.Production })
-}
 
 export async function POST() {
   const session = await getServerSession(authOptions)
@@ -17,59 +9,53 @@ export async function POST() {
   const role = (session.user as Record<string, unknown>).role as string
   if (role !== "OWNER" && role !== "MANAGER") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
-  const square = getSquare()
-  let synced = 0
+  const { prisma } = await import("@/lib/prisma")
 
-  try {
-    let page = await square.customers.list({ limit: 100 })
-    for (const c of page.data || []) {
-      if (!c.id) continue
-      await prisma.client.upsert({
-        where: { squareCustomerId: c.id },
-        create: {
-          squareCustomerId: c.id,
-          firstName: c.givenName || null,
-          lastName: c.familyName || null,
-          email: c.emailAddress || null,
-          phone: c.phoneNumber || null,
-          createdAt: c.createdAt ? new Date(c.createdAt) : new Date(),
-        },
-        update: {
-          firstName: c.givenName || undefined,
-          lastName: c.familyName || undefined,
-          email: c.emailAddress || undefined,
-          phone: c.phoneNumber || undefined,
-        },
-      })
-      synced++
-    }
-    while (page.hasNextPage()) {
-      page = await page.getNextPage()
-      for (const c of page.data || []) {
-        if (!c.id) continue
-        await prisma.client.upsert({
-          where: { squareCustomerId: c.id },
-          create: {
-            squareCustomerId: c.id,
-            firstName: c.givenName || null,
-            lastName: c.familyName || null,
-            email: c.emailAddress || null,
-            phone: c.phoneNumber || null,
-            createdAt: c.createdAt ? new Date(c.createdAt) : new Date(),
-          },
-          update: {
-            firstName: c.givenName || undefined,
-            lastName: c.familyName || undefined,
-            email: c.emailAddress || undefined,
-            phone: c.phoneNumber || undefined,
-          },
-        })
-        synced++
-      }
-    }
+  // Check for existing in-progress job
+  const existing = await prisma.syncJob.findFirst({
+    where: { type: "clients", status: { in: ["pending", "running"] } },
+    orderBy: { startedAt: "desc" },
+  })
 
-    return NextResponse.json({ synced })
-  } catch (err: unknown) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Sync failed", synced }, { status: 500 })
+  if (existing) {
+    return NextResponse.json({ jobId: existing.id, status: existing.status, message: "Sync already in progress" }, { status: 409 })
   }
+
+  const userId = (session.user as Record<string, unknown>).id as string
+  const job = await prisma.syncJob.create({
+    data: { type: "clients", status: "running", triggeredBy: userId },
+  })
+
+  return NextResponse.json({ jobId: job.id, status: "running" }, { status: 202 })
+}
+
+export async function GET() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+  const { prisma } = await import("@/lib/prisma")
+
+  const job = await prisma.syncJob.findFirst({
+    where: { type: "clients" },
+    orderBy: { startedAt: "desc" },
+  })
+
+  if (!job) {
+    return NextResponse.json({ jobId: null, status: "none" })
+  }
+
+  const isStale = job.status === "running" && (Date.now() - job.lastTickAt.getTime() > 3 * 60 * 1000)
+
+  return NextResponse.json({
+    jobId: job.id,
+    status: job.status,
+    totalProcessed: job.totalProcessed,
+    pagesProcessed: job.pagesProcessed,
+    totalEstimate: job.totalEstimate,
+    startedAt: job.startedAt.toISOString(),
+    lastTickAt: job.lastTickAt.toISOString(),
+    completedAt: job.completedAt?.toISOString() ?? null,
+    errorMessage: job.errorMessage,
+    isStale,
+  })
 }
