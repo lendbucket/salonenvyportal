@@ -978,9 +978,10 @@ export default function PortalShell({ children }: { children: React.ReactNode })
       <main style={{
         marginLeft: 220,
         marginTop: 56,
-        minHeight: "calc(100vh - 56px)",
+        height: "calc(100vh - 56px)",
         background: "#F4F5F7",
         overflowX: "hidden",
+        overflowY: "auto",
       }}>
         {children}
       </main>
