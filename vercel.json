@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/social",
-      "schedule": "* * * * *"
+      "schedule": "*/5 * * * *"
     },
     {
       "path": "/api/cron/tdlr-refresh",
