@@ -55,7 +55,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ per
     totalPayout: entry.totalPayout,
   }
 
-  const stream = await renderToStream(React.createElement(PayStubDocument, { data: pdfData }))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stream = await renderToStream(React.createElement(PayStubDocument, { data: pdfData }) as any)
 
   const dateStr = entry.period.periodStart.toISOString().split("T")[0]
 
