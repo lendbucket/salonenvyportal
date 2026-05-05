@@ -414,7 +414,7 @@ export default function CancellationsPage() {
   }
 
   return (
-    <div style={{ padding: "32px", maxWidth: "1400px", margin: "0 auto" }}>
+    <div style={{ padding: "48px 32px 32px 32px", maxWidth: "1700px", margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: "24px" }}>
         <h1

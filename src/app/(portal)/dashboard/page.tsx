@@ -339,7 +339,7 @@ export default function DashboardPage() {
   void now
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px" }}>
+    <div style={{ maxWidth: "1700px", margin: "0 auto", padding: "48px 32px 32px 32px" }}>
       <style>{`@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} } @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }`}</style>
 
       {/* HERO HEADER */}

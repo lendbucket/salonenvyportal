@@ -157,7 +157,7 @@ export default function SchedulePage() {
   const pill = (active: boolean) => ({ padding: "6px 14px", fontSize: "10px", fontWeight: 700 as const, letterSpacing: "0.08em", textTransform: "uppercase" as const, borderRadius: "6px", border: "none", cursor: "pointer" as const, backgroundColor: active ? "#7a8f96" : "transparent", color: active ? "#FBFBFB" : "rgba(26,19,19,0.5)", transition: "all 0.15s" })
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px" }}>
+    <div style={{ maxWidth: "1700px", margin: "0 auto", padding: "48px 32px 32px 32px" }}>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
 
       {/* Header */}

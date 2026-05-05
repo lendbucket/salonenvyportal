@@ -198,7 +198,7 @@ export default function PermissionsPage() {
   return (
     <div style={{ ...jakarta, height: "100%", backgroundColor: BG, color: "#1A1313", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <style>{`@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}} @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}`}</style>
-      <div style={{ flex: 1, display: "flex", overflow: "hidden", maxWidth: "1400px", width: "100%", margin: "0 auto" }}>
+      <div style={{ flex: 1, display: "flex", overflow: "hidden", maxWidth: "1700px", width: "100%", margin: "0 auto" }}>
 
         {/* ═══ LEFT PANEL ═══ */}
         <div style={{ width: "280px", minWidth: "280px", backgroundColor: "#F0F1F3", borderRight: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", overflow: "hidden" }}>

@@ -666,7 +666,7 @@ export default function InventoryPage() {
   }
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px" }}>
+    <div style={{ maxWidth: "1700px", margin: "0 auto", padding: "48px 32px 32px 32px" }}>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
 
       {/* Header */}
