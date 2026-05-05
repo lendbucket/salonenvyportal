@@ -68,7 +68,7 @@ export default function ComplaintsPage() {
   })
 
   if (loading) return (
-    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
+    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1700px", margin: "0 auto" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {[1,2,3].map(i => (
           <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(26,19,19,0.06)", borderRadius: 10, animation: "pulse 2s infinite" }} />
@@ -78,7 +78,7 @@ export default function ComplaintsPage() {
   )
 
   return (
-    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "900px", margin: "0 auto" }}>
+    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1700px", margin: "0 auto" }}>
       <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: "0 0 20px" }}>Anonymous Complaints</h1>
 
       {/* Filter tabs */}

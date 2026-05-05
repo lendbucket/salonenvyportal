@@ -54,7 +54,7 @@ export default function FinancialsPage() {
   ]
 
   return (
-    <div style={{ padding: isMobile ? "16px" : "32px", maxWidth: "1200px", margin: "0 auto", ...jakarta }}>
+    <div style={{ padding: isMobile ? "16px" : "32px", maxWidth: "1700px", margin: "0 auto", ...jakarta }}>
       {/* Header */}
       <div style={{ marginBottom: "24px" }}>
         <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: 0, letterSpacing: "-0.01em" }}>Financials</h1>

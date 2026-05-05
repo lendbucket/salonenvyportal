@@ -14,7 +14,7 @@ const links = [
 
 export default function MorePage() {
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
+    <div className="max-w-[1700px] mx-auto p-6 space-y-6">
       <h1 className="font-[var(--font-noto-serif)] text-3xl text-white">More</h1>
       <ul className="grid gap-3 sm:grid-cols-2">
         {links.map(({ href, icon, label }) => (

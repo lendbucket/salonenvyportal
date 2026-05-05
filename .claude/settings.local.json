@@ -75,7 +75,31 @@
       "Bash(npx dotenv:*)",
       "Bash(npm info:*)",
       "Bash(npx eslint:*)",
-      "Bash(grep -oP '\\\\S+$')"
+      "Bash(grep -oP '\\\\S+$')",
+      "Bash(sed -n '147p' \"src/app/\\(portal\\)/audit-log/page.tsx\")",
+      "Bash(sed -n '57p' \"src/app/\\(portal\\)/financials/page.tsx\")",
+      "Bash(sed -n '184p' \"src/app/\\(portal\\)/metrics/page.tsx\")",
+      "Bash(sed -n '102p' \"src/app/\\(portal\\)/payroll/page.tsx\")",
+      "Bash(sed -n '353p' \"src/app/\\(portal\\)/performance/page.tsx\")",
+      "Bash(sed -n '120p;130p' \"src/app/\\(portal\\)/purchase-orders/page.tsx\")",
+      "Bash(sed -n '242p' \"src/app/\\(portal\\)/retention/page.tsx\")",
+      "Bash(sed -n '166p' \"src/app/\\(portal\\)/reviews/page.tsx\")",
+      "Bash(sed -n '172p' \"src/app/\\(portal\\)/social/page.tsx\")",
+      "Bash(sed -n '202p' \"src/app/\\(portal\\)/onboarding/page.tsx\")",
+      "Bash(sed -n '130p' \"src/app/\\(portal\\)/alerts/page.tsx\")",
+      "Bash(sed -n '47p' \"src/app/\\(portal\\)/approvals/page.tsx\")",
+      "Bash(sed -n '71p;81p;135p' \"src/app/\\(portal\\)/complaints/page.tsx\")",
+      "Bash(sed -n '101p;111p;179p' \"src/app/\\(portal\\)/conduct/page.tsx\")",
+      "Bash(sed -n '50p' \"src/app/\\(portal\\)/suite/page.tsx\")",
+      "Bash(sed -n '290p' \"src/app/\\(portal\\)/suite/style-credit/page.tsx\")",
+      "Bash(sed -n '309p' \"src/app/\\(portal\\)/suite/style-edu/page.tsx\")",
+      "Bash(sed -n '141p' \"src/app/\\(portal\\)/suite/style-health/page.tsx\")",
+      "Bash(sed -n '155p' \"src/app/\\(portal\\)/suite/style-insure/page.tsx\")",
+      "Bash(sed -n '5p' \"src/app/\\(portal\\)/bonus-triggers/page.tsx\")",
+      "Bash(sed -n '5p' \"src/app/\\(portal\\)/issue-reports/page.tsx\")",
+      "Bash(sed -n '17p' \"src/app/\\(portal\\)/more/page.tsx\")",
+      "Bash(sed -n '5p' \"src/app/\\(portal\\)/orders/page.tsx\")",
+      "Bash(sed -n '5p' \"src/app/\\(portal\\)/service-pricing/page.tsx\")"
     ]
   }
 }

@@ -117,7 +117,7 @@ export default function PurchaseOrdersPage() {
   const filtered = filter === "all" ? orders : orders.filter(o => o.status === filter)
 
   if (loading) return (
-    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1200px", margin: "0 auto" }}>
+    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1700px", margin: "0 auto" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {[1,2,3].map(i => (
           <div key={i} style={{ height: 80, background: "#FBFBFB", border: "1px solid rgba(205,201,192,0.12)", borderRadius: 10, animation: "pulse 2s infinite" }} />
@@ -127,7 +127,7 @@ export default function PurchaseOrdersPage() {
   )
 
   return (
-    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1200px", margin: "0 auto" }}>
+    <div style={{ padding: "clamp(16px,4vw,28px)", maxWidth: "1700px", margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
         <h1 style={{ color: "#1A1313", fontSize: "24px", fontWeight: 700, margin: 0 }}>Purchase Orders</h1>
         {(isOwner || isManager) && (

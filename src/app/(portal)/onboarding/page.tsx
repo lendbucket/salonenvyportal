@@ -199,7 +199,7 @@ export default function OnboardingManagementPage() {
   };
 
   return (
-    <div style={{ padding: "24px 20px", maxWidth: "1000px", margin: "0 auto" }}>
+    <div style={{ padding: "24px 20px", maxWidth: "1700px", margin: "0 auto" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
         <div>

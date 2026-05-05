@@ -169,7 +169,7 @@ export default function SocialPage() {
   return (
     <div style={{ ...jakarta, backgroundColor: "#F4F5F7", minHeight: "100%", color: "#1A1313", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       <style>{`@media(max-width:767px){.sg4{grid-template-columns:1fr 1fr !important}.sg2c{grid-template-columns:1fr !important}.comp-grid{grid-template-columns:1fr !important}.comp-prev{display:none !important}} @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}}`}</style>
-      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1700px", margin: "0 auto" }}>
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px", marginBottom: "14px" }}>
           <h1 style={{ fontSize: "18px", fontWeight: 500, margin: 0 }}>Social Media</h1>

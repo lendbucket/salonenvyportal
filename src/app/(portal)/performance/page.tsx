@@ -350,7 +350,7 @@ export default function PerformancePage() {
   const activeGoals = useMemo(() => goals.filter(g => g.status !== "MISSED" && g.status !== "HIT").slice(0, 3), [goals])
 
   return (
-    <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "28px" }}>
+    <div style={{ maxWidth: "1700px", margin: "0 auto", padding: "28px" }}>
       <style>{`
         @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
       `}</style>

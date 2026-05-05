@@ -144,7 +144,7 @@ export default function AuditLogPage() {
   }
 
   return (
-    <div style={{ ...jakarta, padding: "24px", maxWidth: "1200px", margin: "0 auto", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
+    <div style={{ ...jakarta, padding: "24px", maxWidth: "1700px", margin: "0 auto", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}>
         <div>

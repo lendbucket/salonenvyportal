@@ -287,7 +287,7 @@ export default function StyleCreditPage() {
         style={{
           position: "relative",
           zIndex: 1,
-          maxWidth: "1000px",
+          maxWidth: "1700px",
           margin: "0 auto",
           padding: "clamp(24px,4vw,48px) clamp(16px,4vw,32px)",
         }}

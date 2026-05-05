@@ -44,7 +44,7 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "28px" }}>
+    <div style={{ maxWidth: "1700px", margin: "0 auto", padding: "28px" }}>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"

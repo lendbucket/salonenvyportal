@@ -163,7 +163,7 @@ export default function ReviewsPage() {
 
   /* ── Render ── */
   return (
-    <div style={{ padding: "32px", maxWidth: "1200px", margin: "0 auto" }}>
+    <div style={{ padding: "32px", maxWidth: "1700px", margin: "0 auto" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px", marginBottom: "24px" }}>
         <div>

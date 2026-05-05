@@ -99,7 +99,7 @@ export default function PayrollPage() {
   return (
     <div style={{ ...jakarta, minHeight: "100%", backgroundColor: "#F4F5F7", color: "#1A1313", padding: "24px", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       <style>{`@media(max-width:767px){.pr4{grid-template-columns:1fr 1fr !important}.pr-tbl{display:block !important;overflow-x:auto}} @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}} @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
-      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1700px", margin: "0 auto" }}>
 
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>

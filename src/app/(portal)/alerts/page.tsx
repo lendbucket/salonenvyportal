@@ -127,7 +127,7 @@ export default function AlertsPage() {
   const filterTabs = isOwner ? ownerFilters : staffFilters
 
   return (
-    <div style={{ ...jakarta, padding: "32px", maxWidth: "900px", margin: "0 auto", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
+    <div style={{ ...jakarta, padding: "32px", maxWidth: "1700px", margin: "0 auto", paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

@@ -47,7 +47,7 @@ export default function SuitePage() {
 
   return (
     <div style={{ padding: 32, background: "#F4F5F7", minHeight: "calc(100vh - 56px)" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1700, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
           <h1 style={{ fontFamily: "Inter", fontSize: 24, fontWeight: 700, color: "#1A1313", letterSpacing: "-0.31px", margin: 0 }}>Envy Suite</h1>

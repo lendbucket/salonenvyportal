@@ -306,7 +306,7 @@ export default function StyleEduPage() {
     <div style={{ ...jakarta, minHeight: "100vh", backgroundColor: "#F4F5F7", color: "#1A1313", position: "relative" }}>
       <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "400px", background: `radial-gradient(ellipse at 50% 0%, ${ACC_DIM} 0%, transparent 65%)`, pointerEvents: "none" }} />
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "1000px", margin: "0 auto", padding: "clamp(24px,4vw,48px) clamp(16px,4vw,32px)" }}>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: "1700px", margin: "0 auto", padding: "clamp(24px,4vw,48px) clamp(16px,4vw,32px)" }}>
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "28px", flexWrap: "wrap" }}>
           <button onClick={() => router.push("/suite")} style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: MUTED, background: "none", border: "none", cursor: "pointer", ...jakarta }}>&larr; Envy Suite</button>

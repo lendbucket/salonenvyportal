@@ -434,7 +434,7 @@ export default function StyleTaxPage() {
         pointerEvents: "none",
       }} />
 
-      <div style={{ position: "relative", zIndex: 1, padding: "24px", maxWidth: "1100px", margin: "0 auto" }}>
+      <div style={{ position: "relative", zIndex: 1, padding: "24px", maxWidth: "1700px", margin: "0 auto" }}>
         <input ref={fileInputRef} type="file" accept="image/*" capture="environment" style={{ display: "none" }} onChange={handleFileSelect} />
 
         {/* ── Breadcrumb Header ── */}

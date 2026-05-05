@@ -181,7 +181,7 @@ export default function MetricsPage() {
   })
 
   return (
-    <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "32px" }}>
+    <div style={{ maxWidth: "1700px", margin: "0 auto", padding: "32px" }}>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
       <style>{`
         @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
