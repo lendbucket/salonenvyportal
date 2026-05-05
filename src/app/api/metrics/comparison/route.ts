@@ -9,7 +9,9 @@ export async function GET(req: NextRequest) {
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const period = req.nextUrl.searchParams.get("period") || "30days"
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const role = (session.user as any).role as string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sessionLocationName = (session.user as any).locationName as string | undefined
 
     // MANAGER: forced to their own location

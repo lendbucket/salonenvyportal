@@ -166,6 +166,7 @@ export async function GET(req: NextRequest) {
         usedBookings.add(bestIdx)
         attributedTo = bookings[bestIdx].teamMemberId
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const orderTeamMemberId = (o as any).tenders?.[0]?.employeeId
         if (orderTeamMemberId && staffRevenue[orderTeamMemberId]) {
           attributedTo = orderTeamMemberId

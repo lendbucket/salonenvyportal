@@ -14,6 +14,7 @@ export async function GET(
     }
 
     const { id: userId, role } = session.user as { id: string; role: string }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const locationId = (session.user as any).locationId as string | undefined
     const { id } = await params
 
@@ -87,6 +88,7 @@ export async function PUT(
 
     // MANAGER can only update goals for their own location
     if (role === "MANAGER") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const locationId = (session.user as any).locationId
       if (locationId && existing.locationId !== locationId) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 })
@@ -158,6 +160,7 @@ export async function DELETE(
 
     // MANAGER can only soft-delete goals for their own location
     if (role === "MANAGER") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const locationId = (session.user as any).locationId
       if (locationId && existing.locationId !== locationId) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 })

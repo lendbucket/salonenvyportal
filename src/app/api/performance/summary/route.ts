@@ -122,6 +122,7 @@ async function getSquareRevenueForStaff(
       matched = true
     } else {
       // Check if order has team member via tender
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const orderTeamMemberId = (o as any).tenders?.[0]?.employeeId
       if (orderTeamMemberId === staffMemberId) {
         matched = true

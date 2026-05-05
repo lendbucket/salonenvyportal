@@ -8,7 +8,9 @@ export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const role = (session.user as any).role as string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
 
   // Stylists can only see their own records
@@ -25,6 +27,7 @@ export async function GET() {
   }
 
   // Managers see their location, owners see all
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const locationId = (session.user as any).locationId as string | undefined
   const where = role === "MANAGER" && locationId
     ? { staffMember: { locationId } }
@@ -43,11 +46,13 @@ export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const role = (session.user as any).role as string
   if (role !== "OWNER" && role !== "MANAGER") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let body: any
   try { body = await req.json() } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
@@ -58,6 +63,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "staffMemberId, severity, category, title, and description are required" }, { status: 400 })
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
 
   const record = await prisma.conductRecord.create({
@@ -82,6 +88,7 @@ export async function PATCH(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let body: any
   try { body = await req.json() } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })

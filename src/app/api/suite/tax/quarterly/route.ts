@@ -20,6 +20,7 @@ export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
   const taxYear = new Date().getFullYear()
 
@@ -76,6 +77,7 @@ export async function PATCH(request: Request) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
   const body = await request.json()
   const { quarter, actualAmount, confirmationNum } = body as {

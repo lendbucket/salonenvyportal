@@ -12,9 +12,12 @@ export async function PATCH(
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const role = (session.user as any).role as string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let body: any
   try { body = await req.json() } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })

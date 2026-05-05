@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     if (customerId) {
       try {
         const custData = await sq(`/customers/${customerId}`)
-        let rawPhone = custData.customer?.phone_number || ""
+        const rawPhone = custData.customer?.phone_number || ""
         console.log("[booking] Customer phone raw:", rawPhone)
 
         // Normalize to E.164 format

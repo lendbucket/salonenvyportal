@@ -325,7 +325,7 @@ export async function GET(request: NextRequest) {
         idMap.set(a.id, a);
       }
     }
-    let dedupedFinal = Array.from(idMap.values());
+    const dedupedFinal = Array.from(idMap.values());
 
     // Secondary dedup: same customer + same start time (within 5 min)
     // Prefer checked-out entry over non-checked-out when colliding

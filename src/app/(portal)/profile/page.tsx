@@ -40,6 +40,7 @@ const cardStyle: React.CSSProperties = {
 
 export default function ProfilePage() {
   const { data: session } = useSession()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user = session?.user as any
 
   const [name, setName] = useState(user?.name || "")
@@ -61,6 +62,7 @@ export default function ProfilePage() {
     .slice(0, 2)
 
   const roleBadge = user?.role || "STYLIST"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const locationName = (user as any)?.locationName || null
 
   async function handleSaveProfile() {

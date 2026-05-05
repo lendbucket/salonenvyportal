@@ -7,6 +7,7 @@ export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const role = (session.user as any).role as string
   if (role !== "OWNER") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
@@ -19,6 +20,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   // No auth required — anonymous submission
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let body: any
   try { body = await req.json() } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
@@ -66,9 +68,11 @@ export async function PATCH(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const role = (session.user as any).role as string
   if (role !== "OWNER") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let body: any
   try { body = await req.json() } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })

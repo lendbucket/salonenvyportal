@@ -10,6 +10,7 @@ function SettingsInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { isOwner, isManager, isStylist } = useUserRole()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user = session?.user as any
 
   const tabs = [
@@ -28,11 +29,13 @@ function SettingsInner() {
 
   // License state
   const [licenseNumber, setLicenseNumber] = useState("")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [licenseStatus, setLicenseStatus] = useState<any>(null)
   const [licenseLoading, setLicenseLoading] = useState(false)
   const [verifying, setVerifying] = useState(false)
 
   // API Keys state
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [apiKeys, setApiKeys] = useState<any[]>([])
   const [apiKeysLoading, setApiKeysLoading] = useState(false)
   const [showKeyModal, setShowKeyModal] = useState(false)
@@ -217,6 +220,7 @@ function SettingsInner() {
               <div style={{ padding: "40px", textAlign: "center", color: "#606E74", fontSize: "13px" }}>No API keys yet. Generate one to get started.</div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {apiKeys.map((k: any) => (
                   <div key={k.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", backgroundColor: "rgba(26,19,19,0.03)", borderRadius: "8px", border: "1px solid rgba(26,19,19,0.06)" }}>
                     <div style={{ flex: 1 }}>

@@ -81,9 +81,11 @@ export async function getCatalogItems(): Promise<CatalogItem[]> {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     processPage(page.data as unknown as any[])
     while (page.hasNextPage()) {
       page = await page.getNextPage()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       processPage(page.data as unknown as any[])
     }
 

@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     }
 
     const { id: userId, role } = session.user as { id: string; role: string }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const locationId = (session.user as any).locationId as string | undefined
     const period = req.nextUrl.searchParams.get("period") // weekly | monthly
 
@@ -95,6 +96,7 @@ export async function POST(req: NextRequest) {
 
     // MANAGER can only create goals for their own location
     if (role === "MANAGER") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const userLocationId = (session.user as any).locationId
       if (userLocationId && userLocationId !== locationId) {
         return NextResponse.json({ error: "Managers can only create goals for their own location" }, { status: 403 })

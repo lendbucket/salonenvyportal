@@ -9,6 +9,7 @@ export async function GET(request: Request) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
   const { searchParams } = new URL(request.url)
   const year = parseInt(searchParams.get("year") || String(new Date().getFullYear()))
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
   const body = await request.json()
   const { date, purpose, miles, notes } = body as {

@@ -7,7 +7,9 @@ export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const role = (session.user as any).role as string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
 
   // Owners always have access
@@ -42,6 +44,7 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userId = (session.user as any).id as string
   const body = await request.json()
   const { plan } = body as { plan: "monthly" | "annual" }

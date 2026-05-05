@@ -169,7 +169,9 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as UserRole;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (session.user as any).locationId = token.locationId;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (session.user as any).locationName = token.locationName;
       }
       return session;

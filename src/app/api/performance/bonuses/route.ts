@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
     }
 
     const { id: userId, role } = session.user as { id: string; role: string }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const locationId = (session.user as any).locationId as string | undefined
 
     const where: Record<string, unknown> = {}
