@@ -99,7 +99,9 @@
       "Bash(sed -n '5p' \"src/app/\\(portal\\)/issue-reports/page.tsx\")",
       "Bash(sed -n '17p' \"src/app/\\(portal\\)/more/page.tsx\")",
       "Bash(sed -n '5p' \"src/app/\\(portal\\)/orders/page.tsx\")",
-      "Bash(sed -n '5p' \"src/app/\\(portal\\)/service-pricing/page.tsx\")"
+      "Bash(sed -n '5p' \"src/app/\\(portal\\)/service-pricing/page.tsx\")",
+      "Bash(sed -n '695p' \"src/app/\\(portal\\)/retention/page.tsx\")",
+      "Bash(sed -n '452p' \"src/app/\\(portal\\)/reyna-ai/page.tsx\")"
     ]
   }
 }

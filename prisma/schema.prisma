@@ -872,8 +872,43 @@ model Client {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   formulas         ClientFormula[]
+  squareNote          String?
+  addressLine1        String?
+  addressLine2        String?
+  addressCity         String?
+  addressState        String?
+  addressZip          String?
+  addressCountry      String?
+  birthday            DateTime?
+  squareReferenceId   String?
+  emailUnsubscribed   Boolean?
+  squareGroupIds      String[]            @default([])
+  customAttributes    Json?
+  lastSyncedAt        DateTime?
 
+  @@index([lastSyncedAt])
+  @@index([emailUnsubscribed])
   @@map("clients")
+}
+
+model SyncJob {
+  id             String    @id @default(cuid())
+  type           String
+  status         String
+  cursor         String?
+  totalProcessed Int       @default(0)
+  totalEstimate  Int?
+  pagesProcessed Int       @default(0)
+  startedAt      DateTime  @default(now())
+  lastTickAt     DateTime  @default(now())
+  completedAt    DateTime?
+  triggeredBy    String
+  errorMessage   String?
+  errorCount     Int       @default(0)
+
+  @@index([type, status])
+  @@index([startedAt])
+  @@map("sync_jobs")
 }
 
 model ClientFormula {
