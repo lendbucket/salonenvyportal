@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
   const startDate = new Date(start)
   const endDate = new Date(end)
 
+  // Map abbreviated locationId ("CC"/"SA") to Square location ID for order searches
+  const squareLocationId = locationId === "CC" ? CC_LOCATION_ID : locationId === "SA" ? SA_LOCATION_ID : null
+  if (!squareLocationId) return NextResponse.json({ error: "Invalid locationId — must be CC or SA" }, { status: 400 })
+
   const memberIds = Object.entries(TEAM_MEMBERS).filter(([, v]) => v.location === locationId).map(([id]) => id)
   type SD = { name: string; serviceCount: number; serviceSubtotal: number; tips: number }
   const stylistData: Record<string, SD> = {}
@@ -52,14 +56,14 @@ export async function POST(req: NextRequest) {
 
   console.log(`[Payroll] customerToMember: ${Object.keys(customerToMember).length} entries`)
 
-  // STEP 2: Fetch COMPLETED orders closed within period from SA location
+  // STEP 2: Fetch COMPLETED orders closed within period for this location
   let orderCursor: string | undefined
   let totalOrders = 0, matchedOrders = 0
 
   do {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const body: Record<string, any> = {
-      location_ids: [SA_LOCATION_ID],
+      location_ids: [squareLocationId],
       query: { filter: { date_time_filter: { closed_at: { start_at: startDate.toISOString(), end_at: endDate.toISOString() } }, state_filter: { states: ["COMPLETED"] } }, sort: { sort_field: "CLOSED_AT", sort_order: "ASC" } },
       limit: 100,
     }
