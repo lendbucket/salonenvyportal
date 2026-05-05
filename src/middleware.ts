@@ -29,6 +29,8 @@ export const config = {
     "/pos/:path*",
     "/appointments/:path*",
     "/payroll/:path*",
+    "/my-payroll/:path*",
+    "/my-profile/:path*",
     "/suite/:path*",
     "/social/:path*",
   ]

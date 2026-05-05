@@ -66,6 +66,7 @@ const STYLIST_NAV: NavItem[] = [
   { href: "/performance", icon: "trending_up", label: "Performance" },
   { href: "/my-schedule", icon: "calendar_month", label: "My Schedule" },
   { href: "/appointments", icon: "event", label: "My Appts" },
+  { href: "/my-payroll", icon: "payments", label: "My Payroll" },
   { href: "/reviews", icon: "star", label: "My Reviews" },
   { href: "/pos", icon: "point_of_sale", label: "Kasse POS" },
   { href: "/submit-complaint", icon: "report", label: "Report Issue" },
@@ -93,7 +94,7 @@ const STYLIST_BOTTOM: NavItem[] = [
 ]
 
 /* ── Allowed pages per role for stylist redirect ── */
-const STYLIST_ALLOWED = ["/dashboard", "/my-schedule", "/reyna-ai", "/profile", "/preferences", "/submit-complaint", "/conduct", "/pos", "/appointments", "/reviews", "/suite", "/performance", "/permissions"]
+const STYLIST_ALLOWED = ["/dashboard", "/my-schedule", "/reyna-ai", "/profile", "/preferences", "/submit-complaint", "/conduct", "/pos", "/appointments", "/reviews", "/suite", "/performance", "/permissions", "/my-payroll", "/my-profile"]
 
 export default function PortalShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
