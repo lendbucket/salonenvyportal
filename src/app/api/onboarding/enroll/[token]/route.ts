@@ -329,11 +329,22 @@ export async function PATCH(
             updateData.squareCreationError = squareCreationError;
           }
 
-          // Decrypt bank fields for the owner email (they are encrypted at rest)
-          const rawRouting = fullEnrollment.ddRoutingNumber && isEncrypted(fullEnrollment.ddRoutingNumber)
-            ? decryptBankField(fullEnrollment.ddRoutingNumber) : fullEnrollment.ddRoutingNumber;
-          const rawAccount = fullEnrollment.ddAccountNumber && isEncrypted(fullEnrollment.ddAccountNumber)
-            ? decryptBankField(fullEnrollment.ddAccountNumber) : fullEnrollment.ddAccountNumber;
+          // Extract masked bank last-4 for owner email — full plaintext never stored in a variable
+          const bankLast4 = (function () {
+            let routing: string | null = null;
+            let account: string | null = null;
+            if (fullEnrollment.ddRoutingNumber) {
+              const raw = isEncrypted(fullEnrollment.ddRoutingNumber) ? decryptBankField(fullEnrollment.ddRoutingNumber) : fullEnrollment.ddRoutingNumber;
+              routing = raw.length >= 4 ? raw.slice(-4) : raw;
+            }
+            if (fullEnrollment.ddAccountNumber) {
+              const raw = isEncrypted(fullEnrollment.ddAccountNumber) ? decryptBankField(fullEnrollment.ddAccountNumber) : fullEnrollment.ddAccountNumber;
+              account = raw.length >= 4 ? raw.slice(-4) : raw;
+            }
+            return { routing, account };
+          })();
+          const maskedRouting = bankLast4.routing ? `\u2022\u2022\u2022\u2022${bankLast4.routing}` : "N/A";
+          const maskedAccount = bankLast4.account ? `\u2022\u2022\u2022\u2022${bankLast4.account}` : "N/A";
 
           // Generate role-based agreement text
           const agreementText = fullEnrollment.role === "MANAGER"
@@ -400,9 +411,11 @@ ${field("Specialties", fullEnrollment.specialties || "N/A")}
 ${field("Bank Name", fullEnrollment.ddBankName || "N/A")}
 ${field("Account Holder", fullEnrollment.ddNameOnAccount || "N/A")}
 ${field("Account Type", fullEnrollment.ddAccountType ? fullEnrollment.ddAccountType.charAt(0).toUpperCase() + fullEnrollment.ddAccountType.slice(1) : "N/A")}
-${field("Routing Number", rawRouting || "N/A")}
-${field("Account Number", rawAccount || "N/A")}
-</table></div>
+${field("Routing Number", maskedRouting)}
+${field("Account Number", maskedAccount)}
+</table>
+<p style="color:#999;font-size:11px;margin:8px 0 0;">Full bank info is available in the secure portal under Staff &gt; ${fullName} &gt; Direct Deposit.</p>
+</div>
 
 <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px;padding:20px;margin-bottom:20px;">
 <h2 style="color:#333;font-size:16px;margin:0 0 12px;">W-9 INFORMATION</h2>
@@ -449,7 +462,7 @@ Generated: ${signedAt}
               to: "ceo@36west.org",
               subject: `New Contractor Onboarding Complete — ${fullName} — ${fullEnrollment.role} — ${locationName} — ${new Date().toLocaleDateString()}`,
               html: ownerHtml,
-              text: `New Contractor Onboarding Complete\n\nName: ${fullName}\nRole: ${fullEnrollment.role}\nLocation: ${locationName}\nEmail: ${fullEnrollment.email}\nPhone: ${fullEnrollment.phone || "N/A"}\nLicense: ${fullEnrollment.licenseNumber || "N/A"}\nVerification Code: ${code}\nBank: ${fullEnrollment.ddBankName || "N/A"}\nRouting: ${rawRouting || "N/A"}\nAccount: ${rawAccount || "N/A"}\n\nFull agreement and details are in the HTML version of this email.`,
+              text: `New Contractor Onboarding Complete\n\nName: ${fullName}\nRole: ${fullEnrollment.role}\nLocation: ${locationName}\nEmail: ${fullEnrollment.email}\nPhone: ${fullEnrollment.phone || "N/A"}\nLicense: ${fullEnrollment.licenseNumber || "N/A"}\nVerification Code: ${code}\nBank: ${fullEnrollment.ddBankName || "N/A"}\nRouting: ${maskedRouting}\nAccount: ${maskedAccount}\nFull bank info is available in the secure portal under Staff > ${fullName} > Direct Deposit.\n\nFull agreement and details are in the HTML version of this email.`,
             });
 
             // 5. Email welcome to new team member
@@ -488,14 +501,12 @@ Generated: ${signedAt}
           // Mask sensitive data in DB after emailing
           try {
             const ssnLast4 = fullEnrollment.w9Ssn ? fullEnrollment.w9Ssn.slice(-4) : null;
-            const acctLast4 = rawAccount ? rawAccount.slice(-4) : null;
-            const routingLast4 = rawRouting ? rawRouting.slice(-4) : null;
             await prisma.onboardingEnrollment.update({
               where: { id: enrollment.id },
               data: {
                 w9Ssn: ssnLast4 ? `***-**-${ssnLast4}` : null,
-                ddAccountNumber: acctLast4 ? `****${acctLast4}` : null,
-                ddRoutingNumber: routingLast4 ? `*****${routingLast4}` : null,
+                ddAccountNumber: bankLast4.account ? `****${bankLast4.account}` : null,
+                ddRoutingNumber: bankLast4.routing ? `*****${bankLast4.routing}` : null,
               },
             });
           } catch (maskErr) {
