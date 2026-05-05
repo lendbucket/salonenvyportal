@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireStylistContext } from "@/lib/auth/get-stylist-context"
+import { isEncrypted, decryptBankField } from "@/lib/crypto/bank-encryption"
 
 export async function GET() {
   let ctx
@@ -31,9 +32,22 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   })
 
-  if (enrollment?.ddAccountNumber && enrollment.ddAccountNumber.length >= 4) {
-    bankLast4 = enrollment.ddAccountNumber.slice(-4)
-    hasOnFile = true
+  if (enrollment?.ddAccountNumber) {
+    if (isEncrypted(enrollment.ddAccountNumber)) {
+      // Encrypted at rest — decrypt to extract last 4
+      try {
+        const raw = decryptBankField(enrollment.ddAccountNumber)
+        bankLast4 = raw.slice(-4)
+        hasOnFile = true
+      } catch {
+        // Decryption failed — key mismatch or corrupted data
+        hasOnFile = false
+      }
+    } else if (enrollment.ddAccountNumber.length >= 4) {
+      // Legacy plain-text or masked row — take last 4 directly
+      bankLast4 = enrollment.ddAccountNumber.slice(-4)
+      hasOnFile = true
+    }
   }
 
   return NextResponse.json({

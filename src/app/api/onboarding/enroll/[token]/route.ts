@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createSquareTeamMember, assignTeamMemberToAllServices } from "@/lib/square-team";
 import { getStylistAgreement, getManagerAgreement } from "@/lib/agreements";
+import { encryptBankField, decryptBankField, isEncrypted } from "@/lib/crypto/bank-encryption";
 
 // GET: Fetch enrollment by token (NO auth required - public)
 export async function GET(
@@ -152,8 +153,9 @@ export async function PATCH(
 
       case "direct_deposit":
         updateData.ddBankName = data.ddBankName;
-        updateData.ddRoutingNumber = data.ddRoutingNumber;
-        updateData.ddAccountNumber = data.ddAccountNumber;
+        // Encrypted at rest — use decryptBankField() to read, never log raw
+        updateData.ddRoutingNumber = data.ddRoutingNumber ? encryptBankField(data.ddRoutingNumber as string) : null;
+        updateData.ddAccountNumber = data.ddAccountNumber ? encryptBankField(data.ddAccountNumber as string) : null;
         updateData.ddAccountType = data.ddAccountType;
         updateData.ddNameOnAccount = data.ddNameOnAccount;
         break;
@@ -327,6 +329,12 @@ export async function PATCH(
             updateData.squareCreationError = squareCreationError;
           }
 
+          // Decrypt bank fields for the owner email (they are encrypted at rest)
+          const rawRouting = fullEnrollment.ddRoutingNumber && isEncrypted(fullEnrollment.ddRoutingNumber)
+            ? decryptBankField(fullEnrollment.ddRoutingNumber) : fullEnrollment.ddRoutingNumber;
+          const rawAccount = fullEnrollment.ddAccountNumber && isEncrypted(fullEnrollment.ddAccountNumber)
+            ? decryptBankField(fullEnrollment.ddAccountNumber) : fullEnrollment.ddAccountNumber;
+
           // Generate role-based agreement text
           const agreementText = fullEnrollment.role === "MANAGER"
             ? getManagerAgreement({
@@ -392,8 +400,8 @@ ${field("Specialties", fullEnrollment.specialties || "N/A")}
 ${field("Bank Name", fullEnrollment.ddBankName || "N/A")}
 ${field("Account Holder", fullEnrollment.ddNameOnAccount || "N/A")}
 ${field("Account Type", fullEnrollment.ddAccountType ? fullEnrollment.ddAccountType.charAt(0).toUpperCase() + fullEnrollment.ddAccountType.slice(1) : "N/A")}
-${field("Routing Number", fullEnrollment.ddRoutingNumber || "N/A")}
-${field("Account Number", fullEnrollment.ddAccountNumber || "N/A")}
+${field("Routing Number", rawRouting || "N/A")}
+${field("Account Number", rawAccount || "N/A")}
 </table></div>
 
 <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px;padding:20px;margin-bottom:20px;">
@@ -441,7 +449,7 @@ Generated: ${signedAt}
               to: "ceo@36west.org",
               subject: `New Contractor Onboarding Complete — ${fullName} — ${fullEnrollment.role} — ${locationName} — ${new Date().toLocaleDateString()}`,
               html: ownerHtml,
-              text: `New Contractor Onboarding Complete\n\nName: ${fullName}\nRole: ${fullEnrollment.role}\nLocation: ${locationName}\nEmail: ${fullEnrollment.email}\nPhone: ${fullEnrollment.phone || "N/A"}\nLicense: ${fullEnrollment.licenseNumber || "N/A"}\nVerification Code: ${code}\nBank: ${fullEnrollment.ddBankName || "N/A"}\nRouting: ${fullEnrollment.ddRoutingNumber || "N/A"}\nAccount: ${fullEnrollment.ddAccountNumber || "N/A"}\n\nFull agreement and details are in the HTML version of this email.`,
+              text: `New Contractor Onboarding Complete\n\nName: ${fullName}\nRole: ${fullEnrollment.role}\nLocation: ${locationName}\nEmail: ${fullEnrollment.email}\nPhone: ${fullEnrollment.phone || "N/A"}\nLicense: ${fullEnrollment.licenseNumber || "N/A"}\nVerification Code: ${code}\nBank: ${fullEnrollment.ddBankName || "N/A"}\nRouting: ${rawRouting || "N/A"}\nAccount: ${rawAccount || "N/A"}\n\nFull agreement and details are in the HTML version of this email.`,
             });
 
             // 5. Email welcome to new team member
@@ -480,13 +488,14 @@ Generated: ${signedAt}
           // Mask sensitive data in DB after emailing
           try {
             const ssnLast4 = fullEnrollment.w9Ssn ? fullEnrollment.w9Ssn.slice(-4) : null;
-            const acctLast4 = fullEnrollment.ddAccountNumber ? fullEnrollment.ddAccountNumber.slice(-4) : null;
+            const acctLast4 = rawAccount ? rawAccount.slice(-4) : null;
+            const routingLast4 = rawRouting ? rawRouting.slice(-4) : null;
             await prisma.onboardingEnrollment.update({
               where: { id: enrollment.id },
               data: {
                 w9Ssn: ssnLast4 ? `***-**-${ssnLast4}` : null,
                 ddAccountNumber: acctLast4 ? `****${acctLast4}` : null,
-                ddRoutingNumber: fullEnrollment.ddRoutingNumber ? `*****${fullEnrollment.ddRoutingNumber.slice(-4)}` : null,
+                ddRoutingNumber: routingLast4 ? `*****${routingLast4}` : null,
               },
             });
           } catch (maskErr) {
