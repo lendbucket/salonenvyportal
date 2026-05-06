@@ -9,9 +9,10 @@ export async function GET() {
 
   const { prisma } = await import("@/lib/prisma")
 
-  const [clients, orders, appointments] = await Promise.all([
+  const [clients, orders, payments, appointments] = await Promise.all([
     prisma.syncJob.findFirst({ where: { type: "clients" }, orderBy: { startedAt: "desc" } }),
     prisma.syncJob.findFirst({ where: { type: "orders" }, orderBy: { startedAt: "desc" } }),
+    prisma.syncJob.findFirst({ where: { type: "payments" }, orderBy: { startedAt: "desc" } }),
     prisma.syncJob.findFirst({ where: { type: "appointments" }, orderBy: { startedAt: "desc" } }),
   ])
 
@@ -37,6 +38,7 @@ export async function GET() {
   return NextResponse.json({
     clients: format(clients),
     orders: format(orders),
+    payments: format(payments),
     appointments: format(appointments),
     metrics: { lastRun: lastComputed?.metricsLastComputedAt, processed: metricsCount },
   })

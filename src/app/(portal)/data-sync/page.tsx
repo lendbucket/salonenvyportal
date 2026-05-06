@@ -16,12 +16,14 @@ interface AllStatus {
   clients: SyncStatus | null
   orders: SyncStatus | null
   appointments: SyncStatus | null
+  payments: SyncStatus | null
   metrics: { lastRun: string | null; processed: number } | null
 }
 
 const SYNC_TYPES = [
   { key: "clients", label: "Clients", desc: "Square customer profiles", endpoint: "/api/clients/sync" },
   { key: "orders", label: "Orders", desc: "Square orders + line items", endpoint: "/api/orders/sync" },
+  { key: "payments", label: "Payments", desc: "Square payments — card, cash, external", endpoint: "/api/payments/sync" },
   { key: "appointments", label: "Appointments", desc: "Square bookings", endpoint: "/api/appointments/sync" },
   { key: "metrics", label: "Client Metrics", desc: "Computed aggregates", endpoint: "/api/cron/compute-metrics" },
 ] as const
@@ -50,7 +52,7 @@ export default function DataSyncPage() {
       if (res.ok) {
         const data = await res.json()
         setAllStatus(data)
-        const anyRunning = ["clients", "orders", "appointments"].some(
+        const anyRunning = ["clients", "orders", "payments", "appointments"].some(
           k => data[k]?.status === "running"
         )
         setPolling(anyRunning)

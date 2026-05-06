@@ -8,10 +8,11 @@ The data sync system pulls data from Square APIs into local Postgres via Prisma,
 
 Run these in sequence for a fresh environment:
 
-1. **Clients sync** — must run first since orders and appointments reference client records
+1. **Clients sync** — must run first since orders, payments, and appointments reference client records
 2. **Orders sync** — pulls all orders with line items for the past 24 months
-3. **Appointments sync** — pulls all bookings for the past 24 months
-4. **Client metrics** — computes aggregates from orders + appointments data
+3. **Payments sync** — pulls all payments (card, cash, external) for the past 24 months
+4. **Appointments sync** — pulls all bookings for the past 24 months
+5. **Client metrics** — computes aggregates from payments + orders + appointments data
 
 ### Triggering Initial Sync
 
@@ -27,6 +28,9 @@ curl -X POST https://your-domain.com/api/clients/sync -H "Cookie: ..."
 
 # Orders
 curl -X POST https://your-domain.com/api/orders/sync -H "Cookie: ..."
+
+# Payments
+curl -X POST https://your-domain.com/api/payments/sync -H "Cookie: ..."
 
 # Appointments
 curl -X POST https://your-domain.com/api/appointments/sync -H "Cookie: ..."
@@ -58,6 +62,7 @@ Expected response includes:
 |-----|----------|---------|
 | clients-sync | Every minute | Processes running client sync jobs |
 | orders-sync | Every minute | Processes running order sync jobs |
+| payments-sync | Every minute | Processes running payment sync jobs |
 | appointments-sync | Every minute | Processes running appointment sync jobs |
 | compute-metrics | Every 6 hours | Recomputes client metrics (200 clients/tick) |
 
