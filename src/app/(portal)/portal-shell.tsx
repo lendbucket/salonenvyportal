@@ -35,6 +35,7 @@ const OWNER_NAV: NavItem[] = [
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
   { href: "/permissions", icon: "admin_panel_settings", label: "Permissions" },
   { href: "/data-sync", icon: "sync", label: "Data Sync" },
+  { href: "/data-quality", icon: "bar_chart", label: "Data Quality" },
   { href: "/settings", icon: "settings", label: "Settings" },
   { href: "/suite", icon: "", label: "Envy Suite®" },
 ]
