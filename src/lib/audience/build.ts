@@ -8,9 +8,11 @@ interface ClientRow {
   email: string | null
   totalVisits: number
   totalSpend: number
+  lifetimeSpend: number
   lastVisitAt: Date | null
   locationId: string | null
   birthday: Date | null
+  favoriteServiceCategory: string | null
 }
 
 const PHONE_REGEX = /^\+?1?\d{10,11}$/
@@ -35,7 +37,8 @@ export async function buildAudience(filter: AudienceFilter, channel: "SMS" | "EM
     where: baseWhere,
     select: {
       id: true, firstName: true, lastName: true, phone: true, email: true,
-      totalVisits: true, totalSpend: true, lastVisitAt: true, locationId: true, birthday: true,
+      totalVisits: true, totalSpend: true, lifetimeSpend: true, lastVisitAt: true,
+      locationId: true, birthday: true, favoriteServiceCategory: true,
     },
   })
 
@@ -72,8 +75,9 @@ function applyFilter(clients: ClientRow[], filter: AudienceFilter): ClientRow[] 
 
     case "BY_TOTAL_SPEND":
       return clients.filter(c => {
-        if (filter.minSpend !== undefined && c.totalSpend < filter.minSpend) return false
-        if (filter.maxSpend !== undefined && c.totalSpend > filter.maxSpend) return false
+        const spend = c.lifetimeSpend || c.totalSpend
+        if (filter.minSpend !== undefined && spend < filter.minSpend) return false
+        if (filter.maxSpend !== undefined && spend > filter.maxSpend) return false
         return true
       })
 
@@ -90,8 +94,9 @@ function applyFilter(clients: ClientRow[], filter: AudienceFilter): ClientRow[] 
       return clients
 
     case "BY_SERVICE":
-      // Requires order line item data — for V1, return all clients
-      return clients
+      return clients.filter(c =>
+        c.favoriteServiceCategory && filter.serviceCategoryIds.includes(c.favoriteServiceCategory)
+      )
 
     case "AND":
       return filter.filters.reduce((acc, f) => applyFilter(acc, f), clients)
