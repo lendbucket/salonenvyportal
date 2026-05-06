@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client"
 
 const BATCH_SIZE = 100
 const UPSERT_CHUNK = 25
-const SOFT_DEADLINE_MS = 50_000
+const SOFT_DEADLINE_MS = 35_000
 const MAX_ERRORS = 5
 const SQ_BASE = "https://connect.squareup.com/v2"
 
