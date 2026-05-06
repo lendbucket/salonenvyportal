@@ -34,5 +34,6 @@ export const config = {
     "/suite/:path*",
     "/social/:path*",
     "/marketing/:path*",
+    "/data-sync/:path*",
   ]
 }
