@@ -76,61 +76,68 @@ export async function processOrdersSyncBatch(jobId: string): Promise<{ done: boo
           const orders: any[] = data.orders || []
           const nextCursor: string | null = data.cursor || null
 
-          // Deadline check after fetch — if tight, exit (cursor unchanged, re-fetch next tick)
+          // Deadline check after fetch
           if (pastDeadline(startTime)) break
 
-          // Upsert orders in chunks of 25
+          // PRE-FETCH: batch lookup clients (1 query instead of N)
+          const customerIds = [...new Set(orders.map((o: { customer_id?: string }) => o.customer_id).filter(Boolean))] as string[]
+          const clientsByCustomerId = new Map<string, string>()
+          if (customerIds.length > 0) {
+            const found = await prisma.client.findMany({ where: { squareCustomerId: { in: customerIds } }, select: { id: true, squareCustomerId: true } })
+            for (const c of found) if (c.squareCustomerId) clientsByCustomerId.set(c.squareCustomerId, c.id)
+          }
+
+          // BUILD OPS: in-memory map lookups
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const ops: any[] = []
           for (const o of orders) {
-            let clientId: string | null = null
-            if (o.customer_id) {
-              const c = await prisma.client.findUnique({ where: { squareCustomerId: o.customer_id }, select: { id: true } })
-              clientId = c?.id ?? null
-            }
+            const clientId = o.customer_id ? clientsByCustomerId.get(o.customer_id) ?? null : null
             ops.push(prisma.squareOrder.upsert({
               where: { squareOrderId: o.id },
               create: { squareOrderId: o.id, squareLocationId: o.location_id, squareCustomerId: o.customer_id || null, clientId, state: o.state, source: o.source?.name || null, totalAmount: cents2dollars(o.total_money), totalTaxAmount: cents2dollars(o.total_tax_money), totalTipAmount: cents2dollars(o.total_tip_money), totalDiscountAmount: cents2dollars(o.total_discount_money), totalServiceCharge: cents2dollars(o.total_service_charge_money), netAmountDue: cents2dollars(o.net_amount_due_money), closedAt: o.closed_at ? new Date(o.closed_at) : null, createdAtSquare: new Date(o.created_at), updatedAtSquare: new Date(o.updated_at) },
               update: { clientId, state: o.state, totalAmount: cents2dollars(o.total_money), totalTaxAmount: cents2dollars(o.total_tax_money), totalTipAmount: cents2dollars(o.total_tip_money), totalDiscountAmount: cents2dollars(o.total_discount_money), closedAt: o.closed_at ? new Date(o.closed_at) : null, updatedAtSquare: new Date(o.updated_at), syncedAt: new Date() },
             }))
           }
+
+          // SAVE orders: chunked, track actual count
+          let savedCount = 0
           for (let i = 0; i < ops.length; i += 25) {
-            if (pastDeadline(startTime)) break
+            if (pastDeadline(startTime)) {
+              await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation + savedCount }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
+              return { done: false, processed: processedThisInvocation + savedCount, cursor: cursorState }
+            }
             await prisma.$transaction(ops.slice(i, i + 25))
+            savedCount += Math.min(25, ops.length - i)
           }
 
-          // Process line items — single delete+createMany transaction per order (fast + atomic)
+          // PRE-FETCH order IDs for line items (batch lookup instead of per-order findUnique)
+          const sqOrderIds = orders.filter((o: { line_items?: unknown[] }) => o.line_items?.length).map((o: { id: string }) => o.id)
+          const orderIdMap = new Map<string, string>()
+          if (sqOrderIds.length > 0) {
+            const found = await prisma.squareOrder.findMany({ where: { squareOrderId: { in: sqOrderIds } }, select: { id: true, squareOrderId: true } })
+            for (const o of found) orderIdMap.set(o.squareOrderId, o.id)
+          }
+
+          // Process line items per order
           for (const o of orders) {
             if (pastDeadline(startTime)) break
             if (!o.line_items?.length) continue
-            const dbOrder = await prisma.squareOrder.findUnique({ where: { squareOrderId: o.id }, select: { id: true } })
-            if (!dbOrder) continue
+            const dbOrderId = orderIdMap.get(o.id)
+            if (!dbOrderId) continue
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const liData = o.line_items.map((li: any) => ({
-              orderId: dbOrder.id,
-              squareCatalogObjectId: li.catalog_object_id || null,
-              squareCategoryId: li.category_id || null,
-              name: li.name || "Unnamed",
-              variationName: li.variation_name || null,
-              quantity: parseInt(li.quantity || "1", 10),
-              basePriceAmount: cents2dollars(li.base_price_money),
-              totalPriceAmount: cents2dollars(li.total_money),
-              totalDiscountAmount: cents2dollars(li.total_discount_money),
-              totalTaxAmount: cents2dollars(li.total_tax_money),
-              serviceCategory: categorizeService(li.name || ""),
-              squareTeamMemberId: null,
+              orderId: dbOrderId, squareCatalogObjectId: li.catalog_object_id || null, squareCategoryId: li.category_id || null, name: li.name || "Unnamed", variationName: li.variation_name || null, quantity: parseInt(li.quantity || "1", 10), basePriceAmount: cents2dollars(li.base_price_money), totalPriceAmount: cents2dollars(li.total_money), totalDiscountAmount: cents2dollars(li.total_discount_money), totalTaxAmount: cents2dollars(li.total_tax_money), serviceCategory: categorizeService(li.name || ""), squareTeamMemberId: null,
             }))
             await prisma.$transaction([
-              prisma.orderLineItem.deleteMany({ where: { orderId: dbOrder.id } }),
+              prisma.orderLineItem.deleteMany({ where: { orderId: dbOrderId } }),
               prisma.orderLineItem.createMany({ data: liData }),
             ])
           }
 
-          processedThisInvocation += orders.length
+          processedThisInvocation += savedCount
           pagesThisInvocation += 1
           cursorState.locationCursors[locationId] = nextCursor ? nextCursor : "DONE"
 
-          // Checkpoint after EACH successful Square page
           await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
           processedThisInvocation = 0
           pagesThisInvocation = 0

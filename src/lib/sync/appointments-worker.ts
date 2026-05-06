@@ -74,71 +74,53 @@ export async function processAppointmentsSyncBatch(jobId: string): Promise<{ don
           // Deadline check after fetch
           if (pastDeadline(startTime)) break
 
-          // Upsert bookings in chunks of 25
+          // PRE-FETCH: batch lookup clients + staff (2 queries instead of 2N)
+          const customerIds = [...new Set(bookings.map((b: { customer_id?: string }) => b.customer_id).filter(Boolean))] as string[]
+          const teamMemberIds = [...new Set(bookings.map((b: { appointment_segments?: { team_member_id?: string }[] }) => b.appointment_segments?.[0]?.team_member_id).filter(Boolean))] as string[]
+          const clientsByCustomerId = new Map<string, string>()
+          if (customerIds.length > 0) {
+            const found = await prisma.client.findMany({ where: { squareCustomerId: { in: customerIds } }, select: { id: true, squareCustomerId: true } })
+            for (const c of found) if (c.squareCustomerId) clientsByCustomerId.set(c.squareCustomerId, c.id)
+          }
+          const staffByTmId = new Map<string, string>()
+          if (teamMemberIds.length > 0) {
+            const found = await prisma.staffMember.findMany({ where: { squareTeamMemberId: { in: teamMemberIds } }, select: { id: true, squareTeamMemberId: true } })
+            for (const s of found) if (s.squareTeamMemberId) staffByTmId.set(s.squareTeamMemberId, s.id)
+          }
+
+          // BUILD OPS: in-memory map lookups
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const ops: any[] = []
           for (const b of bookings) {
-            let clientId: string | null = null
-            if (b.customer_id) {
-              const c = await prisma.client.findUnique({ where: { squareCustomerId: b.customer_id }, select: { id: true } })
-              clientId = c?.id ?? null
-            }
-
+            const clientId = b.customer_id ? clientsByCustomerId.get(b.customer_id) ?? null : null
             const segment = b.appointment_segments?.[0]
             const squareTeamMemberId = segment?.team_member_id || null
             const durationMinutes = segment?.duration_minutes || null
             const serviceVariationIds = b.appointment_segments?.map((s: { service_variation_id?: string }) => s.service_variation_id).filter(Boolean) || []
-
-            let staffMemberId: string | null = null
-            if (squareTeamMemberId) {
-              const staff = await prisma.staffMember.findFirst({ where: { squareTeamMemberId }, select: { id: true } })
-              staffMemberId = staff?.id ?? null
-            }
+            const staffMemberId = squareTeamMemberId ? staffByTmId.get(squareTeamMemberId) ?? null : null
 
             ops.push(prisma.squareAppointment.upsert({
               where: { squareBookingId: b.id },
-              create: {
-                squareBookingId: b.id,
-                squareLocationId: b.location_id || locationId,
-                squareCustomerId: b.customer_id || null,
-                clientId,
-                squareTeamMemberId,
-                staffMemberId,
-                status: b.status,
-                startAt: new Date(b.start_at),
-                durationMinutes,
-                serviceVariationIds: serviceVariationIds.length > 0 ? serviceVariationIds : undefined,
-                customerNote: b.customer_note || null,
-                sellerNote: b.seller_note || null,
-                source: b.source || null,
-                createdAtSquare: new Date(b.created_at),
-                updatedAtSquare: new Date(b.updated_at),
-              },
-              update: {
-                clientId,
-                squareTeamMemberId,
-                staffMemberId,
-                status: b.status,
-                startAt: new Date(b.start_at),
-                durationMinutes,
-                serviceVariationIds: serviceVariationIds.length > 0 ? serviceVariationIds : undefined,
-                customerNote: b.customer_note || null,
-                sellerNote: b.seller_note || null,
-                updatedAtSquare: new Date(b.updated_at),
-                syncedAt: new Date(),
-              },
+              create: { squareBookingId: b.id, squareLocationId: b.location_id || locationId, squareCustomerId: b.customer_id || null, clientId, squareTeamMemberId, staffMemberId, status: b.status, startAt: new Date(b.start_at), durationMinutes, serviceVariationIds: serviceVariationIds.length > 0 ? serviceVariationIds : undefined, customerNote: b.customer_note || null, sellerNote: b.seller_note || null, source: b.source || null, createdAtSquare: new Date(b.created_at), updatedAtSquare: new Date(b.updated_at) },
+              update: { clientId, squareTeamMemberId, staffMemberId, status: b.status, startAt: new Date(b.start_at), durationMinutes, serviceVariationIds: serviceVariationIds.length > 0 ? serviceVariationIds : undefined, customerNote: b.customer_note || null, sellerNote: b.seller_note || null, updatedAtSquare: new Date(b.updated_at), syncedAt: new Date() },
             }))
           }
+
+          // SAVE: chunked, track actual count
+          let savedCount = 0
           for (let i = 0; i < ops.length; i += 25) {
-            if (pastDeadline(startTime)) break
+            if (pastDeadline(startTime)) {
+              await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation + savedCount }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
+              return { done: false, processed: processedThisInvocation + savedCount, cursor: cursorState }
+            }
             await prisma.$transaction(ops.slice(i, i + 25))
+            savedCount += Math.min(25, ops.length - i)
           }
 
-          processedThisInvocation += bookings.length
+          processedThisInvocation += savedCount
           pagesThisInvocation += 1
           cursorState.locationCursors[locationId] = nextCursor ? nextCursor : "DONE"
 
-          // Checkpoint after EACH successful Square page
           await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
           processedThisInvocation = 0
           pagesThisInvocation = 0

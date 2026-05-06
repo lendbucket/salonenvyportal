@@ -78,75 +78,51 @@ export async function processPaymentsSyncBatch(jobId: string): Promise<{ done: b
           // Deadline check after fetch
           if (pastDeadline(startTime)) break
 
-          // Upsert payments in chunks of 25
+          // PRE-FETCH: batch lookup clients + staff (2 queries total instead of 2N)
+          const customerIds = [...new Set(payments.map((p: { customer_id?: string }) => p.customer_id).filter(Boolean))] as string[]
+          const empIds = [...new Set(payments.map((p: { employee_id?: string; team_member_id?: string }) => p.employee_id || p.team_member_id).filter(Boolean))] as string[]
+          const clientsByCustomerId = new Map<string, string>()
+          if (customerIds.length > 0) {
+            const found = await prisma.client.findMany({ where: { squareCustomerId: { in: customerIds } }, select: { id: true, squareCustomerId: true } })
+            for (const c of found) if (c.squareCustomerId) clientsByCustomerId.set(c.squareCustomerId, c.id)
+          }
+          const staffByEmpId = new Map<string, string>()
+          if (empIds.length > 0) {
+            const found = await prisma.staffMember.findMany({ where: { squareTeamMemberId: { in: empIds } }, select: { id: true, squareTeamMemberId: true } })
+            for (const s of found) if (s.squareTeamMemberId) staffByEmpId.set(s.squareTeamMemberId, s.id)
+          }
+
+          // BUILD OPS: pure in-memory map lookups, zero DB calls
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const ops: any[] = []
           for (const p of payments) {
-            if (pastDeadline(startTime)) break
-
-            // Lookup clientId from squareCustomerId
-            let clientId: string | null = null
-            if (p.customer_id) {
-              const c = await prisma.client.findUnique({ where: { squareCustomerId: p.customer_id }, select: { id: true } })
-              clientId = c?.id ?? null
-            }
-
-            // Lookup staffMemberId from employee_id or team_member_id
-            let staffMemberId: string | null = null
+            const clientId = p.customer_id ? clientsByCustomerId.get(p.customer_id) ?? null : null
             const empId = p.employee_id || p.team_member_id || null
-            if (empId) {
-              const sm = await prisma.staffMember.findUnique({ where: { squareTeamMemberId: empId }, select: { id: true } })
-              staffMemberId = sm?.id ?? null
-            }
-
+            const staffMemberId = empId ? staffByEmpId.get(empId) ?? null : null
             ops.push(prisma.squarePayment.upsert({
               where: { squarePaymentId: p.id },
-              create: {
-                squarePaymentId: p.id,
-                squareLocationId: p.location_id,
-                squareCustomerId: p.customer_id || null,
-                clientId,
-                squareOrderId: p.order_id || null,
-                amount: cents2dollars(p.amount_money),
-                tipAmount: cents2dollars(p.tip_money),
-                taxAmount: cents2dollars(p.tax_money),
-                totalAmount: cents2dollars(p.total_money),
-                refundedAmount: cents2dollars(p.refunded_money),
-                sourceType: p.source_type || "UNKNOWN",
-                cardBrand: p.card_details?.card?.card_brand || null,
-                cardLast4: p.card_details?.card?.last_4 || null,
-                cardEntryMethod: p.card_details?.entry_method || null,
-                status: p.status,
-                receiptNumber: p.receipt_number || null,
-                receiptUrl: p.receipt_url || null,
-                employeeId: empId,
-                staffMemberId,
-                createdAtSquare: new Date(p.created_at),
-                updatedAtSquare: new Date(p.updated_at),
-              },
-              update: {
-                clientId,
-                squareOrderId: p.order_id || null,
-                totalAmount: cents2dollars(p.total_money),
-                tipAmount: cents2dollars(p.tip_money),
-                refundedAmount: cents2dollars(p.refunded_money),
-                status: p.status,
-                staffMemberId,
-                updatedAtSquare: new Date(p.updated_at),
-                syncedAt: new Date(),
-              },
+              create: { squarePaymentId: p.id, squareLocationId: p.location_id, squareCustomerId: p.customer_id || null, clientId, squareOrderId: p.order_id || null, amount: cents2dollars(p.amount_money), tipAmount: cents2dollars(p.tip_money), taxAmount: cents2dollars(p.tax_money), totalAmount: cents2dollars(p.total_money), refundedAmount: cents2dollars(p.refunded_money), sourceType: p.source_type || "UNKNOWN", cardBrand: p.card_details?.card?.card_brand || null, cardLast4: p.card_details?.card?.last_4 || null, cardEntryMethod: p.card_details?.entry_method || null, status: p.status, receiptNumber: p.receipt_number || null, receiptUrl: p.receipt_url || null, employeeId: empId, staffMemberId, createdAtSquare: new Date(p.created_at), updatedAtSquare: new Date(p.updated_at) },
+              update: { clientId, squareOrderId: p.order_id || null, totalAmount: cents2dollars(p.total_money), tipAmount: cents2dollars(p.tip_money), refundedAmount: cents2dollars(p.refunded_money), status: p.status, staffMemberId, updatedAtSquare: new Date(p.updated_at), syncedAt: new Date() },
             }))
           }
+
+          // SAVE: chunked transactions, track actual saved count
+          let savedCount = 0
           for (let i = 0; i < ops.length; i += 25) {
-            if (pastDeadline(startTime)) break
+            if (pastDeadline(startTime)) {
+              // Partial page — do NOT advance cursor, re-fetch same page next tick
+              await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation + savedCount }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
+              return { done: false, processed: processedThisInvocation + savedCount, cursor: cursorState }
+            }
             await prisma.$transaction(ops.slice(i, i + 25))
+            savedCount += Math.min(25, ops.length - i)
           }
 
-          processedThisInvocation += payments.length
+          // Full page saved — advance cursor
+          processedThisInvocation += savedCount
           pagesThisInvocation += 1
           cursorState.locationCursors[locationId] = nextCursor ? nextCursor : "DONE"
 
-          // Checkpoint after EACH successful Square page
           await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
           processedThisInvocation = 0
           pagesThisInvocation = 0
