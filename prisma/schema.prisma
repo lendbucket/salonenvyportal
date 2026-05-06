@@ -871,7 +871,15 @@ model Client {
   stripeCustomerId String?
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  formulas         ClientFormula[]
+  formulas              ClientFormula[]
+  optInRecords          OptInRecord[]
+  messageRecipients     MessageRecipient[]
+  smsMarketingConsent   Boolean   @default(true)
+  smsConsentTimestamp   DateTime?
+  smsConsentMethod      String?
+  smsConsentSource      String?
+  smsOptedOutAt         DateTime?
+  smsLastEngagedAt      DateTime?
   squareNote          String?
   addressLine1        String?
   addressLine2        String?
@@ -888,6 +896,8 @@ model Client {
 
   @@index([lastSyncedAt])
   @@index([emailUnsubscribed])
+  @@index([smsMarketingConsent])
+  @@index([smsOptedOutAt])
   @@map("clients")
 }
 
@@ -909,6 +919,132 @@ model SyncJob {
   @@index([type, status])
   @@index([startedAt])
   @@map("sync_jobs")
+}
+
+// ═══════════════════════════════════════
+// SMS Marketing System
+// ═══════════════════════════════════════
+
+model OptInRecord {
+  id              String   @id @default(cuid())
+  clientId        String
+  channel         String
+  action          String
+  method          String
+  source          String?
+  ipAddress       String?
+  userAgent       String?
+  consentLanguage String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  client          Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId, channel, createdAt])
+  @@index([action])
+  @@map("opt_in_records")
+}
+
+model MarketingMessage {
+  id              String    @id @default(cuid())
+  channel         String
+  category        String?
+  status          String
+  subject         String?
+  body            String    @db.Text
+  htmlBody        String?   @db.Text
+  mmsImageUrl     String?
+  audienceFilter  Json
+  recipientCount  Int       @default(0)
+  estimatedCost   Float     @default(0)
+  actualCost      Float     @default(0)
+  scheduledFor    DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdBy       String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  recipients      MessageRecipient[]
+
+  @@index([status])
+  @@index([channel, status])
+  @@index([category])
+  @@index([scheduledFor])
+  @@map("marketing_messages")
+}
+
+model MessageRecipient {
+  id               String    @id @default(cuid())
+  messageId        String
+  clientId         String
+  channel          String
+  destination      String
+  personalizedBody String    @db.Text
+  segmentCount     Int       @default(1)
+  status           String
+  twilioSid        String?
+  sentAt           DateTime?
+  deliveredAt      DateTime?
+  failedAt         DateTime?
+  errorCode        String?
+  errorMessage     String?
+  cost             Float     @default(0)
+  createdAt        DateTime  @default(now())
+  message          MarketingMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  events           MessageEvent[]
+  clicks           LinkClick[]
+
+  @@unique([messageId, clientId])
+  @@index([messageId, status])
+  @@index([clientId])
+  @@index([twilioSid])
+  @@index([status])
+  @@map("message_recipients")
+}
+
+model MessageEvent {
+  id          String   @id @default(cuid())
+  recipientId String
+  type        String
+  payload     Json?
+  createdAt   DateTime @default(now())
+  recipient   MessageRecipient @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([recipientId, createdAt])
+  @@index([type])
+  @@map("message_events")
+}
+
+model ShortLink {
+  id             String    @id @default(cuid())
+  code           String    @unique
+  destinationUrl String    @db.Text
+  campaignId     String?
+  recipientId    String?
+  createdAt      DateTime  @default(now())
+  expiresAt      DateTime?
+  clicks         LinkClick[]
+
+  @@index([code])
+  @@index([campaignId])
+  @@index([recipientId])
+  @@map("short_links")
+}
+
+model LinkClick {
+  id          String    @id @default(cuid())
+  shortLinkId String
+  recipientId String?
+  clickedAt   DateTime  @default(now())
+  ipAddress   String?
+  userAgent   String?
+  referer     String?
+  shortLink   ShortLink @relation(fields: [shortLinkId], references: [id], onDelete: Cascade)
+  recipient   MessageRecipient? @relation(fields: [recipientId], references: [id], onDelete: SetNull)
+
+  @@index([shortLinkId, clickedAt])
+  @@index([recipientId])
+  @@map("link_clicks")
 }
 
 model ClientFormula {
