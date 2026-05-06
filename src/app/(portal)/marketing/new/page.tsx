@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Send, Users, MessageSquare, Eye, Loader2, AlertTriangle, X, MapPin, Calendar, TrendingUp, DollarSign, Cake, UserPlus, Smartphone } from "lucide-react"
+import { Send, Users, MessageSquare, Eye, Loader2, AlertTriangle, X, MapPin, Calendar, TrendingUp, DollarSign, Cake, UserPlus, Smartphone, CreditCard, Receipt } from "lucide-react"
 import { segmentCount } from "@/lib/sms/personalize"
 import ClientSearchPicker from "@/components/marketing/ClientSearchPicker"
 
@@ -26,6 +26,8 @@ const AUDIENCE_TYPES = [
   { value: "BY_VISIT_COUNT", label: "By visit count", desc: "Clients with X-Y total visits", icon: <TrendingUp size={16} strokeWidth={1.5} /> },
   { value: "BY_TOTAL_SPEND", label: "By total spend", desc: "Clients who spent $X-$Y lifetime", icon: <DollarSign size={16} strokeWidth={1.5} /> },
   { value: "BY_BIRTHDAY_MONTH", label: "Birthday this month", desc: "Celebrate your clients", icon: <Cake size={16} strokeWidth={1.5} /> },
+  { value: "BY_PAYMENT_METHOD", label: "By payment method", desc: "Card only, cash only, or mixed", icon: <CreditCard size={16} strokeWidth={1.5} /> },
+  { value: "BY_AVG_TICKET", label: "By average ticket", desc: "Clients with $X-$Y avg spend", icon: <Receipt size={16} strokeWidth={1.5} /> },
   { value: "MANUAL", label: "Manual selection", desc: "Pick clients individually", icon: <UserPlus size={16} strokeWidth={1.5} /> },
 ]
 
@@ -44,6 +46,9 @@ export default function NewCampaignPage() {
   const [minSpend, setMinSpend] = useState<number | undefined>(undefined)
   const [maxSpend, setMaxSpend] = useState<number | undefined>(undefined)
   const [birthdayMonth, setBirthdayMonth] = useState(new Date().getMonth() + 1)
+  const [paymentMethods, setPaymentMethods] = useState<string[]>(["CARD_ONLY", "CASH_ONLY", "MIXED"])
+  const [minAvgTicket, setMinAvgTicket] = useState<number | undefined>(undefined)
+  const [maxAvgTicket, setMaxAvgTicket] = useState<number | undefined>(undefined)
   const [manualClients, setManualClients] = useState<PickedClient[]>([])
   const [preview, setPreview] = useState<PreviewData | null>(null)
   const [previewLoading, setPreviewLoading] = useState(false)
@@ -66,6 +71,8 @@ export default function NewCampaignPage() {
       case "BY_VISIT_COUNT": return { type: "BY_VISIT_COUNT", minVisits, maxVisits }
       case "BY_TOTAL_SPEND": return { type: "BY_TOTAL_SPEND", minSpend, maxSpend }
       case "BY_BIRTHDAY_MONTH": return { type: "BY_BIRTHDAY_MONTH", month: birthdayMonth }
+      case "BY_PAYMENT_METHOD": return { type: "BY_PAYMENT_METHOD", methods: paymentMethods }
+      case "BY_AVG_TICKET": return { type: "BY_AVG_TICKET", minAvg: minAvgTicket, maxAvg: maxAvgTicket }
       case "MANUAL": return { type: "MANUAL", clientIds: manualClients.map(c => c.id) }
       default: return { type: "ALL_CLIENTS" }
     }
@@ -81,7 +88,7 @@ export default function NewCampaignPage() {
     } catch { setError("Preview failed") }
     setPreviewLoading(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audienceType, locationIds, daysParam, daysOp, minVisits, maxVisits, minSpend, maxSpend, birthdayMonth, manualClients, fullBody])
+  }, [audienceType, locationIds, daysParam, daysOp, minVisits, maxVisits, minSpend, maxSpend, birthdayMonth, paymentMethods, minAvgTicket, maxAvgTicket, manualClients, fullBody])
 
   function insertVar(v: string) {
     const ta = bodyRef.current
@@ -161,6 +168,8 @@ export default function NewCampaignPage() {
                   {selected && t.value === "BY_VISIT_COUNT" && <div style={{ padding: "8px 12px 8px 44px", display: "flex", gap: 6 }}><div><label style={{ ...lbl, marginBottom: 2 }}>Min</label><input type="number" value={minVisits ?? ""} onChange={e => setMinVisits(e.target.value ? Number(e.target.value) : undefined)} style={{ ...inp, padding: "6px 8px" }} /></div><div><label style={{ ...lbl, marginBottom: 2 }}>Max</label><input type="number" value={maxVisits ?? ""} onChange={e => setMaxVisits(e.target.value ? Number(e.target.value) : undefined)} style={{ ...inp, padding: "6px 8px" }} /></div></div>}
                   {selected && t.value === "BY_TOTAL_SPEND" && <div style={{ padding: "8px 12px 8px 44px", display: "flex", gap: 6 }}><div><label style={{ ...lbl, marginBottom: 2 }}>Min $</label><input type="number" value={minSpend ?? ""} onChange={e => setMinSpend(e.target.value ? Number(e.target.value) : undefined)} style={{ ...inp, padding: "6px 8px" }} /></div><div><label style={{ ...lbl, marginBottom: 2 }}>Max $</label><input type="number" value={maxSpend ?? ""} onChange={e => setMaxSpend(e.target.value ? Number(e.target.value) : undefined)} style={{ ...inp, padding: "6px 8px" }} /></div></div>}
                   {selected && t.value === "BY_BIRTHDAY_MONTH" && <div style={{ padding: "8px 12px 8px 44px" }}><select value={birthdayMonth} onChange={e => setBirthdayMonth(Number(e.target.value))} style={{ ...inp, padding: "6px 8px" }}>{Array.from({ length: 12 }, (_, i) => <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString("en-US", { month: "long" })}</option>)}</select></div>}
+                  {selected && t.value === "BY_PAYMENT_METHOD" && <div style={{ padding: "8px 12px 8px 44px" }}>{["CARD_ONLY", "CASH_ONLY", "MIXED"].map(m => <label key={m} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#1A1313", marginBottom: 4, cursor: "pointer" }}><input type="checkbox" checked={paymentMethods.includes(m)} onChange={e => setPaymentMethods(e.target.checked ? [...paymentMethods, m] : paymentMethods.filter(x => x !== m))} />{m === "CARD_ONLY" ? "Card only" : m === "CASH_ONLY" ? "Cash only" : "Mixed (card + cash)"}</label>)}</div>}
+                  {selected && t.value === "BY_AVG_TICKET" && <div style={{ padding: "8px 12px 8px 44px", display: "flex", gap: 6 }}><div><label style={{ ...lbl, marginBottom: 2 }}>Min $</label><input type="number" value={minAvgTicket ?? ""} onChange={e => setMinAvgTicket(e.target.value ? Number(e.target.value) : undefined)} style={{ ...inp, padding: "6px 8px" }} /></div><div><label style={{ ...lbl, marginBottom: 2 }}>Max $</label><input type="number" value={maxAvgTicket ?? ""} onChange={e => setMaxAvgTicket(e.target.value ? Number(e.target.value) : undefined)} style={{ ...inp, padding: "6px 8px" }} /></div></div>}
                   {selected && t.value === "MANUAL" && <div style={{ padding: "8px 12px 8px 44px" }}><ClientSearchPicker selectedClients={manualClients} onChange={setManualClients} /></div>}
                 </div>
               )

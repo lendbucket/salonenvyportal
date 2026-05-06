@@ -9,6 +9,7 @@ interface ClientRow {
   totalVisits: number
   totalSpend: number
   lifetimeSpend: number
+  averageTicket: number
   lastVisitAt: Date | null
   locationId: string | null
   birthday: Date | null
@@ -37,13 +38,44 @@ export async function buildAudience(filter: AudienceFilter, channel: "SMS" | "EM
     where: baseWhere,
     select: {
       id: true, firstName: true, lastName: true, phone: true, email: true,
-      totalVisits: true, totalSpend: true, lifetimeSpend: true, lastVisitAt: true,
-      locationId: true, birthday: true, favoriteServiceCategory: true,
+      totalVisits: true, totalSpend: true, lifetimeSpend: true, averageTicket: true,
+      lastVisitAt: true, locationId: true, birthday: true, favoriteServiceCategory: true,
     },
   })
 
   // Filter for valid phone numbers
   const validClients = channel === "SMS" ? allClients.filter(hasValidPhone) : allClients
+
+  // BY_PAYMENT_METHOD requires async DB query before static filtering
+  if (filter.type === "BY_PAYMENT_METHOD") {
+    const clientIds = validClients.map(c => c.id)
+    const paymentGroups = await prisma.squarePayment.groupBy({
+      by: ["clientId", "sourceType"],
+      where: { clientId: { in: clientIds }, status: { in: ["COMPLETED", "APPROVED"] } },
+      _count: true,
+    })
+    // Determine each client's payment profile: CARD_ONLY, CASH_ONLY, or MIXED
+    const clientMethodMap = new Map<string, Set<string>>()
+    for (const row of paymentGroups) {
+      if (!row.clientId) continue
+      if (!clientMethodMap.has(row.clientId)) clientMethodMap.set(row.clientId, new Set())
+      clientMethodMap.get(row.clientId)!.add(row.sourceType)
+    }
+    const clientCategory = new Map<string, string>()
+    for (const [cid, types] of clientMethodMap) {
+      const hasCard = types.has("CARD") || types.has("SQUARE_GIFT_CARD")
+      const hasCash = types.has("CASH") || types.has("EXTERNAL")
+      if (hasCard && hasCash) clientCategory.set(cid, "MIXED")
+      else if (hasCash) clientCategory.set(cid, "CASH_ONLY")
+      else clientCategory.set(cid, "CARD_ONLY")
+    }
+    const filtered = validClients.filter(c => {
+      const cat = clientCategory.get(c.id)
+      if (!cat) return false // no payment data
+      return filter.methods.includes(cat)
+    })
+    return filtered
+  }
 
   return applyFilter(validClients, filter)
 }
@@ -97,6 +129,19 @@ function applyFilter(clients: ClientRow[], filter: AudienceFilter): ClientRow[] 
       return clients.filter(c =>
         c.favoriteServiceCategory && filter.serviceCategoryIds.includes(c.favoriteServiceCategory)
       )
+
+    case "BY_AVG_TICKET":
+      return clients.filter(c => {
+        const avg = c.averageTicket || 0
+        if (filter.minAvg !== undefined && avg < filter.minAvg) return false
+        if (filter.maxAvg !== undefined && avg > filter.maxAvg) return false
+        return true
+      })
+
+    case "BY_PAYMENT_METHOD":
+      // This filter needs async payment data — for static applyFilter, we pass through
+      // The actual filtering is done in buildAudience before calling applyFilter
+      return clients
 
     case "AND":
       return filter.filters.reduce((acc, f) => applyFilter(acc, f), clients)

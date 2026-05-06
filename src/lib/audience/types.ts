@@ -8,5 +8,7 @@ export type AudienceFilter =
   | { type: "BY_SERVICE"; serviceCategoryIds: string[]; withinDays: number }
   | { type: "BY_BIRTHDAY_MONTH"; month?: number }
   | { type: "MANUAL"; clientIds: string[] }
+  | { type: "BY_PAYMENT_METHOD"; methods: string[] }
+  | { type: "BY_AVG_TICKET"; minAvg?: number; maxAvg?: number }
   | { type: "AND"; filters: AudienceFilter[] }
   | { type: "OR"; filters: AudienceFilter[] }
