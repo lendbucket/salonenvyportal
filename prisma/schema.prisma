@@ -914,6 +914,7 @@ model Client {
   orders                  SquareOrder[]
   appointments            SquareAppointment[]
   payments                SquarePayment[]
+  emailContact            EmailContact?
 
   @@index([lastSyncedAt])
   @@index([emailUnsubscribed])
@@ -1199,6 +1200,123 @@ model LinkClick {
   @@index([shortLinkId, clickedAt])
   @@index([recipientId])
   @@map("link_clicks")
+}
+
+// ═══════════════════════════════════════
+// Email Marketing System
+// ═══════════════════════════════════════
+
+model EmailContact {
+  id                String    @id @default(cuid())
+  clientId          String?   @unique
+  email             String    @unique
+  firstName         String?
+  lastName          String?
+  resendContactId   String?   @unique
+  resendAudienceId  String?
+  totalSent         Int       @default(0)
+  totalOpened       Int       @default(0)
+  totalClicked      Int       @default(0)
+  totalBounced      Int       @default(0)
+  totalComplained   Int       @default(0)
+  totalUnsubscribed Int       @default(0)
+  lastSentAt        DateTime?
+  lastOpenedAt      DateTime?
+  lastClickedAt     DateTime?
+  isOptedIn         Boolean   @default(true)
+  optedInAt         DateTime  @default(now())
+  optedOutAt        DateTime?
+  optOutReason      String?
+  bounceCount       Int       @default(0)
+  isHardBounced     Boolean   @default(false)
+  consentSource     String    @default("salonenvyusa.com/book")
+  consentMethod     String    @default("BACKFILL_LEGACY")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  client            Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([email])
+  @@index([isOptedIn])
+  @@index([resendAudienceId])
+  @@map("email_contacts")
+}
+
+model EmailCampaign {
+  id                String    @id @default(cuid())
+  name              String
+  status            String    @default("draft")
+  subject           String
+  preheader         String?
+  fromName          String
+  fromEmail         String
+  replyTo           String?
+  templateKey       String
+  templateData      Json
+  htmlContent       String?   @db.Text
+  audienceFilter    Json
+  recipientCount    Int       @default(0)
+  resendBroadcastId String?   @unique
+  scheduledFor      DateTime?
+  sentAt            DateTime?
+  totalSent         Int       @default(0)
+  totalDelivered    Int       @default(0)
+  totalOpened       Int       @default(0)
+  totalClicked      Int       @default(0)
+  totalBounced      Int       @default(0)
+  totalComplained   Int       @default(0)
+  totalUnsubscribed Int       @default(0)
+  createdById       String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  recipients        EmailRecipient[]
+  events            EmailEvent[]
+
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([createdAt])
+  @@map("email_campaigns")
+}
+
+model EmailRecipient {
+  id              String        @id @default(cuid())
+  campaignId      String
+  emailContactId  String
+  email           String
+  status          String        @default("queued")
+  resendMessageId String?       @unique
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  openedAt        DateTime?
+  clickedAt       DateTime?
+  bouncedAt       DateTime?
+  complainedAt    DateTime?
+  unsubscribedAt  DateTime?
+  failedAt        DateTime?
+  failedReason    String?
+  campaign        EmailCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, emailContactId])
+  @@index([emailContactId])
+  @@index([status])
+  @@index([resendMessageId])
+  @@map("email_recipients")
+}
+
+model EmailEvent {
+  id              String        @id @default(cuid())
+  campaignId      String
+  emailContactId  String?
+  resendMessageId String?
+  type            String
+  metadata        Json?
+  occurredAt      DateTime      @default(now())
+  campaign        EmailCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, type])
+  @@index([emailContactId])
+  @@index([occurredAt])
+  @@map("email_events")
 }
 
 model ClientFormula {
