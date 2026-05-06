@@ -41,6 +41,10 @@
       "schedule": "* * * * *"
     },
     {
+      "path": "/api/cron/payments-sync",
+      "schedule": "* * * * *"
+    },
+    {
       "path": "/api/cron/compute-metrics",
       "schedule": "0 */6 * * *"
     }
