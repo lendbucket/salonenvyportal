@@ -913,6 +913,7 @@ model Client {
   // Relations
   orders                  SquareOrder[]
   appointments            SquareAppointment[]
+  payments                SquarePayment[]
 
   @@index([lastSyncedAt])
   @@index([emailUnsubscribed])
@@ -1035,6 +1036,43 @@ model SquareAppointment {
   @@index([status])
   @@index([startAt])
   @@map("square_appointments")
+}
+
+model SquarePayment {
+  id                  String   @id @default(cuid())
+  squarePaymentId     String   @unique
+  squareLocationId    String
+  squareCustomerId    String?
+  clientId            String?
+  squareOrderId       String?
+  amount              Float
+  tipAmount           Float    @default(0)
+  taxAmount           Float    @default(0)
+  totalAmount         Float
+  refundedAmount      Float    @default(0)
+  sourceType          String
+  cardBrand           String?
+  cardLast4           String?
+  cardEntryMethod     String?
+  status              String
+  receiptNumber       String?
+  receiptUrl          String?
+  employeeId          String?
+  staffMemberId       String?
+  createdAtSquare     DateTime
+  updatedAtSquare     DateTime
+  syncedAt            DateTime @default(now())
+  rawPayload          Json?
+  client              Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([squareLocationId])
+  @@index([squareCustomerId])
+  @@index([squareOrderId])
+  @@index([status])
+  @@index([sourceType])
+  @@index([createdAtSquare])
+  @@map("square_payments")
 }
 
 // ═══════════════════════════════════════
