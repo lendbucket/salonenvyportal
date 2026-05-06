@@ -28,11 +28,9 @@ export async function buildAudience(filter: AudienceFilter, channel: "SMS" | "EM
 
   // Base: opted in, not opted out, valid destination
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const baseWhere: any = {
-    smsMarketingConsent: true,
-    smsOptedOutAt: null,
-    phone: { not: null },
-  }
+  const baseWhere: any = channel === "EMAIL"
+    ? { email: { not: null } }
+    : { smsMarketingConsent: true, smsOptedOutAt: null, phone: { not: null } }
 
   const allClients = await prisma.client.findMany({
     where: baseWhere,
@@ -43,8 +41,8 @@ export async function buildAudience(filter: AudienceFilter, channel: "SMS" | "EM
     },
   })
 
-  // Filter for valid phone numbers
-  const validClients = channel === "SMS" ? allClients.filter(hasValidPhone) : allClients
+  // Filter for valid phone numbers (SMS) or valid email (EMAIL)
+  const validClients = channel === "SMS" ? allClients.filter(hasValidPhone) : allClients.filter(c => !!c.email)
 
   // BY_PAYMENT_METHOD requires async DB query before static filtering
   if (filter.type === "BY_PAYMENT_METHOD") {
