@@ -61,7 +61,7 @@ export async function processOrdersSyncBatch(jobId: string): Promise<{ done: boo
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const searchBody: Record<string, any> = {
             location_ids: [locationId],
-            query: { filter: { date_time_filter: { closed_at: { start_at: startOfRange.toISOString(), end_at: endOfRange.toISOString() } } }, sort: { sort_field: "CLOSED_AT", sort_order: "DESC" } },
+            query: { filter: { state_filter: { states: ["COMPLETED", "CANCELED"] }, date_time_filter: { closed_at: { start_at: startOfRange.toISOString(), end_at: endOfRange.toISOString() } } }, sort: { sort_field: "CLOSED_AT", sort_order: "DESC" } },
             limit: 100,
           }
           if (locCursor) searchBody.cursor = locCursor
