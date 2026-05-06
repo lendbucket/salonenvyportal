@@ -2,7 +2,7 @@
 
 ## Overview
 
-The data sync system pulls data from Square APIs into local Postgres via Prisma, then computes client metrics from the synced data. All workers share the same architecture: monthly chunking, cursor-based pagination, 35s soft deadline, batch transactions of 25, and error isolation.
+The data sync system pulls data from Square APIs into local Postgres via Prisma, then computes client metrics from the synced data. All workers share the same architecture: monthly chunking, cursor-based pagination, 25s soft deadline, batch transactions of 25, and error isolation.
 
 ## Initial Sync Order
 
@@ -39,6 +39,18 @@ curl -X POST https://your-domain.com/api/appointments/sync -H "Cookie: ..."
 npm run backfill:client-metrics
 ```
 
+### Path C — Payments-Primary Sequence
+
+For environments where payments data is the primary revenue source (recommended):
+
+1. **Clients sync** — must run first (all other syncs reference client records)
+2. **Payments sync** — captures all revenue including cash and external payments
+3. **Orders sync** — supplements with line item detail for service categorization
+4. **Appointments sync** — booking data for scheduling and no-show tracking
+5. **Client metrics** — computes aggregates; uses payments as primary source for lifetimeSpend/totalVisits/lastVisitAt, falls back to orders then appointments
+
+This sequence ensures the most accurate revenue data is available first. The metrics computation uses payments as the source of truth for spend data since it captures cash transactions that may not appear in orders.
+
 ## Verification Steps
 
 After a full sync completes, verify with the health endpoint:
@@ -50,9 +62,11 @@ curl https://your-domain.com/api/sync/health -H "Cookie: ..."
 Expected response includes:
 - `counts.clients` > 0
 - `counts.orders` > 0
+- `counts.payments` > 0
 - `counts.appointments` > 0
 - `counts.metricsComputed` should equal `counts.clients`
 - `revenue.totalCompleted` should be reasonable for your salon
+- `payments.totalRevenue` should be close to or exceed `revenue.totalCompleted` (gap = cash/external payments)
 
 ## Ongoing Operations
 
@@ -85,7 +99,7 @@ If a sync fails or data needs refreshing:
 1. **NEVER** use `--force-reset` or `--accept-data-loss` with Prisma migrations
 2. **NO** schema changes without explicit approval — schema is already deployed
 3. All workers use fresh `PrismaClient` per invocation with `$disconnect()` in `finally`
-4. 35-second soft deadline per invocation — workers checkpoint and resume on next cron tick
+4. 25-second soft deadline per invocation — workers checkpoint and resume on next cron tick
 5. Batch `$transaction` of 25 operations maximum
 6. Error isolation: individual record failures don't crash the entire batch
 7. Monthly chunking: 24 months back, one month at a time per location
