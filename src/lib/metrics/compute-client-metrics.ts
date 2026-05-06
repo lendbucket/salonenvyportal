@@ -3,17 +3,32 @@ import type { PrismaClient } from "@prisma/client"
 const DAY_MS = 24 * 60 * 60 * 1000
 
 export async function computeMetricsForClient(clientId: string, prisma: PrismaClient) {
-  // Aggregate orders
+  // Aggregate payments (primary source — includes cash, no order-mode dependency)
+  const payments = await prisma.squarePayment.findMany({
+    where: { clientId, status: { in: ["COMPLETED", "APPROVED"] } },
+    select: { totalAmount: true, refundedAmount: true, createdAtSquare: true, staffMemberId: true },
+  })
+
+  const lifetimeSpend = payments.reduce((sum, p) => sum + p.totalAmount - p.refundedAmount, 0)
+
+  // totalVisits = count of distinct dates from payments
+  const visitDateSet = new Set<string>()
+  for (const p of payments) {
+    visitDateSet.add(p.createdAtSquare.toISOString().slice(0, 10))
+  }
+  let totalVisits = visitDateSet.size
+
+  const paymentDates = payments.map(p => p.createdAtSquare)
+  const lastPaymentAt = paymentDates.length > 0 ? new Date(Math.max(...paymentDates.map(d => d.getTime()))) : null
+  const firstPaymentAt = paymentDates.length > 0 ? new Date(Math.min(...paymentDates.map(d => d.getTime()))) : null
+
+  // Aggregate orders (supplementary — for line items)
   const orders = await prisma.squareOrder.findMany({
     where: { clientId },
     select: { totalAmount: true, state: true, closedAt: true },
   })
 
   const completedOrders = orders.filter(o => o.state === "COMPLETED")
-  const lifetimeSpend = completedOrders.reduce((sum, o) => sum + o.totalAmount, 0)
-  const totalVisits = completedOrders.length
-  const averageTicket = totalVisits > 0 ? lifetimeSpend / totalVisits : 0
-
   const closedDates = completedOrders.map(o => o.closedAt).filter(Boolean) as Date[]
   const lastOrderAt = closedDates.length > 0 ? new Date(Math.max(...closedDates.map(d => d.getTime()))) : null
   const firstOrderAt = closedDates.length > 0 ? new Date(Math.min(...closedDates.map(d => d.getTime()))) : null
@@ -32,13 +47,19 @@ export async function computeMetricsForClient(clientId: string, prisma: PrismaCl
   const lastAcceptedAppt = acceptedDates.length > 0 ? new Date(Math.max(...acceptedDates.map(d => d.getTime()))) : null
   const firstApptAt = acceptedDates.length > 0 ? new Date(Math.min(...acceptedDates.map(d => d.getTime()))) : null
 
-  const lastVisitAt = lastOrderAt && lastAcceptedAppt
-    ? new Date(Math.max(lastOrderAt.getTime(), lastAcceptedAppt.getTime()))
-    : lastOrderAt || lastAcceptedAppt || null
+  // Fallback: if no payment data, use appointments for visit count
+  if (totalVisits === 0 && acceptedAppts.length > 0) {
+    totalVisits = acceptedAppts.length
+  }
 
-  const firstVisitAt = firstOrderAt && firstApptAt
-    ? new Date(Math.min(firstOrderAt.getTime(), firstApptAt.getTime()))
-    : firstOrderAt || firstApptAt || null
+  const averageTicket = totalVisits > 0 ? lifetimeSpend / totalVisits : 0
+
+  // lastVisitAt: prefer payments, then orders, then appointments
+  const lastVisitAt = lastPaymentAt || lastOrderAt || lastAcceptedAppt || null
+
+  // firstVisitAt: earliest across all sources
+  const allFirstDates = [firstPaymentAt, firstOrderAt, firstApptAt].filter(Boolean) as Date[]
+  const firstVisitAt = allFirstDates.length > 0 ? new Date(Math.min(...allFirstDates.map(d => d.getTime()))) : null
 
   // Days between visits
   let daysBetweenVisits: number | null = null
@@ -52,12 +73,14 @@ export async function computeMetricsForClient(clientId: string, prisma: PrismaCl
     predictedNextVisitAt = new Date(lastVisitAt.getTime() + daysBetweenVisits * DAY_MS)
   }
 
-  // Favorite staff member (mode)
+  // Favorite staff member: prefer payments staffMemberId (mode), fallback to appointments
+  const paymentStaffIds = payments.map(p => p.staffMemberId).filter(Boolean) as string[]
   const teamMemberIds = appointments.map(a => a.squareTeamMemberId).filter(Boolean) as string[]
+  const staffPool = paymentStaffIds.length > 0 ? paymentStaffIds : teamMemberIds
   let favoriteStaffMemberId: string | null = null
-  if (teamMemberIds.length > 0) {
+  if (staffPool.length > 0) {
     const counts: Record<string, number> = {}
-    for (const id of teamMemberIds) counts[id] = (counts[id] || 0) + 1
+    for (const id of staffPool) counts[id] = (counts[id] || 0) + 1
     favoriteStaffMemberId = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0]
   }
 
@@ -113,7 +136,7 @@ export async function computeMetricsForClient(clientId: string, prisma: PrismaCl
       totalNoShows,
       totalCancellations,
       averageTicket,
-      lastOrderAt,
+      lastOrderAt: lastOrderAt || lastPaymentAt,
       lastVisitAt,
       firstVisitAt,
       daysBetweenVisits,
