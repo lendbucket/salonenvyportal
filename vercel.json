@@ -35,6 +35,10 @@
     {
       "path": "/api/cron/orders-sync",
       "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/appointments-sync",
+      "schedule": "* * * * *"
     }
   ]
 }
