@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { Plus, Send, Clock, FileText, AlertCircle, CheckCircle2, Ban } from "lucide-react"
+import { Plus, Send, Clock, FileText, AlertCircle, CheckCircle2, Ban, MessageSquare, Search, TrendingUp, DollarSign, Users, ImagePlus } from "lucide-react"
 
 const ACC = "#7a8f96"
 const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)" }
@@ -13,74 +13,155 @@ const STATUS_COLORS: Record<string, { bg: string; text: string; icon: React.Reac
   FAILED: { bg: "rgba(239,68,68,0.1)", text: "#b91c1c", icon: <AlertCircle size={12} /> },
   CANCELLED: { bg: "rgba(26,19,19,0.06)", text: "rgba(26,19,19,0.4)", icon: <Ban size={12} /> },
 }
-const TABS = ["all", "DRAFT", "SCHEDULED", "SENDING", "SENT", "FAILED"] as const
+const STATUS_TABS = ["all", "DRAFT", "SCHEDULED", "SENDING", "SENT", "FAILED"] as const
+const TIME_RANGES = [
+  { value: "7d", label: "7d", ms: 7 * 86400000 },
+  { value: "30d", label: "30d", ms: 30 * 86400000 },
+  { value: "90d", label: "90d", ms: 90 * 86400000 },
+  { value: "all", label: "All time", ms: 0 },
+]
+const CATEGORIES = ["all", "PROMO", "RETENTION", "BIRTHDAY", "NEWSLETTER", "LAST_CHANCE", "WELCOME", "OTHER"]
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Campaign = Record<string, any>
 
 function fmt(n: number) { return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(n) }
+function timeAgo(d: string) {
+  const ms = Date.now() - new Date(d).getTime()
+  const h = Math.floor(ms / 3600000)
+  if (h < 1) return "Just now"
+  if (h < 24) return `${h}h ago`
+  if (h < 48) return "Yesterday"
+  const days = Math.floor(h / 24)
+  if (days < 7) return `${days}d ago`
+  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+}
 
 export default function MarketingPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [loading, setLoading] = useState(true)
-  const [tab, setTab] = useState<string>("all")
+  const [statusTab, setStatusTab] = useState<string>("all")
+  const [timeRange, setTimeRange] = useState("30d")
+  const [categoryFilter, setCategoryFilter] = useState("all")
+  const [search, setSearch] = useState("")
 
   const load = useCallback((status: string) => {
     setLoading(true)
     fetch(`/api/marketing/campaigns?status=${status}`).then(r => r.json()).then(d => setCampaigns(d.campaigns || [])).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
-  useEffect(() => { load(tab) }, [tab, load])
+  useEffect(() => { load(statusTab) }, [statusTab, load])
+
+  // Client-side filters
+  const filtered = campaigns.filter(c => {
+    if (categoryFilter !== "all" && c.category !== categoryFilter) return false
+    if (search && !c.body?.toLowerCase().includes(search.toLowerCase())) return false
+    if (timeRange !== "all") {
+      const tr = TIME_RANGES.find(t => t.value === timeRange)
+      if (tr && Date.now() - new Date(c.createdAt).getTime() > tr.ms) return false
+    }
+    return true
+  })
+
+  // Stats
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const thirtyDaysAgo = Date.now() - 30 * 86400000
+  const sentToday = campaigns.filter(c => c.status === "SENT" && new Date(c.completedAt || c.createdAt) >= today).length
+  const activeSends = campaigns.filter(c => c.status === "SENDING").length
+  const reached30d = campaigns.filter(c => new Date(c.createdAt).getTime() > thirtyDaysAgo).reduce((s, c) => s + (c.recipientCount || 0), 0)
+  const spent30d = campaigns.filter(c => new Date(c.createdAt).getTime() > thirtyDaysAgo).reduce((s, c) => s + (c.actualCost || 0), 0)
+
+  const stats = [
+    { label: "Sent today", value: sentToday.toString(), icon: <Send size={14} />, color: "#15803d" },
+    { label: "Active sends", value: activeSends.toString(), icon: <Clock size={14} />, color: "#a16207" },
+    { label: "Recipients (30d)", value: reached30d.toLocaleString(), icon: <Users size={14} />, color: "#1d4ed8" },
+    { label: "Spent (30d)", value: fmt(spent30d), icon: <DollarSign size={14} />, color: ACC },
+  ]
 
   return (
     <div style={{ padding: "48px 32px 32px 32px", maxWidth: "1700px", margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h1 style={{ fontSize: 18, fontWeight: 700, color: "#1A1313", margin: 0 }}>Marketing Campaigns</h1>
-        <Link href="/marketing/new" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", backgroundColor: ACC, color: "#fff", borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: "none" }}>
-          <Plus size={14} /> New Campaign
-        </Link>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+        <h1 style={{ fontSize: 18, fontWeight: 700, color: "#1A1313", margin: 0, letterSpacing: "-0.31px" }}>Marketing Campaigns</h1>
+        <div style={{ display: "flex", gap: 8 }}>
+          <Link href="/marketing/analytics" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", backgroundColor: "transparent", border: "1px solid rgba(26,19,19,0.1)", borderRadius: 8, fontSize: 12, fontWeight: 500, color: "rgba(26,19,19,0.6)", textDecoration: "none" }}>
+            <TrendingUp size={14} /> Analytics
+          </Link>
+          <Link href="/marketing/new" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", backgroundColor: ACC, color: "#fff", borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: "none" }}>
+            <Plus size={14} /> New Campaign
+          </Link>
+        </div>
       </div>
 
-      <div style={{ display: "flex", gap: 4, marginBottom: 20 }}>
-        {TABS.map(t => (
-          <button key={t} onClick={() => setTab(t)} style={{ padding: "6px 14px", borderRadius: 6, fontSize: 12, fontWeight: 500, border: "1px solid", borderColor: tab === t ? ACC : "rgba(26,19,19,0.08)", backgroundColor: tab === t ? `${ACC}11` : "transparent", color: tab === t ? ACC : "rgba(26,19,19,0.5)", cursor: "pointer" }}>
-            {t === "all" ? "All" : t.charAt(0) + t.slice(1).toLowerCase()}
-          </button>
+      {/* Stats row */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 20 }}>
+        {stats.map(s => (
+          <div key={s.label} style={{ ...cardStyle, padding: 16, display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: `${s.color}15`, display: "flex", alignItems: "center", justifyContent: "center", color: s.color, flexShrink: 0 }}>{s.icon}</div>
+            <div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#1A1313" }}>{s.value}</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</div>
+            </div>
+          </div>
         ))}
       </div>
 
+      {/* Filters */}
+      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 16 }}>
+        <div style={{ display: "flex", gap: 2 }}>
+          {TIME_RANGES.map(t => <button key={t.value} onClick={() => setTimeRange(t.value)} style={{ padding: "4px 10px", borderRadius: 4, fontSize: 11, fontWeight: 500, border: "1px solid", borderColor: timeRange === t.value ? ACC : "rgba(26,19,19,0.06)", backgroundColor: timeRange === t.value ? `${ACC}11` : "transparent", color: timeRange === t.value ? ACC : "rgba(26,19,19,0.4)", cursor: "pointer" }}>{t.label}</button>)}
+        </div>
+        <div style={{ display: "flex", gap: 2 }}>
+          {STATUS_TABS.map(t => <button key={t} onClick={() => setStatusTab(t)} style={{ padding: "4px 10px", borderRadius: 4, fontSize: 11, fontWeight: 500, border: "1px solid", borderColor: statusTab === t ? ACC : "rgba(26,19,19,0.06)", backgroundColor: statusTab === t ? `${ACC}11` : "transparent", color: statusTab === t ? ACC : "rgba(26,19,19,0.4)", cursor: "pointer" }}>{t === "all" ? "All" : t.charAt(0) + t.slice(1).toLowerCase()}</button>)}
+        </div>
+        <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, border: "1px solid rgba(26,19,19,0.08)", color: "rgba(26,19,19,0.6)", backgroundColor: "#FBFBFB" }}>
+          {CATEGORIES.map(c => <option key={c} value={c}>{c === "all" ? "All categories" : c.charAt(0) + c.slice(1).toLowerCase().replace("_", " ")}</option>)}
+        </select>
+        <div style={{ position: "relative", flex: 1, maxWidth: 220 }}>
+          <Search size={12} style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: "rgba(26,19,19,0.3)" }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search messages..." style={{ width: "100%", padding: "4px 8px 4px 26px", borderRadius: 4, fontSize: 11, border: "1px solid rgba(26,19,19,0.08)", color: "#1A1313", backgroundColor: "#FBFBFB", boxSizing: "border-box" }} />
+        </div>
+      </div>
+
+      {/* Table */}
       <div style={cardStyle}>
         {loading ? (
           <div style={{ padding: 40, textAlign: "center", color: "rgba(26,19,19,0.3)", fontSize: 13 }}>Loading...</div>
-        ) : campaigns.length === 0 ? (
-          <div style={{ padding: 40, textAlign: "center" }}>
-            <Send size={32} strokeWidth={1.5} color="rgba(26,19,19,0.15)" style={{ margin: "0 auto 12px" }} />
-            <p style={{ color: "rgba(26,19,19,0.4)", fontSize: 13, margin: 0 }}>No campaigns yet. Create your first one.</p>
+        ) : filtered.length === 0 ? (
+          <div style={{ padding: "48px 24px", textAlign: "center" }}>
+            <Send size={36} strokeWidth={1.5} color="rgba(26,19,19,0.12)" style={{ margin: "0 auto 14px" }} />
+            <p style={{ color: "rgba(26,19,19,0.45)", fontSize: 14, fontWeight: 500, margin: "0 0 4px" }}>No campaigns yet</p>
+            <p style={{ color: "rgba(26,19,19,0.35)", fontSize: 12, margin: "0 0 16px" }}>Create your first SMS campaign to reach your clients</p>
+            <Link href="/marketing/new" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", backgroundColor: ACC, color: "#fff", borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: "none" }}><Plus size={14} /> Create first campaign</Link>
           </div>
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid rgba(26,19,19,0.08)" }}>
-                  {["Date", "Channel", "Category", "Message", "Recipients", "Status", "Cost"].map(h => (
-                    <th key={h} style={{ padding: "8px 12px", textAlign: h === "Recipients" || h === "Cost" ? "right" : "left", fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
+                  {["Date", "", "Category", "Message", "Recipients", "Status", "Cost"].map(h => (
+                    <th key={h} style={{ padding: "8px 10px", textAlign: h === "Recipients" || h === "Cost" ? "right" : "left", fontSize: 10, fontWeight: 600, color: "rgba(26,19,19,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {campaigns.map(c => {
+                {filtered.map(c => {
                   const sc = STATUS_COLORS[c.status] || STATUS_COLORS.DRAFT
+                  const isSending = c.status === "SENDING"
                   return (
                     <tr key={c.id} style={{ borderBottom: "1px solid rgba(26,19,19,0.04)" }}>
-                      <td style={{ padding: "10px 12px", color: "#1A1313", whiteSpace: "nowrap" }}>{new Date(c.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</td>
-                      <td style={{ padding: "10px 12px", color: "#1A1313" }}>{c.channel}</td>
-                      <td style={{ padding: "10px 12px" }}><span style={{ padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600, backgroundColor: "rgba(122,143,150,0.08)", color: ACC }}>{c.category || "—"}</span></td>
-                      <td style={{ padding: "10px 12px", color: "#1A1313", maxWidth: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        <Link href={`/marketing/${c.id}`} style={{ color: ACC, textDecoration: "none" }}>{c.body?.slice(0, 60) || "—"}</Link>
+                      <td style={{ padding: "10px", color: "rgba(26,19,19,0.55)", whiteSpace: "nowrap", fontSize: 11 }}>{timeAgo(c.createdAt)}</td>
+                      <td style={{ padding: "10px 6px", color: "rgba(26,19,19,0.4)" }}>{c.channel === "MMS" ? <ImagePlus size={14} /> : <MessageSquare size={14} />}</td>
+                      <td style={{ padding: "10px" }}>{c.category && <span style={{ padding: "2px 7px", borderRadius: 10, fontSize: 10, fontWeight: 600, backgroundColor: "rgba(122,143,150,0.08)", color: ACC }}>{c.category}</span>}</td>
+                      <td style={{ padding: "10px", color: "#1A1313", maxWidth: 320, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <Link href={`/marketing/${c.id}`} style={{ color: ACC, textDecoration: "none", fontWeight: 500 }}>{c.body?.slice(0, 60) || "—"}</Link>
                       </td>
-                      <td style={{ padding: "10px 12px", textAlign: "right", color: "#1A1313" }}>{c.recipientCount.toLocaleString()}</td>
-                      <td style={{ padding: "10px 12px" }}><span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600, backgroundColor: sc.bg, color: sc.text }}>{sc.icon}{c.status}</span></td>
-                      <td style={{ padding: "10px 12px", textAlign: "right", color: "#1A1313", fontFamily: "monospace" }}>{fmt(c.actualCost || 0)}</td>
+                      <td style={{ padding: "10px", textAlign: "right", color: "#1A1313", fontWeight: 500 }}>{(c.recipientCount || 0).toLocaleString()}</td>
+                      <td style={{ padding: "10px" }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, padding: "3px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600, backgroundColor: sc.bg, color: sc.text, ...(isSending ? { animation: "pulse 2s infinite" } : {}) }}>
+                          {sc.icon}{c.status}
+                        </span>
+                      </td>
+                      <td style={{ padding: "10px", textAlign: "right", color: "#1A1313", fontFamily: "monospace", fontSize: 11 }}>{fmt(c.actualCost || c.estimatedCost || 0)}</td>
                     </tr>
                   )
                 })}
@@ -89,6 +170,8 @@ export default function MarketingPage() {
           </div>
         )}
       </div>
+
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}`}</style>
     </div>
   )
 }
