@@ -1,9 +1,11 @@
 import { PrismaClient } from "@prisma/client"
 
-const SOFT_DEADLINE_MS = 35_000
+const SOFT_DEADLINE_MS = 25_000
 const SQ_BASE = "https://connect.squareup.com/v2"
 const LOCATIONS = ["LTJSA6QR1HGW6", "LXJYXDXWR0XZF"]
 const MONTHS_BACK = 24
+
+function pastDeadline(startTime: number): boolean { return Date.now() - startTime > SOFT_DEADLINE_MS }
 
 interface CursorState {
   monthOffset: number
@@ -42,7 +44,7 @@ export async function processAppointmentsSyncBatch(jobId: string): Promise<{ don
 
       try {
         for (const locationId of LOCATIONS) {
-          if (Date.now() - startTime > SOFT_DEADLINE_MS) break
+          if (pastDeadline(startTime)) break
 
           const locCursor = cursorState.locationCursors[locationId]
           if (locCursor === "DONE") continue
@@ -69,6 +71,9 @@ export async function processAppointmentsSyncBatch(jobId: string): Promise<{ don
           const bookings: any[] = data.bookings || []
           const nextCursor: string | null = data.cursor || null
 
+          // Deadline check after fetch
+          if (pastDeadline(startTime)) break
+
           // Upsert bookings in chunks of 25
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const ops: any[] = []
@@ -84,7 +89,6 @@ export async function processAppointmentsSyncBatch(jobId: string): Promise<{ don
             const durationMinutes = segment?.duration_minutes || null
             const serviceVariationIds = b.appointment_segments?.map((s: { service_variation_id?: string }) => s.service_variation_id).filter(Boolean) || []
 
-            // Lookup staffMemberId from squareTeamMemberId
             let staffMemberId: string | null = null
             if (squareTeamMemberId) {
               const staff = await prisma.staffMember.findFirst({ where: { squareTeamMemberId }, select: { id: true } })
@@ -125,11 +129,19 @@ export async function processAppointmentsSyncBatch(jobId: string): Promise<{ don
               },
             }))
           }
-          for (let i = 0; i < ops.length; i += 25) await prisma.$transaction(ops.slice(i, i + 25))
+          for (let i = 0; i < ops.length; i += 25) {
+            if (pastDeadline(startTime)) break
+            await prisma.$transaction(ops.slice(i, i + 25))
+          }
 
           processedThisInvocation += bookings.length
           pagesThisInvocation += 1
           cursorState.locationCursors[locationId] = nextCursor ? nextCursor : "DONE"
+
+          // Checkpoint after EACH successful Square page
+          await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
+          processedThisInvocation = 0
+          pagesThisInvocation = 0
         }
 
         const allDone = Object.values(cursorState.locationCursors).every(c => c === "DONE")
@@ -138,10 +150,6 @@ export async function processAppointmentsSyncBatch(jobId: string): Promise<{ don
           cursorState.monthOffset += 1
           cursorState.locationCursors = { LTJSA6QR1HGW6: null, LXJYXDXWR0XZF: null }
         }
-
-        // Checkpoint
-        await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
-        processedThisInvocation = 0; pagesThisInvocation = 0
 
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err)

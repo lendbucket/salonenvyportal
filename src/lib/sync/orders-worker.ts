@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 
-const SOFT_DEADLINE_MS = 35_000
+const SOFT_DEADLINE_MS = 25_000
 const SQ_BASE = "https://connect.squareup.com/v2"
 const LOCATIONS = ["LTJSA6QR1HGW6", "LXJYXDXWR0XZF"]
 const MONTHS_BACK = 24
@@ -15,6 +15,8 @@ function categorizeService(name: string): string {
   if (n.includes("treatment") || n.includes("mask") || n.includes("keratin") || n.includes("botox") || n.includes("olaplex")) return "treatment"
   return "other"
 }
+
+function pastDeadline(startTime: number): boolean { return Date.now() - startTime > SOFT_DEADLINE_MS }
 
 interface CursorState {
   monthOffset: number
@@ -53,7 +55,7 @@ export async function processOrdersSyncBatch(jobId: string): Promise<{ done: boo
 
       try {
         for (const locationId of LOCATIONS) {
-          if (Date.now() - startTime > SOFT_DEADLINE_MS) break
+          if (pastDeadline(startTime)) break
 
           const locCursor = cursorState.locationCursors[locationId]
           if (locCursor === "DONE") continue
@@ -74,7 +76,10 @@ export async function processOrdersSyncBatch(jobId: string): Promise<{ done: boo
           const orders: any[] = data.orders || []
           const nextCursor: string | null = data.cursor || null
 
-          // Upsert orders in chunks
+          // Deadline check after fetch — if tight, exit (cursor unchanged, re-fetch next tick)
+          if (pastDeadline(startTime)) break
+
+          // Upsert orders in chunks of 25
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const ops: any[] = []
           for (const o of orders) {
@@ -89,25 +94,46 @@ export async function processOrdersSyncBatch(jobId: string): Promise<{ done: boo
               update: { clientId, state: o.state, totalAmount: cents2dollars(o.total_money), totalTaxAmount: cents2dollars(o.total_tax_money), totalTipAmount: cents2dollars(o.total_tip_money), totalDiscountAmount: cents2dollars(o.total_discount_money), closedAt: o.closed_at ? new Date(o.closed_at) : null, updatedAtSquare: new Date(o.updated_at), syncedAt: new Date() },
             }))
           }
-          for (let i = 0; i < ops.length; i += 25) await prisma.$transaction(ops.slice(i, i + 25))
+          for (let i = 0; i < ops.length; i += 25) {
+            if (pastDeadline(startTime)) break
+            await prisma.$transaction(ops.slice(i, i + 25))
+          }
 
-          // Upsert line items
+          // Process line items — single delete+createMany transaction per order (fast + atomic)
           for (const o of orders) {
+            if (pastDeadline(startTime)) break
             if (!o.line_items?.length) continue
             const dbOrder = await prisma.squareOrder.findUnique({ where: { squareOrderId: o.id }, select: { id: true } })
             if (!dbOrder) continue
-            await prisma.orderLineItem.deleteMany({ where: { orderId: dbOrder.id } })
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const liOps: any[] = []
-            for (const li of o.line_items) {
-              liOps.push(prisma.orderLineItem.create({ data: { orderId: dbOrder.id, squareCatalogObjectId: li.catalog_object_id || null, squareCategoryId: li.category_id || null, name: li.name || "Unnamed", variationName: li.variation_name || null, quantity: parseInt(li.quantity || "1", 10), basePriceAmount: cents2dollars(li.base_price_money), totalPriceAmount: cents2dollars(li.total_money), totalDiscountAmount: cents2dollars(li.total_discount_money), totalTaxAmount: cents2dollars(li.total_tax_money), serviceCategory: categorizeService(li.name || ""), squareTeamMemberId: null } }))
-            }
-            for (let i = 0; i < liOps.length; i += 25) await prisma.$transaction(liOps.slice(i, i + 25))
+            const liData = o.line_items.map((li: any) => ({
+              orderId: dbOrder.id,
+              squareCatalogObjectId: li.catalog_object_id || null,
+              squareCategoryId: li.category_id || null,
+              name: li.name || "Unnamed",
+              variationName: li.variation_name || null,
+              quantity: parseInt(li.quantity || "1", 10),
+              basePriceAmount: cents2dollars(li.base_price_money),
+              totalPriceAmount: cents2dollars(li.total_money),
+              totalDiscountAmount: cents2dollars(li.total_discount_money),
+              totalTaxAmount: cents2dollars(li.total_tax_money),
+              serviceCategory: categorizeService(li.name || ""),
+              squareTeamMemberId: null,
+            }))
+            await prisma.$transaction([
+              prisma.orderLineItem.deleteMany({ where: { orderId: dbOrder.id } }),
+              prisma.orderLineItem.createMany({ data: liData }),
+            ])
           }
 
           processedThisInvocation += orders.length
           pagesThisInvocation += 1
           cursorState.locationCursors[locationId] = nextCursor ? nextCursor : "DONE"
+
+          // Checkpoint after EACH successful Square page
+          await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
+          processedThisInvocation = 0
+          pagesThisInvocation = 0
         }
 
         const allDone = Object.values(cursorState.locationCursors).every(c => c === "DONE")
@@ -116,10 +142,6 @@ export async function processOrdersSyncBatch(jobId: string): Promise<{ done: boo
           cursorState.monthOffset += 1
           cursorState.locationCursors = { LTJSA6QR1HGW6: null, LXJYXDXWR0XZF: null }
         }
-
-        // Checkpoint
-        await prisma.syncJob.update({ where: { id: jobId }, data: { cursor: JSON.stringify(cursorState), totalProcessed: { increment: processedThisInvocation }, pagesProcessed: { increment: pagesThisInvocation }, lastTickAt: new Date() } })
-        processedThisInvocation = 0; pagesThisInvocation = 0
 
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err)
