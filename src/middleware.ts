@@ -33,5 +33,6 @@ export const config = {
     "/my-profile/:path*",
     "/suite/:path*",
     "/social/:path*",
+    "/marketing/:path*",
   ]
 }
