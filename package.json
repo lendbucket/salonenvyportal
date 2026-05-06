@@ -10,7 +10,8 @@
     "seed": "tsx prisma/seed.ts",
     "postinstall": "prisma generate",
     "backfill:bank-encrypt": "dotenv -e .env.local -- tsx scripts/backfill-encrypt-bank-fields.ts",
-    "backfill:sms-consent": "dotenv -e .env.local -- tsx scripts/backfill-sms-consent.ts"
+    "backfill:sms-consent": "dotenv -e .env.local -- tsx scripts/backfill-sms-consent.ts",
+    "backfill:client-metrics": "dotenv -e .env.local -- tsx scripts/backfill-client-metrics.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
