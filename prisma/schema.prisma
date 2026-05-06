@@ -894,10 +894,34 @@ model Client {
   customAttributes    Json?
   lastSyncedAt        DateTime?
 
+  // Cached aggregates from orders/appointments (computed by daily cron)
+  lifetimeSpend           Float     @default(0)
+  totalNoShows            Int       @default(0)
+  totalCancellations      Int       @default(0)
+  averageTicket           Float     @default(0)
+  lastOrderAt             DateTime?
+  daysBetweenVisits       Float?
+  predictedNextVisitAt    DateTime?
+  favoriteStaffMemberId   String?
+  favoriteServiceCategory String?
+  loyaltyScore            Float?
+  engagementScore         Float?
+  churnRiskScore          Float?
+  vipTier                 String?
+  metricsLastComputedAt   DateTime?
+
+  // Relations
+  orders                  SquareOrder[]
+  appointments            SquareAppointment[]
+
   @@index([lastSyncedAt])
   @@index([emailUnsubscribed])
   @@index([smsMarketingConsent])
   @@index([smsOptedOutAt])
+  @@index([lifetimeSpend])
+  @@index([vipTier])
+  @@index([engagementScore])
+  @@index([churnRiskScore])
   @@map("clients")
 }
 
@@ -919,6 +943,98 @@ model SyncJob {
   @@index([type, status])
   @@index([startedAt])
   @@map("sync_jobs")
+}
+
+// ═══════════════════════════════════════
+// Square Data Sync (Orders + Appointments)
+// ═══════════════════════════════════════
+
+model SquareOrder {
+  id                   String    @id @default(cuid())
+  squareOrderId        String    @unique
+  squareLocationId     String
+  squareCustomerId     String?
+  clientId             String?
+  state                String
+  source               String?
+  totalAmount          Float
+  totalTaxAmount       Float     @default(0)
+  totalTipAmount       Float     @default(0)
+  totalDiscountAmount  Float     @default(0)
+  totalServiceCharge   Float     @default(0)
+  netAmountDue         Float     @default(0)
+  closedAt             DateTime?
+  createdAtSquare      DateTime
+  updatedAtSquare      DateTime
+  syncedAt             DateTime  @default(now())
+  rawPayload           Json?
+  client               Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  lineItems            OrderLineItem[]
+
+  @@index([clientId])
+  @@index([squareLocationId])
+  @@index([squareCustomerId])
+  @@index([state])
+  @@index([closedAt])
+  @@index([createdAtSquare])
+  @@map("square_orders")
+}
+
+model OrderLineItem {
+  id                    String   @id @default(cuid())
+  orderId               String
+  squareCatalogObjectId String?
+  squareCategoryId      String?
+  name                  String
+  variationName         String?
+  quantity              Int      @default(1)
+  basePriceAmount       Float
+  totalPriceAmount      Float
+  totalDiscountAmount   Float    @default(0)
+  totalTaxAmount        Float    @default(0)
+  serviceCategory       String?
+  staffMemberId         String?
+  squareTeamMemberId    String?
+  createdAt             DateTime @default(now())
+  order                 SquareOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([squareCatalogObjectId])
+  @@index([staffMemberId])
+  @@index([serviceCategory])
+  @@map("order_line_items")
+}
+
+model SquareAppointment {
+  id                       String    @id @default(cuid())
+  squareBookingId          String    @unique
+  squareLocationId         String
+  squareCustomerId         String?
+  clientId                 String?
+  squareTeamMemberId       String?
+  staffMemberId            String?
+  status                   String
+  startAt                  DateTime
+  durationMinutes          Int?
+  serviceVariationIds      Json?
+  serviceVariationVersions Json?
+  serviceNames             Json?
+  customerNote             String?   @db.Text
+  sellerNote               String?   @db.Text
+  source                   String?
+  createdAtSquare          DateTime
+  updatedAtSquare          DateTime
+  syncedAt                 DateTime  @default(now())
+  rawPayload               Json?
+  client                   Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([squareLocationId])
+  @@index([squareCustomerId])
+  @@index([squareTeamMemberId])
+  @@index([status])
+  @@index([startAt])
+  @@map("square_appointments")
 }
 
 // ═══════════════════════════════════════
