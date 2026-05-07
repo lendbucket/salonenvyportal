@@ -20,6 +20,7 @@ const OWNER_NAV: NavItem[] = [
   { href: "/cancellations", icon: "event_busy", label: "Cancellations" },
   { href: "/schedule", icon: "calendar_month", label: "Schedule" },
   { href: "/staff", icon: "group", label: "Staff" },
+  { href: "/staff/enrollments", icon: "person_add", label: "Enrollments", badge: true },
   { href: "/inventory", icon: "inventory_2", label: "Inventory" },
   { href: "/pos", icon: "point_of_sale", label: "Kasse POS" },
   { href: "/reviews", icon: "star", label: "Reviews" },
@@ -53,6 +54,7 @@ const MANAGER_NAV: NavItem[] = [
   { href: "/cancellations", icon: "event_busy", label: "Cancellations" },
   { href: "/schedule", icon: "calendar_month", label: "Schedule" },
   { href: "/staff", icon: "group", label: "Staff" },
+  { href: "/staff/enrollments", icon: "person_add", label: "Enrollments", badge: true },
   { href: "/inventory", icon: "inventory_2", label: "Inventory" },
   { href: "/purchase-orders", icon: "shopping_cart", label: "Purchase Orders" },
   { href: "/payroll", icon: "account_balance_wallet", label: "Payroll" },
@@ -181,6 +183,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
   const [pendingCount, setPendingCount] = useState(0)
   const [alertCount, setAlertCount] = useState(0)
   const [inboxUnread, setInboxUnread] = useState(0)
+  const [enrollmentPending, setEnrollmentPending] = useState(0)
 
   useEffect(() => {
     if (!isOwner && !isManager) return
@@ -193,6 +196,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
       }).catch(() => {})
       fetch("/api/marketing/inbox/unread-count").then(r => r.json()).then(d => {
         if (d.count !== undefined) setInboxUnread(d.count)
+      }).catch(() => {})
+      fetch("/api/onboarding/admin/enrollments?status=pending_review").then(r => r.json()).then(d => {
+        setEnrollmentPending(d.pendingCount || 0)
       }).catch(() => {})
     }
     fetchCounts()
@@ -254,7 +260,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           letterSpacing: "-0.31px", lineHeight: "1",
         }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
         {item.badge && (() => {
-          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : item.href === "/marketing/inbox" ? inboxUnread : 0
+          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : item.href === "/marketing/inbox" ? inboxUnread : item.href === "/staff/enrollments" ? enrollmentPending : 0
           if (!count) return null
           return (
             <span style={{
@@ -334,7 +340,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           whiteSpace: "nowrap" as const, flex: 1, lineHeight: "1",
         }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
         {item.badge && (() => {
-          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : item.href === "/marketing/inbox" ? inboxUnread : 0
+          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : item.href === "/marketing/inbox" ? inboxUnread : item.href === "/staff/enrollments" ? enrollmentPending : 0
           if (!count) return null
           return (
             <span style={{
