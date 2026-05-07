@@ -63,7 +63,10 @@ export async function POST(req: NextRequest) {
     }
 
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30);
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7-day expiry (was 30)
+
+    const { generateToken } = await import("@/lib/crypto/invite-tokens");
+    const { plaintext: secureToken, hash: tokenHash } = generateToken();
 
     const enrollment = await prisma.onboardingEnrollment.create({
       data: {
@@ -74,6 +77,7 @@ export async function POST(req: NextRequest) {
         locationId,
         role: inviteRole === "MANAGER" ? "MANAGER" : "STYLIST",
         expiresAt,
+        inviteTokenHash: tokenHash,
       },
     });
 

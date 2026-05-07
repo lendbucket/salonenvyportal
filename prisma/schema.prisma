@@ -298,6 +298,8 @@ model ConductRecord {
 model OnboardingEnrollment {
   id                    String    @id @default(cuid())
   inviteToken           String    @unique @default(cuid())
+  inviteTokenHash       String?
+  tokenUsedAt           DateTime?
   email                 String
   firstName             String
   lastName              String
@@ -398,6 +400,7 @@ model OnboardingEnrollment {
   updatedAt             DateTime  @default(now()) @updatedAt
 
   location              Location  @relation(fields: [locationId], references: [id])
+  @@index([inviteTokenHash])
   @@map("onboarding_enrollments")
 }
 
