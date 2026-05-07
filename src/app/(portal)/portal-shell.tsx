@@ -33,6 +33,7 @@ const OWNER_NAV: NavItem[] = [
   { href: "/social", icon: "share", label: "Social Media" },
   { href: "/marketing", icon: "campaign", label: "Campaigns" },
   { href: "/marketing/email", icon: "mail", label: "Email Campaigns" },
+  { href: "/marketing/inbox", icon: "inbox", label: "Inbox" },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
   { href: "/agents", icon: "smart_toy", label: "Agents" },
   { href: "/permissions", icon: "admin_panel_settings", label: "Permissions" },
