@@ -47,6 +47,10 @@
     {
       "path": "/api/cron/compute-metrics",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/reyna-recovery",
+      "schedule": "0 10 * * *"
     }
   ],
   "functions": {
