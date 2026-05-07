@@ -59,7 +59,21 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    if (!client) return twiml() // Unknown number — no action
+    if (!client) {
+      // Unknown number — still save to inbox for visibility
+      const unknownSid = params.get("MessageSid") || ""
+      if (unknownSid) {
+        await prisma.inboundMessage.create({
+          data: {
+            channel: "sms", fromNumber: normalized, toNumber: params.get("To") || "",
+            body: (params.get("Body") || "").trim(),
+            twilioMessageSid: unknownSid, twilioAccountSid: params.get("AccountSid") || null,
+            status: "unread",
+          },
+        }).catch(() => {})
+      }
+      return twiml()
+    }
 
     if (STOP_KEYWORDS.has(messageBody)) {
       await prisma.client.update({
@@ -69,6 +83,18 @@ export async function POST(req: NextRequest) {
       await prisma.optInRecord.create({
         data: { clientId: client.id, channel: "SMS", action: "OPT_OUT", method: "STOP_KEYWORD", source: "twilio_webhook" },
       })
+      // Persist to inbox as actioned
+      const stopSid = params.get("MessageSid") || ""
+      if (stopSid) {
+        await prisma.inboundMessage.create({
+          data: {
+            channel: "sms", fromNumber: normalized, toNumber: params.get("To") || "",
+            clientId: client.id, body: (params.get("Body") || "").trim(),
+            twilioMessageSid: stopSid, twilioAccountSid: params.get("AccountSid") || null,
+            status: "actioned", intent: "stop",
+          },
+        }).catch(() => {})
+      }
       return twiml() // Let Twilio's built-in STOP reply through
     }
 
@@ -99,6 +125,30 @@ export async function POST(req: NextRequest) {
       })
     }
     await prisma.client.update({ where: { id: client.id }, data: { smsLastEngagedAt: new Date() } })
+
+    // Save inbound message for inbox visibility
+    const messageSid = params.get("MessageSid") || ""
+    const toNumber = params.get("To") || ""
+    const numMedia = parseInt(params.get("NumMedia") || "0", 10)
+    const originalBody = (params.get("Body") || "").trim()
+
+    if (messageSid) {
+      await prisma.inboundMessage.create({
+        data: {
+          channel: "sms",
+          fromNumber: normalized,
+          toNumber,
+          clientId: client.id,
+          replyToRecipientId: recentRecipient?.id ?? null,
+          body: originalBody,
+          numMediaItems: numMedia,
+          mediaUrls: [],
+          twilioMessageSid: messageSid,
+          twilioAccountSid: params.get("AccountSid") || null,
+          status: "unread",
+        },
+      }).catch(() => {}) // Ignore duplicate twilioMessageSid
+    }
 
     return twiml() // No auto-reply for general messages
   } catch (err) {

@@ -917,6 +917,7 @@ model Client {
   payments                SquarePayment[]
   emailContact            EmailContact?
   agentDrafts             AgentDraft[]
+  inboundMessages         InboundMessage[]
 
   @@index([lastSyncedAt])
   @@index([emailUnsubscribed])
@@ -1965,4 +1966,38 @@ model AgentDraft {
   @@index([proposedSendAt])
   @@index([status, proposedSendAt])
   @@map("agent_drafts")
+}
+
+// ═══════════════════════════════════════
+// SMS Inbox
+// ═══════════════════════════════════════
+
+model InboundMessage {
+  id                  String    @id @default(cuid())
+  channel             String
+  fromNumber          String
+  toNumber            String
+  clientId            String?
+  replyToRecipientId  String?
+  body                String    @db.Text
+  numMediaItems       Int       @default(0)
+  mediaUrls           String[]
+  twilioMessageSid    String    @unique
+  twilioAccountSid    String?
+  status              String    @default("unread")
+  intent              String?
+  intentConfidence    Float?
+  replyDraft          String?   @db.Text
+  repliedById         String?
+  repliedAt           DateTime?
+  replyMessageId      String?
+  receivedAt          DateTime  @default(now())
+
+  client              Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([status, receivedAt])
+  @@index([clientId])
+  @@index([fromNumber])
+  @@index([replyToRecipientId])
+  @@map("inbound_messages")
 }
