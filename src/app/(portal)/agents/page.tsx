@@ -1,7 +1,8 @@
 "use client"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Bot, Play, Pause, TrendingUp, Send, UserCheck, DollarSign } from "lucide-react"
+import { Bot, TrendingUp, Send, UserCheck, DollarSign, CheckCircle2 } from "lucide-react"
+import StatusPill from "@/components/agents/StatusPill"
 
 const ACC = "#7a8f96"
 const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid rgba(26,19,19,0.07)", borderRadius: 12, padding: "20px", boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.04), 0 2px 2px rgba(0,0,0,0.04), 0 4px 4px rgba(0,0,0,0.04), 0 8px 8px rgba(0,0,0,0.04)" }
@@ -35,8 +36,6 @@ export default function AgentsPage() {
         {AGENTS.map(a => {
           const isReyna = a.name === "reyna_recovery"
           const status = isReyna && agent ? agent.status : "coming"
-          const statusColor = status === "active" ? "#15803d" : status === "paused" ? "#a16207" : "rgba(26,19,19,0.35)"
-          const statusBg = status === "active" ? "rgba(34,197,94,0.1)" : status === "paused" ? "rgba(234,179,8,0.1)" : "rgba(26,19,19,0.04)"
 
           return (
             <div key={a.name} style={{ ...cardStyle, opacity: a.coming ? 0.5 : 1, position: "relative" }}>
@@ -45,7 +44,7 @@ export default function AgentsPage() {
                 <div style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: `${ACC}15`, color: ACC, display: "flex", alignItems: "center", justifyContent: "center" }}>{a.icon}</div>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: "#1A1313" }}>{a.displayName}</div>
-                  <span style={{ padding: "1px 6px", borderRadius: 8, fontSize: 9, fontWeight: 600, backgroundColor: statusBg, color: statusColor }}>{status === "coming" ? "Coming soon" : status}</span>
+                  {status === "coming" ? <span style={{ padding: "1px 6px", borderRadius: 8, fontSize: 9, fontWeight: 600, backgroundColor: "rgba(26,19,19,0.04)", color: "rgba(26,19,19,0.35)" }}>Coming soon</span> : <StatusPill status={status} size="sm" />}
                 </div>
               </div>
               <p style={{ fontSize: 12, color: "rgba(26,19,19,0.5)", lineHeight: 1.5, margin: "0 0 16px" }}>{a.desc}</p>
@@ -53,7 +52,7 @@ export default function AgentsPage() {
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 16 }}>
                   {[
                     { label: "Drafted", value: agent.totalDrafted, icon: <Send size={12} /> },
-                    { label: "Approved", value: agent.totalApproved, icon: <Play size={12} /> },
+                    { label: "Approved", value: agent.totalApproved, icon: <CheckCircle2 size={12} /> },
                     { label: "Sent", value: agent.totalSent, icon: <Send size={12} /> },
                     { label: "Revenue", value: `$${(agent.revenueAttributed || 0).toFixed(0)}`, icon: <DollarSign size={12} /> },
                   ].map(s => (
