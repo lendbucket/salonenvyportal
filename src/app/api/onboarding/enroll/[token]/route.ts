@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createSquareTeamMember, assignTeamMemberToAllServices } from "@/lib/square-team";
 import { getStylistAgreement, getManagerAgreement } from "@/lib/agreements";
-import { encryptBankField, decryptBankField, isEncrypted } from "@/lib/crypto/bank-encryption";
+import { encryptBankField, decryptBankField, isEncrypted, safeEncrypt, maskSsn, maskAccountNumber } from "@/lib/crypto/bank-encryption";
 
 // GET: Fetch enrollment by token (NO auth required - public)
 export async function GET(
@@ -145,8 +145,8 @@ export async function PATCH(
         updateData.w9LegalName = data.w9LegalName;
         updateData.w9BusinessName = data.w9BusinessName;
         updateData.w9TaxClassification = data.w9TaxClassification;
-        updateData.w9Ssn = data.w9Ssn;
-        updateData.w9Ein = data.w9Ein;
+        updateData.w9Ssn = data.w9Ssn ? safeEncrypt(data.w9Ssn as string) : null;
+        updateData.w9Ein = data.w9Ein ? safeEncrypt(data.w9Ein as string) : null;
         updateData.w9Address = data.w9Address;
         updateData.w9CertifiedAt = new Date();
         break;
@@ -363,7 +363,8 @@ export async function PATCH(
               });
 
           // 4. Email signed agreement to owner — professional white-background HTML
-          const ssnMasked = fullEnrollment.w9Ssn ? `***-**-${fullEnrollment.w9Ssn.replace(/-/g, "").slice(-4)}` : "N/A";
+          const ssnRaw = fullEnrollment.w9Ssn ? (isEncrypted(fullEnrollment.w9Ssn) ? decryptBankField(fullEnrollment.w9Ssn) : fullEnrollment.w9Ssn) : null;
+          const ssnMasked = ssnRaw ? maskSsn(ssnRaw) : "N/A";
           const signedAt = new Date().toISOString();
           const uaTruncated = userAgent.length > 100 ? userAgent.slice(0, 100) + "..." : userAgent;
 
@@ -498,20 +499,9 @@ Generated: ${signedAt}
             console.error("Failed to send onboarding emails:", emailErr);
           }
 
-          // Mask sensitive data in DB after emailing
-          try {
-            const ssnLast4 = fullEnrollment.w9Ssn ? fullEnrollment.w9Ssn.slice(-4) : null;
-            await prisma.onboardingEnrollment.update({
-              where: { id: enrollment.id },
-              data: {
-                w9Ssn: ssnLast4 ? `***-**-${ssnLast4}` : null,
-                ddAccountNumber: bankLast4.account ? `****${bankLast4.account}` : null,
-                ddRoutingNumber: bankLast4.routing ? `*****${bankLast4.routing}` : null,
-              },
-            });
-          } catch (maskErr) {
-            console.error("Failed to mask sensitive data:", maskErr);
-          }
+          // NOTE: Sensitive data stays encrypted at rest (AES-256-GCM).
+          // We no longer destroy the original values by overwriting with masked versions.
+          // Admin decryption is available in the enrollment review UI.
         }
 
         break;

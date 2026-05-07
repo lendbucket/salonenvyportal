@@ -66,9 +66,45 @@ export function isEncrypted(value: string | null | undefined): boolean {
 }
 
 /**
- * Returns masked account number: "••••" + last 4 chars.
+ * Returns masked account number: "****" + last 4 chars.
  */
 export function maskAccountNumber(plaintext: string): string {
   if (plaintext.length <= 4) return plaintext
-  return "\u2022\u2022\u2022\u2022" + plaintext.slice(-4)
+  return "****" + plaintext.slice(-4)
+}
+
+/**
+ * Returns masked SSN: "***-**-" + last 4 digits.
+ */
+export function maskSsn(plaintext: string): string {
+  const digits = plaintext.replace(/\D/g, "")
+  if (digits.length < 4) return plaintext
+  return `***-**-${digits.slice(-4)}`
+}
+
+/**
+ * Returns masked EIN: "**-***" + last 4 digits.
+ */
+export function maskEin(plaintext: string): string {
+  const digits = plaintext.replace(/\D/g, "")
+  if (digits.length < 4) return plaintext
+  return `**-***${digits.slice(-4)}`
+}
+
+/**
+ * Safely decrypt a value — returns original if not encrypted (backward compat).
+ */
+export function safeDecrypt(value: string | null | undefined): string | null {
+  if (!value) return null
+  if (!isEncrypted(value)) return value
+  return decryptBankField(value)
+}
+
+/**
+ * Encrypt a value if it's not already encrypted.
+ */
+export function safeEncrypt(value: string | null | undefined): string | null {
+  if (!value) return null
+  if (isEncrypted(value)) return value
+  return encryptBankField(value)
 }
