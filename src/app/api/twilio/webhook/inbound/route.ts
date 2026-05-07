@@ -59,6 +59,9 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // Check blocklist
+    const blocked = await prisma.blockedNumber.findUnique({ where: { phoneNumber: normalized } })
+
     if (!client) {
       // Unknown number — still save to inbox for visibility
       const unknownSid = params.get("MessageSid") || ""
@@ -68,7 +71,8 @@ export async function POST(req: NextRequest) {
             channel: "sms", fromNumber: normalized, toNumber: params.get("To") || "",
             body: (params.get("Body") || "").trim(),
             twilioMessageSid: unknownSid, twilioAccountSid: params.get("AccountSid") || null,
-            status: "unread",
+            status: blocked ? "archived" : "unread",
+            isFromBlockedNumber: !!blocked,
           },
         }).catch(() => {})
       }
@@ -145,7 +149,8 @@ export async function POST(req: NextRequest) {
           mediaUrls: [],
           twilioMessageSid: messageSid,
           twilioAccountSid: params.get("AccountSid") || null,
-          status: "unread",
+          status: blocked ? "archived" : "unread",
+          isFromBlockedNumber: !!blocked,
         },
       }).catch(() => {}) // Ignore duplicate twilioMessageSid
     }

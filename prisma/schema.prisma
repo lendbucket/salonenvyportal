@@ -1998,6 +1998,9 @@ model InboundMessage {
   replyMessageId      String?
   receivedAt          DateTime  @default(now())
 
+  isImportant         Boolean   @default(false)
+  isFromBlockedNumber Boolean   @default(false)
+
   client              Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   @@index([status, receivedAt])
@@ -2005,4 +2008,14 @@ model InboundMessage {
   @@index([fromNumber])
   @@index([replyToRecipientId])
   @@map("inbound_messages")
+}
+
+model BlockedNumber {
+  id          String    @id @default(cuid())
+  phoneNumber String    @unique
+  reason      String?
+  blockedById String
+  blockedAt   DateTime  @default(now())
+
+  @@map("blocked_numbers")
 }

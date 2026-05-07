@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from "react"
-import { Inbox, Send, Loader2, Archive, Sparkles, MessageSquare, Save, X } from "lucide-react"
+import { Inbox, Send, Loader2, Archive, Sparkles, MessageSquare, Save, X, Star, Ban, Bot, Mail, MailOpen } from "lucide-react"
 
 const ACC = "#7a8f96"
 const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }
@@ -169,6 +169,33 @@ export default function InboxPage() {
     loadConversations()
   }
 
+  async function blockSender() {
+    if (!activeNumber) return
+    if (!confirm("Block this number? All messages from this sender will be archived.")) return
+    await fetch(`/api/marketing/inbox/conversations/${encodeURIComponent(activeNumber)}/block`, { method: "POST" })
+    setActiveNumber(null)
+    setTimeline([])
+    loadConversations()
+  }
+
+  async function toggleStar(msgId: string) {
+    await fetch(`/api/marketing/inbox/messages/${msgId}/star`, { method: "POST" })
+    if (activeNumber) loadThread(activeNumber)
+    loadConversations()
+  }
+
+  async function markUnread() {
+    if (!activeNumber) return
+    // Re-fetch won't work perfectly here but we can at least mark the last inbound as unread
+    const lastInbound = timeline.filter(m => m.type === "inbound").pop()
+    if (lastInbound) {
+      // There's no "mark-unread" endpoint, but we can reuse the status logic
+      // For now, just reload — the real unread state is server-side
+    }
+    setActiveNumber(null)
+    loadConversations()
+  }
+
   const unreadCount = conversations.filter(c => c.status === "unread").length
 
   return (
@@ -217,7 +244,11 @@ export default function InboxPage() {
                     {c.client?.valueTier && <TierBadge tier={c.client.valueTier} />}
                     {intentInfo && <span style={{ padding: "1px 6px", borderRadius: 6, fontSize: 10, fontWeight: 600, backgroundColor: intentInfo.bg, color: intentInfo.color }}>{intentInfo.label}</span>}
                   </div>
-                  <p style={{ fontSize: 13, color: "#6b7280", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.body?.slice(0, 60)}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <p style={{ fontSize: 13, color: "#6b7280", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{c.body?.slice(0, 60)}</p>
+                    {c.replyToRecipientId && <span title="Agent-initiated thread"><Bot size={12} color={ACC} /></span>}
+                    {c.isImportant && <Star size={12} color="#d97706" fill="#d97706" />}
+                  </div>
                 </div>
               )
             })}
@@ -246,10 +277,13 @@ export default function InboxPage() {
                       <span>{activeClient.lastVisitAt ? `Last visit ${timeAgo(activeClient.lastVisitAt)}` : "Never visited"}</span>
                     </div>
                   </div>
-                  <div style={{ display: "flex", gap: 6 }}>
+                  <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
                     <TierBadge tier={activeClient.vipTier} />
                     <TierBadge tier={activeClient.valueTier} />
-                    <button onClick={archiveConversation} style={{ padding: "5px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}><Archive size={12} /> Archive</button>
+                    <div style={{ width: 1, height: 16, backgroundColor: "#e5e7eb", margin: "0 4px" }} />
+                    <button onClick={() => { const last = timeline.filter(m => m.type === "inbound").pop(); if (last) toggleStar(last.id) }} title="Star" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#d97706", cursor: "pointer" }}><Star size={14} /></button>
+                    <button onClick={archiveConversation} title="Archive" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", cursor: "pointer" }}><Archive size={14} /></button>
+                    <button onClick={blockSender} title="Block sender" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#dc2626", cursor: "pointer" }}><Ban size={14} /></button>
                   </div>
                 </div>
               )}
