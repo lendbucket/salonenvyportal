@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from "react"
-import { Inbox, Send, Loader2, Archive, Sparkles, MessageSquare } from "lucide-react"
+import { Inbox, Send, Loader2, Archive, Sparkles, MessageSquare, Save, X } from "lucide-react"
 
 const ACC = "#7a8f96"
 const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }
@@ -65,8 +65,11 @@ export default function InboxPage() {
   const [timelineLoading, setTimelineLoading] = useState(false)
   const [tab, setTab] = useState("all")
   const [reply, setReply] = useState("")
+  const [replySource, setReplySource] = useState<"user" | "ai">("user")
   const [sending, setSending] = useState(false)
   const [suggesting, setSuggesting] = useState(false)
+  const [sendConfirm, setSendConfirm] = useState(false)
+  const [draftSaved, setDraftSaved] = useState(false)
   const threadEnd = useRef<HTMLDivElement>(null)
 
   const loadConversations = useCallback(async () => {
@@ -85,29 +88,46 @@ export default function InboxPage() {
     setActiveNumber(fromNumber)
     setTimelineLoading(true)
     setReply("")
+    setReplySource("user")
+    setDraftSaved(false)
     try {
       const r = await fetch(`/api/marketing/inbox/conversations/${encodeURIComponent(fromNumber)}/messages`)
       const d = await r.json()
       setTimeline(d.timeline || [])
       setActiveClient(d.client)
-      // Mark unread messages as read
+      // Mark unread messages as read + load saved draft
       for (const m of (d.timeline || [])) {
         if (m.type === "inbound" && m.status === "unread") {
           fetch(`/api/marketing/inbox/messages/${m.id}/mark-read`, { method: "POST" }).catch(() => {})
         }
+      }
+      const lastInbound = (d.timeline || []).filter((m: TimelineMsg) => m.type === "inbound").pop()
+      if (lastInbound?.replyDraft) {
+        setReply(lastInbound.replyDraft)
+        setReplySource("ai")
+        setDraftSaved(true)
       }
     } catch { /* ignore */ }
     setTimelineLoading(false)
     setTimeout(() => threadEnd.current?.scrollIntoView({ behavior: "smooth" }), 100)
   }
 
-  async function sendReply() {
+  function trySendReply() {
+    if (!activeNumber || !reply.trim()) return
+    const segments = reply.length <= 160 ? 1 : Math.ceil(reply.length / 153)
+    if (segments > 1) { setSendConfirm(true); return }
+    doSendReply()
+  }
+
+  async function doSendReply() {
     if (!activeNumber || !reply.trim()) return
     setSending(true)
+    setSendConfirm(false)
     await fetch(`/api/marketing/inbox/conversations/${encodeURIComponent(activeNumber)}/reply`, {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: reply }),
     })
     setReply("")
+    setReplySource("user")
     setSending(false)
     loadThread(activeNumber)
     loadConversations()
@@ -118,9 +138,25 @@ export default function InboxPage() {
     try {
       const r = await fetch(`/api/marketing/inbox/messages/${msgId}/suggest-reply`, { method: "POST" })
       const d = await r.json()
-      if (d.draft) setReply(d.draft)
+      if (d.draft) { setReply(d.draft); setReplySource("ai") }
     } catch { /* ignore */ }
     setSuggesting(false)
+  }
+
+  async function saveDraftReply() {
+    if (!activeNumber || !reply.trim()) return
+    const lastInbound = timeline.filter(m => m.type === "inbound").pop()
+    if (lastInbound) {
+      await fetch(`/api/marketing/inbox/messages/${lastInbound.id}/save-draft`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ draft: reply }) }).catch(() => {})
+    }
+    setDraftSaved(true)
+    setTimeout(() => setDraftSaved(false), 2000)
+  }
+
+  function clearDraft() {
+    setReply("")
+    setReplySource("user")
+    setDraftSaved(false)
   }
 
   async function archiveConversation() {
@@ -239,19 +275,51 @@ export default function InboxPage() {
 
               {/* Reply composer */}
               <div style={{ padding: "12px 20px", borderTop: "1px solid #e5e7eb" }}>
-                {timeline.some(m => m.type === "inbound") && (
-                  <button onClick={() => { const lastInbound = timeline.filter(m => m.type === "inbound").pop(); if (lastInbound) suggestReply(lastInbound.id) }} disabled={suggesting} style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500, backgroundColor: `${ACC}10`, color: ACC, border: `1px solid ${ACC}30`, cursor: "pointer", marginBottom: 8, opacity: suggesting ? 0.5 : 1 }}>
-                    {suggesting ? <Loader2 size={12} style={{ animation: "spin 1s linear infinite" }} /> : <Sparkles size={12} />} Suggested reply
-                  </button>
-                )}
-                <div style={{ display: "flex", gap: 8 }}>
-                  <textarea value={reply} onChange={e => setReply(e.target.value)} placeholder="Type a reply..." style={{ flex: 1, padding: "10px 12px", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 14, color: "#1A1313", backgroundColor: "#fff", resize: "none", minHeight: 40, maxHeight: 100, boxSizing: "border-box", outline: "none" }} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendReply() } }} />
-                  <button onClick={sendReply} disabled={!reply.trim() || sending} style={{ padding: "10px 20px", borderRadius: 8, fontSize: 14, fontWeight: 500, backgroundColor: ACC, color: "#fff", border: "none", cursor: "pointer", opacity: !reply.trim() || sending ? 0.5 : 1, display: "flex", alignItems: "center", gap: 6, alignSelf: "flex-end" }}>
-                    {sending ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={14} />} Send
-                  </button>
+                <div style={{ display: "flex", gap: 6, marginBottom: 8, alignItems: "center" }}>
+                  {timeline.some(m => m.type === "inbound") && (
+                    <button onClick={() => { const lastInbound = timeline.filter(m => m.type === "inbound").pop(); if (lastInbound) suggestReply(lastInbound.id) }} disabled={suggesting} style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500, backgroundColor: `${ACC}10`, color: ACC, border: `1px solid ${ACC}30`, cursor: "pointer", opacity: suggesting ? 0.5 : 1 }}>
+                      {suggesting ? <Loader2 size={12} style={{ animation: "spin 1s linear infinite" }} /> : <Sparkles size={12} />} Suggested reply
+                    </button>
+                  )}
+                  {replySource === "ai" && reply && <span style={{ fontSize: 11, color: ACC, fontWeight: 500 }}>AI suggestion -- edit as needed</span>}
+                  {draftSaved && <span style={{ fontSize: 11, color: "#059669", fontWeight: 500 }}>Draft saved</span>}
+                  {reply && (
+                    <button onClick={clearDraft} title="Clear" style={{ marginLeft: "auto", padding: "2px 6px", borderRadius: 4, backgroundColor: "transparent", border: "none", color: "#9ca3af", cursor: "pointer" }}><X size={14} /></button>
+                  )}
                 </div>
-                <div style={{ fontSize: 11, color: reply.length > 160 ? "#dc2626" : "#d1d5db", textAlign: "right", marginTop: 4 }}>{reply.length}/160</div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <textarea value={reply} onChange={e => { setReply(e.target.value); if (replySource === "ai" && e.target.value !== reply) setReplySource("user") }} placeholder="Type a reply..." style={{ flex: 1, padding: "10px 12px", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 14, color: "#1A1313", backgroundColor: "#fff", resize: "none", minHeight: 40, maxHeight: 160, boxSizing: "border-box", outline: "none", lineHeight: 1.5 }} rows={Math.min(6, Math.max(1, reply.split("\n").length))} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); trySendReply() } }} />
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4, alignSelf: "flex-end" }}>
+                    <button onClick={saveDraftReply} disabled={!reply.trim()} title="Save draft" style={{ padding: "8px", borderRadius: 6, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", cursor: "pointer", opacity: !reply.trim() ? 0.3 : 1 }}><Save size={14} /></button>
+                    <button onClick={trySendReply} disabled={!reply.trim() || sending} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 14, fontWeight: 500, backgroundColor: ACC, color: "#fff", border: "none", cursor: "pointer", opacity: !reply.trim() || sending ? 0.5 : 1, display: "flex", alignItems: "center", gap: 6 }}>
+                      {sending ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={14} />} Send
+                    </button>
+                  </div>
+                </div>
+                {(() => {
+                  const segments = reply.length <= 160 ? 1 : Math.ceil(reply.length / 153)
+                  const maxChars = segments * (segments === 1 ? 160 : 153)
+                  return (
+                    <div style={{ fontSize: 11, color: segments > 1 ? "#d97706" : "#d1d5db", textAlign: "right", marginTop: 4 }}>
+                      {segments} SMS ({reply.length}/{maxChars})
+                    </div>
+                  )
+                })()}
               </div>
+
+              {/* Multi-segment send confirmation */}
+              {sendConfirm && (
+                <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.3)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => setSendConfirm(false)}>
+                  <div style={{ backgroundColor: "#FBFBFB", border: "1px solid #e5e7eb", borderRadius: 12, padding: 24, maxWidth: 380, width: "90%", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }} onClick={e => e.stopPropagation()}>
+                    <h3 style={{ fontSize: 16, fontWeight: 600, color: "#1A1313", margin: "0 0 8px" }}>Send multi-segment SMS?</h3>
+                    <p style={{ fontSize: 13, color: "#525866", margin: "0 0 16px" }}>This message is {reply.length} characters ({Math.ceil(reply.length / 153)} segments). You will be charged for {Math.ceil(reply.length / 153)} messages instead of 1.</p>
+                    <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                      <button onClick={() => setSendConfirm(false)} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 500, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#525866", cursor: "pointer" }}>Cancel</button>
+                      <button onClick={doSendReply} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 500, backgroundColor: ACC, color: "#fff", border: "none", cursor: "pointer" }}>Send</button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>
