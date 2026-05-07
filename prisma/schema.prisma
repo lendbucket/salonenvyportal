@@ -1955,6 +1955,11 @@ model AgentDraft {
   convertedAt         DateTime?
   conversionRevenue   Float?
 
+  cancelledAt         DateTime?
+  cancelledById       String?
+  editedAt            DateTime?
+  editedById          String?
+
   createdAt           DateTime  @default(now())
 
   agent               Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)

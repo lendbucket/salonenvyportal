@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { ArrowLeft, Bot, Play, Pause, Send, CheckCircle2, XCircle, Edit3, Loader2, AlertTriangle, Users, Eye, DollarSign, Settings, Inbox, FileText, Clock } from "lucide-react"
+import { ArrowLeft, Bot, Play, Pause, Send, CheckCircle2, XCircle, Edit3, Loader2, AlertTriangle, Eye, DollarSign, Settings, Inbox, FileText, Clock, Undo2, Ban } from "lucide-react"
 
 const ACC = "#7a8f96"
 const cardStyle: React.CSSProperties = { backgroundColor: "#FBFBFB", border: "1px solid #e5e7eb", borderRadius: 12, padding: 24, boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }
@@ -39,6 +39,7 @@ const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
   rejected: { bg: "#fee2e2", text: "#dc2626" },
   converted: { bg: "#d1f5f0", text: "#134e4a" },
   bounced: { bg: "#f3f4f6", text: "#6b7280" },
+  cancelled: { bg: "#f3f4f6", text: "#9ca3af" },
 }
 
 const FILTER_TABS = [
@@ -47,6 +48,7 @@ const FILTER_TABS = [
   { key: "sent", label: "Sent", icon: <Send size={13} /> },
   { key: "rejected", label: "Rejected", icon: <XCircle size={13} /> },
   { key: "converted", label: "Converted", icon: <DollarSign size={13} /> },
+  { key: "cancelled", label: "Cancelled", icon: <Ban size={13} /> },
   { key: "all", label: "All", icon: <FileText size={13} /> },
 ]
 
@@ -113,8 +115,20 @@ export default function ReynaRecoveryDashboard() {
 
   async function saveEdit() {
     if (!editDraft) return
-    await fetch(`/api/agents/reyna-recovery/drafts/${editDraft.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messageBody: editBody, proposedOffer: editOffer }) })
+    await fetch(`/api/agents/reyna-recovery/drafts/${editDraft.id}/edit`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messageBody: editBody, proposedOffer: editOffer }) })
     setEditDraft(null)
+    load()
+  }
+
+  async function unapproveDraft(id: string) {
+    if (!confirm("Move back to pending? You can re-approve or edit later.")) return
+    await fetch(`/api/agents/reyna-recovery/drafts/${id}/unapprove`, { method: "POST" })
+    load()
+  }
+
+  async function cancelDraft(id: string) {
+    if (!confirm("Cancel this message? It won't send. You can't undo this.")) return
+    await fetch(`/api/agents/reyna-recovery/drafts/${id}/cancel`, { method: "POST" })
     load()
   }
 
@@ -177,6 +191,25 @@ export default function ReynaRecoveryDashboard() {
           <button onClick={() => setStatusFilter("pending")} style={{ padding: "4px 12px", borderRadius: 6, fontSize: 13, fontWeight: 500, backgroundColor: ACC, color: "#fff", border: "none", cursor: "pointer" }}>Review now</button>
         </div>
       )}
+
+      {/* Upcoming send warning */}
+      {(() => {
+        const approvedDrafts = drafts.filter(d => d.status === "approved")
+        if (approvedDrafts.length === 0) return null
+        const earliest = approvedDrafts.reduce((min, d) => {
+          const t = new Date(d.proposedSendAt).getTime()
+          return t < min ? t : min
+        }, Infinity)
+        const hoursUntil = (earliest - Date.now()) / 3600000
+        if (hoursUntil > 24) return null
+        const sendTime = new Date(earliest).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
+        return (
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderRadius: 8, borderLeft: "3px solid #d97706", backgroundColor: "#fffbeb", marginBottom: 16, fontSize: 14, color: "#92400e" }}>
+            <AlertTriangle size={16} color="#d97706" />
+            <span>{approvedDrafts.length} message{approvedDrafts.length > 1 ? "s" : ""} will send {sendTime}. You can still edit, un-approve, or cancel before then.</span>
+          </div>
+        )
+      })()}
 
       {/* Filter tabs — pill style */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
@@ -254,8 +287,14 @@ export default function ReynaRecoveryDashboard() {
                         {d.status === "pending" ? (
                           <div style={{ display: "flex", gap: 4 }}>
                             <button onClick={() => approveDraft(d.id)} title="Approve" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "#dcfce7", color: "#059669", border: "none", cursor: "pointer" }}><CheckCircle2 size={14} /></button>
-                            <button onClick={() => rejectDraft(d.id)} title="Reject" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "#fee2e2", color: "#dc2626", border: "none", cursor: "pointer" }}><XCircle size={14} /></button>
                             <button onClick={() => { setEditDraft(d); setEditBody(d.messageBody); setEditOffer(d.proposedOffer || "") }} title="Edit" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: `${ACC}12`, color: ACC, border: "none", cursor: "pointer" }}><Edit3 size={14} /></button>
+                            <button onClick={() => rejectDraft(d.id)} title="Reject" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "#fee2e2", color: "#dc2626", border: "none", cursor: "pointer" }}><XCircle size={14} /></button>
+                          </div>
+                        ) : d.status === "approved" ? (
+                          <div style={{ display: "flex", gap: 4 }}>
+                            <button onClick={() => unapproveDraft(d.id)} title="Move to pending" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "#fef3c7", color: "#92400e", border: "none", cursor: "pointer" }}><Undo2 size={14} /></button>
+                            <button onClick={() => { setEditDraft(d); setEditBody(d.messageBody); setEditOffer(d.proposedOffer || "") }} title="Edit" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: `${ACC}12`, color: ACC, border: "none", cursor: "pointer" }}><Edit3 size={14} /></button>
+                            <button onClick={() => cancelDraft(d.id)} title="Cancel" style={{ padding: "5px 8px", borderRadius: 6, backgroundColor: "#fee2e2", color: "#dc2626", border: "none", cursor: "pointer" }}><Ban size={14} /></button>
                           </div>
                         ) : (
                           <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 600, backgroundColor: ss.bg, color: ss.text }}>{d.status.charAt(0).toUpperCase() + d.status.slice(1)}</span>
@@ -271,26 +310,43 @@ export default function ReynaRecoveryDashboard() {
       </div>
 
       {/* Edit modal */}
-      {editDraft && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.4)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => setEditDraft(null)}>
-          <div style={{ ...cardStyle, maxWidth: 520, width: "90%", padding: 28 }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ fontSize: 18, fontWeight: 600, color: "#1A1313", margin: "0 0 4px" }}>Edit Draft</h2>
-            <p style={{ fontSize: 14, color: "#525866", margin: "0 0 20px" }}>For {editDraft.client?.firstName} {editDraft.client?.lastName}</p>
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 13, fontWeight: 500, color: "#525866", display: "block", marginBottom: 6 }}>Message <span style={{ fontWeight: 400, color: "#9ca3af" }}>({editBody.length} chars)</span></label>
-              <textarea value={editBody} onChange={e => setEditBody(e.target.value)} style={{ width: "100%", padding: "10px 14px", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 14, color: "#1A1313", backgroundColor: "#fff", minHeight: 80, resize: "vertical", boxSizing: "border-box", outline: "none" }} />
-            </div>
-            <div style={{ marginBottom: 20 }}>
-              <label style={{ fontSize: 13, fontWeight: 500, color: "#525866", display: "block", marginBottom: 6 }}>Offer</label>
-              <input value={editOffer} onChange={e => setEditOffer(e.target.value)} style={{ width: "100%", padding: "10px 14px", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 14, color: "#1A1313", backgroundColor: "#fff", boxSizing: "border-box", outline: "none" }} />
-            </div>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-              <button onClick={() => setEditDraft(null)} style={{ padding: "10px 20px", borderRadius: 8, fontSize: 14, fontWeight: 500, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#525866", cursor: "pointer" }}>Cancel</button>
-              <button onClick={saveEdit} style={{ padding: "10px 20px", borderRadius: 8, fontSize: 14, fontWeight: 500, backgroundColor: ACC, color: "#fff", border: "none", cursor: "pointer" }}>Save</button>
+      {editDraft && (() => {
+        const full = editBody + " Reply STOP to opt out."
+        const segments = full.length <= 160 ? 1 : Math.ceil(full.length / 153)
+        const originalBody = editDraft.reasoning ? editDraft.messageBody : ""
+        return (
+          <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.4)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => setEditDraft(null)}>
+            <div style={{ ...cardStyle, maxWidth: 560, width: "90%", padding: 28, maxHeight: "90vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+              <h2 style={{ fontSize: 18, fontWeight: 600, color: "#1A1313", margin: "0 0 4px" }}>Edit Draft</h2>
+              <p style={{ fontSize: 14, color: "#525866", margin: "0 0 16px" }}>For {editDraft.client?.firstName} {editDraft.client?.lastName} ({editDraft.client?.vipTier ? TIER_LABELS[editDraft.client.vipTier] : ""} / {editDraft.client?.valueTier ? TIER_LABELS[editDraft.client.valueTier] : ""})</p>
+
+              {originalBody && (
+                <div style={{ padding: 12, backgroundColor: "#f9fafb", borderRadius: 8, marginBottom: 16, border: "1px solid #f3f4f6" }}>
+                  <div style={{ fontSize: 11, fontWeight: 500, color: "#9ca3af", marginBottom: 4 }}>Original AI draft</div>
+                  <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.5 }}>{originalBody}</div>
+                </div>
+              )}
+
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ fontSize: 13, fontWeight: 500, color: "#525866", display: "block", marginBottom: 6 }}>Your message</label>
+                <textarea value={editBody} onChange={e => setEditBody(e.target.value)} maxLength={320} style={{ width: "100%", padding: "10px 14px", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 14, color: "#1A1313", backgroundColor: "#fff", minHeight: 80, resize: "vertical", boxSizing: "border-box", outline: "none" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                  <span style={{ fontSize: 12, color: segments > 1 ? "#d97706" : "#9ca3af" }}>{segments} SMS segment{segments > 1 ? "s" : ""}</span>
+                  <span style={{ fontSize: 12, color: editBody.length > 280 ? "#dc2626" : "#9ca3af" }}>{editBody.length}/320</span>
+                </div>
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ fontSize: 13, fontWeight: 500, color: "#525866", display: "block", marginBottom: 6 }}>Offer</label>
+                <input value={editOffer} onChange={e => setEditOffer(e.target.value)} style={{ width: "100%", padding: "10px 14px", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 14, color: "#1A1313", backgroundColor: "#fff", boxSizing: "border-box", outline: "none" }} />
+              </div>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                <button onClick={() => setEditDraft(null)} style={{ padding: "10px 20px", borderRadius: 8, fontSize: 14, fontWeight: 500, backgroundColor: "transparent", border: "1px solid #e5e7eb", color: "#525866", cursor: "pointer" }}>Cancel</button>
+                <button onClick={saveEdit} style={{ padding: "10px 20px", borderRadius: 8, fontSize: 14, fontWeight: 500, backgroundColor: ACC, color: "#fff", border: "none", cursor: "pointer" }}>Save changes</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       {/* Bulk confirm modal */}
       {bulkConfirm && (
