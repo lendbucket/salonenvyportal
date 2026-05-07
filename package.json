@@ -14,7 +14,8 @@
     "backfill:client-metrics": "dotenv -e .env.local -- tsx scripts/backfill-client-metrics.ts",
     "backfill:email-contacts": "dotenv -e .env.local -- tsx scripts/backfill-email-contacts.ts",
     "warm:email-domain": "dotenv -e .env.local -- tsx scripts/warm-email-domain.ts",
-    "seed:reyna-recovery": "dotenv -e .env.local -- tsx scripts/seed-reyna-recovery.ts"
+    "seed:reyna-recovery": "dotenv -e .env.local -- tsx scripts/seed-reyna-recovery.ts",
+    "setup:storage-buckets": "dotenv -e .env.local -- tsx scripts/setup-storage-buckets.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
