@@ -33,7 +33,7 @@ const OWNER_NAV: NavItem[] = [
   { href: "/social", icon: "share", label: "Social Media" },
   { href: "/marketing", icon: "campaign", label: "Campaigns" },
   { href: "/marketing/email", icon: "mail", label: "Email Campaigns" },
-  { href: "/marketing/inbox", icon: "inbox", label: "Inbox" },
+  { href: "/marketing/inbox", icon: "inbox", label: "Inbox", badge: true },
   { href: "/reyna-ai", icon: "auto_awesome", label: "Reyna AI", highlight: true },
   { href: "/agents", icon: "smart_toy", label: "Agents" },
   { href: "/permissions", icon: "admin_panel_settings", label: "Permissions" },
@@ -180,6 +180,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
 
   const [pendingCount, setPendingCount] = useState(0)
   const [alertCount, setAlertCount] = useState(0)
+  const [inboxUnread, setInboxUnread] = useState(0)
 
   useEffect(() => {
     if (!isOwner && !isManager) return
@@ -189,6 +190,9 @@ export default function PortalShell({ children }: { children: React.ReactNode })
       }).catch(() => {})
       fetch("/api/alerts").then(r => r.json()).then(d => {
         if (d.unreadCount !== undefined) setAlertCount(d.unreadCount)
+      }).catch(() => {})
+      fetch("/api/marketing/inbox/unread-count").then(r => r.json()).then(d => {
+        if (d.count !== undefined) setInboxUnread(d.count)
       }).catch(() => {})
     }
     fetchCounts()
@@ -250,7 +254,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           letterSpacing: "-0.31px", lineHeight: "1",
         }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
         {item.badge && (() => {
-          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : 0
+          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : item.href === "/marketing/inbox" ? inboxUnread : 0
           if (!count) return null
           return (
             <span style={{
@@ -330,7 +334,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           whiteSpace: "nowrap" as const, flex: 1, lineHeight: "1",
         }}>{item.label === "Envy Suite®" ? (<>Envy Suite<sup style={{ fontSize: "65%", verticalAlign: "super", marginLeft: "1px" }}>&reg;</sup></>) : item.label}</span>
         {item.badge && (() => {
-          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : 0
+          const count = item.href === "/alerts" ? alertCount : item.href === "/approvals" ? pendingCount : item.href === "/marketing/inbox" ? inboxUnread : 0
           if (!count) return null
           return (
             <span style={{
