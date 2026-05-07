@@ -103,7 +103,10 @@
       "Bash(sed -n '695p' \"src/app/\\(portal\\)/retention/page.tsx\")",
       "Bash(sed -n '452p' \"src/app/\\(portal\\)/reyna-ai/page.tsx\")",
       "Bash(mkdir -p \"C:/Users/Salon/salonenvyportal/src/app/api/marketing/campaigns/[id]\")",
-      "Bash(mkdir -p \"C:/Users/Salon/salonenvyportal/src/app/\\(portal\\)/marketing/[id]\")"
+      "Bash(mkdir -p \"C:/Users/Salon/salonenvyportal/src/app/\\(portal\\)/marketing/[id]\")",
+      "Bash(tasklist)",
+      "Bash(wmic process:*)",
+      "Bash(taskkill:*)"
     ]
   }
 }
