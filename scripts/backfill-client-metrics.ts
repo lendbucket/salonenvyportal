@@ -201,7 +201,13 @@ async function main() {
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
   console.log("\n[backfill] COMPLETE in " + elapsed + "s")
   console.log("\n=== RESULTS ===")
-  console.log(JSON.stringify(summary[0], null, 2))
+  // Convert BigInt values to Number for JSON serialization
+  const row = summary[0]
+  const clean: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(row)) {
+    clean[k] = typeof v === "bigint" ? Number(v) : v
+  }
+  console.log(JSON.stringify(clean, null, 2))
 }
 
 main()
