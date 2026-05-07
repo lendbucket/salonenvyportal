@@ -51,6 +51,10 @@
     {
       "path": "/api/cron/reyna-recovery",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/agents-dispatch",
+      "schedule": "*/15 * * * *"
     }
   ],
   "functions": {
