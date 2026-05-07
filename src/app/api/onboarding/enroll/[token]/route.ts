@@ -176,12 +176,23 @@ export async function PATCH(
         updateData.ackDirectDeposit = data.ackDirectDeposit;
         break;
 
-      case "agreement":
+      case "agreement": {
         console.log("[onboarding-api] Agreement step — received fields:", Object.keys(data));
-        console.log("[onboarding-api] Agreement step — signedLegalName:", data.signedLegalName || "(empty)");
-        console.log("[onboarding-api] Agreement step — signatureData length:", typeof data.signatureData === "string" ? data.signatureData.length : 0);
-        console.log("[onboarding-api] Agreement step — acks:", { ackPolicies: data.ackPolicies, ackConfidentiality: data.ackConfidentiality, ackAtWill: data.ackAtWill, ackSafetyProtocol: data.ackSafetyProtocol, ackTechPolicy: data.ackTechPolicy });
-        updateData.signatureData = data.signatureData || null;
+        // Upload signature to Supabase Storage instead of storing base64 in DB
+        if (data.signatureData && typeof data.signatureData === "string" && data.signatureData.length > 100) {
+          try {
+            const { uploadSignature } = await import("@/lib/storage/onboarding-signatures");
+            const { path, size } = await uploadSignature(enrollment.id, data.signatureData as string);
+            updateData.signatureUrl = path;
+            updateData.signatureSize = size;
+            updateData.signatureData = null; // Don't store base64 in DB
+          } catch (uploadErr) {
+            console.error("[onboarding-api] Signature upload failed, falling back to DB:", uploadErr);
+            updateData.signatureData = data.signatureData || null;
+          }
+        } else {
+          updateData.signatureData = data.signatureData || null;
+        }
         updateData.signedLegalName = data.signedLegalName || null;
         updateData.signedSsnLast4 = data.signedSsnLast4 || null;
         updateData.signedDate = data.signedDate || null;
@@ -193,6 +204,7 @@ export async function PATCH(
         updateData.agreementSignedAt = new Date();
         console.log("[onboarding-api] Agreement step — updateData keys:", Object.keys(updateData));
         break;
+      }
 
       case "complete": {
         // Generate verification code

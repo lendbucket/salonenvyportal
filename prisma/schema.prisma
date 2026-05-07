@@ -344,6 +344,8 @@ model OnboardingEnrollment {
 
   // Agreement / Signature
   signatureData         String?   @db.Text
+  signatureUrl          String?
+  signatureSize         Int?
   signedLegalName       String?
   signedSsnLast4        String?
   signedDate            String?
