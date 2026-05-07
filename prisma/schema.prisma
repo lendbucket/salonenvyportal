@@ -908,6 +908,7 @@ model Client {
   engagementScore         Float?
   churnRiskScore          Float?
   vipTier                 String?
+  valueTier               String?
   metricsLastComputedAt   DateTime?
 
   // Relations
