@@ -403,9 +403,71 @@ model OnboardingEnrollment {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @default(now()) @updatedAt
 
+  // I-9 federal employment verification
+  i9Section1Complete    Boolean   @default(false)
+  i9Section1Data        Json?
+  i9Section1SignedAt    DateTime?
+  i9Section2Complete    Boolean   @default(false)
+  i9Section2VerifiedBy  String?
+  i9Section2VerifiedAt  DateTime?
+  i9DocumentList        String?
+
+  // Background check (Checkr)
+  bgCheckOrderId        String?
+  bgCheckStatus         String?
+  bgCheckRequestedAt    DateTime?
+  bgCheckCompletedAt    DateTime?
+  bgCheckResultUrl      String?
+
+  // NDA + Compensation
+  ndaSignedAt           DateTime?
+  compAgreementSignedAt DateTime?
+
+  // Compensation terms
+  compensationType      String?
+  boothRentalAmount     Float?
+  commissionPercent     Float?
+  paymentSchedule       String?
+  startDate             DateTime?
+
+  // State tax
+  stateOfWork           String?
+  stateTaxFormType      String?
+  stateTaxFormData      Json?
+  stateTaxFormSignedAt  DateTime?
+
+  // Reminder tracking (extended)
+  reminderSchedule      Json?
+
+  documents             EnrollmentDocument[]
   location              Location  @relation(fields: [locationId], references: [id])
   @@index([inviteTokenHash])
   @@map("onboarding_enrollments")
+}
+
+model EnrollmentDocument {
+  id              String    @id @default(cuid())
+  enrollmentId    String
+  documentType    String
+  storagePath     String
+  storageBucket   String
+  fileName        String
+  fileSize        Int
+  mimeType        String
+  expiresAt       DateTime?
+  isVerified      Boolean   @default(false)
+  verifiedById    String?
+  verifiedAt      DateTime?
+  rejectedReason  String?
+  metadata        Json?
+  uploadedAt      DateTime  @default(now())
+
+  enrollment      OnboardingEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@index([enrollmentId, documentType])
+  @@index([documentType, isVerified])
+  @@index([expiresAt])
+  @@map("enrollment_documents")
 }
 
 model SuiteSubscription {
