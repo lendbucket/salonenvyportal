@@ -361,12 +361,16 @@ model OnboardingEnrollment {
   ackTechPolicy         Boolean   @default(false)
 
   // Email/Phone Verification
-  emailVerificationCode   String?
-  emailVerificationExpiry DateTime?
-  emailVerified           Boolean   @default(false)
-  phoneVerificationCode   String?
-  phoneVerificationExpiry DateTime?
-  phoneVerified           Boolean   @default(false)
+  emailVerificationCode     String?
+  emailVerificationExpiry   DateTime?
+  emailVerified             Boolean   @default(false)
+  emailVerificationAttempts Int       @default(0)
+  emailVerificationLastSent DateTime?
+  phoneVerificationCode     String?
+  phoneVerificationExpiry   DateTime?
+  phoneVerified             Boolean   @default(false)
+  phoneVerificationAttempts Int       @default(0)
+  phoneVerificationLastSent DateTime?
 
   // Fortune 500 Consents
   ackBackgroundCheck      Boolean   @default(false)
