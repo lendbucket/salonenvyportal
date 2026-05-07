@@ -916,6 +916,7 @@ model Client {
   appointments            SquareAppointment[]
   payments                SquarePayment[]
   emailContact            EmailContact?
+  agentDrafts             AgentDraft[]
 
   @@index([lastSyncedAt])
   @@index([emailUnsubscribed])
@@ -1872,4 +1873,96 @@ model ReynaKnowledge {
   @@unique([category, key, locationId])
   @@index([category])
   @@map("reyna_knowledge")
+}
+
+// ═══════════════════════════════════════
+// Agent System
+// ═══════════════════════════════════════
+
+model Agent {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  displayName       String
+  description       String   @db.Text
+  status            String   @default("paused")
+
+  config            Json
+  schedule          String?
+
+  totalRuns         Int      @default(0)
+  totalDrafted      Int      @default(0)
+  totalApproved     Int      @default(0)
+  totalSent         Int      @default(0)
+  totalRecovered    Int      @default(0)
+  revenueAttributed Float    @default(0)
+
+  lastRunAt         DateTime?
+  nextRunAt         DateTime?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  runs              AgentRun[]
+  drafts            AgentDraft[]
+
+  @@map("agents")
+}
+
+model AgentRun {
+  id                  String    @id @default(cuid())
+  agentId             String
+  status              String
+
+  candidatesEvaluated Int       @default(0)
+  draftsCreated       Int       @default(0)
+  errorsEncountered   Int       @default(0)
+
+  startedAt           DateTime  @default(now())
+  completedAt         DateTime?
+  errorMessage        String?   @db.Text
+
+  agent               Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  drafts              AgentDraft[]
+
+  @@index([agentId, startedAt])
+  @@map("agent_runs")
+}
+
+model AgentDraft {
+  id                  String    @id @default(cuid())
+  agentId             String
+  runId               String
+
+  clientId            String
+
+  reasoning           String    @db.Text
+  priority            Int
+
+  channel             String
+  messageBody         String    @db.Text
+  proposedOffer       String?
+  proposedSendAt      DateTime
+
+  status              String    @default("pending")
+  reviewedById        String?
+  reviewedAt          DateTime?
+  rejectionReason     String?
+
+  marketingMessageId  String?
+  sentAt              DateTime?
+
+  convertedAt         DateTime?
+  conversionRevenue   Float?
+
+  createdAt           DateTime  @default(now())
+
+  agent               Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  run                 AgentRun  @relation(fields: [runId], references: [id], onDelete: Cascade)
+  client              Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([agentId, status])
+  @@index([clientId])
+  @@index([proposedSendAt])
+  @@index([status, proposedSendAt])
+  @@map("agent_drafts")
 }
