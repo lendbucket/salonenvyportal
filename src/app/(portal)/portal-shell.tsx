@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useSession } from "next-auth/react"
-import { signOut } from "next-auth/react"
+import { logoutEverything } from "@/lib/auth/logout-helper"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useUserRole } from "@/hooks/useUserRole"
@@ -545,7 +545,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               Profile
             </Link>
             <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
+              onClick={() => logoutEverything()}
               style={{
                 flex: 1,
                 padding: "10px",
@@ -569,6 +569,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
               <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>logout</span>
               Sign Out
             </button>
+            <a href="/api/force-logout" style={{ fontSize: 10, color: "#9ca3af", textDecoration: "none", textAlign: "center", display: "block", marginTop: 4 }}>Force logout (emergency)</a>
           </div>
         </div>
 
@@ -803,7 +804,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
           </Link>
           {/* Logout */}
           <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={() => logoutEverything()}
             style={{
               width: 28, height: 28, borderRadius: 6,
               background: "transparent",
@@ -974,7 +975,7 @@ export default function PortalShell({ children }: { children: React.ReactNode })
                 <div style={{ height: 1, background: "rgba(26,19,19,0.06)", margin: "4px 0" }} />
 
                 {/* Sign out */}
-                <button onClick={() => { setProfileOpen(false); signOut({ callbackUrl: "/login" }) }} style={{
+                <button onClick={() => { setProfileOpen(false); logoutEverything() }} style={{
                   display: "flex", alignItems: "center", gap: 10, padding: "8px 16px",
                   cursor: "pointer", transition: "all 0.1s ease", color: "#dc2626",
                   fontFamily: "Inter", fontSize: 13, fontWeight: 500, letterSpacing: "-0.31px",
