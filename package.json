@@ -16,7 +16,8 @@
     "warm:email-domain": "dotenv -e .env.local -- tsx scripts/warm-email-domain.ts",
     "seed:reyna-recovery": "dotenv -e .env.local -- tsx scripts/seed-reyna-recovery.ts",
     "setup:storage-buckets": "dotenv -e .env.local -- tsx scripts/setup-storage-buckets.ts",
-    "seed:enrollment-templates": "dotenv -e .env.local -- tsx scripts/seed-enrollment-templates.ts"
+    "seed:enrollment-templates": "dotenv -e .env.local -- tsx scripts/seed-enrollment-templates.ts",
+    "logout-url": "echo Visit https://portal.salonenvyusa.com/api/force-logout to force-logout"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
