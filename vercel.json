@@ -75,6 +75,10 @@
     {
       "path": "/api/cron/enrollment-cleanup",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/hris-dispatch",
+      "schedule": "*/5 * * * *"
     }
   ],
   "functions": {

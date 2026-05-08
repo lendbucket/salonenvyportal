@@ -2118,3 +2118,50 @@ model BlockedNumber {
 
   @@map("blocked_numbers")
 }
+
+// ═══════════════════════════════════════
+// HRIS Integration
+// ═══════════════════════════════════════
+
+model HrisIntegration {
+  id              String    @id @default(cuid())
+  provider        String
+  status          String    @default("disabled")
+  webhookUrl      String?
+  apiKey          String?
+  apiKeyHint      String?
+  config          Json?
+  totalSyncs      Int       @default(0)
+  totalErrors     Int       @default(0)
+  lastSyncAt      DateTime?
+  lastErrorAt     DateTime?
+  lastErrorMsg    String?   @db.Text
+  enabledAt       DateTime?
+  enabledById     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  events          HrisSyncEvent[]
+  @@map("hris_integrations")
+}
+
+model HrisSyncEvent {
+  id              String    @id @default(cuid())
+  integrationId   String
+  enrollmentId    String?
+  staffMemberId   String?
+  eventType       String
+  payload         Json
+  status          String    @default("pending")
+  attemptsMade    Int       @default(0)
+  lastAttemptAt   DateTime?
+  successAt       DateTime?
+  failureReason   String?   @db.Text
+  createdAt       DateTime  @default(now())
+
+  integration     HrisIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@index([integrationId, status])
+  @@index([enrollmentId])
+  @@map("hris_sync_events")
+}
