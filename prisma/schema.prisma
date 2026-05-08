@@ -101,8 +101,35 @@ model StaffMember {
   user               User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   shifts             Shift[]
   conductRecords     ConductRecord[]
+  profileUpdateRequests ProfileUpdateRequest[]
   @@map("staff_members")
 }
+
+model ProfileUpdateRequest {
+  id                String    @id @default(cuid())
+  staffMemberId     String
+  enrollmentId      String?
+  changeType        String
+  changedFields     Json
+  requiresApproval  Boolean   @default(false)
+  status            String    @default("pending")
+  reviewedById      String?
+  reviewedAt        DateTime?
+  rejectionReason   String?
+  identityVerifiedAt DateTime?
+  verificationMethod String?
+  ipAddress         String?
+  userAgent         String?   @db.Text
+  createdAt         DateTime  @default(now())
+  appliedAt         DateTime?
+
+  staffMember       StaffMember @relation(fields: [staffMemberId], references: [id])
+
+  @@index([staffMemberId, createdAt])
+  @@index([status])
+  @@map("profile_update_requests")
+}
+
 
 model InventoryItem {
   id               String   @id @default(cuid())
