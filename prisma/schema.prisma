@@ -447,6 +447,12 @@ model OnboardingEnrollment {
   bgCheckCompletedAt    DateTime?
   bgCheckResultUrl      String?
 
+  // E-Verify
+  everifyCaseNumber     String?
+  everifyStatus         String?
+  everifySubmittedAt    DateTime?
+  everifyResolvedAt     DateTime?
+
   // NDA + Compensation
   ndaSignedAt           DateTime?
   compAgreementSignedAt DateTime?
