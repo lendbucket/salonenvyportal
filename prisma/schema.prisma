@@ -424,6 +424,7 @@ model OnboardingEnrollment {
   lastReminderSentAt    DateTime?
   reminderCount         Int       @default(0)
   cancelledAt           DateTime?
+  deletedAt             DateTime?
 
   completedAt           DateTime?
   expiresAt             DateTime?
