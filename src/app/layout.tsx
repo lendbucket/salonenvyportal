@@ -60,7 +60,9 @@ export default function RootLayout({
         </Providers>
         <Script id="sw-register" strategy="afterInteractive">{`
           if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(() => {});
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for (const r of registrations) { r.unregister() }
+            }).catch(() => {})
           }
         `}</Script>
       </body>
