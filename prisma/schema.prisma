@@ -475,8 +475,24 @@ model OnboardingEnrollment {
 
   documents             EnrollmentDocument[]
   location              Location  @relation(fields: [locationId], references: [id])
+  enrollmentTemplateId  String?
+
   @@index([inviteTokenHash])
   @@map("onboarding_enrollments")
+}
+
+model EnrollmentTemplate {
+  id                  String    @id @default(cuid())
+  name                String    @unique
+  displayName         String
+  description         String    @db.Text
+  requiredSteps       Json
+  defaultCompensationType String?
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@map("enrollment_templates")
 }
 
 model EnrollmentDocument {
