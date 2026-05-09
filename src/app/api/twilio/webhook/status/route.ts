@@ -15,6 +15,10 @@ function verifyTwilioSignature(req: NextRequest, body: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  // KILL SWITCH — set PORTAL_KILL_SWITCH=true in Vercel env vars to disable
+  if (process.env.PORTAL_KILL_SWITCH === "true") {
+    return NextResponse.json({ ok: true, disabled: true }, { status: 200 })
+  }
   const rawBody = await req.text()
 
   if (!verifyTwilioSignature(req, rawBody)) {
