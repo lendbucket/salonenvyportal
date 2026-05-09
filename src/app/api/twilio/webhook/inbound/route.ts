@@ -33,10 +33,6 @@ function normalizePhone(phone: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  // KILL SWITCH — set PORTAL_KILL_SWITCH=true in Vercel env vars to disable
-  if (process.env.PORTAL_KILL_SWITCH === "true") {
-    return twiml()
-  }
   const rawBody = await req.text()
 
   if (!verifyTwilioSignature(req, rawBody)) {
